@@ -1,5 +1,6 @@
 ﻿using GSMA.MobileConnect.Cache;
 using GSMA.MobileConnect.Constants;
+using GSMA.MobileConnect.Exceptions;
 using GSMA.MobileConnect.Utils;
 using Newtonsoft.Json;
 using System;
@@ -103,6 +104,12 @@ namespace GSMA.MobileConnect.Discovery
         }
 
         /// <summary>
+        /// The 16 byte name which is pre-registered by the developer and returned from the API Exchange during Discovery
+        /// </summary>
+        [JsonProperty]
+        public string ApplicationShortName { get; private set; }
+
+        /// <summary>
         /// Creates an instance of the DiscoveryResponse class
         /// </summary>
         [JsonConstructor]
@@ -136,6 +143,7 @@ namespace GSMA.MobileConnect.Discovery
             }
 
             this.OperatorUrls = OperatorUrls.Parse(responseData);
+            this.ApplicationShortName = responseData?.response?.apis?.operatorid.link.FirstOrDefault(x => x.rel == LinkRels.APPLICATION_SHORT_NAME)?.href;
 
             if (responseData.error != null)
             {
@@ -157,6 +165,31 @@ namespace GSMA.MobileConnect.Discovery
         public void MarkExpired(bool isExpired)
         {
             _markedExpiredByCache = isExpired;
+        }
+
+        /// <summary>
+        /// Check to see if provided scopes are supported by the operator linked to the discovery response
+        /// </summary>
+        /// <param name="scope">A space or comma delimited string of required scope values, if empty or null true will be returned</param>
+        /// <exception cref="MobileConnectProviderMetadataUnavailableException">Throws if ProviderMetadata or ScopesSupported is unavailable</exception>
+        /// <returns>True if all scope values requested are supported by the operator, false otherwise</returns>
+        public bool IsMobileConnectServiceSupported(string scope)
+        {
+            if (string.IsNullOrEmpty(scope))
+            {
+                return true;
+            }
+
+            if(ProviderMetadata == null)
+            {
+                throw new MobileConnectProviderMetadataUnavailableException();
+            }
+            else if (ProviderMetadata.ScopesSupported == null || ProviderMetadata.ScopesSupported.Count == 0)
+            {
+                throw new MobileConnectProviderMetadataUnavailableException("ScopesSupported");
+            }
+
+            return ProviderMetadata.ScopesSupported.ContainsAllValues(scope, StringComparison.OrdinalIgnoreCase, ' ', ',');
         }
 
         private static DateTime CalculateTTL(long? responseTtl)

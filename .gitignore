@@ -255,6 +255,6 @@ DTAR_*/
 *.ncrunch*
 Help/
 
-**/GSMA.MobileConnect.Demo.Config/prebuild.bat
-**/GSMA.MobileConnect.Demo.Config/postbuild.bat
-secret-config.json
+# **/GSMA.MobileConnect.Demo.Config/prebuild.bat
+# **/GSMA.MobileConnect.Demo.Config/postbuild.bat
+# secret-config.json

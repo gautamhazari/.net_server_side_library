@@ -252,7 +252,7 @@ namespace GSMA.MobileConnect.Discovery
         {
             if(_cache != null)
             {
-                await _cache.Add(key, value);
+                await _cache.Add(key, value).ConfigureAwait(false);
             }
         }
 
@@ -333,7 +333,7 @@ namespace GSMA.MobileConnect.Discovery
                 if ((int)response.StatusCode < 400)
                 {
                     metadata = JsonConvert.DeserializeObject<ProviderMetadata>(response.Content);
-                    await AddCachedValueAsync(url, metadata);
+                    await AddCachedValueAsync(url, metadata).ConfigureAwait(false);
                 }
                 else if (cached != null)
                 {

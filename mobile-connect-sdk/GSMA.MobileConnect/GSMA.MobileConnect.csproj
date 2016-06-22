@@ -42,6 +42,7 @@
     <Compile Include="Discovery\OperatorUrls.cs" />
     <Compile Include="Discovery\ProviderMetadata.cs" />
     <Compile Include="Exceptions\MobileConnectInvalidArgumentException.cs" />
+    <Compile Include="Exceptions\MobileConnectProviderMetadataUnavailableException.cs" />
     <Compile Include="Json\MobileConnectVersionSupported.cs" />
     <Compile Include="MobileConnectInterfaceHelper.cs" />
     <Compile Include="Cache\ConcurrentDiscoveryCache.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Authentication\StartAuthenticationResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\BasicAuthentication.cs" />
+    <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\HttpUtils.cs" />
     <Compile Include="Utils\JsonWebToken.cs" />
     <Compile Include="Utils\BasicKeyValuePair.cs" />

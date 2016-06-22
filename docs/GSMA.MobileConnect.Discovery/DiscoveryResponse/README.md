@@ -33,26 +33,28 @@ Constructors
 Properties
 ----------
 
-                   | Name                   | Description                                                                                          
------------------- | ---------------------- | ---------------------------------------------------------------------------------------------------- 
-![Public property] | [Cached][5]            | True if the data came from the local cache                                                           
-![Public property] | [ErrorResponse][6]     | The response if the network request returned an error                                                
-![Public property] | [HasExpired][7]        | Has the reponse expired? If no Ttl is specified then it is assumed that the response has not expired 
-![Public property] | [Headers][8]           | Returns the list of Http headers in the response                                                     
-![Public property] | [OperatorUrls][9]      | The returned operator urls for authentication                                                        
-![Public property] | [ProviderMetadata][10] | The provider metadata associated with this response                                                  
-![Public property] | [ResponseCode][11]     | Returns the Http response code or 0 if the data is cached                                            
-![Public property] | [ResponseData][12]     | The parsed json response data                                                                        
-![Public property] | [TimeCachedUtc][13]    | Time when the object was initially cached                                                            
-![Public property] | [Ttl][14]              | Time to live from the response                                                                       
+                   | Name                      | Description                                                                                                   
+------------------ | ------------------------- | ------------------------------------------------------------------------------------------------------------- 
+![Public property] | [ApplicationShortName][5] | The 16 byte name which is pre-registered by the developer and returned from the API Exchange during Discovery 
+![Public property] | [Cached][6]               | True if the data came from the local cache                                                                    
+![Public property] | [ErrorResponse][7]        | The response if the network request returned an error                                                         
+![Public property] | [HasExpired][8]           | Has the reponse expired? If no Ttl is specified then it is assumed that the response has not expired          
+![Public property] | [Headers][9]              | Returns the list of Http headers in the response                                                              
+![Public property] | [OperatorUrls][10]        | The returned operator urls for authentication                                                                 
+![Public property] | [ProviderMetadata][11]    | The provider metadata associated with this response                                                           
+![Public property] | [ResponseCode][12]        | Returns the Http response code or 0 if the data is cached                                                     
+![Public property] | [ResponseData][13]        | The parsed json response data                                                                                 
+![Public property] | [TimeCachedUtc][14]       | Time when the object was initially cached                                                                     
+![Public property] | [Ttl][15]                 | Time to live from the response                                                                                
 
 
 Methods
 -------
 
-                 | Name              | Description                                                                                                        
----------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------ 
-![Public method] | [MarkExpired][15] | Mark the object as expired, this method should only cause HasExpired to move from false to true, not true to false 
+                 | Name                                  | Description                                                                                                        
+---------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------ 
+![Public method] | [IsMobileConnectServiceSupported][16] | Check to see if provided scopes are supported by the operator linked to the discovery response                     
+![Public method] | [MarkExpired][17]                     | Mark the object as expired, this method should only cause HasExpired to move from false to true, not true to false 
 
 
 See Also
@@ -60,24 +62,26 @@ See Also
 
 #### Reference
 [GSMA.MobileConnect.Discovery Namespace][2]  
-[GSMA.MobileConnect.Discovery.IDiscovery][16]  
+[GSMA.MobileConnect.Discovery.IDiscovery][18]  
 
 [1]: http://msdn.microsoft.com/en-us/library/e5kfa45b
 [2]: ../README.md
 [3]: _ctor.md
 [4]: _ctor_1.md
-[5]: Cached.md
-[6]: ErrorResponse.md
-[7]: HasExpired.md
-[8]: Headers.md
-[9]: OperatorUrls.md
-[10]: ProviderMetadata.md
-[11]: ResponseCode.md
-[12]: ResponseData.md
-[13]: TimeCachedUtc.md
-[14]: Ttl.md
-[15]: MarkExpired.md
-[16]: ../IDiscovery/README.md
-[17]: ../../_icons/Help.png
+[5]: ApplicationShortName.md
+[6]: Cached.md
+[7]: ErrorResponse.md
+[8]: HasExpired.md
+[9]: Headers.md
+[10]: OperatorUrls.md
+[11]: ProviderMetadata.md
+[12]: ResponseCode.md
+[13]: ResponseData.md
+[14]: TimeCachedUtc.md
+[15]: Ttl.md
+[16]: IsMobileConnectServiceSupported.md
+[17]: MarkExpired.md
+[18]: ../IDiscovery/README.md
+[19]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Public property]: ../../_icons/pubproperty.gif "Public property"
