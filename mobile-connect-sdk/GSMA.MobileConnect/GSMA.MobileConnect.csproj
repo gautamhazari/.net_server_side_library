@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AF180441-D240-48C6-B2DB-EF7B9B01EE9C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GSMA.MobileConnect</RootNamespace>
+    <AssemblyName>GSMA.MobileConnect</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\GSMA.MobileConnect.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Authentication\Authentication.cs" />
+    <Compile Include="Constants\LinkRels.cs" />
+    <Compile Include="Discovery\OperatorUrls.cs" />
+    <Compile Include="Exceptions\MobileConnectInvalidArgumentException.cs" />
+    <Compile Include="MobileConnectInterfaceHelper.cs" />
+    <Compile Include="Cache\ConcurrentDiscoveryCache.cs" />
+    <Compile Include="Cache\IDiscoveryCache.cs" />
+    <Compile Include="Constants\Cookies.cs" />
+    <Compile Include="Constants\DefaultOptions.cs" />
+    <Compile Include="Constants\Headers.cs" />
+    <Compile Include="Constants\Parameters.cs" />
+    <Compile Include="Discovery\Discovery.cs" />
+    <Compile Include="Discovery\DiscoveryOptions.cs" />
+    <Compile Include="Discovery\DiscoveryResponse.cs" />
+    <Compile Include="Discovery\IDiscovery.cs" />
+    <Compile Include="Discovery\IPreferences.cs" />
+    <Compile Include="Discovery\ParsedDiscoveryRedirect.cs" />
+    <Compile Include="ErrorResponse.cs" />
+    <Compile Include="Exceptions\MobileConnectEndpointHttpException.cs" />
+    <Compile Include="Json\Apis.cs" />
+    <Compile Include="Json\DiscoveryResponseData.cs" />
+    <Compile Include="Json\Link.cs" />
+    <Compile Include="Json\Operatorid.cs" />
+    <Compile Include="Json\Response.cs" />
+    <Compile Include="MobileConnectConfig.cs" />
+    <Compile Include="MobileConnectInterface.cs" />
+    <Compile Include="MobileConnectRequestOptions.cs" />
+    <Compile Include="MobileConnectStatus.cs" />
+    <Compile Include="MobileConnectWebInterface.cs" />
+    <Compile Include="Authentication\AuthenticationOptions.cs" />
+    <Compile Include="Authentication\IAuthentication.cs" />
+    <Compile Include="Authentication\RequestTokenResponse.cs" />
+    <Compile Include="Authentication\RequestTokenResponseData.cs" />
+    <Compile Include="Authentication\StartAuthenticationResponse.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\BasicAuthentication.cs" />
+    <Compile Include="Utils\HttpUtils.cs" />
+    <Compile Include="Utils\JsonWebToken.cs" />
+    <Compile Include="Utils\BasicKeyValuePair.cs" />
+    <Compile Include="Utils\RequiredCookies.cs" />
+    <Compile Include="Utils\RestClient.cs" />
+    <Compile Include="Utils\RestResponse.cs" />
+    <Compile Include="Utils\Validation.cs" />
+    <Compile Include="Web\MobileConnectWebResponse.cs" />
+    <Compile Include="Web\ResponseConverter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="publishnuget.bat" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
