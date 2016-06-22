@@ -8,6 +8,7 @@ using System.Net.Http;
 using GSMA.MobileConnect.Cache;
 using GSMA.MobileConnect.Constants;
 using GSMA.MobileConnect.Exceptions;
+using Newtonsoft.Json;
 
 namespace GSMA.MobileConnect.Discovery
 {
@@ -32,14 +33,14 @@ namespace GSMA.MobileConnect.Discovery
             this._client = client;
         }
 
-        private async Task<DiscoveryResponse> CallDiscoveryEndpoint(string clientId, string clientSecret, string discoveryUrl, DiscoveryOptions options, IEnumerable<BasicKeyValuePair> currentCookies, bool useCache)
+        private async Task<DiscoveryResponse> CallDiscoveryEndpoint(string clientId, string clientSecret, string discoveryUrl, DiscoveryOptions options, IEnumerable<BasicKeyValuePair> currentCookies, bool cacheDiscoveryResponse)
         {
             Validation.RejectNullOrEmpty(clientId, "clientId");
             Validation.RejectNullOrEmpty(clientSecret, "clientSecret");
             Validation.RejectNullOrEmpty(discoveryUrl, "discoveryUrl");
             Validation.RejectNullOrEmpty(options.RedirectUrl, "redirectUrl");
 
-            if (useCache)
+            if (cacheDiscoveryResponse)
             {
                 var cachedValue = await GetCachedValueAsync(options);
                 if (cachedValue != null)
@@ -65,7 +66,9 @@ namespace GSMA.MobileConnect.Discovery
                 }
 
                 var discoveryResponse = new DiscoveryResponse(response);
-                if (useCache)
+                discoveryResponse.ProviderMetadata = await RetrieveProviderMetada(discoveryResponse.OperatorUrls?.ProviderMetadataUrl);
+
+                if (cacheDiscoveryResponse)
                 {
                     await AddCachedValueAsync(options, discoveryResponse).ConfigureAwait(false);
                 }
@@ -245,11 +248,29 @@ namespace GSMA.MobileConnect.Discovery
             }
         }
 
+        private async Task AddCachedValueAsync<T>(string key, T value) where T : ICacheable
+        {
+            if(_cache != null)
+            {
+                await _cache.Add(key, value);
+            }
+        }
+
         private async Task<DiscoveryResponse> GetCachedValueAsync(DiscoveryOptions options)
         {
             var mcc = options.IdentifiedMCC != null ? options.IdentifiedMCC : options.SelectedMCC;
             var mnc = options.IdentifiedMNC != null ? options.IdentifiedMNC : options.SelectedMNC;
             return _cache != null ? await _cache.Get(mcc, mnc) : null;
+        }
+
+        private async Task<T> GetCachedValueAsync<T>(string key, bool removeIfExpired) where T : ICacheable
+        {
+            if(_cache == null)
+            {
+                return default(T);
+            }
+
+            return await _cache.Get<T>(key, removeIfExpired);
         }
 
         private List<BasicKeyValuePair> GetDiscoveryQueryParams(DiscoveryOptions options)
@@ -270,6 +291,66 @@ namespace GSMA.MobileConnect.Discovery
         private IEnumerable<BasicKeyValuePair> GetCookiesToProxy(IEnumerable<BasicKeyValuePair> cookiesToProxy)
         {
             return HttpUtils.ProxyRequiredCookies(RequiredCookies.Discovery, cookiesToProxy);
+        }
+
+        /// <inheritdoc/>
+        /// <exception cref="MobileConnectInvalidArgumentException">Throws if response is null</exception>
+        public async Task<ProviderMetadata> GetProviderMetadata(DiscoveryResponse response, bool forceCacheBypass)
+        {
+            Validation.RejectNull(response, "response");
+
+            var metadata = await RetrieveProviderMetada(response.OperatorUrls?.ProviderMetadataUrl, forceCacheBypass);
+            response.ProviderMetadata = metadata;
+
+            return metadata;
+        }
+
+        private async Task<ProviderMetadata> RetrieveProviderMetada(string url, bool forceCacheBypass = false)
+        {
+            if (url == null)
+            {
+                // TODO [GMC-73] ProviderMetadata.Default
+                return null;
+            }
+
+            // Get value from cache, if it is expired we don't want to remove it because we will use it as a fallback if the call to the provider metadata endpoint fails
+            // If it is expired and the call to the provider metadata endpoint succeeds then expired value will be overwritten in the cache anyway
+            ProviderMetadata cached = null;
+            if (!forceCacheBypass)
+            {
+                cached = await GetCachedValueAsync<ProviderMetadata>(url, false);
+
+                if (cached != null && !cached.HasExpired)
+                {
+                    return cached;
+                } 
+            }
+
+            ProviderMetadata metadata = null;
+            try
+            {
+                var response = await _client.GetAsync(url, null);
+                if ((int)response.StatusCode < 400)
+                {
+                    metadata = JsonConvert.DeserializeObject<ProviderMetadata>(response.Content);
+                    await AddCachedValueAsync(url, metadata);
+                }
+                else if (cached != null)
+                {
+                    metadata = cached;
+                }
+            }
+            catch (Exception e) when (e is HttpRequestException || e is System.Net.WebException || e is TaskCanceledException)
+            {
+                if (cached != null)
+                {
+                    metadata = cached;
+                }
+            }
+
+            // TODO [GMC-73] ProviderMetadata.Default
+
+            return metadata;
         }
     }
 }

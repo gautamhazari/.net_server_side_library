@@ -1,4 +1,5 @@
-﻿using GSMA.MobileConnect.Constants;
+﻿using GSMA.MobileConnect.Cache;
+using GSMA.MobileConnect.Constants;
 using GSMA.MobileConnect.Utils;
 using Newtonsoft.Json;
 using System;
@@ -13,70 +14,102 @@ namespace GSMA.MobileConnect.Discovery
     /// Class to hold a discovery response. This potentially holds cached data as indicated by the cached property.
     /// </summary>
     /// <seealso cref="IDiscovery"/>
-    public class DiscoveryResponse
+    public class DiscoveryResponse : ICacheable
     {
+        private bool _cached;
+        private bool _markedExpiredByCache;
+        private ProviderMetadata _providerMetadata;
+
         /// <summary>
         /// True if the data came from the local cache
         /// </summary>
-        public bool Cached { get; private set; }
+        [JsonIgnore]
+        public bool Cached
+        {
+            get { return _cached; }
+            set
+            {
+                _cached = value;
+
+                // if this was cached we don't want to return someone elses subscriber id, so we clear it
+                if(_cached && ResponseData?.subscriber_id != null)
+                {
+                    ResponseData.subscriber_id = null;
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public DateTime? TimeCachedUtc { get; set; }
 
         /// <summary>
         /// Time to live from the response
         /// </summary>
+        [JsonProperty]
         public DateTime? Ttl { get; private set; }
 
         /// <summary>
         /// Has the reponse expired?
         /// If no Ttl is specified then it is assumed that the response has not expired
         /// </summary>
+        [JsonIgnore]
         public bool HasExpired
         {
-            get { return Ttl.HasValue && Ttl.Value.CompareTo(DateTime.UtcNow) <= 0; }
+            get { return _markedExpiredByCache || (Ttl.HasValue && Ttl.Value.CompareTo(DateTime.UtcNow) <= 0); }
         }
 
         /// <summary>
         /// Returns the Http response code or 0 if the data is cached
         /// </summary>
+        [JsonProperty]
         public int ResponseCode { get; private set; }
 
         /// <summary>
         /// Returns the list of Http headers in the response
         /// </summary>
+        [JsonProperty]
         public List<BasicKeyValuePair> Headers { get; private set; }
 
         /// <summary>
         /// The response if the network request returned an error
         /// </summary>
+        [JsonIgnore]
         public ErrorResponse ErrorResponse { get; set; }
 
         /// <summary>
         /// The parsed json response data
         /// </summary>
+        [JsonProperty]
         public Json.DiscoveryResponseData ResponseData { get; private set; }
 
         /// <summary>
         /// The returned operator urls for authentication
         /// </summary>
-        public OperatorUrls OperatorUrls { get; set; }
+        [JsonIgnore]
+        public OperatorUrls OperatorUrls { get; private set; }
 
         /// <summary>
-        /// Creates an instance of the DiscoveryResponse class by copying an existing DiscoveryResponse instance
+        /// The provider metadata associated with this response
         /// </summary>
-        /// <param name="response">DiscoveryResponse to copy</param>
-        public DiscoveryResponse(DiscoveryResponse response)
+        [JsonProperty]
+        public ProviderMetadata ProviderMetadata
         {
-            this.Cached = true;
-            this.Ttl = response.Ttl;
-            this.ResponseCode = response.ResponseCode;
-            this.Headers = response.Headers;
-            this.ErrorResponse = response.ErrorResponse;
-            this.OperatorUrls = response.OperatorUrls;
+            get { return _providerMetadata; }
+            set
+            {
+                _providerMetadata = value;
+                OverrideOperatorUrls(_providerMetadata);
+            }
+        }
 
-            // Serialize/Deserialize to clone the cached data
-            var cachedJson = JsonConvert.SerializeObject(response.ResponseData);
-            this.ResponseData = JsonConvert.DeserializeObject<Json.DiscoveryResponseData>(cachedJson);
-            //Remove subscriber id from the cached response
-            this.ResponseData.subscriber_id = null;
+        /// <summary>
+        /// Creates an instance of the DiscoveryResponse class
+        /// </summary>
+        [JsonConstructor]
+        public DiscoveryResponse(Json.DiscoveryResponseData responseData)
+        {
+            ParseResponseData(responseData);
+            this.ResponseData = responseData;
         }
 
         /// <summary>
@@ -87,19 +120,46 @@ namespace GSMA.MobileConnect.Discovery
         {
             this.Cached = false;
             this.ResponseCode = (int)rawResponse.StatusCode;
-            this.ResponseData = rawResponse.Content == null ? null : JsonConvert.DeserializeObject<Json.DiscoveryResponseData>(rawResponse.Content);
             this.Headers = rawResponse.Headers;
-            this.Ttl = CalculateTTL(this.ResponseData?.ttl);
 
-            this.OperatorUrls = OperatorUrls.Parse(this.ResponseData);
+            this.ResponseData = rawResponse.Content == null ? null : JsonConvert.DeserializeObject<Json.DiscoveryResponseData>(rawResponse.Content);
+            ParseResponseData(ResponseData);
+        }
 
-            if(this.ResponseData.error != null)
+        private void ParseResponseData(Json.DiscoveryResponseData responseData)
+        {
+            this.Ttl = Ttl.HasValue ? Ttl : CalculateTTL(responseData?.ttl);
+
+            if (responseData == null)
             {
-                this.ErrorResponse = new ErrorResponse() { Error = ResponseData.error, ErrorDescription = ResponseData.description };
+                return;
+            }
+
+            this.OperatorUrls = OperatorUrls.Parse(responseData);
+
+            if (responseData.error != null)
+            {
+                this.ErrorResponse = new ErrorResponse() { Error = responseData.error, ErrorDescription = responseData.description };
             }
         }
 
-        private DateTime CalculateTTL(long? responseTtl)
+        private void OverrideOperatorUrls(ProviderMetadata metadata)
+        {
+            if(OperatorUrls == null)
+            {
+                return;
+            }
+
+            OperatorUrls.OverrideUrls(metadata);
+        }
+
+        /// <inheritdoc/>
+        public void MarkExpired(bool isExpired)
+        {
+            _markedExpiredByCache = isExpired;
+        }
+
+        private static DateTime CalculateTTL(long? responseTtl)
         {
             DateTime now = DateTime.UtcNow;
             DateTime epoch = new DateTime(1970, 1, 1);

@@ -1,6 +1,6 @@
 ConcurrentDiscoveryCache.Remove Method (String, String)
 =======================================================
-Removes a value from the cache if it exists
+Remove an entry from the cache that matches the mcc and mnc
 
 **Namespace:** [GSMA.MobileConnect.Cache][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
@@ -9,7 +9,7 @@ Syntax
 ------
 
 ```csharp
-public Task Remove(
+public override Task Remove(
 	string mcc,
 	string mnc
 )
@@ -19,11 +19,11 @@ public Task Remove(
 
 ##### *mcc*
 Type: [System.String][2]  
-Mobile Country Code
+Mobile Country Code (Required)
 
 ##### *mnc*
 Type: [System.String][2]  
-Mobile Network Code
+Mobile Network Code (Required)
 
 #### Return Value
 Type: [Task][3]  

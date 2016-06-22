@@ -36,9 +36,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Authentication\Authentication.cs" />
+    <Compile Include="Cache\BaseDiscoveryCache.cs" />
+    <Compile Include="Cache\ICacheable.cs" />
     <Compile Include="Constants\LinkRels.cs" />
     <Compile Include="Discovery\OperatorUrls.cs" />
+    <Compile Include="Discovery\ProviderMetadata.cs" />
     <Compile Include="Exceptions\MobileConnectInvalidArgumentException.cs" />
+    <Compile Include="Json\MobileConnectVersionSupported.cs" />
     <Compile Include="MobileConnectInterfaceHelper.cs" />
     <Compile Include="Cache\ConcurrentDiscoveryCache.cs" />
     <Compile Include="Cache\IDiscoveryCache.cs" />

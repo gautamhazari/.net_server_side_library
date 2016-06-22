@@ -1,6 +1,6 @@
-IDiscoveryCache.Add Method (String, DiscoveryResponse)
-======================================================
-Add a value with the specified key
+IDiscoveryCache.Add Method (String, String, DiscoveryResponse)
+==============================================================
+Add a value to the cache with the specified mcc and mnc
 
 **Namespace:** [GSMA.MobileConnect.Cache][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
@@ -10,16 +10,21 @@ Syntax
 
 ```csharp
 Task Add(
-	string key,
+	string mcc,
+	string mnc,
 	DiscoveryResponse value
 )
 ```
 
 #### Parameters
 
-##### *key*
+##### *mcc*
 Type: [System.String][2]  
-Key (Required)
+Mobile Country Code (Required)
+
+##### *mnc*
+Type: [System.String][2]  
+Mobile Network Code (Required)
 
 ##### *value*
 Type: [GSMA.MobileConnect.Discovery.DiscoveryResponse][3]  
@@ -28,7 +33,7 @@ Value (Required)
 #### Return Value
 Type: [Task][4]  
 
-[Missing &lt;returns> documentation for "M:GSMA.MobileConnect.Cache.IDiscoveryCache.Add(System.String,GSMA.MobileConnect.Discovery.DiscoveryResponse)"]
+[Missing &lt;returns> documentation for "M:GSMA.MobileConnect.Cache.IDiscoveryCache.Add(System.String,System.String,GSMA.MobileConnect.Discovery.DiscoveryResponse)"]
 
 
 See Also

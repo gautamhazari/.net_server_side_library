@@ -24,10 +24,14 @@ The **LinkRels** type exposes the following members.
 Fields
 ------
 
-                                | Name               | Description               
-------------------------------- | ------------------ | ------------------------- 
-![Public field]![Static member] | [AUTHORIZATION][3] | Key for authorization url 
-![Public field]![Static member] | [TOKEN][4]         | Key for token url         
+                                | Name                        | Description                  
+------------------------------- | --------------------------- | ---------------------------- 
+![Public field]![Static member] | [APPLICATION_SHORT_NAME][3] | Key for applicationShortName 
+![Public field]![Static member] | [AUTHORIZATION][4]          | Key for authorization url    
+![Public field]![Static member] | [JWKS][5]                   | Key for jwks url             
+![Public field]![Static member] | [OPENID_CONFIGURATION][6]   | Key for openid-configuration 
+![Public field]![Static member] | [TOKEN][7]                  | Key for token url            
+![Public field]![Static member] | [USERINFO][8]               | Key for userinfo url         
 
 
 See Also
@@ -38,8 +42,12 @@ See Also
 
 [1]: http://msdn.microsoft.com/en-us/library/e5kfa45b
 [2]: ../README.md
-[3]: AUTHORIZATION.md
-[4]: TOKEN.md
-[5]: ../../_icons/Help.png
+[3]: APPLICATION_SHORT_NAME.md
+[4]: AUTHORIZATION.md
+[5]: JWKS.md
+[6]: OPENID_CONFIGURATION.md
+[7]: TOKEN.md
+[8]: USERINFO.md
+[9]: ../../_icons/Help.png
 [Public field]: ../../_icons/pubfield.gif "Public field"
 [Static member]: ../../_icons/static.gif "Static member"

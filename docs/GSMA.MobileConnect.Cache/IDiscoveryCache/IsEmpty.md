@@ -1,6 +1,6 @@
 IDiscoveryCache.IsEmpty Property
 ================================
-Is the cache empty?
+Returns true if cache is empty
 
 **Namespace:** [GSMA.MobileConnect.Cache][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

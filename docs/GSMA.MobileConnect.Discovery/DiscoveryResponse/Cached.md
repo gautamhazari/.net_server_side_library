@@ -9,20 +9,24 @@ Syntax
 ------
 
 ```csharp
-public bool Cached { get; }
+public bool Cached { get; set; }
 ```
 
 #### Property Value
 Type: [Boolean][2]
+#### Implements
+[ICacheable.Cached][3]  
+
 
 See Also
 --------
 
 #### Reference
-[DiscoveryResponse Class][3]  
+[DiscoveryResponse Class][4]  
 [GSMA.MobileConnect.Discovery Namespace][1]  
 
 [1]: ../README.md
 [2]: http://msdn.microsoft.com/en-us/library/a28wyd50
-[3]: README.md
-[4]: ../../_icons/Help.png
+[3]: ../../GSMA.MobileConnect.Cache/ICacheable/Cached.md
+[4]: README.md
+[5]: ../../_icons/Help.png

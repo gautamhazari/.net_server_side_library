@@ -23,7 +23,7 @@ namespace GSMA.MobileConnect.Test
 
         //[TestCase("sandbox-v1")]
         [TestCase("sandbox-v2")]
-        //[TestCase("r2-ref")]
+        [TestCase("r2-ref")]
         public async Task MobileConnectInterfaceShouldWorkEndToEnd(string configKey)
         {
             RestClient restClient = new RestClient();
@@ -76,7 +76,7 @@ namespace GSMA.MobileConnect.Test
 
         //[TestCase("sandbox-v1")]
         [TestCase("sandbox-v2")]
-        //[TestCase("r2-ref")]
+        [TestCase("r2-ref")]
         public async Task MobileConnectInterfaceShouldRejectIncorrectState(string configKey)
         {
             RestClient restClient = new RestClient();
@@ -130,7 +130,7 @@ namespace GSMA.MobileConnect.Test
 
         //[TestCase("sandbox-v1")]
         [TestCase("sandbox-v2")]
-        //[TestCase("r2-ref")]
+        [TestCase("r2-ref")]
         public async Task MobileConnectInterfaceShouldRejectIncorrectNonce(string configKey)
         {
             RestClient restClient = new RestClient();
@@ -184,7 +184,7 @@ namespace GSMA.MobileConnect.Test
 
         //[TestCase("sandbox-v1")]
         [TestCase("sandbox-v2")]
-        //[TestCase("r2-ref")]
+        [TestCase("r2-ref")]
         public async Task MobileConnectWebInterfaceShouldWorkEndToEnd(string configKey)
         {
             RestClient restClient = new RestClient();
@@ -241,7 +241,7 @@ namespace GSMA.MobileConnect.Test
 
         //[TestCase("sandbox-v1")]
         [TestCase("sandbox-v2")]
-        //[TestCase("r2-ref")]
+        [TestCase("r2-ref")]
         public async Task MobileConnectWebInterfaceShouldWorkEndToEndWithCache(string configKey)
         {
             RestClient restClient = new RestClient();

@@ -58,6 +58,18 @@ kernel.Bind<MobileConnectWebInterface>().ToSelf().InSingletonScope();
 
 Non-server applications will require the use of some WebView to show the user certain web pages in the authorization process with any redirects to the registered RedirectUrl being caught and handled.
 
+Extending The IDiscoveryCache
+-------------------
+Certain parts of the Discovery and MobileConnect processes utilise an implementation of [IDiscoveryCache](Docs/GSMA.MobileConnect.Cache/IDiscoveryCache) if provided.
+The [IDiscoveryCache](Docs/GSMA.MobileConnect.Cache/IDiscoveryCache) is designed to appear as a simple key/value store for any information that needs to be cached with a configurable lifetime.
+The cache also provides convenience methods for accessing and storing DiscoveryResponse objects.
+
+To make implementation of custom cache types easier the abstract class [BaseDiscoveryCache](#) is provided to cut down on the number of required method implementations.
+The [BaseDiscoveryCache](#) also implements basic cache object lifetime to trigger expiry of objects at fetch time if required, expired results can be either removed at this point or returned to be used as a fallback value for a HTTP call.
+
+Currently the only cache implementation available is [ConcurrentDiscoveryCache](Docs/GSMA.MobileConnect.Cache/ConcurrentDiscoveryCache) which utilises JSON serialisation and a ConcurrentDictionary for thread safe storage and retrieval.
+This cache implementation will not share across application instances, if that functionality is required an implementation wrapping a third party in memory cache such as redis or memcached should be created.
+
 Resources
 ---------
 - [SDK Class Documentation](Docs/README.md)

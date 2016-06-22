@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace GSMA.MobileConnect.Cache
 {
     /// <summary>
-    /// Interface for the discovery response cache
+    /// Interface for the cache used during the discovery process, cache is mainly used to cache DiscoveryResponse objects but can also be used to cache any data used during the Discovery process
     /// </summary>
     public interface IDiscoveryCache
     {
         /// <summary>
-        /// Is the cache empty?
+        /// Returns true if cache is empty
         /// </summary>
         bool IsEmpty { get; }
 
@@ -30,7 +30,8 @@ namespace GSMA.MobileConnect.Cache
         /// </summary>
         /// <param name="key">Key (Required)</param>
         /// <param name="value">Value (Required)</param>
-        Task Add(string key, DiscoveryResponse value);
+        /// <typeparam name="T">Type of value to be added to the cache</typeparam>
+        Task Add<T>(string key, T value) where T : ICacheable;
 
         /// <summary>
         /// Return a cached value based on the mcc and mnc
@@ -44,8 +45,12 @@ namespace GSMA.MobileConnect.Cache
         /// Return a cached value based on the key
         /// </summary>
         /// <param name="key">Key (Required)</param>
+        /// <param name="removeIfExpired">
+        /// If value should be removed if it is retrieved and found to be expired, should be set to false if a fallback value is required for if the next call for the required resource fails.
+        /// </param>
+        /// <typeparam name="T">Type of value to be returned by cache</typeparam>
         /// <returns>The cached value if preset, null otherwise</returns>
-        Task<DiscoveryResponse> Get(string key);
+        Task<T> Get<T>(string key, bool removeIfExpired = true) where T : ICacheable;
 
         /// <summary>
         /// Remove an entry from the cache that matches the mcc and mnc
@@ -64,5 +69,12 @@ namespace GSMA.MobileConnect.Cache
         /// Remove all key value pairs from the cache
         /// </summary>
         Task Clear();
+
+        /// <summary>
+        /// Set length of time before cached values of the specified type are marked as expired.
+        /// </summary>
+        /// <typeparam name="T">Type of cached value</typeparam>
+        /// <param name="cacheTime">Length of time before expiry</param>
+        void SetCacheExpiryTime<T>(TimeSpan cacheTime) where T : ICacheable;
     }
 }

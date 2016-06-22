@@ -9,7 +9,7 @@ Syntax
 ------
 
 ```csharp
-public OperatorUrls OperatorUrls { get; set; }
+public OperatorUrls OperatorUrls { get; }
 ```
 
 #### Property Value

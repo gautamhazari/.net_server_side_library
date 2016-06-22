@@ -14,15 +14,19 @@ public bool HasExpired { get; }
 
 #### Property Value
 Type: [Boolean][2]
+#### Implements
+[ICacheable.HasExpired][3]  
+
 
 See Also
 --------
 
 #### Reference
-[DiscoveryResponse Class][3]  
+[DiscoveryResponse Class][4]  
 [GSMA.MobileConnect.Discovery Namespace][1]  
 
 [1]: ../README.md
 [2]: http://msdn.microsoft.com/en-us/library/a28wyd50
-[3]: README.md
-[4]: ../../_icons/Help.png
+[3]: ../../GSMA.MobileConnect.Cache/ICacheable/HasExpired.md
+[4]: README.md
+[5]: ../../_icons/Help.png

@@ -19,8 +19,9 @@ namespace GSMA.MobileConnect.Test.Discovery
         private Dictionary<string, RestResponse> _responses = new Dictionary<string, RestResponse>()
         {
             { "operator-selection", new RestResponse(System.Net.HttpStatusCode.Accepted, "{\"links\":[{\"rel\":\"operatorSelection\",\"href\":\"http://discovery.sandbox2.mobileconnect.io/v2/discovery/users/operator-selection?session_id=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZWRpcmVjdFVybCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMS8iLCJhcHBsaWNhdGlvbiI6eyJleHRlcm5hbF9pZCI6IjExMzgiLCJuYW1lIjoiY3NoYXJwLXNkayIsImtleXMiOnsic2FuZGJveCI6eyJrZXkiOiI2Njc0MmE4NS0yMjgyLTQ3NDctODgxZC1lZDViN2JkNzRkMmQiLCJzZWNyZXQiOiJmMTUxOTlmNC1iNjU4LTRlNTgtOGJiMy1lNDA5OTg4NzMzOTIifX0sInJlZGlyZWN0X3VyaSI6Imh0dHBzOi8vbG9jYWxob3N0OjgwMDEvIiwiZGV2ZWxvcGVyIjp7InBvcnRhbF91c2VyX2lkIjoiMTEzOCIsIm5hbWUiOiJOaWNob2xhcyBEb25vaG9lIiwiZW1haWwiOiJuaWNob2xhcy5kb25vaG9lQGJqc3MuY29tIiwicHJvZmlsZSI6Imh0dHBzOi8vZGV2ZWxvcGVyLm1vYmlsZWNvbm5lY3QuaW8vYXBpL3YxL3VzZXI_ZW1haWw9bmljaG9sYXMuZG9ub2hvZSU0MGJqc3MuY29tIiwidXBkYXRlZCI6IjIwMTYtMDQtMjBUMDk6MzQ6MThaIiwibXNpc2RucyI6WyI5NDE0ZTI1MmMzYjE1ZWUzMGIyN2NmYmQxNjkzN2UwNWJlMGQ1NWYwZGZjZGQ0MjM2OTg3NTU1MjQ3ZjU0YzUyIiwiZjYwZjFkZDU1YzUxMjE3ZTAwMTc4YWE3ZGIxM2Q5Njc4OGUxZmM0MzRkMGU2ZGZiZmI2NjVlYjU5NzU3MGIwZiJdLCJtc2lzZG5TaG9ydCI6WyI3NTc1IiwiMzMzMyJdLCJzbXNBdXRoIjp0cnVlLCJtY2MiOiI5MDEiLCJtbmMiOiIwMSIsImNvbnNlbnQiOmZhbHNlfX0sInVzZXIiOnsibmFtZSI6IjY2NzQyYTg1LTIyODItNDc0Ny04ODFkLWVkNWI3YmQ3NGQyZCIsInBhc3MiOiJmMTUxOTlmNC1iNjU4LTRlNTgtOGJiMy1lNDA5OTg4NzMzOTIifSwiaWF0IjoxNDYxMTY5MzA5fQ.2Lp0Xt9JXVZxNbnNq_RH-5KJPQ06qw6ttR4ZK3fwcQU\"}]}") },
-            { "authentication", new RestResponse(System.Net.HttpStatusCode.OK, "{\"ttl\":1461169322705,\"subscriber_id\":\"e06a09de399ae6c6798c2126e531775ddf3cfe00367af1842534be709fef25e199157c49cc44adf661d286a29afa09c017747fb4383db22b2eaf33db5f878b3ea261c8f342b234e998757e83de23f4a637ce2390453d5d578c76cd65aae99332ee7fbdbd4a140c99babc4e700eae6aa44d3e17ac050771c1fd784fef0214bf770cd0854ea6f4cff87b3ea1e4b25dccd1d340f00eb66c0f041f90596f5236c1017b2541606fff5165320fc4b3381ebfe1fdb848ab04fbedc550bc575ca385b44695a0a9917a368552ee9f8e2178553318a17c32284197631f74f293f30fe6c04f7a77115ec0d2e8ab2a522db88c60263ec1b690ca22540b916e8a9d2c3d820ec1\",\"response\":{\"serving_operator\":\"Example Operator A\",\"country\":\"US\",\"currency\":\"USD\",\"apis\":{\"operatorid\":{\"link\":[{\"href\":\"http://operator_a.sandbox2.mobileconnect.io/oidc/authorize\",\"rel\":\"authorization\"},{\"href\":\"http://operator_a.sandbox2.mobileconnect.io/oidc/accesstoken\",\"rel\":\"token\"},{\"href\":\"http://operator_a.sandbox2.mobileconnect.io/oidc/userinfo\",\"rel\":\"userinfo\"},{\"href\":\"openid profile email\",\"rel\":\"scope\"}]}},\"client_id\":\"66742a85-2282-4747-881d-ed5b7bd74d2d\",\"client_secret\":\"f15199f4-b658-4e58-8bb3-e40998873392\",\"subscriber_id\":\"e06a09de399ae6c6798c2126e531775ddf3cfe00367af1842534be709fef25e199157c49cc44adf661d286a29afa09c017747fb4383db22b2eaf33db5f878b3ea261c8f342b234e998757e83de23f4a637ce2390453d5d578c76cd65aae99332ee7fbdbd4a140c99babc4e700eae6aa44d3e17ac050771c1fd784fef0214bf770cd0854ea6f4cff87b3ea1e4b25dccd1d340f00eb66c0f041f90596f5236c1017b2541606fff5165320fc4b3381ebfe1fdb848ab04fbedc550bc575ca385b44695a0a9917a368552ee9f8e2178553318a17c32284197631f74f293f30fe6c04f7a77115ec0d2e8ab2a522db88c60263ec1b690ca22540b916e8a9d2c3d820ec1\"}}") },
-            { "error", new RestResponse(System.Net.HttpStatusCode.OK, "{\"error\":\"Not_Found_Entity\",\"description\":\"Operator Not Found\"}") }
+            { "authentication", new RestResponse(System.Net.HttpStatusCode.OK, "{\"ttl\":1466082848000,\"response\":{\"client_id\":\"x-ZWRhNjU3OWI3MGIwYTRh\",\"client_secret\":\"x-NjQzZTBhZWM0YmQ4ZDQ5\",\"serving_operator\":\"demo_unitedkingdom\",\"country\":\"UnitedKingdom\",\"currency\":\"GBP\",\"apis\":{\"operatorid\":{\"link\":[{\"rel\":\"authorization\",\"href\":\"https://reference.mobileconnect.io/mobileconnect/index.php/auth\"},{\"rel\":\"token\",\"href\":\"https://reference.mobileconnect.io/mobileconnect/index.php/token\"},{\"rel\":\"userinfo\",\"href\":\"https://reference.mobileconnect.io/mobileconnect/index.php/userinfo\"},{\"rel\":\"jwks\",\"href\":\"https://reference.mobileconnect.io/mobileconnect/cert.jwk\"},{\"rel\":\"applicationShortName\",\"href\":\"test1\"},{\"rel\":\"openid-configuration\",\"href\":\"https://reference.mobileconnect.io/mobileconnect/discovery.php/openid-configuration\"}]}}},\"subscriber_id\":\"6c483ef529a86e5aa808f9cfdcb78ac3ec9f24aba27ea1a003476b0693751d89c3feacd3d2ff00c0e1e1cb683ff7de9ea87bdd775d4e79b7da5a4fbec509d918c1f804fdaf1fcaa9d1aae572bd19a12de7de2d695d004a3b2828be9b79e5f13a5c70a35adebedef138ab11440f8573fff53e59c8348caaf458716dbb53b4162d27737f290a8a759a4eab409af27685b3667659ce1f5b2194ab68953c0381126fc941eb0043c17647021d1e47a07cfde2e5e18c9e29ca01af1a8d2b3558d9853ffeed1cd9c8545e0d4c609db4ca318c02d10cddaf83bab927f81c4ca8bbb04da4dba273a4f76d3962e5a31a59f806067393823ae6702850726281352849209fe4\"}") },
+            { "error", new RestResponse(System.Net.HttpStatusCode.OK, "{\"error\":\"Not_Found_Entity\",\"description\":\"Operator Not Found\"}") },
+            { "provider-metadata", new RestResponse(System.Net.HttpStatusCode.OK, "{\"version\":\"3.0\",\"issuer\":\"https://reference.mobileconnect.io/mobileconnect\",\"authorization_endpoint\":\"https://reference.mobileconnect.io/mobileconnect/index.php/auth\",\"token_endpoint\":\"https://reference.mobileconnect.io/mobileconnect/index.php/token\",\"userinfo_endpoint\":\"https://reference.mobileconnect.io/mobileconnect/index.php/userinfo\",\"check_session_iframe\":\"https://reference.mobileconnect.io/mobileconnect/opframe.php\",\"end_session_endpoint\":\"https://reference.mobileconnect.io/mobileconnect/index.php/endsession\",\"jwks_uri\":\"https://reference.mobileconnect.io/mobileconnect/op.jwk\",\"scopes_supported\":[\"openid\",\"mc_authn\",\"mc_authz\",\"profile\",\"email\",\"address\"],\"response_types_supported\":[\"code\",\"code token\",\"code id_token\",\"token\",\"token id_token\",\"code token id_token\",\"id_token\"],\"grant_types_supported\":[\"authorization_code\"],\"acr_values_supported\":[\"2\",\"3\"],\"subject_types_supported\":[\"public\",\"pairwise\"],\"userinfo_signing_alg_values_supported\":[\"HS256\",\"HS384\",\"HS512\",\"RS256\",\"RS384\",\"RS512\"],\"userinfo_encryption_alg_values_supported\":[\"RSA1_5\",\"RSA-OAEP\"],\"userinfo_encryption_enc_values_supported\":[\"A128CBC-HS256\",\"A256CBC-HS512\",\"A128GCM\",\"A256GCM\"],\"id_token_signing_alg_values_supported\":[\"HS256\",\"HS384\",\"HS512\",\"RS256\",\"RS384\",\"RS512\"],\"id_token_encryption_alg_values_supported\":[\"RSA1_5\",\"RSA-OAEP\"],\"id_token_encryption_enc_values_supported\":[\"A128CBC-HS256\",\"A256CBC-HS512\",\"A128GCM\",\"A256GCM\"],\"request_object_signing_alg_values_supported\":[\"HS256\",\"HS384\",\"HS512\",\"RS256\",\"RS384\",\"RS512\"],\"request_object_encryption_alg_values_supported\":[\"RSA1_5\",\"RSA-OAEP\"],\"request_object_encryption_enc_values_supported\":[\"A128CBC-HS256\",\"A256CBC-HS512\",\"A128GCM\",\"A256GCM\"],\"token_endpoint_auth_methods_supported\":[\"client_secret_post\",\"client_secret_basic\",\"client_secret_jwt\",\"private_key_jwt\"],\"token_endpoint_auth_signing_alg_values_supported\":[\"HS256\",\"HS384\",\"HS512\",\"RS256\",\"RS384\",\"RS512\"],\"display_values_supported\":[\"page\"],\"claim_types_supported\":[\"normal\"],\"claims_supported\":[\"name\",\"given_name\",\"family_name\",\"middle_name\",\"nickname\",\"preferred_username\",\"profile\",\"picture\",\"website\",\"email\",\"email_verified\",\"gender\",\"birthdate\",\"zoneinfo\",\"locale\",\"phone_number\",\"phone_number_verified\",\"address\",\"updated_at\"],\"service_documentation\":\"https://reference.mobileconnect.io/mobileconnect/index.php/servicedocs\",\"claims_locales_supported\":[\"en-US\"],\"ui_locales_supported\":[\"en-US\"],\"require_request_uri_registration\":false,\"op_policy_uri\":\"https://reference.mobileconnect.io/mobileconnect/index.php/op_policy\",\"op_tos_uri\":\"https://reference.mobileconnect.io/mobileconnect/index.php/op_tos\",\"claims_parameter_supported\":true,\"request_parameter_supported\":true,\"request_uri_parameter_supported\":true,\"mobile_connect_version_supported\":[{\"openid\":\"mc_v1.1\"},{\"openid mc_authn\":\"mc_v1.2\"},{\"openid mc_authz\":\"mc_v1.2\"}],\"login_hint_methods_supported\":[\"MSISDN\",\"ENCR_MSISDN\",\"PCR\"]} ") },
         };
 
         private IDiscovery _discovery;
@@ -68,7 +69,8 @@ namespace GSMA.MobileConnect.Test.Discovery
         {
             var response = _responses["authentication"];
             var options = new DiscoveryOptions();
-            _restClient.NextExpectedResponse = response;
+            _restClient.QueueResponse(response);
+            _restClient.QueueResponse(_responses["provider-metadata"]);
 
             var result = _discovery.StartAutomatedOperatorDiscovery(_config, REDIRECT_URL, options, null);
 
@@ -77,6 +79,7 @@ namespace GSMA.MobileConnect.Test.Discovery
             Assert.IsNotNull(result.ResponseData);
             Assert.IsNotNull(result.ResponseData.response);
             Assert.IsNotNull(result.ResponseData.ttl);
+            Assert.IsNotNull(result.ProviderMetadata);
             Assert.IsFalse(result.Cached);
         }
 
@@ -164,7 +167,8 @@ namespace GSMA.MobileConnect.Test.Discovery
         public void CompleteSelectedOperatorDiscoveryShouldHandleAuthenticationResponse()
         {
             var response = _responses["authentication"];
-            _restClient.NextExpectedResponse = response;
+            _restClient.QueueResponse(response);
+            _restClient.QueueResponse(_responses["provider-metadata"]);
 
             var result = _discovery.CompleteSelectedOperatorDiscovery(_config, REDIRECT_URL, "901", "01");
 
@@ -173,6 +177,7 @@ namespace GSMA.MobileConnect.Test.Discovery
             Assert.IsNotNull(result.ResponseData);
             Assert.IsNotNull(result.ResponseData.response);
             Assert.IsNotNull(result.ResponseData.ttl);
+            Assert.IsNotNull(result.ProviderMetadata);
             Assert.IsFalse(result.Cached);
         }
 
@@ -197,15 +202,17 @@ namespace GSMA.MobileConnect.Test.Discovery
             SetupWithCache();
             var response = _responses["authentication"];
             var options = new DiscoveryOptions();
-            _restClient.NextExpectedResponse = response;
+            _restClient.QueueResponse(response);
+            _restClient.QueueResponse(_responses["provider-metadata"]);
+            _restClient.QueueResponse(new System.Net.WebException("this should not be hit as the process should pull the cached value"));
             var initialResult = _discovery.CompleteSelectedOperatorDiscovery(_config, REDIRECT_URL, "901", "01");
-            _restClient.NextException = new System.Net.WebException("this should not be hit as the process should pull the cached value");
 
             var cachedResult = _discovery.CompleteSelectedOperatorDiscovery(_config, REDIRECT_URL, "901", "01");
 
             Assert.IsNotNull(cachedResult);
             Assert.IsTrue(cachedResult.Cached);
             Assert.AreEqual(initialResult.ResponseData.links, cachedResult.ResponseData.links);
+            Assert.IsNotNull(cachedResult.ProviderMetadata);
         }
 
         [Test]
@@ -230,7 +237,8 @@ namespace GSMA.MobileConnect.Test.Discovery
             SetupWithCache();
             var response = _responses["authentication"];
             var options = new DiscoveryOptions();
-            _restClient.NextExpectedResponse = response;
+            _restClient.QueueResponse(response);
+            _restClient.QueueResponse(_responses["provider-metadata"]);
             var initialResult = _discovery.CompleteSelectedOperatorDiscovery(_config, REDIRECT_URL, "901", "01");
 
             var cachedResult = _discovery.GetCachedDiscoveryResultAsync("901", "01").Result;
@@ -238,6 +246,7 @@ namespace GSMA.MobileConnect.Test.Discovery
             Assert.IsNotNull(cachedResult);
             Assert.IsTrue(cachedResult.Cached);
             Assert.AreEqual(initialResult.ResponseData.links, cachedResult.ResponseData.links);
+            Assert.IsNotNull(cachedResult.ProviderMetadata);
         }
 
         [Test]
@@ -249,7 +258,8 @@ namespace GSMA.MobileConnect.Test.Discovery
 
             for (int i = 0; i < 5; i++)
             {
-                _restClient.NextExpectedResponse = response;
+                _restClient.QueueResponse(response);
+                _restClient.QueueResponse(_responses["provider-metadata"]);
                 var result = _discovery.CompleteSelectedOperatorDiscovery(_config, REDIRECT_URL, "90" + i, "01");
             }
 
@@ -267,7 +277,8 @@ namespace GSMA.MobileConnect.Test.Discovery
 
             for (int i = 0; i < 5; i++)
             {
-                _restClient.NextExpectedResponse = response;
+                _restClient.QueueResponse(response);
+                _restClient.QueueResponse(_responses["provider-metadata"]);
                 var result = _discovery.CompleteSelectedOperatorDiscovery(_config, REDIRECT_URL, "90" + i, "01");
             }
 
@@ -276,6 +287,53 @@ namespace GSMA.MobileConnect.Test.Discovery
 
             Assert.IsFalse(_cache.IsEmpty);
             Assert.IsNotNull(otherCachedResult);
+        }
+
+        [Test]
+        public void DiscoveryResponseShouldContainProviderMetadataWhenAvailable()
+        {
+            var response = _responses["authentication"];
+            _restClient.QueueResponse(response);
+            _restClient.QueueResponse(_responses["provider-metadata"]);
+
+            var result = _discovery.CompleteSelectedOperatorDiscovery(_config, REDIRECT_URL, "901", "01");
+
+            Assert.IsNotNull(result.ProviderMetadata);
+            Assert.IsNotNull(result.ProviderMetadata.Version);
+        }
+
+        [Test]
+        public async Task DiscoveryResponseShouldUseCachedProviderMetadataWhenAvailable()
+        {
+            SetupWithCache();
+            var response = _responses["authentication"];
+            var options = new DiscoveryOptions { MSISDN = "+441122334455" };
+
+            _restClient.QueueResponse(response);
+            _restClient.QueueResponse(_responses["provider-metadata"]);
+            var discoveryResponse = await _discovery.StartAutomatedOperatorDiscoveryAsync(_config, REDIRECT_URL, options, null);
+            _restClient.QueueResponse(response);
+
+            var responseWithCachedMetadata = await _discovery.StartAutomatedOperatorDiscoveryAsync(_config, REDIRECT_URL, options, null);
+
+            Assert.IsNotNull(responseWithCachedMetadata.ProviderMetadata);
+        }
+
+        [Test]
+        public async Task GetProviderMetadataShouldBypassCacheIfRequested()
+        {
+            SetupWithCache();
+            var updatedMetadata = new RestResponse(System.Net.HttpStatusCode.OK, "{\"version\":\"4.0\",\"issuer\":\"https://reference.mobileconnect.io/mobileconnect\",\"authorization_endpoint\":\"https://reference.mobileconnect.io/mobileconnect/index.php/auth\",\"token_endpoint\":\"https://reference.mobileconnect.io/mobileconnect/index.php/token\",\"userinfo_endpoint\":\"https://reference.mobileconnect.io/mobileconnect/index.php/userinfo\",\"check_session_iframe\":\"https://reference.mobileconnect.io/mobileconnect/opframe.php\",\"end_session_endpoint\":\"https://reference.mobileconnect.io/mobileconnect/index.php/endsession\",\"jwks_uri\":\"https://reference.mobileconnect.io/mobileconnect/op.jwk\",\"scopes_supported\":[\"openid\",\"mc_authn\",\"mc_authz\",\"profile\",\"email\",\"address\"],\"response_types_supported\":[\"code\",\"code token\",\"code id_token\",\"token\",\"token id_token\",\"code token id_token\",\"id_token\"],\"grant_types_supported\":[\"authorization_code\"],\"acr_values_supported\":[\"2\",\"3\"],\"subject_types_supported\":[\"public\",\"pairwise\"],\"userinfo_signing_alg_values_supported\":[\"HS256\",\"HS384\",\"HS512\",\"RS256\",\"RS384\",\"RS512\"],\"userinfo_encryption_alg_values_supported\":[\"RSA1_5\",\"RSA-OAEP\"],\"userinfo_encryption_enc_values_supported\":[\"A128CBC-HS256\",\"A256CBC-HS512\",\"A128GCM\",\"A256GCM\"],\"id_token_signing_alg_values_supported\":[\"HS256\",\"HS384\",\"HS512\",\"RS256\",\"RS384\",\"RS512\"],\"id_token_encryption_alg_values_supported\":[\"RSA1_5\",\"RSA-OAEP\"],\"id_token_encryption_enc_values_supported\":[\"A128CBC-HS256\",\"A256CBC-HS512\",\"A128GCM\",\"A256GCM\"],\"request_object_signing_alg_values_supported\":[\"HS256\",\"HS384\",\"HS512\",\"RS256\",\"RS384\",\"RS512\"],\"request_object_encryption_alg_values_supported\":[\"RSA1_5\",\"RSA-OAEP\"],\"request_object_encryption_enc_values_supported\":[\"A128CBC-HS256\",\"A256CBC-HS512\",\"A128GCM\",\"A256GCM\"],\"token_endpoint_auth_methods_supported\":[\"client_secret_post\",\"client_secret_basic\",\"client_secret_jwt\",\"private_key_jwt\"],\"token_endpoint_auth_signing_alg_values_supported\":[\"HS256\",\"HS384\",\"HS512\",\"RS256\",\"RS384\",\"RS512\"],\"display_values_supported\":[\"page\"],\"claim_types_supported\":[\"normal\"],\"claims_supported\":[\"name\",\"given_name\",\"family_name\",\"middle_name\",\"nickname\",\"preferred_username\",\"profile\",\"picture\",\"website\",\"email\",\"email_verified\",\"gender\",\"birthdate\",\"zoneinfo\",\"locale\",\"phone_number\",\"phone_number_verified\",\"address\",\"updated_at\"],\"service_documentation\":\"https://reference.mobileconnect.io/mobileconnect/index.php/servicedocs\",\"claims_locales_supported\":[\"en-US\"],\"ui_locales_supported\":[\"en-US\"],\"require_request_uri_registration\":false,\"op_policy_uri\":\"https://reference.mobileconnect.io/mobileconnect/index.php/op_policy\",\"op_tos_uri\":\"https://reference.mobileconnect.io/mobileconnect/index.php/op_tos\",\"claims_parameter_supported\":true,\"request_parameter_supported\":true,\"request_uri_parameter_supported\":true,\"mobile_connect_version_supported\":[{\"openid\":\"mc_v1.1\"},{\"openid mc_authn\":\"mc_v1.2\"},{\"openid mc_authz\":\"mc_v1.2\"}],\"login_hint_methods_supported\":[\"MSISDN\",\"ENCR_MSISDN\",\"PCR\"]} ");
+            var options = new DiscoveryOptions { MSISDN = "+441122334455" };
+            _restClient.QueueResponse(_responses["authentication"]);
+            _restClient.QueueResponse(_responses["provider-metadata"]);
+            var discoveryResponse = await _discovery.StartAutomatedOperatorDiscoveryAsync(_config, REDIRECT_URL, options, null);
+
+            _restClient.QueueResponse(updatedMetadata);
+            var nonCachedMetadata = await _discovery.GetProviderMetadata(discoveryResponse, true);
+
+            Assert.AreEqual("4.0", nonCachedMetadata.Version);
+            Assert.AreEqual(nonCachedMetadata, discoveryResponse.ProviderMetadata);
         }
 
         #region Argument Validation

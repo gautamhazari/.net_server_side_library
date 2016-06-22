@@ -1,6 +1,6 @@
-IDiscoveryCache.Get Method (String)
-===================================
-Return a cached value based on the key
+IDiscoveryCache.Get Method (String, String)
+===========================================
+Return a cached value based on the mcc and mnc
 
 **Namespace:** [GSMA.MobileConnect.Cache][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
@@ -10,19 +10,24 @@ Syntax
 
 ```csharp
 Task<DiscoveryResponse> Get(
-	string key
+	string mcc,
+	string mnc
 )
 ```
 
 #### Parameters
 
-##### *key*
+##### *mcc*
 Type: [System.String][2]  
-Key (Required)
+Mobile Country Code (Required)
+
+##### *mnc*
+Type: [System.String][2]  
+Mobile Network Code (Required)
 
 #### Return Value
 Type: [Task][3]&lt;[DiscoveryResponse][4]>  
-The cached value if preset, null otherwise
+The cached value if present, null otherwise
 
 See Also
 --------

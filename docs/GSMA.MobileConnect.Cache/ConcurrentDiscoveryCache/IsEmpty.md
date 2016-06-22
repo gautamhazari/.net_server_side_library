@@ -9,7 +9,7 @@ Syntax
 ------
 
 ```csharp
-public bool IsEmpty { get; }
+public override bool IsEmpty { get; }
 ```
 
 #### Property Value

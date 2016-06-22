@@ -34,15 +34,18 @@ namespace GSMA.MobileConnect.Test.Cache
         }
 
         [Test]
-        public void AddShouldStoreDiscoveryResponse()
+        public async Task AddShouldStoreDiscoveryResponse()
         {
             var cache = new ConcurrentDiscoveryCache();
             var response = new DiscoveryResponse(_responses[0]);
             var mcc = "001";
             var mnc = "01";
 
-            cache.Add(mcc, mnc, response);
-            var actual = cache.Get(mcc, mnc).Result;
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(response, new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
+            var cached = Newtonsoft.Json.JsonConvert.DeserializeObject<DiscoveryResponse>(json);
+
+            await cache.Add(mcc, mnc, response);
+            var actual = await cache.Get(mcc, mnc);
 
             Assert.IsFalse(cache.IsEmpty);
             Assert.IsNotNull(actual);
@@ -51,16 +54,16 @@ namespace GSMA.MobileConnect.Test.Cache
         }
 
         [Test]
-        public void CacheShouldGetResponseWhenMultipleStored()
+        public async Task CacheShouldGetResponseWhenMultipleStored()
         {
             var cache = new ConcurrentDiscoveryCache();
             var expected = new DiscoveryResponse(_responses[1]);
             var mcc = "001";
             var mnc = "01";
 
-            cache.Add(mcc, mnc, expected);
-            cache.Add("002", "02", new DiscoveryResponse(_responses[0]));
-            var actual = cache.Get(mcc, mnc).Result;
+            await cache.Add(mcc, mnc, expected);
+            await cache.Add("002", "02", new DiscoveryResponse(_responses[0]));
+            var actual = await cache.Get(mcc, mnc);
 
             Assert.IsNotNull(actual);
             Assert.IsTrue(actual.Cached);
@@ -68,27 +71,27 @@ namespace GSMA.MobileConnect.Test.Cache
         }
 
         [Test]
-        public void RemoveShouldRemoveStoredResponse()
+        public async Task RemoveShouldRemoveStoredResponse()
         {
             var cache = new ConcurrentDiscoveryCache();
             var mcc = "001";
             var mnc = "01";
 
-            cache.Add(mcc, mnc, new DiscoveryResponse(_responses[0]));
-            cache.Remove(mcc, mnc);
-            var actual = cache.Get(mcc, mnc).Result;
+            await cache.Add(mcc, mnc, new DiscoveryResponse(_responses[0]));
+            await cache.Remove(mcc, mnc);
+            var actual = await cache.Get(mcc, mnc);
 
             Assert.IsNull(actual);
         }
 
         [Test]
-        public void ClearShouldClearStore()
+        public async Task ClearShouldClearStore()
         {
             var cache = new ConcurrentDiscoveryCache();
 
-            cache.Add("001", "01", new DiscoveryResponse(_responses[0]));
-            cache.Add("002", "02", new DiscoveryResponse(_responses[1]));
-            cache.Clear();
+            await cache.Add("001", "01", new DiscoveryResponse(_responses[0]));
+            await cache.Add("002", "02", new DiscoveryResponse(_responses[1]));
+            await cache.Clear();
 
             Assert.IsTrue(cache.IsEmpty);
         }
@@ -97,13 +100,44 @@ namespace GSMA.MobileConnect.Test.Cache
         [TestCase("", "01")]
         [TestCase("001", null)]
         [TestCase("001", "")]
-        public void CacheShouldNotAddWithEmptyOrNullArguments(string mcc, string mnc)
+        public async Task CacheShouldNotAddWithEmptyOrNullArguments(string mcc, string mnc)
         {
             var cache = new ConcurrentDiscoveryCache();
 
-            cache.Add(mcc, mnc, new DiscoveryResponse(_responses[0]));
+            await cache.Add(mcc, mnc, new DiscoveryResponse(_responses[0]));
 
             Assert.IsTrue(cache.IsEmpty);
+        }
+
+        [Test]
+        public async Task CacheShouldNotReturnValueIfExpiredAndRemoveIfExpiredIsTrue()
+        {
+            var cache = new ConcurrentDiscoveryCache();
+            cache.SetCacheExpiryTime<ProviderMetadata>(TimeSpan.Zero);
+            var value = new ProviderMetadata();
+            var key = "test";
+            await cache.Add(key, value);
+            await Task.Delay(50);
+
+            var cached = await cache.Get<ProviderMetadata>(key, true);
+
+            Assert.IsNull(cached);
+        }
+
+        [Test]
+        public async Task CacheShouldReturnValueIfExpiredAndRemoveIfExpiredIsFalse()
+        {
+            var cache = new ConcurrentDiscoveryCache();
+            cache.SetCacheExpiryTime<ProviderMetadata>(TimeSpan.Zero);
+            var value = new ProviderMetadata();
+            var key = "test";
+            await cache.Add(key, value);
+            await Task.Delay(50);
+
+            var cached = await cache.Get<ProviderMetadata>(key, false);
+
+            Assert.IsNotNull(cached);
+            Assert.IsTrue(cached.HasExpired);
         }
     }
 }

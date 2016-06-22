@@ -32,10 +32,13 @@ Constructors
 Properties
 ----------
 
-                   | Name                  | Description                
------------------- | --------------------- | -------------------------- 
-![Public property] | [AuthorizationUrl][4] | Url for authorization call 
-![Public property] | [RequestTokenUrl][5]  | Url for token request call 
+                   | Name                     | Description                
+------------------ | ------------------------ | -------------------------- 
+![Public property] | [AuthorizationUrl][4]    | Url for authorization call 
+![Public property] | [JWKSUrl][5]             | Url for JWKS info          
+![Public property] | [ProviderMetadataUrl][6] | Url for Provider Metadata  
+![Public property] | [RequestTokenUrl][7]     | Url for token request call 
+![Public property] | [UserInfoUrl][8]         | Url for user info call     
 
 
 Methods
@@ -43,7 +46,7 @@ Methods
 
                                  | Name       | Description                                                    
 -------------------------------- | ---------- | -------------------------------------------------------------- 
-![Public method]![Static member] | [Parse][6] | Parses the operator urls from the parsed DiscoveryResponseData 
+![Public method]![Static member] | [Parse][9] | Parses the operator urls from the parsed DiscoveryResponseData 
 
 
 See Also
@@ -56,9 +59,12 @@ See Also
 [2]: ../README.md
 [3]: _ctor.md
 [4]: AuthorizationUrl.md
-[5]: RequestTokenUrl.md
-[6]: Parse.md
-[7]: ../../_icons/Help.png
+[5]: JWKSUrl.md
+[6]: ProviderMetadataUrl.md
+[7]: RequestTokenUrl.md
+[8]: UserInfoUrl.md
+[9]: Parse.md
+[10]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Public property]: ../../_icons/pubproperty.gif "Public property"
 [Static member]: ../../_icons/static.gif "Static member"

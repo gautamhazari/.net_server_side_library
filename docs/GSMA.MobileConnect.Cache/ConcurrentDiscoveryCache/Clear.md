@@ -1,6 +1,6 @@
 ConcurrentDiscoveryCache.Clear Method
 =====================================
-Clears the cache
+Remove all key value pairs from the cache
 
 **Namespace:** [GSMA.MobileConnect.Cache][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
@@ -9,7 +9,7 @@ Syntax
 ------
 
 ```csharp
-public Task Clear()
+public override Task Clear()
 ```
 
 #### Return Value

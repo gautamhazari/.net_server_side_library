@@ -185,5 +185,18 @@ namespace GSMA.MobileConnect.Discovery
         /// <param name="mnc">The mobile network code of the cached object (optional)</param>
         /// <remarks>If either mcc or mnc are null or empty the cache will be cleared</remarks>
         Task ClearDiscoveryCacheAsync(string mcc = null, string mnc = null);
+
+        /// <summary>
+        /// Retrieves an updated version of the ProviderMetadata if available, the discovery response property ProviderMetadata
+        /// will also be updated with this version for future access
+        /// </summary>
+        /// <remarks>This method can trigger an HTTP GET request</remarks>
+        /// <param name="response">Discovery response to retrieve provider metadata for</param>
+        /// <param name="forceCacheBypass">
+        /// True if cache should be bypassed and the latest version of the ProviderMetadata should be fetched from the provider metadata endpoint.
+        /// False if the cache should be tested first for a non-expired ProviderMetadata before trying the provider metadata endpoint.
+        /// </param>
+        /// <returns>An updated ProviderMetadata object</returns>
+        Task<ProviderMetadata> GetProviderMetadata(DiscoveryResponse response, bool forceCacheBypass);
     }
 }

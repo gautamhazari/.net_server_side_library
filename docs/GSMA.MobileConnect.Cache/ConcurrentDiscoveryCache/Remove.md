@@ -1,6 +1,6 @@
 ConcurrentDiscoveryCache.Remove Method (String)
 ===============================================
-Removes a value from the cache if it exists
+Remove an entry from the cache that matches the key
 
 **Namespace:** [GSMA.MobileConnect.Cache][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
@@ -9,7 +9,7 @@ Syntax
 ------
 
 ```csharp
-public Task Remove(
+public override Task Remove(
 	string key
 )
 ```
@@ -18,7 +18,7 @@ public Task Remove(
 
 ##### *key*
 Type: [System.String][2]  
-Key
+Key (Required)
 
 #### Return Value
 Type: [Task][3]  

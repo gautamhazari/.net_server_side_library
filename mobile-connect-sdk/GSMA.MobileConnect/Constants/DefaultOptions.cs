@@ -26,5 +26,7 @@ namespace GSMA.MobileConnect.Constants
         internal const string AUTHENTICATION_RESPONSE_TYPE = "code";
 
         internal const string GRANT_TYPE = "authorization_code";
+
+        internal const int PROVIDER_METADATA_TTL_SECONDS = 600;
     }
 }

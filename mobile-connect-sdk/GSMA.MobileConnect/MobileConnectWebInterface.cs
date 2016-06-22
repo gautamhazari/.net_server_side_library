@@ -208,7 +208,7 @@ namespace GSMA.MobileConnect
                 return null;
             }
 
-            return await _discovery.Cache.Get(sessionId);
+            return await _discovery.Cache.Get<DiscoveryResponse>(sessionId);
         }
 
         private MobileConnectStatus GetCacheError()

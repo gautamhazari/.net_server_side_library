@@ -11,13 +11,38 @@ namespace GSMA.MobileConnect.Test
 {
     public class MockRestClient : RestClient
     {
-        public RestResponse NextExpectedResponse { get; set; }
-        public int? NextExpectedStatusCode { get; set; }
-        public Exception NextException { get; set; }
+        public Queue<object> ResponseQueue { get; private set; }
+        public RestResponse NextExpectedResponse
+        {
+            get { return ResponseQueue.Count == 0 ? null : ResponseQueue.Peek() as RestResponse; }
+            set
+            {
+                ResponseQueue.Clear();
+                QueueResponse(value);
+            }
+        }
+        public int? NextExpectedStatusCode
+        {
+            get { return ResponseQueue.Count == 0 ? null : ResponseQueue.Peek() as int?; }
+            set
+            {
+                ResponseQueue.Clear();
+                QueueResponse(value);
+            }
+        }
+        public Exception NextException
+        {
+            get { return ResponseQueue.Count == 0 ? null : ResponseQueue.Peek() as Exception; }
+            set
+            {
+                ResponseQueue.Clear();
+                QueueResponse(value);
+            }
+        }
 
         public MockRestClient(TimeSpan? timeout = null) : base(timeout)
         {
-
+            ResponseQueue = new Queue<object>();
         }
 
         public override Task<RestResponse> GetAsync(string uri, string basicAuthenticationEncoded, string sourceIp, IEnumerable<BasicKeyValuePair> queryParams = null, IEnumerable<BasicKeyValuePair> cookies = null)
@@ -30,16 +55,37 @@ namespace GSMA.MobileConnect.Test
             return Task.Run(() => CreateResponse());
         }
 
+        public void QueueResponse(RestResponse response)
+        {
+            ResponseQueue.Enqueue(response);
+        }
+
+        public void QueueResponse(Exception ex)
+        {
+            ResponseQueue.Enqueue(ex);
+        }
+
+        public void QueueResponse(int? status)
+        {
+            ResponseQueue.Enqueue(status);
+        }
+
         private RestResponse CreateResponse()
         {
-            if (NextException != null)
-                throw NextException;
+            if(ResponseQueue.Count == 0)
+            {
+                throw new ArgumentOutOfRangeException("No responses queued");
+            }
 
-            var response = NextExpectedResponse == null ? new RestResponse((HttpStatusCode)(NextExpectedStatusCode ?? 202), null) : NextExpectedResponse;
+            var nextQueuedResponse = ResponseQueue.Dequeue();
+            var nextException = nextQueuedResponse as Exception;
 
-            NextExpectedResponse = null;
-            NextExpectedStatusCode = null;
-            NextException = null;
+            if (nextException != null)
+                throw nextException;
+
+            var nextResponse = nextQueuedResponse as RestResponse;
+            var nextStatusCode = nextQueuedResponse as int?;
+            var response = nextResponse == null ? new RestResponse((HttpStatusCode)(nextStatusCode ?? 202), null) : nextResponse;
 
             return response;
         }
