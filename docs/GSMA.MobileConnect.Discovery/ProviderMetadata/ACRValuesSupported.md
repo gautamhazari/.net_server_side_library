@@ -1,8 +1,6 @@
 ProviderMetadata.ACRValuesSupported Property
 ============================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.ACRValuesSupported"]
-
+Array containing Authentication Context Class References that the issuer supports
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

@@ -1,6 +1,6 @@
 StartAuthenticationResponse Class
 =================================
-Class to hold the response from [StartAuthentication(String, String, String, String, String, String, Nullable&lt;Int32>, String, String, AuthenticationOptions)][1]
+Class to hold the response from [StartAuthentication(String, String, String, String, String, String, Nullable&lt;Int32>, String, String, String, AuthenticationOptions)][1]
 
 
 Inheritance Hierarchy

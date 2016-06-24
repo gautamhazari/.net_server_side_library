@@ -1,8 +1,6 @@
 ProviderMetadata.GrantTypesSupported Property
 =============================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.GrantTypesSupported"]
-
+Array containing OAuth 2.0 grant_type values that the issuer supports
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

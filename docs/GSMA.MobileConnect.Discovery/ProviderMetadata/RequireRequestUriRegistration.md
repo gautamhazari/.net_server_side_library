@@ -1,8 +1,6 @@
 ProviderMetadata.RequireRequestUriRegistration Property
 =======================================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.RequireRequestUriRegistration"]
-
+Boolean value specifying whether the issuer requires any request_uri values used to be pre-registered using the request_uris registration parameter. Pre-registration is required when the value is true
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

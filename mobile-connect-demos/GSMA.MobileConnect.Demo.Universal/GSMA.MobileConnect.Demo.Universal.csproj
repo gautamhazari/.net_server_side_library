@@ -128,6 +128,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\mobile-connect-sdk\GSMA.MobileConnect\GSMA.MobileConnect.csproj">
+      <Project>{af180441-d240-48c6-b2db-ef7b9b01ee9c}</Project>
+      <Name>GSMA.MobileConnect</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GSMA.MobileConnect.Demo.Config\GSMA.MobileConnect.Demo.Config.csproj">
       <Project>{269f3c4f-f6d9-40b9-81aa-9ef287c6bd49}</Project>
       <Name>GSMA.MobileConnect.Demo.Config</Name>

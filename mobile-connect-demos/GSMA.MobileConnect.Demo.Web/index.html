@@ -57,6 +57,18 @@
 
         .logged-in {
             text-align: center;
+            width: 100%;
+            max-width: 400px;
+            padding: 16px;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .display-value {
+            word-wrap: break-word;
+            width: 100%;
+            margin: 6px 0;
         }
 
         .error {
@@ -81,8 +93,11 @@
             <label class="login-check"><input type="checkbox" id="msisdn-toggle" />Enter MSISDN</label>
         </div>
         <div class="error"></div>
-        <div id="logged-in" class="hidden">
-            Succesfully Logged In
+        <div id="logged-in" class="logged-in hidden">
+            <div id="logged-in-message">Succesfully Logged In</div>
+            <div id="value-access-token" class="display-value"></div>
+            <div id="value-id-token" class="display-value"></div>
+            <div id="value-time-received" class="display-value"></div>
         </div>
     </div>
     <script>
@@ -126,6 +141,12 @@
         var hideLogin = function hideLogin() {
             $('#login').addClass('hidden');
             $('#logged-in').removeClass('hidden');
+        }
+
+        var printTokenInfo = function printTokenInfo(token) {
+            $('#value-access-token').html(token.access_token);
+            $('#value-id-token').html(token.id_token);
+            $('#value-time-received').html(token.time_received);
         }
 
         var api = {
@@ -174,6 +195,7 @@
                 if (response.token) {
                     clearAttempt();
                     hideLogin();
+                    printTokenInfo(response.token);
                 } else {
                     api.error({ description: 'Authentication not returned, user not logged in' });
                 }

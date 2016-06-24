@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace GSMA.MobileConnect.Authentication
 {
     /// <summary>
-    /// Holds required and optional options for <see cref="IAuthentication.StartAuthentication(string, string, string, string, string, string, int?, string, string, AuthenticationOptions)"/>
+    /// Holds required and optional options for <see cref="IAuthentication.StartAuthentication(string, string, string, string, string, string, int?, string, string, string, AuthenticationOptions)"/>
     /// </summary>
     /// <seealso cref="IAuthentication"/>
     public class AuthenticationOptions
@@ -30,14 +30,14 @@ namespace GSMA.MobileConnect.Authentication
         /// The acr_values are indication of what authentication methods to used by the IDP. 
         /// The authentication methods to be used are linked to the LOA value passed in the acr_values. The IDP configures the authentication method selection logic based on the acr_values.
         /// </summary>
-        public string AcrValues { get; set; }
+        public string AcrValues { get; set; } = DefaultOptions.AUTHENTICATION_ACR_VALUES;
 
         /// <summary>
         /// Space delimited and case-sensitive list of ASCII strings for OAuth 2.0 scope values. 
         /// OIDC Authorisation request MUST contain the scope value “openid”. 
         /// The other optional values for scope in OIDC are: "profile", "email", "address", "phone" and "offline_access".
         /// </summary>
-        public string Scope { get; set; }
+        public string Scope { get; set; } = DefaultOptions.AUTHENTICATION_SCOPE;
 
         /// <summary>
         /// String value used to associate a client session with the ID Token. It is passed unmodified from Authorisation Request to ID Token. The value SHOULD be unique per session to mitigate replay attacks.
@@ -54,7 +54,7 @@ namespace GSMA.MobileConnect.Authentication
         /// If the elapsed time is greater than this value, a reauthentication MUST be done. 
         /// When this parameter is used in the request, the ID Token MUST contain the auth_time claim value.
         /// </summary>
-        public int MaxAge { get; set; }
+        public int MaxAge { get; set; } = DefaultOptions.AUTHENTICATION_MAX_AGE;
 
         /// <summary>
         /// ASCII String value to specify the user interface display for the Authentication and Consent flow.
@@ -67,7 +67,7 @@ namespace GSMA.MobileConnect.Authentication
         /// <para>- "touch": The Authorization Server SHOULD display the UI consistent with a "touch" based interface.</para>
         /// <para>- "wap": The UI SHOULD be consistent with a "feature-phone" device display.</para>
         /// </remarks>
-        public string Display { get; set; }
+        public string Display { get; set; } = DefaultOptions.DISPLAY;
 
         /// <summary>
         /// Space delimited, case-sensitive ASCII string values to specify to the Authorization Server whether to prompt or
@@ -131,14 +131,5 @@ namespace GSMA.MobileConnect.Authentication
         /// The signed data in the ID Claim as private JWT claims for this profile.
         /// </summary>
         public string Dtbs { get; set; }
-
-        /// <inheritdoc/>
-        public AuthenticationOptions()
-        {
-            this.Display = DefaultOptions.DISPLAY;
-            this.AcrValues = DefaultOptions.AUTHENTICATION_ACR_VALUES;
-            this.Scope = DefaultOptions.AUTHENTICATION_SCOPE;
-            this.MaxAge = DefaultOptions.AUTHENTICATION_MAX_AGE;
-        }
     }
 }

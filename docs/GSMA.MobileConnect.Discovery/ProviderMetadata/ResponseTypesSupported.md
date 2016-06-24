@@ -1,8 +1,6 @@
 ProviderMetadata.ResponseTypesSupported Property
 ================================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.ResponseTypesSupported"]
-
+Array containing OAuth 2.0 response_type values that the issuer supports
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

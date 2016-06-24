@@ -1,8 +1,6 @@
 ProviderMetadata.ClaimsParameterSupported Property
 ==================================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.ClaimsParameterSupported"]
-
+Boolean value specifying whether the issuer supports use of the claims parameter, with true indicating support
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

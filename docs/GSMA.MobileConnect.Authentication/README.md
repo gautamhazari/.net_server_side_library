@@ -6,13 +6,13 @@ This namespace contains classes pertaining to the Authentication steps of the Mo
 Classes
 -------
 
-                | Class                            | Description                                                                                                                                                                 
---------------- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
-![Public class] | [Authentication][1]              | Concrete implementation of [IAuthentication][2]                                                                                                                             
-![Public class] | [AuthenticationOptions][3]       | Holds required and optional options for [StartAuthentication(String, String, String, String, String, String, Nullable&lt;Int32>, String, String, AuthenticationOptions)][4] 
-![Public class] | [RequestTokenResponse][5]        | Class to hold the response of [RequestTokenAsync(String, String, String, String, String)][6] Will contain either an error response or request data                          
-![Public class] | [RequestTokenResponseData][7]    | A class that holds a valid response from [RequestTokenAsync(String, String, String, String, String)][6]                                                                     
-![Public class] | [StartAuthenticationResponse][8] | Class to hold the response from [StartAuthentication(String, String, String, String, String, String, Nullable&lt;Int32>, String, String, AuthenticationOptions)][4]         
+                | Class                            | Description                                                                                                                                                                         
+--------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+![Public class] | [Authentication][1]              | Concrete implementation of [IAuthentication][2]                                                                                                                                     
+![Public class] | [AuthenticationOptions][3]       | Holds required and optional options for [StartAuthentication(String, String, String, String, String, String, Nullable&lt;Int32>, String, String, String, AuthenticationOptions)][4] 
+![Public class] | [RequestTokenResponse][5]        | Class to hold the response of [RequestTokenAsync(String, String, String, String, String)][6] Will contain either an error response or request data                                  
+![Public class] | [RequestTokenResponseData][7]    | A class that holds a valid response from [RequestTokenAsync(String, String, String, String, String)][6]                                                                             
+![Public class] | [StartAuthenticationResponse][8] | Class to hold the response from [StartAuthentication(String, String, String, String, String, String, Nullable&lt;Int32>, String, String, String, AuthenticationOptions)][4]         
 
 
 Interfaces

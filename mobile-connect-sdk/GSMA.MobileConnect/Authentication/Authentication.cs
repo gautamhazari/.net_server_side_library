@@ -25,7 +25,8 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        public StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce, string scope, int? maxAge, string acrValues, string encryptedMSISDN, AuthenticationOptions options)
+        public StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce, string scope, int? maxAge, string acrValues, 
+            string encryptedMSISDN, string supportedVersion, AuthenticationOptions options)
         {
             Validation.RejectNullOrEmpty(clientId, "clientId");
             Validation.RejectNullOrEmpty(authorizeUrl, "authorizeUrl");
@@ -34,7 +35,7 @@ namespace GSMA.MobileConnect.Authentication
             Validation.RejectNullOrEmpty(nonce, "nonce");
 
             options = options ?? new AuthenticationOptions();
-            options.Scope = scope ?? options.Scope;
+            options.Scope = CoerceAuthenticationScope(scope ?? options.Scope, supportedVersion);
             options.AcrValues = acrValues ?? options.AcrValues;
             options.MaxAge = maxAge ?? options.MaxAge;
             options.State = state;
@@ -47,6 +48,31 @@ namespace GSMA.MobileConnect.Authentication
             build.AddQueryParams(GetAuthenticationQueryParams(options));
 
             return new StartAuthenticationResponse() { Url = build.Uri.AbsoluteUri };
+        }
+
+        /// <summary>
+        /// Returns a modified scope value based on the version required. Depending on the version the value mc_authn may be added or removed
+        /// </summary>
+        /// <param name="scopeRequested">Request scope value</param>
+        /// <param name="version">Version of the mobileconnect service being called</param>
+        /// <returns>Returns a modified scope value with mc_authn removed or added</returns>
+        private string CoerceAuthenticationScope(string scopeRequested, string version)
+        {
+            version = MobileConnectVersions.CoerceVersion(version, MobileConnectConstants.MOBILECONNECTAUTHENTICATION);
+
+            if (string.IsNullOrEmpty(version) || version == DefaultOptions.VERSION_MOBILECONNECTAUTHN)
+            {
+                // add mc_authn if it doesn't already exist
+                return scopeRequested.IndexOf(DefaultOptions.VERSION_MOBILECONNECTAUTHN) > 0 ? scopeRequested : 
+                    scopeRequested.RemoveFromDelimitedString(Scope.AUTHN, StringComparison.OrdinalIgnoreCase);
+            }
+
+            if (scopeRequested.IndexOf(Scope.AUTHN, StringComparison.OrdinalIgnoreCase) < 0)
+            {
+                return string.Join(" ", scopeRequested, Scope.AUTHN);
+            }
+
+            return scopeRequested;
         }
 
         /// <inheritdoc/>

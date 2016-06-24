@@ -1,8 +1,6 @@
 ProviderMetadata.OperatorPolicyUri Property
 ===========================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.OperatorPolicyUri"]
-
+URL that the OpenID Provider provides to the person registering the Client to read about the issuer requirements on how the Relying Party can use the data provided by the issuer. The registration process SHOULD display this URL to the person registering the Client if it is given
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

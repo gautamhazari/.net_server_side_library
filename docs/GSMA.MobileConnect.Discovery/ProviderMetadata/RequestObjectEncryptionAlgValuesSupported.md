@@ -1,8 +1,6 @@
 ProviderMetadata.RequestObjectEncryptionAlgValuesSupported Property
 ===================================================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.RequestObjectEncryptionAlgValuesSupported"]
-
+Array containing the JWE encryption algorithms (alg values) [JWA] supported by the issuer for Request Objects which are described in Section 6.1 of OpenID Connect Core 1.0
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

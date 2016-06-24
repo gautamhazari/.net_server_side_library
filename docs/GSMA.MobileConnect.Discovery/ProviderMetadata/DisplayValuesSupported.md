@@ -1,8 +1,6 @@
 ProviderMetadata.DisplayValuesSupported Property
 ================================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.DisplayValuesSupported"]
-
+Array containing the display parameter values that the issuer supports
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

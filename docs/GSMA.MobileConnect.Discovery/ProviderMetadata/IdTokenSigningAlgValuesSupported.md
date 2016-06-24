@@ -1,8 +1,6 @@
 ProviderMetadata.IdTokenSigningAlgValuesSupported Property
 ==========================================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.IdTokenSigningAlgValuesSupported"]
-
+Array containing the JWS signing algorithms [JWA] supported by the issuer for the ID Token to encode the claims in a JWT
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

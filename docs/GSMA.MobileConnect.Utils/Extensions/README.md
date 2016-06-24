@@ -18,6 +18,8 @@ Syntax
 public static class Extensions
 ```
 
+The **Extensions** type exposes the following members.
+
 
 Methods
 -------
@@ -26,6 +28,7 @@ Methods
 -------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ 
 ![Public method]![Static member] | [ContainsAllValues(IEnumerable&lt;String>, List&lt;String>, StringComparison)][3] | Checks for the IEnumerable to contain all values in the value list                                                             
 ![Public method]![Static member] | [ContainsAllValues(IEnumerable&lt;String>, String, StringComparison, Char[])][4]  | Checks for the IEnumerable to contain all the values specified in the values string after being separated using the separators 
+![Public method]![Static member] | [RemoveFromDelimitedString][5]                                                    | Remove a specified value from a delimited string if found                                                                      
 
 
 See Also
@@ -38,6 +41,7 @@ See Also
 [2]: ../README.md
 [3]: ContainsAllValues.md
 [4]: ContainsAllValues_1.md
-[5]: ../../_icons/Help.png
+[5]: RemoveFromDelimitedString.md
+[6]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Static member]: ../../_icons/static.gif "Static member"

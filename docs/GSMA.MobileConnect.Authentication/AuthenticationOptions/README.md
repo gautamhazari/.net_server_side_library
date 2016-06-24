@@ -1,6 +1,6 @@
 AuthenticationOptions Class
 ===========================
-Holds required and optional options for [StartAuthentication(String, String, String, String, String, String, Nullable&lt;Int32>, String, String, AuthenticationOptions)][1]
+Holds required and optional options for [StartAuthentication(String, String, String, String, String, String, Nullable&lt;Int32>, String, String, String, AuthenticationOptions)][1]
 
 
 Inheritance Hierarchy
@@ -24,9 +24,9 @@ The **AuthenticationOptions** type exposes the following members.
 Constructors
 ------------
 
-                 | Name                       | Description                                          
----------------- | -------------------------- | ---------------------------------------------------- 
-![Public method] | [AuthenticationOptions][4] | Initializes a new instance of the [Object][2] class. 
+                 | Name                       | Description                                                       
+---------------- | -------------------------- | ----------------------------------------------------------------- 
+![Public method] | [AuthenticationOptions][4] | Initializes a new instance of the **AuthenticationOptions** class 
 
 
 Properties

@@ -1,8 +1,6 @@
 ProviderMetadata.ClaimsSupported Property
 =========================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.ClaimsSupported"]
-
+Array containing the Claim Names of the Claims that the issuer MAY be able to supply values for. Note that for privacy or other reasons this may not be an exhaustive list
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

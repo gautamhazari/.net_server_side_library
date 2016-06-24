@@ -19,6 +19,7 @@ public StartAuthenticationResponse StartAuthentication(
 	Nullable<int> maxAge,
 	string acrValues,
 	string encryptedMSISDN,
+	string supportedVersion,
 	AuthenticationOptions options
 )
 ```
@@ -61,6 +62,10 @@ Requested Authentication Context class Reference. If omitted or empty defaults t
 Type: [System.String][2]  
 Encrypted MSISDN for user if returned from discovery service
 
+##### *supportedVersion*
+Type: [System.String][2]  
+Version of the mobile connect authentication supported
+
 ##### *options*
 Type: [GSMA.MobileConnect.Authentication.AuthenticationOptions][5]  
 Optional parameters
@@ -68,10 +73,10 @@ Optional parameters
 #### Return Value
 Type: [StartAuthenticationResponse][6]  
 
-[Missing &lt;returns> documentation for "M:GSMA.MobileConnect.Authentication.Authentication.StartAuthentication(System.String,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Int32},System.String,System.String,GSMA.MobileConnect.Authentication.AuthenticationOptions)"]
+[Missing &lt;returns> documentation for "M:GSMA.MobileConnect.Authentication.Authentication.StartAuthentication(System.String,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Int32},System.String,System.String,System.String,GSMA.MobileConnect.Authentication.AuthenticationOptions)"]
 
 #### Implements
-[IAuthentication.StartAuthentication(String, String, String, String, String, String, Nullable&lt;Int32>, String, String, AuthenticationOptions)][7]  
+[IAuthentication.StartAuthentication(String, String, String, String, String, String, Nullable&lt;Int32>, String, String, String, AuthenticationOptions)][7]  
 
 
 See Also

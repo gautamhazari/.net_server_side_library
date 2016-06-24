@@ -35,10 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GSMA.MobileConnect, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\GSMA.MobileConnect.1.0.0.3\lib\portable45-net45+win8+wpa81\GSMA.MobileConnect.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -108,6 +104,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\mobile-connect-sdk\GSMA.MobileConnect\GSMA.MobileConnect.csproj">
+      <Project>{af180441-d240-48c6-b2db-ef7b9b01ee9c}</Project>
+      <Name>GSMA.MobileConnect</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GSMA.MobileConnect.Demo.Config\GSMA.MobileConnect.Demo.Config.csproj">
       <Project>{269f3c4f-f6d9-40b9-81aa-9ef287c6bd49}</Project>
       <Name>GSMA.MobileConnect.Demo.Config</Name>

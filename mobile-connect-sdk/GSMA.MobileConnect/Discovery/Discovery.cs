@@ -309,8 +309,7 @@ namespace GSMA.MobileConnect.Discovery
         {
             if (url == null)
             {
-                // TODO [GMC-73] ProviderMetadata.Default
-                return null;
+                return ProviderMetadata.Default;
             }
 
             // Get value from cache, if it is expired we don't want to remove it because we will use it as a fallback if the call to the provider metadata endpoint fails
@@ -348,9 +347,7 @@ namespace GSMA.MobileConnect.Discovery
                 }
             }
 
-            // TODO [GMC-73] ProviderMetadata.Default
-
-            return metadata;
+            return metadata ?? ProviderMetadata.Default;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using GSMA.MobileConnect.Discovery;
+﻿using GSMA.MobileConnect.Constants;
+using GSMA.MobileConnect.Discovery;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +26,9 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="maxAge">Requested maximum time in seconds since last user authentication. If omitted or empty defaults to the value 3600</param>
         /// <param name="acrValues">Requested Authentication Context class Reference. If omitted or empty defaults to the value "2"</param>
         /// <param name="encryptedMSISDN">Encrypted MSISDN for user if returned from discovery service</param>
+        /// <param name="supportedVersion">Version of the mobile connect authentication supported</param>
         /// <param name="options">Optional parameters</param>
-        StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce, string scope, int? maxAge, string acrValues, string encryptedMSISDN, AuthenticationOptions options);
+        StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce, string scope, int? maxAge, string acrValues, string encryptedMSISDN, string supportedVersion, AuthenticationOptions options);
 
         /// <summary>
         /// Synchronous wrapper for <see cref="IAuthentication.RequestTokenAsync(string, string, string, string, string)"/>

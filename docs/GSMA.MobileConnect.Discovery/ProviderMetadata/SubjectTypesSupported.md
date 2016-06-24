@@ -1,8 +1,6 @@
 ProviderMetadata.SubjectTypesSupported Property
 ===============================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.SubjectTypesSupported"]
-
+Array containing a list of the Subject Identifier Types that the issuer supports
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

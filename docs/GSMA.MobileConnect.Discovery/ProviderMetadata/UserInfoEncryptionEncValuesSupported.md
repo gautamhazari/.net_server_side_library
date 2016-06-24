@@ -1,8 +1,6 @@
 ProviderMetadata.UserInfoEncryptionEncValuesSupported Property
 ==============================================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.UserInfoEncryptionEncValuesSupported"]
-
+Array containing a list of the JWE encryption algorithms (enc values) [JWE] supported by the issuer for the UserInfo Endpoint to encode the claims in a JWT
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

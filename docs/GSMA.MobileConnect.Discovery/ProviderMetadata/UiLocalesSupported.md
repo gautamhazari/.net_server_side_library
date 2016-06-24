@@ -1,8 +1,6 @@
 ProviderMetadata.UiLocalesSupported Property
 ============================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.UiLocalesSupported"]
-
+Array containing the languages and scripts supported for the user interface, represented as an array of BCP47 [RFC5646] language tag values
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

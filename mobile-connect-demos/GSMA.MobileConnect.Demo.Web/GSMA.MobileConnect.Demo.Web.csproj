@@ -43,10 +43,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GSMA.MobileConnect, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\GSMA.MobileConnect.1.0.0.3\lib\portable45-net45+win8+wpa81\GSMA.MobileConnect.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -140,6 +136,10 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\mobile-connect-sdk\GSMA.MobileConnect\GSMA.MobileConnect.csproj">
+      <Project>{af180441-d240-48c6-b2db-ef7b9b01ee9c}</Project>
+      <Name>GSMA.MobileConnect</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GSMA.MobileConnect.Demo.Config\GSMA.MobileConnect.Demo.Config.csproj">
       <Project>{269f3c4f-f6d9-40b9-81aa-9ef287c6bd49}</Project>
       <Name>GSMA.MobileConnect.Demo.Config</Name>

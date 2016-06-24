@@ -1,8 +1,6 @@
 ProviderMetadata.TokenEndpointAuthMethodsSupported Property
 ===========================================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.TokenEndpointAuthMethodsSupported"]
-
+Array containing the Client Authentication methods suppoorted by the Token Endpoint
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

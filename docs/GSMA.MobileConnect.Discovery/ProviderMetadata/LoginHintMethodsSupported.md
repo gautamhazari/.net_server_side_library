@@ -1,8 +1,6 @@
 ProviderMetadata.LoginHintMethodsSupported Property
 ===================================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.LoginHintMethodsSupported"]
-
+Array containing a list of the login hint methods supported by the issuer ID Gateway
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

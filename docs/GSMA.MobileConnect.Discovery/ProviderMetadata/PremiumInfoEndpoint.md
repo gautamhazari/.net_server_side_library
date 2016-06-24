@@ -1,15 +1,15 @@
-MobileConnectVersionSupported.OpenId Property
+ProviderMetadata.PremiumInfoEndpoint Property
 =============================================
-The supported version for all requests if specific values have not been provided
+PremiumInfo endpoint to use if different from url returned by discovery
 
-**Namespace:** [GSMA.MobileConnect.Json][1]  
+**Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
 
 Syntax
 ------
 
 ```csharp
-public string OpenId { get; set; }
+public string PremiumInfoEndpoint { get; set; }
 ```
 
 #### Property Value
@@ -19,8 +19,8 @@ See Also
 --------
 
 #### Reference
-[MobileConnectVersionSupported Class][3]  
-[GSMA.MobileConnect.Json Namespace][1]  
+[ProviderMetadata Class][3]  
+[GSMA.MobileConnect.Discovery Namespace][1]  
 
 [1]: ../README.md
 [2]: http://msdn.microsoft.com/en-us/library/s1wwdcbf

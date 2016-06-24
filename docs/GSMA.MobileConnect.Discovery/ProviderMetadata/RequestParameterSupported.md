@@ -1,8 +1,6 @@
 ProviderMetadata.RequestParameterSupported Property
 ===================================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.RequestParameterSupported"]
-
+Boolean value specifying whether the issuer supports use of the request parameter, with true indicating support
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

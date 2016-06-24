@@ -52,5 +52,29 @@ namespace GSMA.MobileConnect.Utils
 
             return false;
         }
+
+        /// <summary>
+        /// Remove a specified value from a delimited string if found
+        /// </summary>
+        /// <param name="value">Delimited string to remove value from</param>
+        /// <param name="toRemove">Value to remove</param>
+        /// <param name="stringComparison">One of the enumeration values that specifies the rules of comparison</param>
+        /// <param name="separator">Seperator to split and join values on, if null will split on whitespace and join using the space character</param>
+        /// <returns>String with instance of toRemove removed</returns>
+        public static string RemoveFromDelimitedString(this string value, string toRemove, StringComparison stringComparison, char? separator = null)
+        {
+            if(value.IndexOf(toRemove, stringComparison) < 0)
+            {
+                return value;
+            }
+
+            var separators = separator == null ? null : new char[] { separator.Value };
+            var split = value.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            split.RemoveAll(x => x.Equals(toRemove, stringComparison));
+
+            var delimiter = new string(separator ?? ' ', 1);
+            return string.Join(delimiter, split);
+        }
     }
 }

@@ -1,8 +1,6 @@
 ProviderMetadata.UserInfoEndpoint Property
 ==========================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.UserInfoEndpoint"]
-
+UserInfo endpoint to use if different from url returned by discovery
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

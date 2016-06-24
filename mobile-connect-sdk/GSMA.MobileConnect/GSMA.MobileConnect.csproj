@@ -39,11 +39,13 @@
     <Compile Include="Cache\BaseDiscoveryCache.cs" />
     <Compile Include="Cache\ICacheable.cs" />
     <Compile Include="Constants\LinkRels.cs" />
+    <Compile Include="Constants\Scope.cs" />
     <Compile Include="Discovery\OperatorUrls.cs" />
     <Compile Include="Discovery\ProviderMetadata.cs" />
     <Compile Include="Exceptions\MobileConnectInvalidArgumentException.cs" />
     <Compile Include="Exceptions\MobileConnectProviderMetadataUnavailableException.cs" />
-    <Compile Include="Json\MobileConnectVersionSupported.cs" />
+    <Compile Include="Json\Converters\ObjectArrayToDictionaryConverter.cs" />
+    <Compile Include="MobileConnectConstants.cs" />
     <Compile Include="MobileConnectInterfaceHelper.cs" />
     <Compile Include="Cache\ConcurrentDiscoveryCache.cs" />
     <Compile Include="Cache\IDiscoveryCache.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="Utils\HttpUtils.cs" />
     <Compile Include="Utils\JsonWebToken.cs" />
     <Compile Include="Utils\BasicKeyValuePair.cs" />
+    <Compile Include="Utils\MobileConnectVersions.cs" />
     <Compile Include="Utils\RequiredCookies.cs" />
     <Compile Include="Utils\RestClient.cs" />
     <Compile Include="Utils\RestResponse.cs" />

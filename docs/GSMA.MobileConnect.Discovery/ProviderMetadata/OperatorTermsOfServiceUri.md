@@ -1,8 +1,6 @@
 ProviderMetadata.OperatorTermsOfServiceUri Property
 ===================================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.OperatorTermsOfServiceUri"]
-
+URL that the issuer provides to the person registering the Client to read about the issuers terms of service. The registration process SHOULD display this URL to the person registering the client if it is given
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

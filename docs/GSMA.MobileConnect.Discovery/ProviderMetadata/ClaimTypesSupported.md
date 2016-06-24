@@ -1,8 +1,6 @@
 ProviderMetadata.ClaimTypesSupported Property
 =============================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.ClaimTypesSupported"]
-
+Array containing the Claim Types that the issuer supports. These Claim Types are described inn Section 5.6 of OpenID Connect Core 1.0
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

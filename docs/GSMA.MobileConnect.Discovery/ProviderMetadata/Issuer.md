@@ -1,8 +1,6 @@
 ProviderMetadata.Issuer Property
 ================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.Issuer"]
-
+The name of the issuer the provider metadata is related to. This value is used when validating the returned ID Token
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

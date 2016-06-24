@@ -1,8 +1,6 @@
 ProviderMetadata.ServiceDocumentation Property
 ==============================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.ServiceDocumentation"]
-
+URL of a page containing human readable information that developers might want or need to know when using the issuing service
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

@@ -1,8 +1,6 @@
 ProviderMetadata.RequestObjectSigningAlgValuesSupported Property
 ================================================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.RequestObjectSigningAlgValuesSupported"]
-
+Array containing the JWS signing algorithms [JWA] supported by the issuer for Request Objects which are described in Section 6.1 of OpenID Connect Core 1.0
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

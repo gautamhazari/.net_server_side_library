@@ -1,8 +1,6 @@
 ProviderMetadata.TokenEndpointAuthSigningAlgValuesSupported Property
 ====================================================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.TokenEndpointAuthSigningAlgValuesSupported"]
-
+Array containing the JWS signing algorithms (alg values) supported by the Token Endpoint for the signature on the JWT used to authenticate the client at the Token Endpoint for the private_key_jwt and client_secret_jwt authentication methods
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

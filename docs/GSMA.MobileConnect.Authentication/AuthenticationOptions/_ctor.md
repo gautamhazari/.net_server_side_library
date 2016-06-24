@@ -1,6 +1,6 @@
 AuthenticationOptions Constructor
 =================================
-Initializes a new instance of the [Object][1] class.
+Initializes a new instance of the [AuthenticationOptions][1] class
 
 **Namespace:** [GSMA.MobileConnect.Authentication][2]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
@@ -17,10 +17,9 @@ See Also
 --------
 
 #### Reference
-[AuthenticationOptions Class][3]  
+[AuthenticationOptions Class][1]  
 [GSMA.MobileConnect.Authentication Namespace][2]  
 
-[1]: http://msdn.microsoft.com/en-us/library/e5kfa45b
+[1]: README.md
 [2]: ../README.md
-[3]: README.md
-[4]: ../../_icons/Help.png
+[3]: ../../_icons/Help.png

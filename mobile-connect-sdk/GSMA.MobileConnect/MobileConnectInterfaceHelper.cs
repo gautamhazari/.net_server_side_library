@@ -76,14 +76,18 @@ namespace GSMA.MobileConnect
             return GenerateStatusFromDiscoveryResponse(discovery, response);
         }
 
-        internal static MobileConnectStatus StartAuthorization(IAuthentication authentication, DiscoveryResponse discoveryResponse, string encryptedMSISDN, string state, string nonce, MobileConnectConfig config, MobileConnectRequestOptions options)
+        internal static MobileConnectStatus StartAuthorization(IAuthentication authentication, DiscoveryResponse discoveryResponse, string encryptedMSISDN, 
+            string state, string nonce, MobileConnectConfig config, MobileConnectRequestOptions options)
         {
             StartAuthenticationResponse response;
             try
             {
                 string clientId = discoveryResponse?.ResponseData?.response?.client_id ?? config.ClientId;
                 string authorizationUrl = discoveryResponse?.OperatorUrls?.AuthorizationUrl;
-                response = authentication.StartAuthentication(clientId, authorizationUrl, config.RedirectUrl, state, nonce, config.AuthorizationScope, config.AuthorizationMaxAge, config.AuthorizationAcrValues, encryptedMSISDN, options?.AuthenticationOptions);
+                string supportedVersion = discoveryResponse?.ProviderMetadata?.GetSupportedMobileConnectVersion(MobileConnectConstants.MOBILECONNECTAUTHENTICATION);
+
+                response = authentication.StartAuthentication(clientId, authorizationUrl, config.RedirectUrl, state, nonce, config.AuthorizationScope, 
+                    config.AuthorizationMaxAge, config.AuthorizationAcrValues, encryptedMSISDN, supportedVersion, options?.AuthenticationOptions);
             }
             catch (MobileConnectInvalidArgumentException e)
             {

@@ -1,8 +1,6 @@
 ProviderMetadata.ClaimsLocalesSupported Property
 ================================================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Discovery.ProviderMetadata.ClaimsLocalesSupported"]
-
+Array containing languages and scripts supported for values in Claims being returned as an array of BCP47 [RFC5646] language tag values. Not all languages and scripts are necessarily supported for all Claim values
 
 **Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
