@@ -46,6 +46,45 @@ namespace GSMA.MobileConnect.Test.Authentication
         }
 
         [Test]
+        public void StartAuthenticationWith1_1VersionShouldStripAuthnArgumentFromScope()
+        {
+            var initialScope = "openid mc_authn";
+            var expectedScope = "openid";
+            var version = "mc_v1.1";
+
+            var result = _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", "nonce", initialScope, 3600, null, null, version, null);
+            var actualScope = HttpUtils.ExtractQueryValue(result.Url, "scope");
+
+            Assert.AreEqual(expectedScope, actualScope);
+        }
+
+        [Test]
+        public void StartAuthenticationWith1_1VersionShouldLeaveAuthnArgumentInScope()
+        {
+            var initialScope = "openid mc_authn";
+            var expectedScope = "openid mc_authn";
+            var version = "mc_v1.2";
+
+            var result = _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", "nonce", initialScope, 3600, null, null, version, null);
+            var actualScope = HttpUtils.ExtractQueryValue(result.Url, "scope");
+
+            Assert.AreEqual(expectedScope, actualScope);
+        }
+
+        [Test]
+        public void StartAuthenticationWithout1_1VersionShouldAddAuthnArgumentToScope()
+        {
+            var initialScope = "openid";
+            var expectedScope = "openid mc_authn";
+            var version = "mc_v1.2";
+
+            var result = _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", "nonce", initialScope, 3600, null, null, version, null);
+            var actualScope = HttpUtils.ExtractQueryValue(result.Url, "scope");
+
+            Assert.AreEqual(expectedScope, actualScope);
+        }
+
+        [Test]
         public void RequestTokenShouldHandleTokenResponse()
         {
             var response = _responses["token"];
