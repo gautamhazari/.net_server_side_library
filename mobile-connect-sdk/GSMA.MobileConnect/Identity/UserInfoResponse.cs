@@ -15,9 +15,14 @@ namespace GSMA.MobileConnect.Identity
     public class UserInfoResponse
     {
         /// <summary>
+        /// Returns the Http response code or 0 if the data is cached
+        /// </summary>
+        [JsonProperty]
+        public int ResponseCode { get; private set; }
+
+        /// <summary>
         /// The response if the network request returned an error
         /// </summary>
-        [JsonIgnore]
         public ErrorResponse ErrorResponse { get; set; }
 
         /// <summary>
@@ -41,8 +46,16 @@ namespace GSMA.MobileConnect.Identity
         /// <param name="rawResponse">Response from UserInfo endpoint</param>
         public UserInfoResponse(RestResponse rawResponse)
         {
-            this.ResponseData = rawResponse.Content == null ? null : JsonConvert.DeserializeObject<UserInfoResponseData>(rawResponse.Content);
-            ParseResponseData(ResponseData);
+            this.ResponseCode = (int)rawResponse.StatusCode;
+            if (this.ResponseCode < 400)
+            {
+                this.ResponseData = rawResponse.Content == null ? null : JsonConvert.DeserializeObject<UserInfoResponseData>(rawResponse.Content);
+                ParseResponseData(ResponseData);
+                return;
+            }
+
+            var authenticationError = rawResponse.Headers.FirstOrDefault(x => x.Key == "WWW-Authenticate")?.Value;
+            this.ErrorResponse = HttpUtils.GenerateAuthenticationError(authenticationError);
         }
 
         private void ParseResponseData(UserInfoResponseData responseData)

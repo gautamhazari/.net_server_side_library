@@ -25,6 +25,7 @@ namespace GSMA.MobileConnect.Identity
         /// <inheritdoc/>
         public async Task<UserInfoResponse> RequestUserInfo(string userInfoUrl, string accessToken, string claims)
         {
+            Validation.RejectNullOrEmpty(userInfoUrl, "userInfoUrl");
             Validation.RejectNullOrEmpty(accessToken, "accessToken");
 
             try

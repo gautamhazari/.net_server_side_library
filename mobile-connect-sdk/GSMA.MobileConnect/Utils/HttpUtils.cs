@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace GSMA.MobileConnect.Utils
@@ -13,6 +14,8 @@ namespace GSMA.MobileConnect.Utils
     /// </summary>
     public static class HttpUtils
     {
+        private static Regex authErrorRegex = new Regex(@"error=""(.*?)"".*?error_description=""(.*?)""");
+
         /// <summary>
         /// Extension method to add list of queryparams to a UriBuilder as a querystring
         /// </summary>
@@ -181,6 +184,22 @@ namespace GSMA.MobileConnect.Utils
             if (request.Properties.ContainsKey("MS_OwinContext"))
             {
                 return ((dynamic)request.Properties["MS_OwinContext"])?.Request.RemoteIpAddress;
+            }
+
+            return null;
+        }
+
+        internal static ErrorResponse GenerateAuthenticationError(string wwwauthenticate)
+        {
+            if(string.IsNullOrEmpty(wwwauthenticate))
+            {
+                return null;
+            }
+
+            var match = authErrorRegex.Match(wwwauthenticate);
+            if(match != null && match.Groups.Count == 3)
+            {
+                return new ErrorResponse { Error = match.Groups[0].Value, ErrorDescription = match.Groups[1].Value };
             }
 
             return null;

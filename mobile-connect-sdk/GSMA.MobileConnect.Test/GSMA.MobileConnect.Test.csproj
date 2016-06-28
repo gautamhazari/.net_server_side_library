@@ -65,6 +65,7 @@
     <Compile Include="Discovery\DiscoveryTests.cs" />
     <Compile Include="EndToEndTests.cs" />
     <Compile Include="ErrorResponseTests.cs" />
+    <Compile Include="Identity\IdentityServiceTests.cs" />
     <Compile Include="MobileConnectInterfaceTests.cs" />
     <Compile Include="MobileConnectRequestOptionsTests.cs" />
     <Compile Include="MobileConnectWebInterfaceTests.cs" />
