@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>Mobile Connect</title>
+    <title>C# Mobile Connect</title>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -95,6 +95,7 @@
         <div class="error"></div>
         <div id="logged-in" class="logged-in hidden">
             <div id="logged-in-message">Succesfully Logged In</div>
+            <div id="value-application-name" class="display-value"></div>
             <div id="value-access-token" class="display-value"></div>
             <div id="value-id-token" class="display-value"></div>
             <div id="value-time-received" class="display-value"></div>
@@ -114,7 +115,7 @@
                 window.child.location.href = url;
             }
             else {
-                window.child = window.open(url, 'Mobile Connect', 'width=' + width + ',height=' + height + ',menubar=0,toolbar=0,directories=0,scrollbars=no,resizable=no,left=' + position_x + ',top=' + position_y);
+                window.child = window.open(url, 'C# Mobile Connect', 'width=' + width + ',height=' + height + ',menubar=0,toolbar=0,directories=0,scrollbars=no,resizable=no,left=' + position_x + ',top=' + position_y);
             }
         }
 
@@ -141,12 +142,18 @@
         var hideLogin = function hideLogin() {
             $('#login').addClass('hidden');
             $('#logged-in').removeClass('hidden');
+            $('#error').addClass('hidden');
         }
 
         var printTokenInfo = function printTokenInfo(token) {
             $('#value-access-token').html(token.access_token);
             $('#value-id-token').html(token.id_token);
             $('#value-time-received').html(token.time_received);
+        }
+
+        var printInfo = function printInfo(response) {
+            $('#value-application-name').html(api.currentAttempt.applicationShortName);
+            printTokenInfo(response.token);
         }
 
         var api = {
@@ -171,6 +178,7 @@
                 });
 
                 api.currentAttempt.session = response.sdkSession;
+                api.currentAttempt.applicationShortName = response.applicationShortName;
 
                 $.get(authorizationUrl + queryString, api.httpCallback);
             },
@@ -193,9 +201,9 @@
             },
             complete: function complete(response) {
                 if (response.token) {
-                    clearAttempt();
                     hideLogin();
-                    printTokenInfo(response.token);
+                    printInfo(response);
+                    clearAttempt();
                 } else {
                     api.error({ description: 'Authentication not returned, user not logged in' });
                 }

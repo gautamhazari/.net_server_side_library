@@ -22,6 +22,10 @@ namespace GSMA.MobileConnect.Web
         /// </summary>
         public string Action { get; set; }
         /// <summary>
+        /// Application short name returned by discovery service, this identifies the application requesting authorization
+        /// </summary>
+        public string ApplicationShortName { get; set; }
+        /// <summary>
         /// If next step requires visiting a url it will be returned with this property
         /// </summary>
         public string Url { get; set; }

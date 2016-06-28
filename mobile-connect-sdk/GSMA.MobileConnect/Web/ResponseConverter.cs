@@ -60,6 +60,7 @@ namespace GSMA.MobileConnect.Web
             {
                 Status = _statusDict[status.ResponseType],
                 Action = _actionDict[status.ResponseType],
+                ApplicationShortName = status.DiscoveryResponse?.ApplicationShortName,
                 Nonce = status.Nonce,
                 State = status.State,
                 Url = status.Url,

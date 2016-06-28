@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace GSMA.MobileConnect.Json.Converters
 {
     /// <summary>
-    /// Flattens an array of objects to a dictionary of string, string. Should only be used when the objects are simple key/value objectswith different keys
+    /// Flattens an array of objects to a dictionary of string, string. Should only be used when the objects are simple key/value objects with different keys
     /// </summary>
     public class ObjectArrayToDictionaryConverter : JsonConverter
     {
