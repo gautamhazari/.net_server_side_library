@@ -86,7 +86,7 @@ namespace GSMA.MobileConnect
                 string authorizationUrl = discoveryResponse?.OperatorUrls?.AuthorizationUrl;
                 string supportedVersion = discoveryResponse?.ProviderMetadata?.GetSupportedMobileConnectVersion(MobileConnectConstants.MOBILECONNECTAUTHENTICATION);
 
-                response = authentication.StartAuthentication(clientId, authorizationUrl, config.RedirectUrl, state, nonce, config.AuthorizationScope, 
+                response = authentication.StartAuthentication(clientId, authorizationUrl, config.RedirectUrl, state, nonce, options.Scope, 
                     config.AuthorizationMaxAge, config.AuthorizationAcrValues, encryptedMSISDN, supportedVersion, options?.AuthenticationOptions);
             }
             catch (MobileConnectInvalidArgumentException e)

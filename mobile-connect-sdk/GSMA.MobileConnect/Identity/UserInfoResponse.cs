@@ -1,4 +1,7 @@
-﻿using System;
+﻿using GSMA.MobileConnect.Json;
+using GSMA.MobileConnect.Utils;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +14,48 @@ namespace GSMA.MobileConnect.Identity
     /// </summary>
     public class UserInfoResponse
     {
-        public ErrorResponse Error { get; set; }
+        /// <summary>
+        /// The response if the network request returned an error
+        /// </summary>
+        [JsonIgnore]
+        public ErrorResponse ErrorResponse { get; set; }
+
+        /// <summary>
+        /// The parsed json response data
+        /// </summary>
+        public UserInfoResponseData ResponseData {get;set;}
+
+        /// <summary>
+        /// Creates a new instance of the UserInfoResponse class
+        /// </summary>
+        [JsonConstructor]
+        public UserInfoResponse(UserInfoResponseData responseData)
+        {
+            ParseResponseData(responseData);
+            this.ResponseData = responseData;
+        }
+
+        /// <summary>
+        /// Creates a new instance of the UserInfoResponse class using a the json content of a RestResponse for construction
+        /// </summary>
+        /// <param name="rawResponse">Response from UserInfo endpoint</param>
+        public UserInfoResponse(RestResponse rawResponse)
+        {
+            this.ResponseData = rawResponse.Content == null ? null : JsonConvert.DeserializeObject<UserInfoResponseData>(rawResponse.Content);
+            ParseResponseData(ResponseData);
+        }
+
+        private void ParseResponseData(UserInfoResponseData responseData)
+        {
+            if (responseData == null)
+            {
+                return;
+            }
+
+            if (responseData.error != null)
+            {
+                this.ErrorResponse = new ErrorResponse() { Error = responseData.error, ErrorDescription = responseData.description };
+            }
+        }
     }
 }

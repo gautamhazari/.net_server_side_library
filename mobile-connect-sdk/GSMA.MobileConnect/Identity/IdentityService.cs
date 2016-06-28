@@ -1,6 +1,9 @@
-﻿using System;
+﻿using GSMA.MobileConnect.Exceptions;
+using GSMA.MobileConnect.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,9 +14,28 @@ namespace GSMA.MobileConnect.Identity
     /// </summary>
     public class IdentityService : IIdentityService
     {
-        public async Task<UserInfoResponse> RequestUserInfo(string accessToken, string claims)
+        private readonly RestClient _client;
+
+        /// <inheritdoc/>
+        public IdentityService(RestClient client)
         {
-            throw new NotImplementedException();
+            this._client = client;
+        }
+
+        /// <inheritdoc/>
+        public async Task<UserInfoResponse> RequestUserInfo(string userInfoUrl, string accessToken, string claims)
+        {
+            Validation.RejectNullOrEmpty(accessToken, "accessToken");
+
+            try
+            {
+                var response = await _client.GetAsync(userInfoUrl, RestAuthentication.Bearer(accessToken), null, null, null);
+                return new UserInfoResponse(response);
+            }
+            catch (Exception e) when (e is HttpRequestException || e is System.Net.WebException || e is TaskCanceledException)
+            {
+                throw new MobileConnectEndpointHttpException(e.Message, e);
+            }
         }
     }
 }

@@ -39,9 +39,6 @@ namespace GSMA.MobileConnect
         /// <inheritdoc cref="Authentication.AuthenticationOptions.MaxAge"/>
         public int AuthorizationMaxAge { get; set; }
 
-        /// <inheritdoc cref="Authentication.AuthenticationOptions.Scope"/>
-        public string AuthorizationScope { get; set; }
-
         #endregion
 
         #region Web

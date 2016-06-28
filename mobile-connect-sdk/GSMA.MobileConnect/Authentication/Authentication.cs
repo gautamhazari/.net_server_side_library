@@ -86,7 +86,6 @@ namespace GSMA.MobileConnect.Authentication
 
             try
             {
-                var encodedAuthentication = BasicAuthentication.Encode(clientId, clientSecret);
                 var formData = new List<BasicKeyValuePair>()
                 {
                     new BasicKeyValuePair(Parameters.AUTHENTICATION_REDIRECT_URI, redirectUrl),
@@ -94,7 +93,7 @@ namespace GSMA.MobileConnect.Authentication
                     new BasicKeyValuePair(Parameters.GRANT_TYPE, DefaultOptions.GRANT_TYPE)
                 };
 
-                RestResponse response = await _client.PostAsync(requestTokenUrl, encodedAuthentication, formData, null, null);
+                RestResponse response = await _client.PostAsync(requestTokenUrl, RestAuthentication.Basic(clientId, clientSecret), formData, null, null);
                 var tokenResponse = new RequestTokenResponse(response);
 
                 return tokenResponse;

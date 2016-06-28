@@ -33,7 +33,7 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
         [Route("start_authorization")]
         public async Task<IHttpActionResult> StartAuthorization(string sdksession = null, string subscriberId = null)
         {
-            var response = await _mobileConnect.StartAuthorization(Request, sdksession, subscriberId, null, null, new MobileConnectRequestOptions() { Prompt = "login" });
+            var response = await _mobileConnect.StartAuthorization(Request, sdksession, subscriberId, null, null, new MobileConnectRequestOptions() { Scope = MobileConnectConstants.MOBILECONNECTIDENTITYPHONE });
             return CreateResponse(response);
         }
 

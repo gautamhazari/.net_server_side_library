@@ -94,6 +94,13 @@ namespace GSMA.MobileConnect
             set { _authOptions.Dtbs = value; }
         }
 
+        /// <inheritdoc cref="AuthenticationOptions.Scope" />
+        public string Scope
+        {
+            get { return _authOptions.Scope; }
+            set { _authOptions.Scope = value; }
+        }
+
         /// <summary>
         /// Filled authentication options instance
         /// </summary>

@@ -52,17 +52,17 @@ namespace GSMA.MobileConnect.Discovery
             try
             {
                 var cookies = GetCookiesToProxy(currentCookies);
-                var encodedAuthentication = BasicAuthentication.Encode(clientId, clientSecret);
+                var authentication = RestAuthentication.Basic(clientId, clientSecret);
                 var queryParams = GetDiscoveryQueryParams(options);
 
                 RestResponse response;
                 if (string.IsNullOrEmpty(options.MSISDN))
                 {
-                    response = await _client.GetAsync(discoveryUrl, encodedAuthentication, options.ClientIP, queryParams, cookies);
+                    response = await _client.GetAsync(discoveryUrl, authentication, options.ClientIP, queryParams, cookies);
                 }
                 else
                 {
-                    response = await _client.PostAsync(discoveryUrl, encodedAuthentication, GetDiscoveryQueryParams(options), options.ClientIP, cookies);
+                    response = await _client.PostAsync(discoveryUrl, authentication, GetDiscoveryQueryParams(options), options.ClientIP, cookies);
                 }
 
                 var discoveryResponse = new DiscoveryResponse(response);

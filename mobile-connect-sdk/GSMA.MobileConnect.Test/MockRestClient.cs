@@ -45,12 +45,12 @@ namespace GSMA.MobileConnect.Test
             ResponseQueue = new Queue<object>();
         }
 
-        public override Task<RestResponse> GetAsync(string uri, string basicAuthenticationEncoded, string sourceIp, IEnumerable<BasicKeyValuePair> queryParams = null, IEnumerable<BasicKeyValuePair> cookies = null)
+        public override Task<RestResponse> GetAsync(string uri, RestAuthentication authentication, string sourceIp, IEnumerable<BasicKeyValuePair> queryParams = null, IEnumerable<BasicKeyValuePair> cookies = null)
         {
             return Task.Run(() => CreateResponse());
         }
 
-        protected override Task<RestResponse> PostAsync(string uri, string basicAuthenticationEncoded, HttpContent content, string sourceIp, IEnumerable<BasicKeyValuePair> cookies = null)
+        protected override Task<RestResponse> PostAsync(string uri, RestAuthentication authentication, HttpContent content, string sourceIp, IEnumerable<BasicKeyValuePair> cookies = null)
         {
             return Task.Run(() => CreateResponse());
         }
