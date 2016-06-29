@@ -286,7 +286,6 @@ namespace GSMA.MobileConnect.Discovery
         /// </summary>
         public static ProviderMetadata Default
         {
-            // TODO [GMC-73] Set additional properties?
             get { return new ProviderMetadata(null); }
         }
 

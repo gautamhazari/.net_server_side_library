@@ -63,7 +63,7 @@ namespace GSMA.MobileConnect.Authentication
             if (string.IsNullOrEmpty(version) || version == DefaultOptions.VERSION_MOBILECONNECTAUTHN)
             {
                 // add mc_authn if it doesn't already exist
-                return scopeRequested.IndexOf(DefaultOptions.VERSION_MOBILECONNECTAUTHN) > 0 ? scopeRequested : 
+                return scopeRequested.IndexOf(Scope.AUTHN, StringComparison.OrdinalIgnoreCase) > -1 ? scopeRequested : 
                     scopeRequested.RemoveFromDelimitedString(Scope.AUTHN, StringComparison.OrdinalIgnoreCase);
             }
 
