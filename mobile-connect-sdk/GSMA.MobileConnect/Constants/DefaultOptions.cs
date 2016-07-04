@@ -28,7 +28,7 @@ namespace GSMA.MobileConnect.Constants
 
         internal const string GRANT_TYPE = "authorization_code";
 
-        internal const int PROVIDER_METADATA_TTL_SECONDS = 600;
+        internal const int PROVIDER_METADATA_TTL_SECONDS = 900;
 
         internal const string VERSION_MOBILECONNECT = "mc_v1.1";
         internal const string VERSION_MOBILECONNECTAUTHN = "mc_v1.1";

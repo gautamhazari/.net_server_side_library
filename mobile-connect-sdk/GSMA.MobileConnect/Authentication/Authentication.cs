@@ -62,11 +62,12 @@ namespace GSMA.MobileConnect.Authentication
 
             if (string.IsNullOrEmpty(version) || version == DefaultOptions.VERSION_MOBILECONNECTAUTHN)
             {
-                // add mc_authn if it doesn't already exist
-                return scopeRequested.IndexOf(Scope.AUTHN, StringComparison.OrdinalIgnoreCase) > -1 ? scopeRequested : 
+                // remove mc_authn if it exists in the scope
+                return scopeRequested.IndexOf(Scope.AUTHN, StringComparison.OrdinalIgnoreCase) < 0 ? scopeRequested : 
                     scopeRequested.RemoveFromDelimitedString(Scope.AUTHN, StringComparison.OrdinalIgnoreCase);
             }
 
+            // add mc_authn if it doesn't already exist
             if (scopeRequested.IndexOf(Scope.AUTHN, StringComparison.OrdinalIgnoreCase) < 0)
             {
                 return string.Join(" ", scopeRequested, Scope.AUTHN);
