@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Constants;
+using GSMA.MobileConnect.Exceptions;
 
 namespace GSMA.MobileConnect.Cache
 {
@@ -17,6 +18,14 @@ namespace GSMA.MobileConnect.Cache
         /// Convenience field to return when a non-async Task returning method needs to return early
         /// </summary>
         protected static readonly Task _completedTask = Task.FromResult(Type.Missing);
+
+        /// <summary>
+        /// Values configured for the minimum and maximum configurable cache expiry times
+        /// </summary>
+        protected readonly Dictionary<Type, Tuple<TimeSpan?, TimeSpan?>> _cacheExpiryLimits = new Dictionary<Type, Tuple<TimeSpan?, TimeSpan?>>()
+        {
+            [typeof(ProviderMetadata)] = Tuple.Create<TimeSpan?, TimeSpan?>(TimeSpan.FromSeconds(60), TimeSpan.FromHours(24))
+        };
 
         /// <summary>
         /// Values configured for cache expiry times of types
@@ -154,7 +163,19 @@ namespace GSMA.MobileConnect.Cache
         /// <inheritdoc/>
         public void SetCacheExpiryTime<T>(TimeSpan cacheTime) where T : ICacheable
         {
-            _cacheExpiryTimes[typeof(T)] = cacheTime;
+            var type = typeof(T);
+            Tuple<TimeSpan?, TimeSpan?> limits;
+            if(!_cacheExpiryLimits.TryGetValue(type, out limits))
+            {
+                _cacheExpiryTimes[typeof(T)] = cacheTime;
+                return;
+            }
+
+            if ((limits.Item1.HasValue && limits.Item1.Value.CompareTo(cacheTime) > 0) || 
+                (limits.Item2.HasValue && limits.Item2.Value.CompareTo(cacheTime) < 0))
+            {
+                throw new MobileConnectCacheExpiryLimitException(type, limits.Item1, limits.Item2);
+            }
         }
     }
 }

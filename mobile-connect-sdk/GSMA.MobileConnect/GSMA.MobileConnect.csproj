@@ -42,6 +42,7 @@
     <Compile Include="Constants\Scope.cs" />
     <Compile Include="Discovery\OperatorUrls.cs" />
     <Compile Include="Discovery\ProviderMetadata.cs" />
+    <Compile Include="Exceptions\MobileConnectCacheExpiryLimitException.cs" />
     <Compile Include="Exceptions\MobileConnectInvalidArgumentException.cs" />
     <Compile Include="Exceptions\MobileConnectProviderMetadataUnavailableException.cs" />
     <Compile Include="Json\Converters\ObjectArrayToDictionaryConverter.cs" />

@@ -68,6 +68,7 @@
     <Compile Include="MobileConnectInterfaceTests.cs" />
     <Compile Include="MobileConnectRequestOptionsTests.cs" />
     <Compile Include="MobileConnectWebInterfaceTests.cs" />
+    <Compile Include="NoExpiryLimitCache.cs" />
     <Compile Include="MockRestClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestConfig.cs" />

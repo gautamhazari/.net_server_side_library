@@ -1,5 +1,6 @@
 ﻿using GSMA.MobileConnect.Cache;
 using GSMA.MobileConnect.Discovery;
+using GSMA.MobileConnect.Exceptions;
 using GSMA.MobileConnect.Utils;
 using NUnit.Framework;
 using System;
@@ -112,7 +113,7 @@ namespace GSMA.MobileConnect.Test.Cache
         [Test]
         public async Task CacheShouldNotReturnValueIfExpiredAndRemoveIfExpiredIsTrue()
         {
-            var cache = new ConcurrentDiscoveryCache();
+            var cache = new NoExpiryLimitCache();
             cache.SetCacheExpiryTime<ProviderMetadata>(TimeSpan.Zero);
             var value = new ProviderMetadata();
             var key = "test";
@@ -127,7 +128,7 @@ namespace GSMA.MobileConnect.Test.Cache
         [Test]
         public async Task CacheShouldReturnValueIfExpiredAndRemoveIfExpiredIsFalse()
         {
-            var cache = new ConcurrentDiscoveryCache();
+            var cache = new NoExpiryLimitCache();
             cache.SetCacheExpiryTime<ProviderMetadata>(TimeSpan.Zero);
             var value = new ProviderMetadata();
             var key = "test";
@@ -138,6 +139,24 @@ namespace GSMA.MobileConnect.Test.Cache
 
             Assert.IsNotNull(cached);
             Assert.IsTrue(cached.HasExpired);
+        }
+
+        [Test]
+        public void SetCacheExpiryTimeShouldThrowIfExpiryTimeTooShort()
+        {
+            var cache = new NoExpiryLimitCache();
+            cache.SetCacheExpiryLimit<ProviderMetadata>(TimeSpan.FromSeconds(200), TimeSpan.FromSeconds(400));
+
+            Assert.Throws<MobileConnectCacheExpiryLimitException>(() => cache.SetCacheExpiryTime<ProviderMetadata>(TimeSpan.FromSeconds(10)));
+        }
+
+        [Test]
+        public void SetCacheExpiryTimeShouldThrowIfExpiryTimeTooLong()
+        {
+            var cache = new NoExpiryLimitCache();
+            cache.SetCacheExpiryLimit<ProviderMetadata>(TimeSpan.FromSeconds(200), TimeSpan.FromSeconds(400));
+
+            Assert.Throws<MobileConnectCacheExpiryLimitException>(() => cache.SetCacheExpiryTime<ProviderMetadata>(TimeSpan.FromSeconds(600)));
         }
     }
 }
