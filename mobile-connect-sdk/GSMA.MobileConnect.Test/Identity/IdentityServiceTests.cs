@@ -44,8 +44,7 @@ namespace GSMA.MobileConnect.Test.Identity
 
             Assert.IsNotNull(result);
             Assert.AreEqual(200, result.ResponseCode);
-            Assert.IsNotNull(result.ResponseData);
-            Assert.IsNotNull(result.ResponseData.sub);
+            Assert.IsNotNull(result.ResponseJson);
         }
 
         [Test]
@@ -58,7 +57,7 @@ namespace GSMA.MobileConnect.Test.Identity
 
             Assert.IsNotNull(result);
             Assert.AreEqual(401, result.ResponseCode);
-            Assert.IsNull(result.ResponseData);
+            Assert.IsNull(result.ResponseJson);
             Assert.IsNotNull(result.ErrorResponse);
             Assert.IsNotEmpty(result.ErrorResponse.Error);
             Assert.IsNotEmpty(result.ErrorResponse.ErrorDescription);

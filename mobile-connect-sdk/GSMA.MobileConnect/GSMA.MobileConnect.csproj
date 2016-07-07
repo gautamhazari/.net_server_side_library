@@ -38,6 +38,9 @@
     <Compile Include="Authentication\Authentication.cs" />
     <Compile Include="Cache\BaseDiscoveryCache.cs" />
     <Compile Include="Cache\ICacheable.cs" />
+    <Compile Include="Claims\ClaimsDictionary.cs" />
+    <Compile Include="Claims\ClaimsParameter.cs" />
+    <Compile Include="Claims\ClaimsValue.cs" />
     <Compile Include="Constants\LinkRels.cs" />
     <Compile Include="Constants\Scope.cs" />
     <Compile Include="Discovery\OperatorUrls.cs" />

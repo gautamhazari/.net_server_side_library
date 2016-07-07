@@ -1,6 +1,7 @@
 ﻿using GSMA.MobileConnect.Json;
 using GSMA.MobileConnect.Utils;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace GSMA.MobileConnect.Identity
     /// </summary>
     public class UserInfoResponse
     {
+        private object _convertedResponseData;
+
         /// <summary>
         /// Returns the Http response code or 0 if the data is cached
         /// </summary>
@@ -28,16 +31,16 @@ namespace GSMA.MobileConnect.Identity
         /// <summary>
         /// The parsed json response data
         /// </summary>
-        public UserInfoResponseData ResponseData {get;set;}
+        public string ResponseJson {get;set;}
 
         /// <summary>
         /// Creates a new instance of the UserInfoResponse class
         /// </summary>
         [JsonConstructor]
-        public UserInfoResponse(UserInfoResponseData responseData)
+        public UserInfoResponse(string responseJson)
         {
-            ParseResponseData(responseData);
-            this.ResponseData = responseData;
+            ParseResponseData(responseJson);
+            this.ResponseJson = responseJson;
         }
 
         /// <summary>
@@ -49,8 +52,8 @@ namespace GSMA.MobileConnect.Identity
             this.ResponseCode = (int)rawResponse.StatusCode;
             if (this.ResponseCode < 400)
             {
-                this.ResponseData = rawResponse.Content == null ? null : JsonConvert.DeserializeObject<UserInfoResponseData>(rawResponse.Content);
-                ParseResponseData(ResponseData);
+                this.ResponseJson = ExtractJson(rawResponse.Content);
+                ParseResponseData(ResponseJson);
                 return;
             }
 
@@ -58,16 +61,66 @@ namespace GSMA.MobileConnect.Identity
             this.ErrorResponse = HttpUtils.GenerateAuthenticationError(authenticationError);
         }
 
-        private void ParseResponseData(UserInfoResponseData responseData)
+        private string ExtractJson(string responseData)
         {
-            if (responseData == null)
+            if(string.IsNullOrEmpty(responseData))
+            {
+                return responseData;
+            }
+
+            if(responseData.IndexOf('{') > -1)
+            {
+                // Already JSON
+                return responseData;
+            }
+
+            if (JsonWebToken.IsValidFormat(responseData))
+            {
+                var json = JsonWebToken.DecodePart(responseData, JWTPart.Payload);
+                return responseData;
+            }
+
+            return "{\"error\":\"invalid_format\",\"error_description\":\"Recieved UserInfo response that is not JSON or JWT format\"";
+        }
+
+        /// <summary>
+        /// Converts response JSON to custom provided user info class
+        /// </summary>
+        /// <typeparam name="T">User info class with properties linking to keys in userinfo response json</typeparam>
+        /// <seealso cref="UserInfoResponseData"/>
+        /// <remarks>The last used object will be cached for subsequent method calls with the same type</remarks>
+        /// <returns>JSON Deserialized to instance of Type T</returns>
+        public T ResponseDataAs<T>() where T : class
+        {
+            if(string.IsNullOrEmpty(ResponseJson))
+            {
+                return default(T);
+            }
+
+            T convertedResponse = _convertedResponseData as T;
+
+            if(convertedResponse != null)
+            {
+                return convertedResponse;
+            }
+
+            convertedResponse = JsonConvert.DeserializeObject<T>(ResponseJson);
+            _convertedResponseData = convertedResponse;
+            return convertedResponse;
+        }
+
+        private void ParseResponseData(string responseJson)
+        {
+            if (responseJson == null)
             {
                 return;
             }
 
-            if (responseData.error != null)
+            JObject response = JObject.Parse(responseJson);
+
+            if (response["error"] != null)
             {
-                this.ErrorResponse = new ErrorResponse() { Error = responseData.error, ErrorDescription = responseData.description };
+                this.ErrorResponse = new ErrorResponse() { Error = (string)response["error"], ErrorDescription = (string)response["description"] };
             }
         }
     }

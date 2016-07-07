@@ -51,7 +51,7 @@ namespace GSMA.MobileConnect.Utils
         /// <returns>True if the nonce value found is the same as the expected value</returns>
         internal static bool IsExpectedNonce(string token, string expectedNonce)
         {
-            var decodedPayload = JsonWebToken.DecodePayload(token);
+            var decodedPayload = JsonWebToken.DecodePart(token, JWTPart.Payload);
             JObject parsed = JObject.Parse(decodedPayload);
 
             return expectedNonce == (string)parsed["nonce"];

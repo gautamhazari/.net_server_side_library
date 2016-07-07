@@ -11,6 +11,7 @@ namespace GSMA.MobileConnect.Demo.Config
 {
     public static class DemoConfiguration
     {
+        private static string _myConfig = "r2-ref";
         // Replace the values here with values for your mobileconnect application
         public static MobileConnectConfig Config
         {
@@ -19,10 +20,10 @@ namespace GSMA.MobileConnect.Demo.Config
                 EnsureConfigLoaded();
                 return new MobileConnectConfig
                 {
-                    ClientId = _configurations[_defaultConfig].ClientId,
-                    ClientSecret = _configurations[_defaultConfig].ClientSecret,
-                    RedirectUrl = _configurations[_defaultConfig].RedirectUrl,
-                    DiscoveryUrl = _configurations[_defaultConfig].DiscoveryUrl
+                    ClientId = _configurations[_myConfig].ClientId,
+                    ClientSecret = _configurations[_myConfig].ClientSecret,
+                    RedirectUrl = _configurations[_myConfig].RedirectUrl,
+                    DiscoveryUrl = _configurations[_myConfig].DiscoveryUrl
                 };
             }
         }

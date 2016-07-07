@@ -57,7 +57,7 @@ namespace GSMA.MobileConnect.Authentication
             else
             {
                 this.ResponseData = JsonConvert.DeserializeObject<RequestTokenResponseData>(rawResponse.Content);
-                this.DecodedIdTokenPayload = JsonWebToken.DecodePayload(this.ResponseData.IdToken);
+                this.DecodedIdTokenPayload = JsonWebToken.DecodePart(this.ResponseData.IdToken, JWTPart.Payload);
             }
         }
     }

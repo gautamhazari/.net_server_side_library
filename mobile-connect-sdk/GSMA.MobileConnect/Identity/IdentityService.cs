@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using GSMA.MobileConnect.Claims;
+using Newtonsoft.Json;
 
 namespace GSMA.MobileConnect.Identity
 {
@@ -23,8 +25,17 @@ namespace GSMA.MobileConnect.Identity
         }
 
         /// <inheritdoc/>
+        public async Task<UserInfoResponse> RequestUserInfo(string userInfoUrl, string accessToken, ClaimsParameter claims)
+        {
+            string claimsJson = JsonConvert.SerializeObject(claims);
+            return await RequestUserInfo(userInfoUrl, accessToken, claimsJson);
+        }
+
+        /// <inheritdoc/>
         public async Task<UserInfoResponse> RequestUserInfo(string userInfoUrl, string accessToken, string claims)
         {
+            // TODO: handle recieving JWT vs standard JSON
+
             Validation.RejectNullOrEmpty(userInfoUrl, "userInfoUrl");
             Validation.RejectNullOrEmpty(accessToken, "accessToken");
 

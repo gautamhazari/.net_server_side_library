@@ -21,7 +21,7 @@ namespace GSMA.MobileConnect.Constants
         internal const long MAX_TTL_MS = 15552000000;
 
         internal const string AUTHENTICATION_ACR_VALUES = "2";
-        internal const string AUTHENTICATION_SCOPE = "openid";
+        internal const string AUTHENTICATION_SCOPE = Scope.OPENID;
         internal const int AUTHENTICATION_MAX_AGE = 3600;
         internal const string AUTHENTICATION_RESPONSE_TYPE = "code";
         internal const string AUTHENTICATION_DEFAULT_VERSION = "mc_v1.1";

@@ -14,14 +14,33 @@ namespace GSMA.MobileConnect.Utils
     public static class JsonWebToken
     {
         /// <summary>
-        /// Decodes the payload of a JSON Web Token to a standard JSON string
+        /// Check if token is in valid JWT format
         /// </summary>
-        /// <param name="token">JSON Web Token to decode the payload content</param>
-        /// <returns>JSON string decoded from payload</returns>
-        public static string DecodePayload(string token)
+        /// <param name="token">Token to check</param>
+        /// <returns>True if token contains 3 parts split by '.' the last part may be empty</returns>
+        public static bool IsValidFormat(string token)
         {
-            var split = token.Split('.');
-            var base64 = split[1].Replace('-', '+').Replace('_', '/');
+            var split = token.Split(new char[] { '.' }, StringSplitOptions.None);
+            return split.Length == 3;
+        }
+
+        /// <summary>
+        /// Decodes the specified token part
+        /// </summary>
+        /// <param name="token">JSON Web Token to decode the part content</param>
+        /// <param name="part">Part to decode, if signature then the part will be returned directly and no decode will be completed</param>
+        /// <returns>JSON string decoded from part</returns>
+        public static string DecodePart(string token, JWTPart part)
+        {
+            var split = token.Split(new char[] { '.' }, StringSplitOptions.None);
+            var stringPart = split[(int)part];
+
+            if(stringPart == string.Empty || part == JWTPart.Signature)
+            {
+                return stringPart;
+            }
+
+            var base64 = stringPart.Replace('-', '+').Replace('_', '/');
             var padding = 4 - (base64.Length % 4);
             var base64Padded = padding < 4 ? base64.PadRight(base64.Length + padding, '=') : base64;
 
@@ -30,5 +49,24 @@ namespace GSMA.MobileConnect.Utils
 
             return decodedString;
         }
+    }
+
+    /// <summary>
+    /// Enum for specifying part of a Json Web Token
+    /// </summary>
+    public enum JWTPart
+    {
+        /// <summary>
+        /// First part of the JSON Web Token containing information about the Algorithm and token type
+        /// </summary>
+        Header = 0,
+        /// <summary>
+        /// Second part of the JSON Web Token containing data and required claims
+        /// </summary>
+        Payload = 1,
+        /// <summary>
+        /// Third part of the JSON Web Token used to verify the token authenticity
+        /// </summary>
+        Signature = 2
     }
 }

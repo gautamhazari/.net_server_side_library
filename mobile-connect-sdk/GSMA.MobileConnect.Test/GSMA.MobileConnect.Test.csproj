@@ -61,6 +61,8 @@
   <ItemGroup>
     <Compile Include="Authentication\AuthenticationTests.cs" />
     <Compile Include="Cache\ConcurrentDiscoveryCacheTests.cs" />
+    <Compile Include="Claims\ClaimsDictionaryTests.cs" />
+    <Compile Include="Claims\ClaimsValueTests.cs" />
     <Compile Include="Discovery\DiscoveryResponseTests.cs" />
     <Compile Include="Discovery\DiscoveryTests.cs" />
     <Compile Include="EndToEndTests.cs" />
