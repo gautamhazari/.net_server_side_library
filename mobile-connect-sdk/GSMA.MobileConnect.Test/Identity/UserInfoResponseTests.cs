@@ -38,5 +38,20 @@ namespace GSMA.MobileConnect.Test.Identity
             Assert.AreEqual("test2@example.com", (string)json["email"]);
             Assert.AreEqual(true, (bool)json["email_verified"]);
         }
+
+        [Test]
+        public void ResponseDataAsShouldDeserializeToUserInfoData()
+        {
+            string responseJson = "{\"sub\":\"411421B0-38D6-6568-A53A-DF99691B7EB6\",\"email\":\"test2@example.com\",\"email_verified\":true}";
+            var response = new RestResponse(System.Net.HttpStatusCode.Accepted, responseJson);
+
+            var userInfoResponse = new UserInfoResponse(response);
+            var actual = userInfoResponse.ResponseDataAs<UserInfoData>();
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual("411421B0-38D6-6568-A53A-DF99691B7EB6", actual.Sub);
+            Assert.AreEqual("test2@example.com", actual.Email);
+            Assert.AreEqual(true, actual.EmailVerified);
+        }
     }
 }

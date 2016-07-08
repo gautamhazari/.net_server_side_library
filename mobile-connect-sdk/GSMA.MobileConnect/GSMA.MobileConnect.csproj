@@ -48,8 +48,10 @@
     <Compile Include="Exceptions\MobileConnectCacheExpiryLimitException.cs" />
     <Compile Include="Exceptions\MobileConnectInvalidArgumentException.cs" />
     <Compile Include="Exceptions\MobileConnectProviderMetadataUnavailableException.cs" />
+    <Compile Include="Identity\AddressData.cs" />
     <Compile Include="Identity\IdentityService.cs" />
     <Compile Include="Identity\IIdentityService.cs" />
+    <Compile Include="Identity\UserInfoData.cs" />
     <Compile Include="Identity\UserInfoResponse.cs" />
     <Compile Include="Json\Converters\ObjectArrayToDictionaryConverter.cs" />
     <Compile Include="Json\UserInfoResponseData.cs" />
