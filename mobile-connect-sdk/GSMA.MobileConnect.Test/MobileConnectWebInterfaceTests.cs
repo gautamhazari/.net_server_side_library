@@ -1,6 +1,7 @@
 ﻿using GSMA.MobileConnect.Authentication;
 using GSMA.MobileConnect.Cache;
 using GSMA.MobileConnect.Discovery;
+using GSMA.MobileConnect.Identity;
 using GSMA.MobileConnect.Utils;
 using NUnit.Framework;
 using System;
@@ -30,6 +31,7 @@ namespace GSMA.MobileConnect.Test
         private IDiscoveryCache _cache;
         private IDiscovery _discovery;
         private IAuthentication _authentication;
+        private IIdentityService _identity;
         private MobileConnectConfig _config;
         private MobileConnectWebInterface _mobileConnect;
 
@@ -40,6 +42,7 @@ namespace GSMA.MobileConnect.Test
             _cache = new ConcurrentDiscoveryCache();
             _discovery = new GSMA.MobileConnect.Discovery.Discovery(_cache, _restClient);
             _authentication = new GSMA.MobileConnect.Authentication.Authentication(_restClient);
+            _identity = new GSMA.MobileConnect.Identity.IdentityService(_restClient);
 
             _testConfig = TestConfig.GetConfig(TestConfig.DEFAULT_TEST_CONFIG);
             _config = new MobileConnectConfig()
@@ -50,7 +53,7 @@ namespace GSMA.MobileConnect.Test
                 RedirectUrl = _testConfig.RedirectUrl,
             };
 
-            _mobileConnect = new MobileConnectWebInterface(_discovery, _authentication, _config);
+            _mobileConnect = new MobileConnectWebInterface(_discovery, _authentication, _identity, _config);
         }
 
         [Test]

@@ -1,7 +1,9 @@
 ﻿using GSMA.MobileConnect.Authentication;
+using GSMA.MobileConnect.Claims;
 using GSMA.MobileConnect.Constants;
 using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Exceptions;
+using GSMA.MobileConnect.Identity;
 using GSMA.MobileConnect.Utils;
 using System;
 using System.Collections.Generic;
@@ -23,6 +25,7 @@ namespace GSMA.MobileConnect
     {
         private readonly IDiscovery _discovery;
         private readonly IAuthentication _authentication;
+        private readonly IIdentityService _identity;
         private readonly MobileConnectConfig _config;
         private readonly bool _cacheWithSessionId;
 
@@ -31,11 +34,13 @@ namespace GSMA.MobileConnect
         /// </summary>
         /// <param name="discovery">Instance of IDiscovery concrete implementation</param>
         /// <param name="authentication">Instance of IAuthentication concrete implementation</param>
+        /// <param name="identity">Instance of IIdentityService concrete implementation</param>
         /// <param name="config">Configuration options</param>
-        public MobileConnectWebInterface(IDiscovery discovery, IAuthentication authentication, MobileConnectConfig config)
+        public MobileConnectWebInterface(IDiscovery discovery, IAuthentication authentication, IIdentityService identity, MobileConnectConfig config)
         {
             this._discovery = discovery;
             this._authentication = authentication;
+            this._identity = identity;
             this._config = config;
             this._cacheWithSessionId = config.CacheResponsesWithSessionId && discovery.Cache != null;
         }
@@ -180,6 +185,41 @@ namespace GSMA.MobileConnect
             }
 
             return await CacheIfRequired(await MobileConnectInterfaceHelper.HandleUrlRedirect(_discovery, _authentication, redirectedUrl, discoveryResponse, expectedState, expectedNonce, _config));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request">Originating web request</param>
+        /// <param name="discoveryResponse">The response returned by the discovery process</param>
+        /// <param name="accessToken">Access token returned from RequestToken required to authenticate the request</param>
+        /// <param name="claims">ClaimsParameter describing the requested claims</param>
+        /// <param name="options">Optional parameters</param>
+        /// <returns>MobileConnectStatus object with requested user information</returns>
+        public async Task<MobileConnectStatus> RequestUserInfoAsync(HttpRequestMessage request, DiscoveryResponse discoveryResponse, string accessToken, ClaimsParameter claims, MobileConnectRequestOptions options)
+        {
+            return await MobileConnectInterfaceHelper.RequestUserInfo(_identity, discoveryResponse, accessToken, claims, _config, options);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request">Originating web request</param>
+        /// <param name="sdkSession">SDKSession id used to fetch the discovery response with additional parameters that are required to request a user info</param>
+        /// <param name="accessToken"></param>
+        /// <param name="claims"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public async Task<MobileConnectStatus> RequestUserInfoAsync(HttpRequestMessage request, string sdkSession, string accessToken, ClaimsParameter claims, MobileConnectRequestOptions options)
+        {
+            var discoveryResponse = await GetSessionFromCache(sdkSession);
+
+            if (discoveryResponse == null)
+            {
+                return GetCacheError();
+            }
+
+            return await RequestUserInfoAsync(request, discoveryResponse, accessToken, claims, options);
         }
 
         private string GenerateUniqueString()

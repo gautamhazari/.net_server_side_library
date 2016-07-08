@@ -34,14 +34,22 @@ namespace GSMA.MobileConnect.Identity
         /// <inheritdoc/>
         public async Task<UserInfoResponse> RequestUserInfo(string userInfoUrl, string accessToken, string claims)
         {
-            // TODO: handle recieving JWT vs standard JSON
-
             Validation.RejectNullOrEmpty(userInfoUrl, "userInfoUrl");
             Validation.RejectNullOrEmpty(accessToken, "accessToken");
 
             try
             {
-                var response = await _client.GetAsync(userInfoUrl, RestAuthentication.Bearer(accessToken), null, null, null);
+                RestResponse response;
+                var auth = RestAuthentication.Bearer(accessToken);
+                if(string.IsNullOrEmpty(claims))
+                {
+                    response = await _client.GetAsync(userInfoUrl, auth, null, null, null);
+                }
+                else
+                {
+                    response = await _client.PostAsync(userInfoUrl, auth, claims, null, null);
+                }
+
                 return new UserInfoResponse(response);
             }
             catch (Exception e) when (e is HttpRequestException || e is System.Net.WebException || e is TaskCanceledException)

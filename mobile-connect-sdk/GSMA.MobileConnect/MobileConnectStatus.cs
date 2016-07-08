@@ -1,7 +1,9 @@
 ﻿using GSMA.MobileConnect.Authentication;
 using GSMA.MobileConnect.Constants;
 using GSMA.MobileConnect.Discovery;
+using GSMA.MobileConnect.Identity;
 using GSMA.MobileConnect.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,9 +66,14 @@ namespace GSMA.MobileConnect
         public DiscoveryResponse DiscoveryResponse { get; set; }
 
         /// <summary>
-        /// Complete discovery response if included
+        /// Complete token response if included
         /// </summary>
         public RequestTokenResponse TokenResponse { get; set; }
+
+        /// <summary>
+        /// Complete user info response if included
+        /// </summary>
+        public UserInfoResponse UserInfoResponse { get; set; }
 
         /// <summary>
         /// Exception encountered during request if included
@@ -204,6 +211,22 @@ namespace GSMA.MobileConnect
             };
         }
 
+        /// <summary>
+        /// Creates a status with ResponseType UserInfo and the complete <see cref="UserInfoResponse"/>.
+        /// Indicates that a user info request has been successful.
+        /// </summary>
+        /// <param name="response">UserInfoResponse returned from <see cref="IIdentityService"/></param>
+        /// <returns>MobileConnectStatus with ResponseType UserInfo</returns>
+        public static MobileConnectStatus UserInfo(UserInfoResponse response)
+        {
+            return new MobileConnectStatus
+            {
+                ResponseType = MobileConnectResponseType.UserInfo,
+                UserInfoResponse = response,
+            };
+        }
+
+        [JsonConstructor]
         private MobileConnectStatus() { }
     }
 
@@ -236,6 +259,10 @@ namespace GSMA.MobileConnect
         /// <summary>
         /// ResponseType indicating completion of the MobileConnectProcess
         /// </summary>
-        Complete
+        Complete,
+        /// <summary>
+        /// ResponseType indicating userInfo has been received
+        /// </summary>
+        UserInfo
     }
 }

@@ -1,6 +1,8 @@
 ﻿using GSMA.MobileConnect.Authentication;
+using GSMA.MobileConnect.Claims;
 using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Exceptions;
+using GSMA.MobileConnect.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +22,7 @@ namespace GSMA.MobileConnect
     {
         private readonly IDiscovery _discovery;
         private readonly IAuthentication _authentication;
+        private readonly IIdentityService _identity;
         private readonly MobileConnectConfig _config;
 
         /// <summary>
@@ -27,11 +30,13 @@ namespace GSMA.MobileConnect
         /// </summary>
         /// <param name="discovery">Instance of IDiscovery concrete implementation</param>
         /// <param name="authentication">Instance of IAuthentication concrete implementation</param>
+        /// <param name="identity">Instance of IIdentityService concrete implementation</param>
         /// <param name="config">Configuration options</param>
-        public MobileConnectInterface(IDiscovery discovery, IAuthentication authentication, MobileConnectConfig config)
+        public MobileConnectInterface(IDiscovery discovery, IAuthentication authentication, IIdentityService identity, MobileConnectConfig config)
         {
             this._discovery = discovery;
             this._authentication = authentication;
+            this._identity = identity;
             this._config = config;
         }
 
@@ -147,6 +152,19 @@ namespace GSMA.MobileConnect
         public MobileConnectStatus HandleUrlRedirect(Uri redirectedUrl, DiscoveryResponse discoveryResponse = null, string expectedState = null, string expectedNonce = null, string requestTokenUrl = null)
         {
             return MobileConnectInterfaceHelper.HandleUrlRedirect(_discovery, _authentication, redirectedUrl, discoveryResponse, expectedState, expectedNonce, _config).Result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="discoveryResponse"></param>
+        /// <param name="accessToken"></param>
+        /// <param name="claims"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public async Task<MobileConnectStatus> RequestUserInfo(DiscoveryResponse discoveryResponse, string accessToken, ClaimsParameter claims, MobileConnectRequestOptions options)
+        {
+            return await MobileConnectInterfaceHelper.RequestUserInfo(_identity, discoveryResponse, accessToken, claims, _config, options);
         }
     }
 }

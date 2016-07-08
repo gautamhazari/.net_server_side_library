@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GSMA.MobileConnect.Claims;
+using GSMA.MobileConnect.Identity;
 
 namespace GSMA.MobileConnect
 {
@@ -171,6 +173,17 @@ namespace GSMA.MobileConnect
             return MobileConnectStatus.Error(errorCode, errorDesc, null);
         }
 
+        internal static async Task<MobileConnectStatus> RequestUserInfo(IIdentityService _identity, DiscoveryResponse discoveryResponse, string accessToken, ClaimsParameter claims, MobileConnectConfig _config, MobileConnectRequestOptions options)
+        {
+            if(discoveryResponse?.OperatorUrls?.UserInfoUrl == null)
+            {
+                return MobileConnectStatus.Error("not_supported", "UserInfo not supported with current operator", null);
+            }
+
+            var response = await _identity.RequestUserInfo(discoveryResponse.OperatorUrls.UserInfoUrl, accessToken, claims);
+            return MobileConnectStatus.UserInfo(response);
+        }
+
         private static MobileConnectStatus GenerateStatusFromDiscoveryResponse(IDiscovery discovery, DiscoveryResponse response)
         {
             if (!response.Cached && response.ErrorResponse != null)
@@ -186,6 +199,5 @@ namespace GSMA.MobileConnect
 
             return MobileConnectStatus.StartAuthorization(response);
         }
-
     }
 }

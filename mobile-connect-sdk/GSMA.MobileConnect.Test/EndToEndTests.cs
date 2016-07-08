@@ -1,6 +1,7 @@
 ﻿using GSMA.MobileConnect.Authentication;
 using GSMA.MobileConnect.Cache;
 using GSMA.MobileConnect.Discovery;
+using GSMA.MobileConnect.Identity;
 using GSMA.MobileConnect.Utils;
 using NUnit.Framework;
 using System;
@@ -30,6 +31,7 @@ namespace GSMA.MobileConnect.Test
             IDiscoveryCache cache = null;
             IDiscovery discovery = new GSMA.MobileConnect.Discovery.Discovery(cache, restClient);
             IAuthentication authentication = new GSMA.MobileConnect.Authentication.Authentication(restClient);
+            IIdentityService identity = new GSMA.MobileConnect.Identity.IdentityService(restClient);
 
             var testConfig = TestConfig.GetConfig(configKey);
             MobileConnectConfig config = new MobileConnectConfig()
@@ -41,7 +43,7 @@ namespace GSMA.MobileConnect.Test
             };
 
             MobileConnectRequestOptions blankOptions = new MobileConnectRequestOptions();
-            MobileConnectInterface mobileConnect = new MobileConnectInterface(discovery, authentication, config);
+            MobileConnectInterface mobileConnect = new MobileConnectInterface(discovery, authentication, identity, config);
 
             //Attempt discovery
             var status = await mobileConnect.AttemptDiscoveryAsync(testConfig.ValidMSISDN, null, null, blankOptions);
@@ -83,6 +85,7 @@ namespace GSMA.MobileConnect.Test
             IDiscoveryCache cache = null;
             IDiscovery discovery = new GSMA.MobileConnect.Discovery.Discovery(cache, restClient);
             IAuthentication authentication = new GSMA.MobileConnect.Authentication.Authentication(restClient);
+            IIdentityService identity = new GSMA.MobileConnect.Identity.IdentityService(restClient);
 
             var testConfig = TestConfig.GetConfig(configKey);
             MobileConnectConfig config = new MobileConnectConfig()
@@ -94,7 +97,7 @@ namespace GSMA.MobileConnect.Test
             };
 
             MobileConnectRequestOptions blankOptions = new MobileConnectRequestOptions();
-            MobileConnectInterface mobileConnect = new MobileConnectInterface(discovery, authentication, config);
+            MobileConnectInterface mobileConnect = new MobileConnectInterface(discovery, authentication, identity, config);
 
             //Attempt discovery
             var status = await mobileConnect.AttemptDiscoveryAsync(testConfig.ValidMSISDN, null, null, blankOptions);
@@ -137,6 +140,7 @@ namespace GSMA.MobileConnect.Test
             IDiscoveryCache cache = null;
             IDiscovery discovery = new GSMA.MobileConnect.Discovery.Discovery(cache, restClient);
             IAuthentication authentication = new GSMA.MobileConnect.Authentication.Authentication(restClient);
+            IIdentityService identity = new GSMA.MobileConnect.Identity.IdentityService(restClient);
 
             var testConfig = TestConfig.GetConfig(configKey);
             MobileConnectConfig config = new MobileConnectConfig()
@@ -148,7 +152,7 @@ namespace GSMA.MobileConnect.Test
             };
 
             MobileConnectRequestOptions blankOptions = new MobileConnectRequestOptions();
-            MobileConnectInterface mobileConnect = new MobileConnectInterface(discovery, authentication, config);
+            MobileConnectInterface mobileConnect = new MobileConnectInterface(discovery, authentication, identity, config);
 
             //Attempt discovery
             var status = await mobileConnect.AttemptDiscoveryAsync(testConfig.ValidMSISDN, null, null, blankOptions);
@@ -191,6 +195,7 @@ namespace GSMA.MobileConnect.Test
             IDiscoveryCache cache = null;
             IDiscovery discovery = new GSMA.MobileConnect.Discovery.Discovery(cache, restClient);
             IAuthentication authentication = new GSMA.MobileConnect.Authentication.Authentication(restClient);
+            IIdentityService identity = new GSMA.MobileConnect.Identity.IdentityService(restClient);
 
             var testConfig = TestConfig.GetConfig(configKey);
             MobileConnectConfig config = new MobileConnectConfig()
@@ -202,7 +207,7 @@ namespace GSMA.MobileConnect.Test
             };
 
             MobileConnectRequestOptions blankOptions = new MobileConnectRequestOptions();
-            MobileConnectWebInterface mobileConnect = new MobileConnectWebInterface(discovery, authentication, config);
+            MobileConnectWebInterface mobileConnect = new MobileConnectWebInterface(discovery, authentication, identity, config);
 
             //Attempt discovery
             var request = new HttpRequestMessage();
@@ -248,6 +253,7 @@ namespace GSMA.MobileConnect.Test
             IDiscoveryCache cache = new ConcurrentDiscoveryCache();
             IDiscovery discovery = new GSMA.MobileConnect.Discovery.Discovery(cache, restClient);
             IAuthentication authentication = new GSMA.MobileConnect.Authentication.Authentication(restClient);
+            IIdentityService identity = new GSMA.MobileConnect.Identity.IdentityService(restClient);
 
             var testConfig = TestConfig.GetConfig(configKey);
             MobileConnectConfig config = new MobileConnectConfig()
@@ -259,7 +265,7 @@ namespace GSMA.MobileConnect.Test
             };
 
             MobileConnectRequestOptions blankOptions = new MobileConnectRequestOptions();
-            MobileConnectWebInterface mobileConnect = new MobileConnectWebInterface(discovery, authentication, config);
+            MobileConnectWebInterface mobileConnect = new MobileConnectWebInterface(discovery, authentication, identity, config);
 
             //Attempt discovery
             var request = new HttpRequestMessage();
