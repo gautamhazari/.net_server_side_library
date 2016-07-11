@@ -53,7 +53,9 @@
     <Compile Include="Identity\IIdentityService.cs" />
     <Compile Include="Identity\UserInfoData.cs" />
     <Compile Include="Identity\UserInfoResponse.cs" />
+    <Compile Include="Json\Converters\IsoDateConverter.cs" />
     <Compile Include="Json\Converters\ObjectArrayToDictionaryConverter.cs" />
+    <Compile Include="Json\Converters\UnixTimestampConverter.cs" />
     <Compile Include="MobileConnectConstants.cs" />
     <Compile Include="MobileConnectInterfaceHelper.cs" />
     <Compile Include="Cache\ConcurrentDiscoveryCache.cs" />

@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using GSMA.MobileConnect.Json.Converters;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,10 +96,11 @@ namespace GSMA.MobileConnect.Identity
         /// End-User's birthday
         /// </summary>
         [JsonProperty("birthdate")]
+        [JsonConverter(typeof(IsoDateConverter))]
         public DateTime? Birthdate { get; set; }
 
         /// <summary>
-        /// 	String from zoneinfo time zone database representing the End-User's time zone. For example, Europe/Paris or America/Los_Angeles.
+        /// String from zoneinfo time zone database representing the End-User's time zone. For example, Europe/Paris or America/Los_Angeles.
         /// </summary>
         [JsonProperty("zoneinfo")]
         public string ZoneInfo { get; set; }
@@ -112,10 +115,11 @@ namespace GSMA.MobileConnect.Identity
         public string Locale { get; set; }
 
         /// <summary>
-        /// Time the End-User's information was last updated
+        /// Time the End-User's information was last updated in UTC time
         /// TODO: Capture timestamp and convert to datetime
         /// </summary>
         [JsonProperty("updated_at")]
+        [JsonConverter(typeof(UnixTimestampConverter))]
         public DateTime? UpdatedAt { get; set; }
 
         #endregion

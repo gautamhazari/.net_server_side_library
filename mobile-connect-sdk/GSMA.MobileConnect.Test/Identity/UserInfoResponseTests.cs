@@ -1,5 +1,6 @@
 ﻿using GSMA.MobileConnect.Identity;
 using GSMA.MobileConnect.Utils;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using System;
@@ -42,7 +43,7 @@ namespace GSMA.MobileConnect.Test.Identity
         [Test]
         public void ResponseDataAsShouldDeserializeToUserInfoData()
         {
-            string responseJson = "{\"sub\":\"411421B0-38D6-6568-A53A-DF99691B7EB6\",\"email\":\"test2@example.com\",\"email_verified\":true}";
+            string responseJson = "{\"sub\":\"411421B0-38D6-6568-A53A-DF99691B7EB6\",\"email\":\"test2@example.com\",\"email_verified\":true,\"phone_number\":\"+447700200200\",\"phone_number_verified\":true,\"birthdate\":\"1990-04-11\",\"updated_at\":\"1460779506\",\"address\":{\"formatted\":\"123 Fake Street \r\n Manchester\",\"postal_code\":\"M1 1AB\"}}";
             var response = new RestResponse(System.Net.HttpStatusCode.Accepted, responseJson);
 
             var userInfoResponse = new UserInfoResponse(response);
@@ -52,6 +53,26 @@ namespace GSMA.MobileConnect.Test.Identity
             Assert.AreEqual("411421B0-38D6-6568-A53A-DF99691B7EB6", actual.Sub);
             Assert.AreEqual("test2@example.com", actual.Email);
             Assert.AreEqual(true, actual.EmailVerified);
+            Assert.AreEqual("+447700200200", actual.PhoneNumber);
+            Assert.AreEqual(true, actual.PhoneNumberVerified);
+            Assert.IsNotNull(actual.Address);
+            Assert.AreEqual("123 Fake Street \r\n Manchester", actual.Address.Formatted);
+            Assert.AreEqual("M1 1AB", actual.Address.PostalCode);
+            Assert.AreEqual(new DateTime(1990, 4, 11), actual.Birthdate);
+            Assert.AreEqual(new DateTime(2016, 4, 16, 4, 5, 6), actual.UpdatedAt);
+        }
+
+        [Test]
+        public void UserInfoDataShouldSerialize()
+        {
+            string responseJson = "{\"sub\":\"411421B0-38D6-6568-A53A-DF99691B7EB6\",\"birthdate\":\"1990-04-11\",\"updated_at\":1460779506,\"email\":\"test2@example.com\",\"email_verified\":true,\"address\":{\"formatted\":\"123 Fake Street \\r\\n Manchester\",\"postal_code\":\"M1 1AB\"},\"phone_number\":\"+447700200200\",\"phone_number_verified\":true}";
+            var response = new RestResponse(System.Net.HttpStatusCode.Accepted, responseJson);
+            var userInfoResponse = new UserInfoResponse(response);
+            var userInfoData = userInfoResponse.ResponseDataAs<UserInfoData>();
+
+            var actual = JsonConvert.SerializeObject(userInfoData, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
+
+            Assert.AreEqual(responseJson, actual);
         }
     }
 }
