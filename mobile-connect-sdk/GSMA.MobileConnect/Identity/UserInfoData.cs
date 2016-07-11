@@ -116,7 +116,6 @@ namespace GSMA.MobileConnect.Identity
 
         /// <summary>
         /// Time the End-User's information was last updated in UTC time
-        /// TODO: Capture timestamp and convert to datetime
         /// </summary>
         [JsonProperty("updated_at")]
         [JsonConverter(typeof(UnixTimestampConverter))]
@@ -134,7 +133,7 @@ namespace GSMA.MobileConnect.Identity
         public string Email { get; set; }
 
         /// <summary>
-        /// True if the End-User's e-mail address has been verified; otherwise false. 
+        /// True if the End-User's e-mail address has been verified; otherwise false.
         /// When this Claim Value is true, this means that the OP took affirmative steps to ensure that this e-mail address was controlled by the End-User at the time the verification was performed.
         /// The means by which an e-mail address is verified is context-specific, and dependent upon the trust framework or contractual agreements within which the parties are operating.
         /// </summary>
