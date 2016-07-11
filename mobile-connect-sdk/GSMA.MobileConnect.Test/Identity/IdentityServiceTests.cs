@@ -1,4 +1,5 @@
-﻿using GSMA.MobileConnect.Exceptions;
+﻿using GSMA.MobileConnect.Claims;
+using GSMA.MobileConnect.Exceptions;
 using GSMA.MobileConnect.Identity;
 using GSMA.MobileConnect.Utils;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ namespace GSMA.MobileConnect.Test.Identity
     [TestFixture]
     public class IdentityServiceTests
     {
-        private static RestResponse _unauthorizedResponse = new RestResponse(System.Net.HttpStatusCode.Unauthorized, "{\"sub\":\"411421B0-38D6-6568-A53A-DF99691B7EB6\",\"email\":\"test2@example.com\",\"email_verified\":true}")
+        private static RestResponse _unauthorizedResponse = new RestResponse(System.Net.HttpStatusCode.Unauthorized, "")
         {
             Headers = new List<BasicKeyValuePair> { new BasicKeyValuePair("WWW-Authenticate", "Bearer error=\"invalid_request\", error_description=\"No Access Token\"") }
         };
@@ -77,6 +78,21 @@ namespace GSMA.MobileConnect.Test.Identity
             _restClient.NextException = new System.Net.WebException("This is the message");
 
             Assert.ThrowsAsync<MobileConnectEndpointHttpException>(() => _identityService.RequestUserInfo("user info url", "zmalqpxnskwocbdjeivbfhru", ""));
+        }
+
+        [Test]
+        public void RequestUserInfoShouldAcceptClaimsParameter()
+        {
+            _restClient.NextExpectedResponse = _responses["user-info"];
+            var claims = new ClaimsParameter();
+            claims.UserInfo.AddRequired("test");
+            claims.IdToken.AddWithValue("testvalue", false, "this value");
+
+            var result = _identityService.RequestUserInfo("user info url", "zmalqpxnskwocbdjeivbfhru", claims).Result;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(200, result.ResponseCode);
+            Assert.IsNotNull(result.ResponseJson);
         }
 
         #region Argument Validation

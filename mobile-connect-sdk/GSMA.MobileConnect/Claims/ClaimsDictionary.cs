@@ -14,7 +14,7 @@ namespace GSMA.MobileConnect.Claims
     /// </summary>
     public class ClaimsDictionary : IDictionary<string, ClaimsValue>
     {
-        private Dictionary<string, ClaimsValue> _internalDict { get; set; } = new Dictionary<string, ClaimsValue>();
+        private Dictionary<string, ClaimsValue> _internalDict = new Dictionary<string, ClaimsValue>();
 
         /// <summary>
         /// Get or set claim value at specified key

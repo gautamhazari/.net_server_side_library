@@ -175,7 +175,7 @@ namespace GSMA.MobileConnect
 
         internal static async Task<MobileConnectStatus> RequestUserInfo(IIdentityService _identity, DiscoveryResponse discoveryResponse, string accessToken, ClaimsParameter claims, MobileConnectConfig _config, MobileConnectRequestOptions options)
         {
-            if(discoveryResponse?.OperatorUrls?.UserInfoUrl == null)
+            if(string.IsNullOrEmpty(discoveryResponse?.OperatorUrls?.UserInfoUrl))
             {
                 return MobileConnectStatus.Error("not_supported", "UserInfo not supported with current operator", null);
             }

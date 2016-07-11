@@ -79,14 +79,14 @@ namespace GSMA.MobileConnect.Identity
                 return JsonWebToken.DecodePart(responseData, JWTPart.Payload);
             }
 
-            return "{\"error\":\"invalid_format\",\"error_description\":\"Recieved UserInfo response that is not JSON or JWT format\"";
+            return "{\"error\":\"invalid_format\",\"error_description\":\"Recieved UserInfo response that is not JSON or JWT format\"}";
         }
 
         /// <summary>
         /// Converts response JSON to custom provided user info class
         /// </summary>
         /// <typeparam name="T">User info class with properties linking to keys in userinfo response json</typeparam>
-        /// <seealso cref="UserInfoResponseData"/>
+        /// <seealso cref="UserInfoData"/>
         /// <remarks>The last used object will be cached for subsequent method calls with the same type</remarks>
         /// <returns>JSON Deserialized to instance of Type T</returns>
         public T ResponseDataAs<T>() where T : class

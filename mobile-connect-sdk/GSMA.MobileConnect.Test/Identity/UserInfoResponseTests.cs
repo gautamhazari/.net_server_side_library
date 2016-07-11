@@ -41,6 +41,41 @@ namespace GSMA.MobileConnect.Test.Identity
         }
 
         [Test]
+        public void ConstructorShouldSetResponseWithNullContent()
+        {
+            var response = new RestResponse(System.Net.HttpStatusCode.Accepted, null);
+
+            var actual = new UserInfoResponse(response);
+
+            Assert.IsNull(actual.ResponseJson);
+        }
+
+        [Test]
+        public void ConstructorShouldSetErrorForInvalidFormatResponseData()
+        {
+            string responseJson = "<html>not valid</html>";
+            var response = new RestResponse(System.Net.HttpStatusCode.Accepted, responseJson);
+
+            var actual = new UserInfoResponse(response);
+
+            Assert.IsNotNull(actual.ErrorResponse);
+            Assert.AreEqual("invalid_format", actual.ErrorResponse.Error);
+        }
+
+        [Test]
+        public void ConstructorShouldSetErrorForAuthenticationError()
+        {
+            var response = new RestResponse(System.Net.HttpStatusCode.Unauthorized, "");
+            response.Headers = new List<BasicKeyValuePair> { new BasicKeyValuePair("WWW-Authenticate", "Bearer error = \"invalid_request\", error_description = \"No Access Token\"") };
+
+            var actual = new UserInfoResponse(response);
+
+            Assert.IsNotNull(actual.ErrorResponse);
+            Assert.AreEqual("invalid_request", actual.ErrorResponse.Error);
+            Assert.AreEqual("No Access Token", actual.ErrorResponse.ErrorDescription);
+        }
+
+        [Test]
         public void ResponseDataAsShouldDeserializeToUserInfoData()
         {
             string responseJson = "{\"sub\":\"411421B0-38D6-6568-A53A-DF99691B7EB6\",\"email\":\"test2@example.com\",\"email_verified\":true,\"phone_number\":\"+447700200200\",\"phone_number_verified\":true,\"birthdate\":\"1990-04-11\",\"updated_at\":\"1460779506\",\"address\":{\"formatted\":\"123 Fake Street \r\n Manchester\",\"postal_code\":\"M1 1AB\"}}";
@@ -63,16 +98,27 @@ namespace GSMA.MobileConnect.Test.Identity
         }
 
         [Test]
-        public void UserInfoDataShouldSerialize()
+        public void ResponseDataAsShouldReuseConvertedResponse()
         {
-            string responseJson = "{\"sub\":\"411421B0-38D6-6568-A53A-DF99691B7EB6\",\"birthdate\":\"1990-04-11\",\"updated_at\":1460779506,\"email\":\"test2@example.com\",\"email_verified\":true,\"address\":{\"formatted\":\"123 Fake Street \\r\\n Manchester\",\"postal_code\":\"M1 1AB\"},\"phone_number\":\"+447700200200\",\"phone_number_verified\":true}";
+            string responseJson = "{\"sub\":\"411421B0-38D6-6568-A53A-DF99691B7EB6\",\"email\":\"test2@example.com\",\"email_verified\":true,\"phone_number\":\"+447700200200\",\"phone_number_verified\":true,\"birthdate\":\"1990-04-11\",\"updated_at\":\"1460779506\",\"address\":{\"formatted\":\"123 Fake Street \r\n Manchester\",\"postal_code\":\"M1 1AB\"}}";
             var response = new RestResponse(System.Net.HttpStatusCode.Accepted, responseJson);
+
             var userInfoResponse = new UserInfoResponse(response);
-            var userInfoData = userInfoResponse.ResponseDataAs<UserInfoData>();
+            var first = userInfoResponse.ResponseDataAs<UserInfoData>();
+            var second = userInfoResponse.ResponseDataAs<UserInfoData>();
 
-            var actual = JsonConvert.SerializeObject(userInfoData, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
+            Assert.AreSame(first, second);
+        }
 
-            Assert.AreEqual(responseJson, actual);
+        [Test]
+        public void ResponseDataAsShouldReturnDefaultIfResponseJsonNull()
+        {
+            var response = new RestResponse(System.Net.HttpStatusCode.Accepted, null);
+
+            var userInfoResponse = new UserInfoResponse(response);
+            var actual = userInfoResponse.ResponseDataAs<UserInfoData>();
+
+            Assert.IsNull(actual);
         }
     }
 }

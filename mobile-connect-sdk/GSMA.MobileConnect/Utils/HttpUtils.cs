@@ -14,7 +14,7 @@ namespace GSMA.MobileConnect.Utils
     /// </summary>
     public static class HttpUtils
     {
-        private static Regex authErrorRegex = new Regex(@"error=""(.*?)"".*?error_description=""(.*?)""");
+        private static Regex authErrorRegex = new Regex(@"error\s?=\s?""(.*?)"".*?error_description\s?=\s?""(.*?)""");
 
         /// <summary>
         /// Extension method to add list of queryparams to a UriBuilder as a querystring
@@ -199,7 +199,7 @@ namespace GSMA.MobileConnect.Utils
             var match = authErrorRegex.Match(wwwauthenticate);
             if(match != null && match.Groups.Count == 3)
             {
-                return new ErrorResponse { Error = match.Groups[0].Value, ErrorDescription = match.Groups[1].Value };
+                return new ErrorResponse { Error = match.Groups[1].Value, ErrorDescription = match.Groups[2].Value };
             }
 
             return null;
