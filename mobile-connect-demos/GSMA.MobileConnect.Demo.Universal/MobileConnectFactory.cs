@@ -1,6 +1,7 @@
 ﻿using GSMA.MobileConnect.Authentication;
 using GSMA.MobileConnect.Demo.Config;
 using GSMA.MobileConnect.Discovery;
+using GSMA.MobileConnect.Identity;
 using GSMA.MobileConnect.Utils;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace GSMA.MobileConnect.Demo.Universal
         private static RestClient _client;
         private static IDiscovery _discovery;
         private static IAuthentication _authentication;
+        private static IIdentityService _identity;
         private static MobileConnectConfig _config;
         private static MobileConnectInterface _mobileConnect;
 
@@ -23,8 +25,9 @@ namespace GSMA.MobileConnect.Demo.Universal
             _client = new RestClient();
             _discovery = new Discovery.Discovery(null, _client);
             _authentication = new Authentication.Authentication(_client);
+            _identity = new Identity.IdentityService(_client);
             _config = CreateConfig();
-            _mobileConnect = new MobileConnectInterface(_discovery, _authentication, _config);
+            _mobileConnect = new MobileConnectInterface(_discovery, _authentication, _identity, _config);
         }
 
         private static MobileConnectConfig CreateConfig()
