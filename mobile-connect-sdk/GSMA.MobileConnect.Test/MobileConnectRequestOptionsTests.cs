@@ -16,12 +16,6 @@ namespace GSMA.MobileConnect.Test
             var isUsingMobileData = true;
             var localClientIp = "111.11.11.11";
             var clientIp = "222.22.22.22";
-            var expected = new MobileConnect.Discovery.DiscoveryOptions()
-            {
-                IsUsingMobileData = true,
-                LocalClientIP = localClientIp,
-                ClientIP = clientIp,
-            };
 
             var actual = new MobileConnectRequestOptions
             {
@@ -45,16 +39,9 @@ namespace GSMA.MobileConnect.Test
             var idTokenHint = "id token";
             var loginHint = "login hint";
             var dtbs = "data to be sent";
-            var expected = new MobileConnect.Authentication.AuthenticationOptions
-            {
-                Display = display,
-                Prompt = prompt,
-                UiLocales = uiLocales,
-                ClaimsLocales = claimsLocales,
-                IdTokenHint = idTokenHint,
-                LoginHint = loginHint,
-                Dtbs = dtbs,
-            };
+            var scope = "scope value";
+            var acr = "acr value";
+            var maxAge = 1200;
 
             var actual = new MobileConnectRequestOptions
             {
@@ -65,6 +52,9 @@ namespace GSMA.MobileConnect.Test
                 IdTokenHint = idTokenHint,
                 LoginHint = loginHint,
                 Dtbs = dtbs,
+                Scope = scope,
+                AcrValues = acr,
+                MaxAge = maxAge,
             };
 
             Assert.AreEqual(display, actual.Display);
@@ -74,6 +64,9 @@ namespace GSMA.MobileConnect.Test
             Assert.AreEqual(idTokenHint, actual.IdTokenHint);
             Assert.AreEqual(loginHint, actual.LoginHint);
             Assert.AreEqual(dtbs, actual.Dtbs);
+            Assert.AreEqual(scope, actual.Scope);
+            Assert.AreEqual(acr, actual.AcrValues);
+            Assert.AreEqual(maxAge, actual.MaxAge);
         }
     }
 }

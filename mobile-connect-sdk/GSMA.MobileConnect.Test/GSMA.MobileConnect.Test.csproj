@@ -82,6 +82,7 @@
     <Compile Include="TestFixtureSetup.cs" />
     <Compile Include="Utils\ExtensionsTests.cs" />
     <Compile Include="Utils\HttpUtilsTests.cs" />
+    <Compile Include="Utils\ScopeTests.cs" />
     <Compile Include="Web\ResponseConverterTests.cs" />
   </ItemGroup>
   <ItemGroup>

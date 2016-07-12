@@ -49,6 +49,10 @@ namespace GSMA.MobileConnect.Web
         /// Token data returned from a successful RequestToken call
         /// </summary>
         public RequestTokenResponseData Token { get; set; }
+        /// <summary>
+        /// UserInfo data returned from successful RequestUserInfo call
+        /// </summary>
+        public Newtonsoft.Json.Linq.JRaw UserInfo { get; set; }
 
         /// <summary>
         /// Error code if available

@@ -70,7 +70,7 @@ namespace GSMA.MobileConnect.Test
             claims.UserInfo.AddRequired("test");
             claims.IdToken.AddWithValue("testvalue", false, "this value");
 
-            var result = await _mobileConnect.RequestUserInfo(_discoveryResponse, "zaqwsxcderfvbgtyhnmjukilop", claims, new MobileConnectRequestOptions());
+            var result = await _mobileConnect.RequestUserInfoAsync(_discoveryResponse, "zaqwsxcderfvbgtyhnmjukilop", claims, new MobileConnectRequestOptions());
 
             Assert.IsNotNull(result.UserInfoResponse);
             Assert.AreEqual(MobileConnectResponseType.UserInfo, result.ResponseType);
@@ -84,7 +84,7 @@ namespace GSMA.MobileConnect.Test
             claims.IdToken.AddWithValue("testvalue", false, "this value");
             _discoveryResponse.OperatorUrls.UserInfoUrl = null;
 
-            var result = await _mobileConnect.RequestUserInfo(_discoveryResponse, "zaqwsxcderfvbgtyhnmjukilop", claims, new MobileConnectRequestOptions());
+            var result = await _mobileConnect.RequestUserInfoAsync(_discoveryResponse, "zaqwsxcderfvbgtyhnmjukilop", claims, new MobileConnectRequestOptions());
 
             Assert.IsNull(result.UserInfoResponse);
             Assert.IsNotNull(result.ErrorCode);

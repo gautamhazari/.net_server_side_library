@@ -22,13 +22,10 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="redirectUrl">On completion or error where the result information is sent using a HTTP 302 redirect (Required)</param>
         /// <param name="state">Application specified unique scope value</param>
         /// <param name="nonce">Application specified nonce value. (Required)</param>
-        /// <param name="scope">Requested scope. If omitted or empty defaults to the value "openid"</param>
-        /// <param name="maxAge">Requested maximum time in seconds since last user authentication. If omitted or empty defaults to the value 3600</param>
-        /// <param name="acrValues">Requested Authentication Context class Reference. If omitted or empty defaults to the value "2"</param>
         /// <param name="encryptedMSISDN">Encrypted MSISDN for user if returned from discovery service</param>
         /// <param name="supportedVersion">Version of the mobile connect authentication supported</param>
         /// <param name="options">Optional parameters</param>
-        StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce, string scope, int? maxAge, string acrValues, string encryptedMSISDN, string supportedVersion, AuthenticationOptions options);
+        StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce, string encryptedMSISDN, string supportedVersion, AuthenticationOptions options);
 
         /// <summary>
         /// Synchronous wrapper for <see cref="IAuthentication.RequestTokenAsync(string, string, string, string, string)"/>

@@ -1,4 +1,5 @@
 ﻿using GSMA.MobileConnect.Discovery;
+using GSMA.MobileConnect.Utils;
 using GSMA.MobileConnect.Web;
 using System;
 using System.Collections.Generic;
@@ -31,10 +32,17 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
 
         [HttpGet]
         [Route("start_authorization")]
-        public async Task<IHttpActionResult> StartAuthorization(string sdksession = null, string subscriberId = null)
+        public async Task<IHttpActionResult> StartAuthorization(string sdksession = null, string subscriberId = null, string scope = null)
         {
-            var scope = string.Join(" ", MobileConnectConstants.MOBILECONNECTAUTHENTICATION, "email", "phone", "profile", "address");
-            var response = await _mobileConnect.StartAuthorization(Request, sdksession, subscriberId, null, null, new MobileConnectRequestOptions() { Scope = MobileConnectConstants.MOBILECONNECTAUTHENTICATION + " email" });
+            var response = await _mobileConnect.StartAuthorization(Request, sdksession, subscriberId, null, null, new MobileConnectRequestOptions() { Scope = scope });
+            return CreateResponse(response);
+        }
+
+        [HttpGet]
+        [Route("user_info")]
+        public async Task<IHttpActionResult> RequestUserInfo(string sdksession = null, string accessToken = null)
+        {
+            var response = await _mobileConnect.RequestUserInfoAsync(Request, sdksession, accessToken, null, new MobileConnectRequestOptions());
             return CreateResponse(response);
         }
 

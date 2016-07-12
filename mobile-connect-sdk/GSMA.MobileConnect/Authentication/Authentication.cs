@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Utils;
-using GSMA.MobileConnect.Constants;
 using GSMA.MobileConnect.Exceptions;
 using System.Net.Http;
 
@@ -25,7 +24,7 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        public StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce, string scope, int? maxAge, string acrValues, 
+        public StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce,
             string encryptedMSISDN, string supportedVersion, AuthenticationOptions options)
         {
             Validation.RejectNullOrEmpty(clientId, "clientId");
@@ -35,9 +34,7 @@ namespace GSMA.MobileConnect.Authentication
             Validation.RejectNullOrEmpty(nonce, "nonce");
 
             options = options ?? new AuthenticationOptions();
-            options.Scope = CoerceAuthenticationScope(scope ?? options.Scope, supportedVersion);
-            options.AcrValues = acrValues ?? options.AcrValues;
-            options.MaxAge = maxAge ?? options.MaxAge;
+            options.Scope = CoerceAuthenticationScope(options.Scope, supportedVersion);
             options.State = state;
             options.Nonce = nonce;
             options.LoginHint = options.LoginHint ?? (string.IsNullOrEmpty(encryptedMSISDN) ? null : string.Format("ENCR_MSISDN:{0}", encryptedMSISDN));
@@ -60,20 +57,15 @@ namespace GSMA.MobileConnect.Authentication
         {
             version = MobileConnectVersions.CoerceVersion(version, MobileConnectConstants.MOBILECONNECTAUTHENTICATION);
 
-            if (string.IsNullOrEmpty(version) || version == DefaultOptions.VERSION_MOBILECONNECTAUTHN)
+            if (string.IsNullOrEmpty(version) || version == Constants.DefaultOptions.VERSION_MOBILECONNECTAUTHN)
             {
                 // remove mc_authn if it exists in the scope
-                return scopeRequested.IndexOf(Scope.AUTHN, StringComparison.OrdinalIgnoreCase) < 0 ? scopeRequested : 
-                    scopeRequested.RemoveFromDelimitedString(Scope.AUTHN, StringComparison.OrdinalIgnoreCase);
+                return scopeRequested.IndexOf(Constants.Scope.AUTHN, StringComparison.OrdinalIgnoreCase) < 0 ? Scope.CoerceOpenIdScope(scopeRequested, MobileConnectConstants.MOBILECONNECT) : 
+                    scopeRequested.RemoveFromDelimitedString(Constants.Scope.AUTHN, StringComparison.OrdinalIgnoreCase);
             }
 
             // add mc_authn if it doesn't already exist
-            if (scopeRequested.IndexOf(Scope.AUTHN, StringComparison.OrdinalIgnoreCase) < 0)
-            {
-                return string.Join(" ", scopeRequested, Scope.AUTHN);
-            }
-
-            return scopeRequested;
+            return Scope.CoerceOpenIdScope(scopeRequested, MobileConnectConstants.MOBILECONNECTAUTHENTICATION);
         }
 
         /// <inheritdoc/>
@@ -89,9 +81,9 @@ namespace GSMA.MobileConnect.Authentication
             {
                 var formData = new List<BasicKeyValuePair>()
                 {
-                    new BasicKeyValuePair(Parameters.AUTHENTICATION_REDIRECT_URI, redirectUrl),
-                    new BasicKeyValuePair(Parameters.CODE, code),
-                    new BasicKeyValuePair(Parameters.GRANT_TYPE, DefaultOptions.GRANT_TYPE)
+                    new BasicKeyValuePair(Constants.Parameters.AUTHENTICATION_REDIRECT_URI, redirectUrl),
+                    new BasicKeyValuePair(Constants.Parameters.CODE, code),
+                    new BasicKeyValuePair(Constants.Parameters.GRANT_TYPE, Constants.DefaultOptions.GRANT_TYPE)
                 };
 
                 RestResponse response = await _client.PostAsync(requestTokenUrl, RestAuthentication.Basic(clientId, clientSecret), formData, null, null);
@@ -116,21 +108,21 @@ namespace GSMA.MobileConnect.Authentication
         {
             return new List<BasicKeyValuePair>
             {
-                new BasicKeyValuePair(Parameters.AUTHENTICATION_REDIRECT_URI, options.RedirectUrl),
-                new BasicKeyValuePair(Parameters.CLIENT_ID, options.ClientId),
-                new BasicKeyValuePair(Parameters.RESPONSE_TYPE, DefaultOptions.AUTHENTICATION_RESPONSE_TYPE),
-                new BasicKeyValuePair(Parameters.SCOPE, options.Scope),
-                new BasicKeyValuePair(Parameters.ACR_VALUES, options.AcrValues),
-                new BasicKeyValuePair(Parameters.STATE, options.State),
-                new BasicKeyValuePair(Parameters.NONCE, options.Nonce),
-                new BasicKeyValuePair(Parameters.DISPLAY, options.Display),
-                new BasicKeyValuePair(Parameters.PROMPT, options.Prompt),
-                new BasicKeyValuePair(Parameters.MAX_AGE, options.MaxAge.ToString()),
-                new BasicKeyValuePair(Parameters.UI_LOCALES, options.UiLocales),
-                new BasicKeyValuePair(Parameters.CLAIMS_LOCALES, options.ClaimsLocales),
-                new BasicKeyValuePair(Parameters.ID_TOKEN_HINT, options.IdTokenHint),
-                new BasicKeyValuePair(Parameters.LOGIN_HINT, options.LoginHint),
-                new BasicKeyValuePair(Parameters.DTBS, options.Dtbs),
+                new BasicKeyValuePair(Constants.Parameters.AUTHENTICATION_REDIRECT_URI, options.RedirectUrl),
+                new BasicKeyValuePair(Constants.Parameters.CLIENT_ID, options.ClientId),
+                new BasicKeyValuePair(Constants.Parameters.RESPONSE_TYPE, Constants.DefaultOptions.AUTHENTICATION_RESPONSE_TYPE),
+                new BasicKeyValuePair(Constants.Parameters.SCOPE, options.Scope),
+                new BasicKeyValuePair(Constants.Parameters.ACR_VALUES, options.AcrValues),
+                new BasicKeyValuePair(Constants.Parameters.STATE, options.State),
+                new BasicKeyValuePair(Constants.Parameters.NONCE, options.Nonce),
+                new BasicKeyValuePair(Constants.Parameters.DISPLAY, options.Display),
+                new BasicKeyValuePair(Constants.Parameters.PROMPT, options.Prompt),
+                new BasicKeyValuePair(Constants.Parameters.MAX_AGE, options.MaxAge.ToString()),
+                new BasicKeyValuePair(Constants.Parameters.UI_LOCALES, options.UiLocales),
+                new BasicKeyValuePair(Constants.Parameters.CLAIMS_LOCALES, options.ClaimsLocales),
+                new BasicKeyValuePair(Constants.Parameters.ID_TOKEN_HINT, options.IdTokenHint),
+                new BasicKeyValuePair(Constants.Parameters.LOGIN_HINT, options.LoginHint),
+                new BasicKeyValuePair(Constants.Parameters.DTBS, options.Dtbs),
             };
         }
     }

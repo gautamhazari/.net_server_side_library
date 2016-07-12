@@ -101,6 +101,20 @@ namespace GSMA.MobileConnect
             set { _authOptions.Scope = value; }
         }
 
+        /// <inheritdoc cref="AuthenticationOptions.AcrValues" />
+        public string AcrValues
+        {
+            get { return _authOptions.AcrValues; }
+            set { _authOptions.AcrValues = value; }
+        }
+
+        /// <inheritdoc cref="AuthenticationOptions.MaxAge" />
+        public int MaxAge
+        {
+            get { return _authOptions.MaxAge; }
+            set { _authOptions.MaxAge = value; }
+        }
+
         /// <summary>
         /// Filled authentication options instance
         /// </summary>

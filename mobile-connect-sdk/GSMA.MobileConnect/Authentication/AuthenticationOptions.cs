@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace GSMA.MobileConnect.Authentication
 {
     /// <summary>
-    /// Holds required and optional options for <see cref="IAuthentication.StartAuthentication(string, string, string, string, string, string, int?, string, string, string, AuthenticationOptions)"/>
+    /// Holds required and optional options for <see cref="IAuthentication.StartAuthentication(string, string, string, string, string, string, string, AuthenticationOptions)"/>
     /// </summary>
     /// <seealso cref="IAuthentication"/>
     public class AuthenticationOptions

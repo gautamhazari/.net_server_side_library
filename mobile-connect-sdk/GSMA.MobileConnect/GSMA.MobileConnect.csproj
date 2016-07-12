@@ -98,6 +98,7 @@
     <Compile Include="Utils\RestAuthentication.cs" />
     <Compile Include="Utils\RestClient.cs" />
     <Compile Include="Utils\RestResponse.cs" />
+    <Compile Include="Utils\Scope.cs" />
     <Compile Include="Utils\Validation.cs" />
     <Compile Include="Web\MobileConnectWebResponse.cs" />
     <Compile Include="Web\ResponseConverter.cs" />
