@@ -258,5 +258,6 @@ Help/
 # **/GSMA.MobileConnect.Demo.Config/prebuild.bat
 # **/GSMA.MobileConnect.Demo.Config/postbuild.bat
 # secret-config.json
+
 deploy/web/
 reports/
