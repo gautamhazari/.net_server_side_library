@@ -107,6 +107,9 @@
                 <label class="login-check"><input type="checkbox" id="msisdn-toggle" />Enter MSISDN</label>
             </div>
             <div class="error"></div>
+            <h2 class="subheader">Auth Type To Request</h2>
+            <label class="auth-radio"><input type="radio" id="authn-toggle" value="authn" name="auth" checked/>Authentication</label>
+            <label class="auth-radio"><input type="radio" id="authz-toggle" value="authz" name="auth" />Authorization</label>
             <h2 class="subheader">User Permissions To Request</h2>
             <label class="permissions-check"><input type="checkbox" id="address-toggle" data-scope="address" />Address</label>
             <label class="permissions-check"><input type="checkbox" id="email-toggle" data-scope="email"/>Email</label>
@@ -187,6 +190,15 @@
             return scope;
         }
 
+        var getAuthScope = function getAuthScope() {
+            var scope = 'mc_';
+
+            scope = scope + $('input[name=auth]:checked').val();
+            scope = scope + getPermissionsRequested();
+
+            return scope;
+        }
+
         var clearAttempt = function clearAttempt() {
             api.currentAttempt = {};
             closeChildWindow();
@@ -233,7 +245,7 @@
                 var queryString = '?' + generateParams({
                     subscriberId: response.subscriberId,
                     sdkSession: response.sdkSession,
-                    scope: getPermissionsRequested()
+                    scope: getAuthScope()
                 });
 
                 api.currentAttempt.session = response.sdkSession;

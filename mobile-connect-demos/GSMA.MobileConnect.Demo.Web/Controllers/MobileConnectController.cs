@@ -34,7 +34,15 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
         [Route("start_authentication")]
         public async Task<IHttpActionResult> StartAuthentication(string sdksession = null, string subscriberId = null, string scope = null)
         {
-            var response = await _mobileConnect.StartAuthentication(Request, sdksession, subscriberId, null, null, new MobileConnectRequestOptions() { Scope = scope });
+            bool authz = scope.Contains("mc_authz");
+            var options = new MobileConnectRequestOptions
+            {
+                Scope = scope,
+                Context = authz ? "demo" : null,
+                BindingMessage = authz ? "demo auth" : null,
+            };
+
+            var response = await _mobileConnect.StartAuthentication(Request, sdksession, subscriberId, null, null, options);
             return CreateResponse(response);
         }
 
