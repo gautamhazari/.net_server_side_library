@@ -68,6 +68,78 @@ namespace GSMA.MobileConnect.Test
             _mobileConnect = new MobileConnectWebInterface(_discovery, _authentication, _identity, _config);
         }
 
+        private MobileConnect.Discovery.DiscoveryResponse CompleteDiscovery()
+        {
+            _restClient.QueueResponse(_responses["authentication"]);
+            _restClient.QueueResponse(_responses["provider-metadata"]);
+            return _discovery.CompleteSelectedOperatorDiscovery(_config, _config.RedirectUrl, "111", "11");
+        }
+
+        [Test]
+        public void StartAuthenticationShouldUseAuthnWhenAuthzOptionsNotSet()
+        {
+            var discoveryResponse = CompleteDiscovery();
+
+            var result = _mobileConnect.StartAuthorization(_request, discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions());
+            var scope = HttpUtils.ExtractQueryValue(result.Url, "scope");
+
+            Assert.AreEqual(MobileConnectResponseType.Authorization, result.ResponseType);
+            Assert.That(() => scope.Contains("mc_authn"));
+            Assert.That(() => !scope.Contains("mc_authz"));
+        }
+
+        [Test]
+        public void StartAuthenticationShouldUseAuthzWhenContextSet()
+        {
+            var discoveryResponse = CompleteDiscovery();
+
+            var result = _mobileConnect.StartAuthorization(_request, discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions { Context = "context" });
+            var scope = HttpUtils.ExtractQueryValue(result.Url, "scope");
+
+            Assert.AreEqual(MobileConnectResponseType.Authorization, result.ResponseType);
+            Assert.That(() => scope.Contains("mc_authz"));
+            Assert.That(() => !scope.Contains("mc_authn"));
+        }
+
+        [Test]
+        public void StartAuthenticationShouldUseAuthzWhenAuthzScope()
+        {
+            var discoveryResponse = CompleteDiscovery();
+
+            var result = _mobileConnect.StartAuthorization(_request, discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions { Scope = "mc_authz", Context = "context", BindingMessage = "message" });
+            var scope = HttpUtils.ExtractQueryValue(result.Url, "scope");
+
+            Assert.AreEqual(MobileConnectResponseType.Authorization, result.ResponseType);
+            Assert.That(() => scope.Contains("mc_authz"));
+            Assert.That(() => !scope.Contains("mc_authn"));
+        }
+
+        [Test]
+        public void StartAuthenticationShouldUseAuthzWhenMCProductScope()
+        {
+            var discoveryResponse = CompleteDiscovery();
+
+            var result = _mobileConnect.StartAuthorization(_request, discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions { Scope = "mc_identity_phone", Context = "context", BindingMessage = "message" });
+            var scope = HttpUtils.ExtractQueryValue(result.Url, "scope");
+
+            Assert.AreEqual(MobileConnectResponseType.Authorization, result.ResponseType);
+            Assert.That(() => scope.Contains("mc_authz"));
+            Assert.That(() => scope.Contains("mc_identity_phone"));
+            Assert.That(() => !scope.Contains("mc_authn"));
+        }
+
+        [Test]
+        public void StartAuthenticationShouldSetClientNameWhenAuthz()
+        {
+            var discoveryResponse = CompleteDiscovery();
+            var expected = "test1";
+
+            var result = _mobileConnect.StartAuthorization(_request, discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions { Scope = "mc_identity_phone", Context = "context", BindingMessage = "message" });
+            var clientName = HttpUtils.ExtractQueryValue(result.Url, "client_name");
+
+            Assert.AreEqual(expected, clientName);
+        }
+
         [Test]
         public async Task RequestUserInfoReturnsUserInfo()
         {

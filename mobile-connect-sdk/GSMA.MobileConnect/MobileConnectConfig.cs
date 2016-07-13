@@ -31,16 +31,6 @@ namespace GSMA.MobileConnect
 
         #endregion
 
-        #region Authorization
-
-        /// <inheritdoc cref="Authentication.AuthenticationOptions.AcrValues"/>
-        public string AuthorizationAcrValues { get; set; }
-
-        /// <inheritdoc cref="Authentication.AuthenticationOptions.MaxAge"/>
-        public int AuthorizationMaxAge { get; set; }
-
-        #endregion
-
         #region Web
 
         /// <summary>
