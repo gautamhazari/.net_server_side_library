@@ -25,7 +25,7 @@ namespace GSMA.MobileConnect.Authentication
 
         /// <inheritdoc/>
         public StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce,
-            string encryptedMSISDN, string supportedVersion, AuthenticationOptions options)
+            string encryptedMSISDN, SupportedVersions versions, AuthenticationOptions options)
         {
             Validation.RejectNullOrEmpty(clientId, "clientId");
             Validation.RejectNullOrEmpty(authorizeUrl, "authorizeUrl");
@@ -34,38 +34,73 @@ namespace GSMA.MobileConnect.Authentication
             Validation.RejectNullOrEmpty(nonce, "nonce");
 
             options = options ?? new AuthenticationOptions();
-            options.Scope = CoerceAuthenticationScope(options.Scope, supportedVersion);
+            options.Scope = options.Scope ?? "";
+            bool shouldUseAuthorize = ShouldUseAuthorize(options);
+
+            if(shouldUseAuthorize)
+            {
+                Validation.RejectNullOrEmpty(options.Context, "options.Context");
+                Validation.RejectNullOrEmpty(options.ClientName, "options.ClientName");
+            }
+
             options.State = state;
             options.Nonce = nonce;
             options.LoginHint = options.LoginHint ?? (string.IsNullOrEmpty(encryptedMSISDN) ? null : string.Format("ENCR_MSISDN:{0}", encryptedMSISDN));
             options.RedirectUrl = redirectUrl;
             options.ClientId = clientId;
 
+            options.Scope = CoerceAuthenticationScope(options.Scope, versions, shouldUseAuthorize);
+
             UriBuilder build = new UriBuilder(authorizeUrl);
-            build.AddQueryParams(GetAuthenticationQueryParams(options));
+            build.AddQueryParams(GetAuthenticationQueryParams(options, shouldUseAuthorize));
 
             return new StartAuthenticationResponse() { Url = build.Uri.AbsoluteUri };
+        }
+
+        private bool ShouldUseAuthorize(AuthenticationOptions options)
+        {
+            // If a mobile connect product is requested and it isn't authn then use authorize
+            if (options.Scope.IndexOf(Constants.Scope.MCPREFIX, StringComparison.OrdinalIgnoreCase) > -1 
+                && options.Scope.IndexOf(Constants.Scope.AUTHN, StringComparison.OrdinalIgnoreCase) == -1)
+            {
+                return true;
+            }
+
+            // If context is passed then use authorize
+            if(!string.IsNullOrEmpty(options.Context))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
         /// Returns a modified scope value based on the version required. Depending on the version the value mc_authn may be added or removed
         /// </summary>
         /// <param name="scopeRequested">Request scope value</param>
-        /// <param name="version">Version of the mobileconnect service being called</param>
+        /// <param name="versions">SupportedVersions from ProviderMetadata, used for finding the supported version for the requested auth type</param>
+        /// <param name="shouldUseAuthorize">If mc_authz should be used over mc_authn</param>
         /// <returns>Returns a modified scope value with mc_authn removed or added</returns>
-        private string CoerceAuthenticationScope(string scopeRequested, string version)
+        private string CoerceAuthenticationScope(string scopeRequested, SupportedVersions versions, bool shouldUseAuthorize)
         {
-            version = MobileConnectVersions.CoerceVersion(version, MobileConnectConstants.MOBILECONNECTAUTHENTICATION);
+            var requiredScope = shouldUseAuthorize ? MobileConnectConstants.MOBILECONNECTAUTHORIZATION : MobileConnectConstants.MOBILECONNECTAUTHENTICATION;
+            var disallowedScope = shouldUseAuthorize ? Constants.Scope.AUTHN : Constants.Scope.AUTHZ;
 
-            if (string.IsNullOrEmpty(version) || version == Constants.DefaultOptions.VERSION_MOBILECONNECTAUTHN)
+            versions = versions ?? new SupportedVersions(null);
+            string version = versions.GetSupportedVersion(requiredScope);
+
+            var splitScope = scopeRequested.Split().ToList();
+            splitScope = Scope.CoerceOpenIdScope(splitScope, requiredScope);
+
+            splitScope.RemoveAll(x => x.Equals(disallowedScope, StringComparison.OrdinalIgnoreCase));
+
+            if(!shouldUseAuthorize && version == Constants.DefaultOptions.VERSION_MOBILECONNECTAUTHN)
             {
-                // remove mc_authn if it exists in the scope
-                return scopeRequested.IndexOf(Constants.Scope.AUTHN, StringComparison.OrdinalIgnoreCase) < 0 ? Scope.CoerceOpenIdScope(scopeRequested, MobileConnectConstants.MOBILECONNECT) : 
-                    scopeRequested.RemoveFromDelimitedString(Constants.Scope.AUTHN, StringComparison.OrdinalIgnoreCase);
+                splitScope.RemoveAll(x => x.Equals(Constants.Scope.AUTHN, StringComparison.OrdinalIgnoreCase));
             }
 
-            // add mc_authn if it doesn't already exist
-            return Scope.CoerceOpenIdScope(scopeRequested, MobileConnectConstants.MOBILECONNECTAUTHENTICATION);
+            return Scope.CreateScope(splitScope);
         }
 
         /// <inheritdoc/>
@@ -104,9 +139,9 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        private List<BasicKeyValuePair> GetAuthenticationQueryParams(AuthenticationOptions options)
+        private List<BasicKeyValuePair> GetAuthenticationQueryParams(AuthenticationOptions options, bool useAuthorize)
         {
-            return new List<BasicKeyValuePair>
+            var authParameters = new List<BasicKeyValuePair>
             {
                 new BasicKeyValuePair(Constants.Parameters.AUTHENTICATION_REDIRECT_URI, options.RedirectUrl),
                 new BasicKeyValuePair(Constants.Parameters.CLIENT_ID, options.ClientId),
@@ -124,6 +159,15 @@ namespace GSMA.MobileConnect.Authentication
                 new BasicKeyValuePair(Constants.Parameters.LOGIN_HINT, options.LoginHint),
                 new BasicKeyValuePair(Constants.Parameters.DTBS, options.Dtbs),
             };
+
+            if(useAuthorize)
+            {
+                authParameters.Add(new BasicKeyValuePair(Constants.Parameters.CLIENT_NAME, options.ClientName));
+                authParameters.Add(new BasicKeyValuePair(Constants.Parameters.CONTEXT, options.Context));
+                authParameters.Add(new BasicKeyValuePair(Constants.Parameters.BINDING_MESSAGE, options.BindingMessage));
+            }
+
+            return authParameters;
         }
     }
 }

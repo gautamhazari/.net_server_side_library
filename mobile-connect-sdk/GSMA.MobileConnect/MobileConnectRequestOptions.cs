@@ -115,6 +115,20 @@ namespace GSMA.MobileConnect
             set { _authOptions.MaxAge = value; }
         }
 
+        /// <inheritdoc cref="AuthenticationOptions.Context" />
+        public string Context
+        {
+            get { return _authOptions.Context; }
+            set { _authOptions.Context = value; }
+        }
+
+        /// <inheritdoc cref="AuthenticationOptions.BindingMessage" />
+        public string BindingMessage
+        {
+            get { return _authOptions.BindingMessage; }
+            set { _authOptions.BindingMessage = value; }
+        }
+
         /// <summary>
         /// Filled authentication options instance
         /// </summary>

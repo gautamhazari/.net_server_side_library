@@ -23,9 +23,9 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="state">Application specified unique scope value</param>
         /// <param name="nonce">Application specified nonce value. (Required)</param>
         /// <param name="encryptedMSISDN">Encrypted MSISDN for user if returned from discovery service</param>
-        /// <param name="supportedVersion">Version of the mobile connect authentication supported</param>
+        /// <param name="versions">SupportedVersions from <see cref="ProviderMetadata"/> if null default supported versions will be used to generate the auth url</param>
         /// <param name="options">Optional parameters</param>
-        StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce, string encryptedMSISDN, string supportedVersion, AuthenticationOptions options);
+        StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce, string encryptedMSISDN, SupportedVersions versions, AuthenticationOptions options);
 
         /// <summary>
         /// Synchronous wrapper for <see cref="IAuthentication.RequestTokenAsync(string, string, string, string, string)"/>

@@ -11,5 +11,7 @@ namespace GSMA.MobileConnect.Constants
         internal const string OPENID = "openid";
         internal const string AUTHN = "mc_authn";
         internal const string AUTHZ = "mc_authz";
+
+        internal const string MCPREFIX = "mc_";
     }
 }

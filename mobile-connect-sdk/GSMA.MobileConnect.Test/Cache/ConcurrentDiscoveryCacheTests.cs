@@ -142,6 +142,16 @@ namespace GSMA.MobileConnect.Test.Cache
         }
 
         [Test]
+        public async Task CacheShouldReturnDefaultValueIfKeyNull()
+        {
+            var cache = new ConcurrentDiscoveryCache();
+
+            var cached = await cache.Get<ProviderMetadata>(null, true);
+
+            Assert.IsNull(cached);
+        }
+
+        [Test]
         public void SetCacheExpiryTimeShouldThrowIfExpiryTimeTooShort()
         {
             var cache = new NoExpiryLimitCache();

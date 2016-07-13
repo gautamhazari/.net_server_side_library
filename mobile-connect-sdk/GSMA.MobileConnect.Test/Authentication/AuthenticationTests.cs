@@ -23,6 +23,7 @@ namespace GSMA.MobileConnect.Test.Authentication
             { "invalid-code", new RestResponse(System.Net.HttpStatusCode.BadRequest, "{\"error\":\"invalid_grant\",\"error_description\":\"Authorization code doesn't exist or is invalid for the client\"}") },
         };
 
+        private MobileConnect.Discovery.SupportedVersions _defaultVersions = new MobileConnect.Discovery.SupportedVersions(new Dictionary<string, string> { ["openid"] = "mc_v1.2" });
         private IAuthentication _authentication;
         private MockRestClient _restClient;
         private MobileConnectConfig _config;
@@ -50,9 +51,9 @@ namespace GSMA.MobileConnect.Test.Authentication
         {
             var initialScope = "openid mc_authn";
             var expectedScope = "openid";
-            var version = "mc_v1.1";
+            var versions = new MobileConnect.Discovery.SupportedVersions(new Dictionary<string, string> { ["openid"] = "mc_v1.1" });
 
-            var result = _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", "nonce", null, version, new AuthenticationOptions { Scope = initialScope });
+            var result = _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", "nonce", null, versions, new AuthenticationOptions { Scope = initialScope });
             var actualScope = HttpUtils.ExtractQueryValue(result.Url, "scope");
 
             Assert.AreEqual(expectedScope, actualScope);
@@ -63,9 +64,9 @@ namespace GSMA.MobileConnect.Test.Authentication
         {
             var initialScope = "openid mc_authn";
             var expectedScope = "openid mc_authn";
-            var version = "mc_v1.2";
+            var versions = new MobileConnect.Discovery.SupportedVersions(new Dictionary<string, string> { ["openid"] = "mc_v1.2" });
 
-            var result = _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", "nonce", null, version, new AuthenticationOptions { Scope = initialScope });
+            var result = _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", "nonce", null, versions, new AuthenticationOptions { Scope = initialScope });
             var actualScope = HttpUtils.ExtractQueryValue(result.Url, "scope");
 
             Assert.AreEqual(expectedScope, actualScope);
@@ -76,9 +77,54 @@ namespace GSMA.MobileConnect.Test.Authentication
         {
             var initialScope = "openid";
             var expectedScope = "openid mc_authn";
-            var version = "mc_v1.2";
+            var versions = new MobileConnect.Discovery.SupportedVersions(new Dictionary<string, string> { ["openid"] = "mc_v1.2" });
 
-            var result = _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", "nonce", null, version, new AuthenticationOptions { Scope = initialScope });
+            var result = _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", "nonce", null, versions, new AuthenticationOptions { Scope = initialScope });
+            var actualScope = HttpUtils.ExtractQueryValue(result.Url, "scope");
+
+            Assert.AreEqual(expectedScope, actualScope);
+        }
+
+        [Test]
+        public void StartAuthenticationWithMc_AuthzScopeShouldAddAuthorizationArguments()
+        {
+            var options = new AuthenticationOptions
+            {
+                Scope = "openid mc_authz",
+                ClientName = "test",
+                Context = "context",
+                BindingMessage = "binding",
+            };
+
+            var result = _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", "nonce", null, _defaultVersions, options);
+            var query = HttpUtils.ParseQueryString(new Uri(result.Url).Query);
+
+            Assert.AreEqual(options.Context, query["context"]);
+            Assert.AreEqual(options.ClientName, query["client_name"]);
+            Assert.AreEqual(options.BindingMessage, query["binding_message"]);
+        }
+
+        [Test]
+        public void StartAuthenticationWithContextShouldUseAuthorizationScope()
+        {
+            var initialScope = "openid mc_authn";
+            var expectedScope = "openid mc_authz";
+            var options = new AuthenticationOptions { Scope = initialScope, ClientName = "clientName", Context = "context" };
+
+            var result = _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", "nonce", null, _defaultVersions, options);
+            var actualScope = HttpUtils.ExtractQueryValue(result.Url, "scope");
+
+            Assert.AreEqual(expectedScope, actualScope);
+        }
+
+        [Test]
+        public void StartAuthenticationWithMobileConnectProductScopeShouldUseAuthorizationScope()
+        {
+            var initialScope = "openid mc_authn mc_identity_phone";
+            var expectedScope = "openid mc_authz mc_identity_phone";
+            var options = new AuthenticationOptions { Scope = initialScope, ClientName = "clientName", Context = "context" };
+
+            var result = _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", "nonce", null, _defaultVersions, options);
             var actualScope = HttpUtils.ExtractQueryValue(result.Url, "scope");
 
             Assert.AreEqual(expectedScope, actualScope);
@@ -160,6 +206,20 @@ namespace GSMA.MobileConnect.Test.Authentication
         public void StartAuthenticationShouldThrowWhenNonceIsNull()
         {
             Assert.Throws<MobileConnectInvalidArgumentException>(() => _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", null, null, null, null));
+        }
+
+        [Test]
+        public void StartAuthenticationShouldThrowWhenClientNameIsNullAndShouldUseAuthorization()
+        {
+            var options = new AuthenticationOptions { Context = "context", BindingMessage = "bind", ClientName = null };
+            Assert.Throws<MobileConnectInvalidArgumentException>(() => _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", null, null, null, options));
+        }
+
+        [Test]
+        public void StartAuthenticationShouldThrowWhenContextIsNullAndShouldUseAuthorization()
+        {
+            var options = new AuthenticationOptions { Context = null, BindingMessage = "bind", ClientName = "client" };
+            Assert.Throws<MobileConnectInvalidArgumentException>(() => _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", null, null, null, options));
         }
 
         [Test]

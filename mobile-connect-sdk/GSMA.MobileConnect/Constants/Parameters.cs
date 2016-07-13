@@ -43,6 +43,11 @@ namespace GSMA.MobileConnect.Constants
         internal const string LOGIN_HINT = "login_hint";
         internal const string DTBS = "dtbs";
 
+        //Required params for authorization
+        internal const string CLIENT_NAME = "client_name";
+        internal const string CONTEXT = "context";
+        internal const string BINDING_MESSAGE = "binding_message";
+
         //Params for AuthorizationResponse
         internal const string ERROR = "error";
         internal const string ERROR_DESCRIPTION = "error_description";

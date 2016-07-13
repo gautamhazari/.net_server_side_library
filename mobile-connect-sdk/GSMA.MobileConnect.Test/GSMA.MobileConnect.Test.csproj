@@ -66,6 +66,7 @@
     <Compile Include="Claims\ClaimsValueTests.cs" />
     <Compile Include="Discovery\DiscoveryResponseTests.cs" />
     <Compile Include="Discovery\DiscoveryTests.cs" />
+    <Compile Include="Discovery\SupportedVersionsTests.cs" />
     <Compile Include="EndToEndTests.cs" />
     <Compile Include="ErrorResponseTests.cs" />
     <Compile Include="Identity\IdentityServiceTests.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="MobileConnectInterfaceMockTests.cs" />
     <Compile Include="MobileConnectRequestOptionsTests.cs" />
     <Compile Include="MobileConnectWebInterfaceIntegrationTests.cs" />
+    <Compile Include="MobileConnectWebInterfaceMockTests.cs" />
     <Compile Include="NoExpiryLimitCache.cs" />
     <Compile Include="MockRestClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

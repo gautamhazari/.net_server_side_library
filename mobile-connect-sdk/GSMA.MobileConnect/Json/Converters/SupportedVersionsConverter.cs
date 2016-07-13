@@ -8,15 +8,12 @@ using System.Threading.Tasks;
 
 namespace GSMA.MobileConnect.Json.Converters
 {
-    /// <summary>
-    /// Flattens an array of objects to a dictionary of string, string. Should only be used when the objects are simple key/value objects with different keys
-    /// </summary>
-    public class ObjectArrayToDictionaryConverter : JsonConverter
+    public class SupportedVersionsConverter : JsonConverter
     {
         /// <inheritdoc/>
         public override bool CanConvert(Type objectType)
         {
-            return (objectType == typeof(Dictionary<string, string>));
+            return (objectType == typeof(Discovery.SupportedVersions));
         }
 
         /// <inheritdoc/>
@@ -38,7 +35,7 @@ namespace GSMA.MobileConnect.Json.Converters
             {
                 var obj = item as JObject;
 
-                if(obj == null)
+                if (obj == null)
                 {
                     continue;
                 }
@@ -49,14 +46,16 @@ namespace GSMA.MobileConnect.Json.Converters
                 }
             }
 
-            return dict;
+            return new Discovery.SupportedVersions(dict);
         }
 
         /// <inheritdoc/>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var dict = value as Dictionary<string, string>;
-            if(dict == null)
+            var versions = value as Discovery.SupportedVersions;
+            var dict = versions?.InitialValues;
+
+            if (dict == null || dict.Count == 0)
             {
                 return;
             }

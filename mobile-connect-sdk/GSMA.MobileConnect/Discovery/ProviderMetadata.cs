@@ -272,8 +272,8 @@ namespace GSMA.MobileConnect.Discovery
         /// Dictionary of values that represent the supported versions for different mobile connect services from this provider. These versions are used when constructing calls to the services.
         /// </summary>
         [JsonProperty("mobile_connect_version_supported")]
-        [JsonConverter(typeof(Json.Converters.ObjectArrayToDictionaryConverter))]
-        public Dictionary<string, string> MobileConnectVersionSupported { get; set; }
+        [JsonConverter(typeof(Json.Converters.SupportedVersionsConverter))]
+        public SupportedVersions MobileConnectVersionSupported { get; set; }
 
         /// <summary>
         /// Array containing a list of the login hint methods supported by the issuer ID Gateway
@@ -299,30 +299,15 @@ namespace GSMA.MobileConnect.Discovery
         /// </summary>
         /// <param name="mobileConnectVersionSupported">Dictionary of version supported, if null will default to a populated dictionary</param>
         [JsonConstructor]
-        public ProviderMetadata(Dictionary<string, string> mobileConnectVersionSupported)
+        public ProviderMetadata(SupportedVersions mobileConnectVersionSupported)
         {
-            MobileConnectVersionSupported = mobileConnectVersionSupported ?? MobileConnectVersions.CreateDefaultSupportedVersions();
+            MobileConnectVersionSupported = mobileConnectVersionSupported ?? new SupportedVersions(null);
         }
 
         /// <inheritdoc/>
         public void MarkExpired(bool isExpired)
         {
             HasExpired = HasExpired || isExpired;
-        }
-
-        /// <summary>
-        /// Gets the available mobile connect version for the specified scope value
-        /// </summary>
-        /// <param name="scope">Scope value to retrieve supported version for</param>
-        public string GetSupportedMobileConnectVersion(string scope)
-        {
-            string version;
-            if (MobileConnectVersionSupported.TryGetValue(scope, out version))
-            {
-                return version;
-            }
-
-            return MobileConnectVersionSupported[MobileConnectConstants.MOBILECONNECT];
         }
     }
 }

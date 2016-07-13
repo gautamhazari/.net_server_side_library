@@ -18,7 +18,7 @@ namespace GSMA.MobileConnect.Utils
         /// Creates a dictionary of supported versions populated with defaulted values
         /// </summary>
         /// <returns>Dictionary with supported versions populated</returns>
-        public static Dictionary<string, string> CreateDefaultSupportedVersions()
+        private static Dictionary<string, string> CreateDefaultSupportedVersions()
         {
             return new Dictionary<string, string>
             {

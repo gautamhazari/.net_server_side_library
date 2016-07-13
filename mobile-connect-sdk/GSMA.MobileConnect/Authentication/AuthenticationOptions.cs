@@ -25,10 +25,9 @@ namespace GSMA.MobileConnect.Authentication
 
         /// <summary>
         /// Authentication Context class Reference. Space separated string that specifies the Authentication Context Reference to be used during authentication processing. 
-        /// The LOA required by the RP/Client for the use case can be used here. The values appear as order of preference. The acr satisfied during authentication is returned as acr claim value.
-        /// The recommended values are the LOAs as specified in ISO/IEC 29115 Clause 6 – 1, 2, 3, 4 – representing the LOAs of LOW, MEDIUM, HIGH and VERY HIGH.
-        /// The acr_values are indication of what authentication methods to used by the IDP. 
-        /// The authentication methods to be used are linked to the LOA value passed in the acr_values. The IDP configures the authentication method selection logic based on the acr_values.
+        /// Mobile Connect Authentication and Authorization support the values "2" and "3", 2 specifies authenticate/authorize and 3 specifies autthenticate/authorize plus.
+        /// If required the server may override the ACR value passed to force a higher level of assurance or if the required level of assurance is temporarily unavailable, 
+        /// if this happens the ID Token will contain the actual acr value used
         /// </summary>
         public string AcrValues { get; set; } = DefaultOptions.AUTHENTICATION_ACR_VALUES;
 
@@ -131,5 +130,25 @@ namespace GSMA.MobileConnect.Authentication
         /// The signed data in the ID Claim as private JWT claims for this profile.
         /// </summary>
         public string Dtbs { get; set; }
+
+        /// <summary>
+        /// ApplicationShortName for the registered application, this must be correct for the application client id
+        /// when authorizing with mc_authz or authentication will fail
+        /// </summary>
+        public string ClientName { get; set; }
+
+        /// <summary>
+        /// Context of the action being authorized, when authorizing using mc_authz this will be displayed
+        /// to the user along with the <see cref="ClientName"/> and <see cref="BindingMessage"/> to allow
+        /// the user to identify the authorization request
+        /// </summary>
+        public string Context { get; set; }
+
+        /// <summary>
+        /// Binding message to be displayed to the user when authorizing using mc_authz this will be displayed
+        /// to the user along with the <see cref="ClientName"/> and <see cref="Context"/> to allow
+        /// the user to identify the authorization request. This is optional.
+        /// </summary>
+        public string BindingMessage { get; set; }
     }
 }

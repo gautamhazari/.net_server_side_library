@@ -21,17 +21,37 @@ namespace GSMA.MobileConnect.Utils
         public static string CoerceOpenIdScope(string scope, string defaultScope = Constants.Scope.OPENID)
         {
             var split = (scope ?? "").Split().ToList();
+
+            var scopeValues = CoerceOpenIdScope(split, defaultScope);
+
+            return CreateScope(scopeValues);
+        }
+
+        /// <summary>
+        /// Returns a list of scope values that is ensured to contain the defaultScope values and has any duplication of values removed.
+        /// This can be used when multiple modifications of scope are required to be chained
+        /// </summary>
+        /// <param name="scopeValues">Scope to coerce</param>
+        /// <param name="defaultScope">Required default scope</param>
+        /// <returns>List of scope values containing default scope values and no duplicated values</returns>
+        public static List<string> CoerceOpenIdScope(IList<string> scopeValues, string defaultScope = Constants.Scope.OPENID)
+        {
             var splitDefault = defaultScope.Split().ToList();
 
             for (int i = 0; i < splitDefault.Count; i++)
             {
-                if (split.FirstOrDefault(x => x.Equals(splitDefault[i], StringComparison.OrdinalIgnoreCase)) == null)
+                if (scopeValues.FirstOrDefault(x => x.Equals(splitDefault[i], StringComparison.OrdinalIgnoreCase)) == null)
                 {
-                    split.Insert(i, splitDefault[i]);
+                    scopeValues.Insert(i, splitDefault[i]);
                 }
             }
 
-            return string.Join(" ", split.Distinct()).Trim();
+            return scopeValues.Distinct().ToList();
+        }
+
+        internal static string CreateScope(IList<string> scopeValues)
+        {
+            return string.Join(" ", scopeValues).Trim();
         }
     }
 }
