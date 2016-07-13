@@ -76,7 +76,7 @@ namespace GSMA.MobileConnect
         }
 
         /// <summary>
-        /// Creates an authorization url with parameters to begin the authorization process
+        /// Creates an authorization url with parameters to begin the authetication process
         /// </summary>
         /// <param name="request">Originating web request</param>
         /// <param name="discoveryResponse">The response returned by the discovery process</param>
@@ -85,16 +85,16 @@ namespace GSMA.MobileConnect
         /// <param name="nonce">Unique string to be used to prevent replay attacks during request token process (defaults to guid if not supplied, value will be returned in MobileConnectStatus object)</param>
         /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public MobileConnectStatus StartAuthorization(HttpRequestMessage request, DiscoveryResponse discoveryResponse, string encryptedMSISDN, string state, string nonce, MobileConnectRequestOptions options)
+        public MobileConnectStatus StartAuthentication(HttpRequestMessage request, DiscoveryResponse discoveryResponse, string encryptedMSISDN, string state, string nonce, MobileConnectRequestOptions options)
         {
             state = string.IsNullOrEmpty(state) ? GenerateUniqueString() : state;
             nonce = string.IsNullOrEmpty(nonce) ? GenerateUniqueString() : nonce;
 
-            return MobileConnectInterfaceHelper.StartAuthorization(_authentication, discoveryResponse, encryptedMSISDN, state, nonce, _config, options);
+            return MobileConnectInterfaceHelper.StartAuthentication(_authentication, discoveryResponse, encryptedMSISDN, state, nonce, _config, options);
         }
 
         /// <summary>
-        /// Creates an authorization url with parameters to begin the authorization process, the SDKSession id is used to fetch the discovery response
+        /// Creates an authorization url with parameters to begin the authetication process, the SDKSession id is used to fetch the discovery response
         /// </summary>
         /// <param name="request">Originating web request</param>
         /// <param name="sdkSession">SDKSession id used to fetch the discovery response with additional parameters that are required to generate the url</param>
@@ -103,7 +103,7 @@ namespace GSMA.MobileConnect
         /// <param name="nonce">Unique string to be used to prevent replay attacks during request token process (defaults to guid if not supplied, value will be returned in MobileConnectStatus object)</param>
         /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public async Task<MobileConnectStatus> StartAuthorization(HttpRequestMessage request, string sdkSession, string encryptedMSISDN, string state, string nonce, MobileConnectRequestOptions options)
+        public async Task<MobileConnectStatus> StartAuthentication(HttpRequestMessage request, string sdkSession, string encryptedMSISDN, string state, string nonce, MobileConnectRequestOptions options)
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -112,7 +112,7 @@ namespace GSMA.MobileConnect
                 return GetCacheError();
             }
 
-            return StartAuthorization(request, discoveryResponse, encryptedMSISDN, state, nonce, options);
+            return StartAuthentication(request, discoveryResponse, encryptedMSISDN, state, nonce, options);
         }
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace GSMA.MobileConnect
 
         private async Task<MobileConnectStatus> CacheIfRequired(MobileConnectStatus status)
         {
-            if (!_cacheWithSessionId || status.ResponseType != MobileConnectResponseType.StartAuthorization || status.DiscoveryResponse == null)
+            if (!_cacheWithSessionId || status.ResponseType != MobileConnectResponseType.StartAuthentication || status.DiscoveryResponse == null)
             {
                 return status;
             }

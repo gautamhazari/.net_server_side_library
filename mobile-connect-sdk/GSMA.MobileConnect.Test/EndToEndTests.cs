@@ -48,7 +48,7 @@ namespace GSMA.MobileConnect.Test
             //Attempt discovery
             var status = await mobileConnect.AttemptDiscoveryAsync(testConfig.ValidMSISDN, null, null, blankOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.StartAuthorization, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType);
 
             var discoveryResponse = status.DiscoveryResponse;
             var encryptedMsisdn = status.DiscoveryResponse.ResponseData.subscriber_id;
@@ -56,9 +56,9 @@ namespace GSMA.MobileConnect.Test
             var nonce = "qpwoeirutyalskdjfhgzmxncbv";
 
             //Start Authorization
-            status = mobileConnect.StartAuthorization(discoveryResponse, encryptedMsisdn, state, nonce, blankOptions);
+            status = mobileConnect.StartAuthentication(discoveryResponse, encryptedMsisdn, state, nonce, blankOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.Authorization, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.Authentication, status.ResponseType);
 
             //Inconclusive at this point because the sandbox no longer allows us to follow redirects easily
             Assert.Inconclusive("Can't follow redirects in sandbox");
@@ -102,7 +102,7 @@ namespace GSMA.MobileConnect.Test
             //Attempt discovery
             var status = await mobileConnect.AttemptDiscoveryAsync(testConfig.ValidMSISDN, null, null, blankOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.StartAuthorization, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType);
 
             var discoveryResponse = status.DiscoveryResponse;
             var encryptedMsisdn = status.DiscoveryResponse.ResponseData.subscriber_id;
@@ -110,9 +110,9 @@ namespace GSMA.MobileConnect.Test
             var nonce = "qpwoeirutyalskdjfhgzmxncbv";
 
             //Start Authorization
-            status = mobileConnect.StartAuthorization(discoveryResponse, encryptedMsisdn, state, nonce, blankOptions);
+            status = mobileConnect.StartAuthentication(discoveryResponse, encryptedMsisdn, state, nonce, blankOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.Authorization, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.Authentication, status.ResponseType);
 
             //Inconclusive at this point because the sandbox no longer allows us to follow redirects easily
             Assert.Inconclusive("Can't follow redirects in sandbox");
@@ -157,7 +157,7 @@ namespace GSMA.MobileConnect.Test
             //Attempt discovery
             var status = await mobileConnect.AttemptDiscoveryAsync(testConfig.ValidMSISDN, null, null, blankOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.StartAuthorization, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType);
 
             var discoveryResponse = status.DiscoveryResponse;
             var encryptedMsisdn = status.DiscoveryResponse.ResponseData.subscriber_id;
@@ -165,9 +165,9 @@ namespace GSMA.MobileConnect.Test
             var nonce = "qpwoeirutyalskdjfhgzmxncbv";
 
             //Start Authorization
-            status = mobileConnect.StartAuthorization(discoveryResponse, encryptedMsisdn, state, nonce, blankOptions);
+            status = mobileConnect.StartAuthentication(discoveryResponse, encryptedMsisdn, state, nonce, blankOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.Authorization, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.Authentication, status.ResponseType);
 
             //Inconclusive at this point because the sandbox no longer allows us to follow redirects easily
             Assert.Inconclusive("Can't follow redirects in sandbox");
@@ -213,7 +213,7 @@ namespace GSMA.MobileConnect.Test
             var request = new HttpRequestMessage();
             var status = await mobileConnect.AttemptDiscoveryAsync(request, testConfig.ValidMSISDN, null, null, true, blankOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.StartAuthorization, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType);
 
             var discoveryResponse = status.DiscoveryResponse;
             var encryptedMsisdn = status.DiscoveryResponse.ResponseData.subscriber_id;
@@ -222,9 +222,9 @@ namespace GSMA.MobileConnect.Test
 
             //Start Authorization
             request = new HttpRequestMessage();
-            status = mobileConnect.StartAuthorization(request, discoveryResponse, encryptedMsisdn, state, nonce, blankOptions);
+            status = mobileConnect.StartAuthentication(request, discoveryResponse, encryptedMsisdn, state, nonce, blankOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.Authorization, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.Authentication, status.ResponseType);
 
             //Inconclusive at this point because the sandbox no longer allows us to follow redirects easily
             Assert.Inconclusive("Can't follow redirects in sandbox");
@@ -271,7 +271,7 @@ namespace GSMA.MobileConnect.Test
             var request = new HttpRequestMessage();
             var status = await mobileConnect.AttemptDiscoveryAsync(request, testConfig.ValidMSISDN, null, null, true, blankOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.StartAuthorization, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType);
 
             var session = status.SDKSession;
             var encryptedMsisdn = status.DiscoveryResponse.ResponseData.subscriber_id;
@@ -280,9 +280,9 @@ namespace GSMA.MobileConnect.Test
 
             //Start Authorization
             request = new HttpRequestMessage();
-            status = await mobileConnect.StartAuthorization(request, session, encryptedMsisdn, state, nonce, blankOptions);
+            status = await mobileConnect.StartAuthentication(request, session, encryptedMsisdn, state, nonce, blankOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.Authorization, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.Authentication, status.ResponseType);
 
             //Inconclusive at this point because the sandbox no longer allows us to follow redirects easily
             Assert.Inconclusive("Can't follow redirects in sandbox");

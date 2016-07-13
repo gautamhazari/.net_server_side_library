@@ -128,7 +128,7 @@
     </div>
     <script>
         var discoveryUrl = '/api/mobileconnect/start_discovery';
-        var authorizationUrl = '/api/mobileconnect/start_authorization';
+        var authorizationUrl = '/api/mobileconnect/start_authentication';
         var userInfoUrl = '/api/mobileconnect/user_info';
 
         var openWindow = function openWindow(url) {
@@ -229,7 +229,7 @@
 
                 $.get(discoveryUrl + queryString, api.httpCallback);
             },
-            start_authorization: function start_authorization(response) {
+            start_authentication: function start_authentication(response) {
                 var queryString = '?' + generateParams({
                     subscriberId: response.subscriberId,
                     sdkSession: response.sdkSession,
@@ -241,7 +241,7 @@
 
                 $.get(authorizationUrl + queryString, api.httpCallback);
             },
-            authorization: function authorization(response) {
+            authentication: function authentication(response) {
                 api.currentAttempt.expectedState = response.state;
                 api.currentAttempt.expectedNonce = response.nonce;
                 openWindow(response.url);

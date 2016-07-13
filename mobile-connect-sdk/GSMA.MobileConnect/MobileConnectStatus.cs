@@ -159,7 +159,7 @@ namespace GSMA.MobileConnect
             return new MobileConnectStatus
             {
                 DiscoveryResponse = response,
-                ResponseType = MobileConnectResponseType.StartAuthorization,
+                ResponseType = MobileConnectResponseType.StartAuthentication,
                 SetCookie = setCookie
             };
         }
@@ -189,7 +189,7 @@ namespace GSMA.MobileConnect
         {
             return new MobileConnectStatus
             {
-                ResponseType = MobileConnectResponseType.Authorization,
+                ResponseType = MobileConnectResponseType.Authentication,
                 Url = url,
                 State = state,
                 Nonce = nonce
@@ -249,13 +249,13 @@ namespace GSMA.MobileConnect
         /// </summary>
         StartDiscovery,
         /// <summary>
-        /// ResponseType indicating the next step should be StartAuthorization
+        /// ResponseType indicating the next step should be StartAuthentication
         /// </summary>
-        StartAuthorization,
+        StartAuthentication,
         /// <summary>
-        /// ResponseType indicating the next step should be Authorization
+        /// ResponseType indicating the next step should be Authentication
         /// </summary>
-        Authorization,
+        Authentication,
         /// <summary>
         /// ResponseType indicating completion of the MobileConnectProcess
         /// </summary>

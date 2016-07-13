@@ -95,9 +95,9 @@ namespace GSMA.MobileConnect
         /// <param name="nonce">Unique value to associate a client session with an id token</param>
         /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public MobileConnectStatus StartAuthorization(DiscoveryResponse discoveryResponse, string encryptedMSISDN, string state, string nonce, MobileConnectRequestOptions options)
+        public MobileConnectStatus StartAuthentication(DiscoveryResponse discoveryResponse, string encryptedMSISDN, string state, string nonce, MobileConnectRequestOptions options)
         {
-            return MobileConnectInterfaceHelper.StartAuthorization(_authentication, discoveryResponse, encryptedMSISDN, state, nonce, _config, options);
+            return MobileConnectInterfaceHelper.StartAuthentication(_authentication, discoveryResponse, encryptedMSISDN, state, nonce, _config, options);
         }
 
         /// <summary>

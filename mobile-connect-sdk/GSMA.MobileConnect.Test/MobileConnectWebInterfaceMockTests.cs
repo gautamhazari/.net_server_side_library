@@ -80,10 +80,10 @@ namespace GSMA.MobileConnect.Test
         {
             var discoveryResponse = CompleteDiscovery();
 
-            var result = _mobileConnect.StartAuthorization(_request, discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions());
+            var result = _mobileConnect.StartAuthentication(_request, discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions());
             var scope = HttpUtils.ExtractQueryValue(result.Url, "scope");
 
-            Assert.AreEqual(MobileConnectResponseType.Authorization, result.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.Authentication, result.ResponseType);
             Assert.That(() => scope.Contains("mc_authn"));
             Assert.That(() => !scope.Contains("mc_authz"));
         }
@@ -93,10 +93,10 @@ namespace GSMA.MobileConnect.Test
         {
             var discoveryResponse = CompleteDiscovery();
 
-            var result = _mobileConnect.StartAuthorization(_request, discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions { Context = "context" });
+            var result = _mobileConnect.StartAuthentication(_request, discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions { Context = "context" });
             var scope = HttpUtils.ExtractQueryValue(result.Url, "scope");
 
-            Assert.AreEqual(MobileConnectResponseType.Authorization, result.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.Authentication, result.ResponseType);
             Assert.That(() => scope.Contains("mc_authz"));
             Assert.That(() => !scope.Contains("mc_authn"));
         }
@@ -106,10 +106,10 @@ namespace GSMA.MobileConnect.Test
         {
             var discoveryResponse = CompleteDiscovery();
 
-            var result = _mobileConnect.StartAuthorization(_request, discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions { Scope = "mc_authz", Context = "context", BindingMessage = "message" });
+            var result = _mobileConnect.StartAuthentication(_request, discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions { Scope = "mc_authz", Context = "context", BindingMessage = "message" });
             var scope = HttpUtils.ExtractQueryValue(result.Url, "scope");
 
-            Assert.AreEqual(MobileConnectResponseType.Authorization, result.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.Authentication, result.ResponseType);
             Assert.That(() => scope.Contains("mc_authz"));
             Assert.That(() => !scope.Contains("mc_authn"));
         }
@@ -119,10 +119,10 @@ namespace GSMA.MobileConnect.Test
         {
             var discoveryResponse = CompleteDiscovery();
 
-            var result = _mobileConnect.StartAuthorization(_request, discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions { Scope = "mc_identity_phone", Context = "context", BindingMessage = "message" });
+            var result = _mobileConnect.StartAuthentication(_request, discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions { Scope = "mc_identity_phone", Context = "context", BindingMessage = "message" });
             var scope = HttpUtils.ExtractQueryValue(result.Url, "scope");
 
-            Assert.AreEqual(MobileConnectResponseType.Authorization, result.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.Authentication, result.ResponseType);
             Assert.That(() => scope.Contains("mc_authz"));
             Assert.That(() => scope.Contains("mc_identity_phone"));
             Assert.That(() => !scope.Contains("mc_authn"));
@@ -134,7 +134,7 @@ namespace GSMA.MobileConnect.Test
             var discoveryResponse = CompleteDiscovery();
             var expected = "test1";
 
-            var result = _mobileConnect.StartAuthorization(_request, discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions { Scope = "mc_identity_phone", Context = "context", BindingMessage = "message" });
+            var result = _mobileConnect.StartAuthentication(_request, discoveryResponse, "1111222233334444", "state", "nonce", new MobileConnectRequestOptions { Scope = "mc_identity_phone", Context = "context", BindingMessage = "message" });
             var clientName = HttpUtils.ExtractQueryValue(result.Url, "client_name");
 
             Assert.AreEqual(expected, clientName);

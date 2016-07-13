@@ -78,7 +78,7 @@ namespace GSMA.MobileConnect
             return GenerateStatusFromDiscoveryResponse(discovery, response);
         }
 
-        internal static MobileConnectStatus StartAuthorization(IAuthentication authentication, DiscoveryResponse discoveryResponse, string encryptedMSISDN, 
+        internal static MobileConnectStatus StartAuthentication(IAuthentication authentication, DiscoveryResponse discoveryResponse, string encryptedMSISDN, 
             string state, string nonce, MobileConnectConfig config, MobileConnectRequestOptions options)
         {
             StartAuthenticationResponse response;

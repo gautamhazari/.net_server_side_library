@@ -73,7 +73,7 @@ namespace GSMA.MobileConnect.Test
             var requestOptions = new MobileConnectRequestOptions();
             var response = await _mobileConnect.AttemptDiscoveryAsync(_testConfig.ValidMSISDN, null, null, requestOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.StartAuthorization, response.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, response.ResponseType);
             Assert.IsNotNull(response.DiscoveryResponse);
         }
 
@@ -93,7 +93,7 @@ namespace GSMA.MobileConnect.Test
             var requestOptions = new MobileConnectRequestOptions();
             var response = await _mobileConnect.AttemptDiscoveryAsync(null, _testConfig.ValidMCC, _testConfig.ValidMNC, requestOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.StartAuthorization, response.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, response.ResponseType);
             Assert.IsNotNull(response.DiscoveryResponse);
         }
 
@@ -132,7 +132,7 @@ namespace GSMA.MobileConnect.Test
         {
             var response = await _mobileConnect.AttemptDiscoveryAfterOperatorSelectionAsync(validOperatorSelectionCallback);
 
-            Assert.AreEqual(MobileConnectResponseType.StartAuthorization, response.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, response.ResponseType);
             Assert.IsNotNull(response.DiscoveryResponse);
         }
 
@@ -157,7 +157,7 @@ namespace GSMA.MobileConnect.Test
         {
             var response = await _mobileConnect.HandleUrlRedirectAsync(validOperatorSelectionCallback);
 
-            Assert.AreEqual(MobileConnectResponseType.StartAuthorization, response.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, response.ResponseType);
         }
 
         [Test]
@@ -170,7 +170,7 @@ namespace GSMA.MobileConnect.Test
             var discoveryResponse = new DiscoveryResponse(new RestResponse(System.Net.HttpStatusCode.OK, responseJson));
             discoveryResponse.OperatorUrls.AuthorizationUrl = authorizeUrl;
 
-            var response = _mobileConnect.StartAuthorization(discoveryResponse, encryptedMSISDN, state, nonce, new MobileConnectRequestOptions());
+            var response = _mobileConnect.StartAuthentication(discoveryResponse, encryptedMSISDN, state, nonce, new MobileConnectRequestOptions());
 
             Assert.IsNotNull(response);
             Assert.That(response.Url.StartsWith(authorizeUrl));
@@ -186,7 +186,7 @@ namespace GSMA.MobileConnect.Test
             var discoveryResponse = new DiscoveryResponse(new RestResponse(System.Net.HttpStatusCode.OK, responseJson));
             discoveryResponse.ResponseData.response.client_id = clientId;
 
-            var response = _mobileConnect.StartAuthorization(discoveryResponse, encryptedMSISDN, state, nonce, new MobileConnectRequestOptions());
+            var response = _mobileConnect.StartAuthentication(discoveryResponse, encryptedMSISDN, state, nonce, new MobileConnectRequestOptions());
 
             Assert.IsNotNull(response);
             Assert.That(response.Url.Contains("client_id=" + clientId));
@@ -295,9 +295,9 @@ namespace GSMA.MobileConnect.Test
         }
 
         [Test]
-        public void StartAuthorizationShouldHandleInvalidArgumentException()
+        public void StartAuthenticationShouldHandleInvalidArgumentException()
         {
-            var response = _mobileConnect.StartAuthorization(null, _testConfig.ValidSubscriberId, "state", "nonce", new MobileConnectRequestOptions());
+            var response = _mobileConnect.StartAuthentication(null, _testConfig.ValidSubscriberId, "state", "nonce", new MobileConnectRequestOptions());
 
             Assert.IsNotNull(response);
             Assert.AreEqual(MobileConnectResponseType.Error, response.ResponseType);

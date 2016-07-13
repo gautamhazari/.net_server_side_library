@@ -37,11 +37,11 @@ namespace GSMA.MobileConnect.Demo.Wpf
         private async Task HandleResponse(MobileConnectStatus response)
         {
             System.Diagnostics.Debug.WriteLine(response.ResponseType);
-            if (response.ResponseType == MobileConnectResponseType.OperatorSelection || response.ResponseType == MobileConnectResponseType.Authorization)
+            if (response.ResponseType == MobileConnectResponseType.OperatorSelection || response.ResponseType == MobileConnectResponseType.Authentication)
             {
                 web.Navigate(new Uri(response.Url));
             }
-            else if (response.ResponseType == MobileConnectResponseType.StartAuthorization)
+            else if (response.ResponseType == MobileConnectResponseType.StartAuthentication)
             {
                 _discoveryResponse = response.DiscoveryResponse;
                 await StartAuthorization(response);
@@ -68,7 +68,7 @@ namespace GSMA.MobileConnect.Demo.Wpf
         {
             _state = Guid.NewGuid().ToString("N");
             _nonce = Guid.NewGuid().ToString("N");
-            var newResponse = _mobileConnect.StartAuthorization(_discoveryResponse,
+            var newResponse = _mobileConnect.StartAuthentication(_discoveryResponse,
                 response.DiscoveryResponse.ResponseData.subscriber_id, _state, _nonce, new MobileConnectRequestOptions());
 
             await HandleResponse(newResponse);

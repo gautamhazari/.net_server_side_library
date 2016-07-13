@@ -39,7 +39,7 @@ namespace GSMA.MobileConnect.Test.Web
         }
 
         [Test]
-        public void ResponseConverterShouldHandleStartAuthorizationStatus()
+        public void ResponseConverterShouldHandleStartAuthenticationStatus()
         {
             var session = "session";
             var response = new DiscoveryResponse(_responses["authentication"]);
@@ -50,13 +50,13 @@ namespace GSMA.MobileConnect.Test.Web
 
             Assert.IsNotNull(actual);
             Assert.AreEqual("success", actual.Status);
-            Assert.AreEqual("start_authorization", actual.Action);
+            Assert.AreEqual("start_authentication", actual.Action);
             Assert.IsNotNull(actual.SdkSession);
             Assert.IsNotNull(actual.SubscriberId);
         }
 
         [Test]
-        public void ResponseConverterShouldHandleAuthorizationStatus()
+        public void ResponseConverterShouldHandleAuthenticationStatus()
         {
             var state = "qpwoeirurytalsksjdhdgf";
             var nonce = "qpwowieuryrttalksjsggdfj";
@@ -66,7 +66,7 @@ namespace GSMA.MobileConnect.Test.Web
 
             Assert.IsNotNull(actual);
             Assert.AreEqual("success", actual.Status);
-            Assert.AreEqual("authorization", actual.Action);
+            Assert.AreEqual("authentication", actual.Action);
             Assert.AreEqual(AUTHORIZE_URL, actual.Url);
             Assert.AreEqual(state, actual.State);
             Assert.AreEqual(nonce, actual.Nonce);

@@ -18,22 +18,22 @@ namespace GSMA.MobileConnect.Web
 
         private static Dictionary<MobileConnectResponseType, string> _statusDict = new Dictionary<MobileConnectResponseType, string>()
         {
-            { MobileConnectResponseType.Authorization, STATUS_SUCCESS },
+            { MobileConnectResponseType.Authentication, STATUS_SUCCESS },
             { MobileConnectResponseType.Complete, STATUS_SUCCESS },
             { MobileConnectResponseType.Error, STATUS_FAILURE },
             { MobileConnectResponseType.OperatorSelection, STATUS_SUCCESS },
-            { MobileConnectResponseType.StartAuthorization, STATUS_SUCCESS },
+            { MobileConnectResponseType.StartAuthentication, STATUS_SUCCESS },
             { MobileConnectResponseType.StartDiscovery, STATUS_SUCCESS },
             { MobileConnectResponseType.UserInfo, STATUS_SUCCESS },
         };
 
         private static Dictionary<MobileConnectResponseType, string> _actionDict = new Dictionary<MobileConnectResponseType, string>()
         {
-            { MobileConnectResponseType.Authorization, "authorization" },
+            { MobileConnectResponseType.Authentication, "authentication" },
             { MobileConnectResponseType.Complete, "complete" },
             { MobileConnectResponseType.Error, "error" },
             { MobileConnectResponseType.OperatorSelection, "operator_selection" },
-            { MobileConnectResponseType.StartAuthorization, "start_authorization" },
+            { MobileConnectResponseType.StartAuthentication, "start_authentication" },
             { MobileConnectResponseType.StartDiscovery, "discovery" },
             { MobileConnectResponseType.UserInfo, "user_info" },
         };
