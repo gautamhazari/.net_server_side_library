@@ -1,5 +1,5 @@
-RestClient.PostAsync Method (String, String, String, String, String, IEnumerable&lt;BasicKeyValuePair>)
-=======================================================================================================
+RestClient.PostAsync Method (String, RestAuthentication, String, String, String, IEnumerable&lt;BasicKeyValuePair>)
+===================================================================================================================
 Executes a HTTP POST to the supplied uri with the supplied content type and content, with optional cookies
 
 **Namespace:** [GSMA.MobileConnect.Utils][1]  
@@ -11,7 +11,7 @@ Syntax
 ```csharp
 public virtual Task<RestResponse> PostAsync(
 	string uri,
-	string basicAuthenticationEncoded,
+	RestAuthentication authentication,
 	string content,
 	string contentType,
 	string sourceIp,
@@ -25,9 +25,9 @@ public virtual Task<RestResponse> PostAsync(
 Type: [System.String][2]  
 Base uri of the POST
 
-##### *basicAuthenticationEncoded*
-Type: [System.String][2]  
-Encoded basic authenticaion string (if auth required)
+##### *authentication*
+Type: [GSMA.MobileConnect.Utils.RestAuthentication][3]  
+Authentication value to be used (if auth required)
 
 ##### *content*
 Type: [System.String][2]  
@@ -42,25 +42,26 @@ Type: [System.String][2]
 Source request IP (if identified)
 
 ##### *cookies* (Optional)
-Type: [System.Collections.Generic.IEnumerable][3]&lt;[BasicKeyValuePair][4]>  
+Type: [System.Collections.Generic.IEnumerable][4]&lt;[BasicKeyValuePair][5]>  
 Cookies to be added to the request (if required)
 
 #### Return Value
-Type: [Task][5]&lt;[RestResponse][6]>  
+Type: [Task][6]&lt;[RestResponse][7]>  
 RestResponse containing status code, headers and content
 
 See Also
 --------
 
 #### Reference
-[RestClient Class][7]  
+[RestClient Class][8]  
 [GSMA.MobileConnect.Utils Namespace][1]  
 
 [1]: ../README.md
 [2]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
-[3]: http://msdn.microsoft.com/en-us/library/9eekhta0
-[4]: ../BasicKeyValuePair/README.md
-[5]: http://msdn.microsoft.com/en-us/library/dd321424
-[6]: ../RestResponse/README.md
-[7]: README.md
-[8]: ../../_icons/Help.png
+[3]: ../RestAuthentication/README.md
+[4]: http://msdn.microsoft.com/en-us/library/9eekhta0
+[5]: ../BasicKeyValuePair/README.md
+[6]: http://msdn.microsoft.com/en-us/library/dd321424
+[7]: ../RestResponse/README.md
+[8]: README.md
+[9]: ../../_icons/Help.png

@@ -15,11 +15,8 @@ StartAuthenticationResponse StartAuthentication(
 	string redirectUrl,
 	string state,
 	string nonce,
-	string scope,
-	Nullable<int> maxAge,
-	string acrValues,
 	string encryptedMSISDN,
-	string supportedVersion,
+	SupportedVersions versions,
 	AuthenticationOptions options
 )
 ```
@@ -46,25 +43,13 @@ Application specified unique scope value
 Type: [System.String][2]  
 Application specified nonce value. (Required)
 
-##### *scope*
-Type: [System.String][2]  
-Requested scope. If omitted or empty defaults to the value "openid"
-
-##### *maxAge*
-Type: [System.Nullable][3]&lt;[Int32][4]>  
-Requested maximum time in seconds since last user authentication. If omitted or empty defaults to the value 3600
-
-##### *acrValues*
-Type: [System.String][2]  
-Requested Authentication Context class Reference. If omitted or empty defaults to the value "2"
-
 ##### *encryptedMSISDN*
 Type: [System.String][2]  
 Encrypted MSISDN for user if returned from discovery service
 
-##### *supportedVersion*
-Type: [System.String][2]  
-Version of the mobile connect authentication supported
+##### *versions*
+Type: [GSMA.MobileConnect.Discovery.SupportedVersions][3]  
+SupportedVersions from [ProviderMetadata][4] if null default supported versions will be used to generate the auth url
 
 ##### *options*
 Type: [GSMA.MobileConnect.Authentication.AuthenticationOptions][5]  
@@ -73,7 +58,7 @@ Optional parameters
 #### Return Value
 Type: [StartAuthenticationResponse][6]  
 
-[Missing &lt;returns> documentation for "M:GSMA.MobileConnect.Authentication.IAuthentication.StartAuthentication(System.String,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Int32},System.String,System.String,System.String,GSMA.MobileConnect.Authentication.AuthenticationOptions)"]
+[Missing &lt;returns> documentation for "M:GSMA.MobileConnect.Authentication.IAuthentication.StartAuthentication(System.String,System.String,System.String,System.String,System.String,System.String,GSMA.MobileConnect.Discovery.SupportedVersions,GSMA.MobileConnect.Authentication.AuthenticationOptions)"]
 
 
 See Also
@@ -85,8 +70,8 @@ See Also
 
 [1]: ../README.md
 [2]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
-[3]: http://msdn.microsoft.com/en-us/library/b3h38hb0
-[4]: http://msdn.microsoft.com/en-us/library/td2s409d
+[3]: ../../GSMA.MobileConnect.Discovery/SupportedVersions/README.md
+[4]: ../../GSMA.MobileConnect.Discovery/ProviderMetadata/README.md
 [5]: ../AuthenticationOptions/README.md
 [6]: ../StartAuthenticationResponse/README.md
 [7]: README.md

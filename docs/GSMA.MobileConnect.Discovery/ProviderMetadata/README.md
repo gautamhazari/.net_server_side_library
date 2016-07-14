@@ -24,10 +24,10 @@ The **ProviderMetadata** type exposes the following members.
 Constructors
 ------------
 
-                 | Name                                                 | Description                                                                                                                                                               
----------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
-![Public method] | [ProviderMetadata()][3]                              | Creates a new instance of the Provider Metadata class                                                                                                                     
-![Public method] | [ProviderMetadata(Dictionary&lt;String, String>)][4] | Creates a new intance of ProviderMetadata using the input dictionary for MobileConnectVersionSupported. This is used to construct the object when deserializing from JSON 
+                 | Name                                     | Description                                                                                                                                                               
+---------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+![Public method] | [ProviderMetadata()][3]                  | Creates a new instance of the Provider Metadata class                                                                                                                     
+![Public method] | [ProviderMetadata(SupportedVersions)][4] | Creates a new intance of ProviderMetadata using the input dictionary for MobileConnectVersionSupported. This is used to construct the object when deserializing from JSON 
 
 
 Properties
@@ -86,10 +86,9 @@ Properties
 Methods
 -------
 
-                 | Name                                   | Description                                                                                                        
----------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------ 
-![Public method] | [GetSupportedMobileConnectVersion][52] | Gets the available mobile connect version for the specified scope value                                            
-![Public method] | [MarkExpired][53]                      | Mark the object as expired, this method should only cause HasExpired to move from false to true, not true to false 
+                 | Name              | Description                                                                                                        
+---------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------ 
+![Public method] | [MarkExpired][52] | Mark the object as expired, this method should only cause HasExpired to move from false to true, not true to false 
 
 
 See Also
@@ -149,9 +148,8 @@ See Also
 [49]: UserInfoEndpoint.md
 [50]: UserInfoSigningAlgValuesSupported.md
 [51]: Version.md
-[52]: GetSupportedMobileConnectVersion.md
-[53]: MarkExpired.md
-[54]: ../../_icons/Help.png
+[52]: MarkExpired.md
+[53]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Public property]: ../../_icons/pubproperty.gif "Public property"
 [Static member]: ../../_icons/static.gif "Static member"

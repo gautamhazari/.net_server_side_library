@@ -1,6 +1,6 @@
 MobileConnectStatus.TokenResponse Property
 ==========================================
-Complete discovery response if included
+Complete token response if included
 
 **Namespace:** [GSMA.MobileConnect][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

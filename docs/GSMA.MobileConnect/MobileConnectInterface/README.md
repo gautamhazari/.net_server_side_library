@@ -42,7 +42,9 @@ Methods
 ![Public method] | [HandleUrlRedirectAsync][11]                     | Handles continuation of the process following a completed redirect. Only the redirectedUrl is required, however if the redirect being handled is the result of calling the Authorization URL then the remaining parameters are required. 
 ![Public method] | [RequestToken][12]                               | Synchronous wrapper for [RequestTokenAsync(DiscoveryResponse, Uri, String, String)][13]                                                                                                                                                  
 ![Public method] | [RequestTokenAsync][13]                          | Request token using the values returned from the authorization redirect                                                                                                                                                                  
-![Public method] | [StartAuthorization][14]                         | Creates an authorization url with parameters to begin the authorization process                                                                                                                                                          
+![Public method] | [RequestUserInfo][14]                            | Syncronous wrapper for [RequestTokenAsync(DiscoveryResponse, Uri, String, String)][13]                                                                                                                                                   
+![Public method] | [RequestUserInfoAsync][15]                       | Request user info using the access token returned by [RequestTokenAsync(DiscoveryResponse, Uri, String, String)][13]                                                                                                                     
+![Public method] | [StartAuthentication][16]                        | Creates an authorization url with parameters to begin the authorization process                                                                                                                                                          
 
 
 See Also
@@ -50,9 +52,9 @@ See Also
 
 #### Reference
 [GSMA.MobileConnect Namespace][4]  
-[GSMA.MobileConnect.MobileConnectWebInterface][15]  
-[GSMA.MobileConnect.MobileConnectStatus][16]  
-[GSMA.MobileConnect.MobileConnectConfig][17]  
+[GSMA.MobileConnect.MobileConnectWebInterface][17]  
+[GSMA.MobileConnect.MobileConnectStatus][18]  
+[GSMA.MobileConnect.MobileConnectConfig][19]  
 
 [1]: ../../GSMA.MobileConnect.Discovery/IDiscovery/README.md
 [2]: ../../GSMA.MobileConnect.Authentication/IAuthentication/README.md
@@ -67,9 +69,11 @@ See Also
 [11]: HandleUrlRedirectAsync.md
 [12]: RequestToken.md
 [13]: RequestTokenAsync.md
-[14]: StartAuthorization.md
-[15]: ../MobileConnectWebInterface/README.md
-[16]: ../MobileConnectStatus/README.md
-[17]: ../MobileConnectConfig/README.md
-[18]: ../../_icons/Help.png
+[14]: RequestUserInfo.md
+[15]: RequestUserInfoAsync.md
+[16]: StartAuthentication.md
+[17]: ../MobileConnectWebInterface/README.md
+[18]: ../MobileConnectStatus/README.md
+[19]: ../MobileConnectConfig/README.md
+[20]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"

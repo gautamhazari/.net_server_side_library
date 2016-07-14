@@ -16,14 +16,15 @@ public enum MobileConnectResponseType
 Members
 -------
 
-Member name            | Value | Description                                                          
----------------------- | ----- | -------------------------------------------------------------------- 
-**Error**              | 0     | ResponseType indicating Error was encountered                        
-**OperatorSelection**  | 1     | ResponseType indicating the next step should be OperatorSelection    
-**StartDiscovery**     | 2     | ResponseType indicating the next step should be to restart Discovery 
-**StartAuthorization** | 3     | ResponseType indicating the next step should be StartAuthorization   
-**Authorization**      | 4     | ResponseType indicating the next step should be Authorization        
-**Complete**           | 5     | ResponseType indicating completion of the MobileConnectProcess       
+Member name             | Value | Description                                                          
+----------------------- | ----- | -------------------------------------------------------------------- 
+**Error**               | 0     | ResponseType indicating Error was encountered                        
+**OperatorSelection**   | 1     | ResponseType indicating the next step should be OperatorSelection    
+**StartDiscovery**      | 2     | ResponseType indicating the next step should be to restart Discovery 
+**StartAuthentication** | 3     | ResponseType indicating the next step should be StartAuthentication  
+**Authentication**      | 4     | ResponseType indicating the next step should be Authentication       
+**Complete**            | 5     | ResponseType indicating completion of the MobileConnectProcess       
+**UserInfo**            | 6     | ResponseType indicating userInfo has been received                   
 
 
 See Also

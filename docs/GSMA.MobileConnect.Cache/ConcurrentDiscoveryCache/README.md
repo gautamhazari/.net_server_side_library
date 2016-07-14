@@ -60,9 +60,10 @@ Methods
 Fields
 ------
 
-                   | Name                    | Description                                                                                 
------------------- | ----------------------- | ------------------------------------------------------------------------------------------- 
-![Protected field] | [_cacheExpiryTimes][25] | Values configured for cache expiry times of types (Inherited from [BaseDiscoveryCache][3].) 
+                   | Name                     | Description                                                                                                             
+------------------ | ------------------------ | ----------------------------------------------------------------------------------------------------------------------- 
+![Protected field] | [_cacheExpiryLimits][25] | Values configured for the minimum and maximum configurable cache expiry times (Inherited from [BaseDiscoveryCache][3].) 
+![Protected field] | [_cacheExpiryTimes][26]  | Values configured for cache expiry times of types (Inherited from [BaseDiscoveryCache][3].)                             
 
 
 See Also
@@ -95,8 +96,9 @@ See Also
 [22]: Remove_1.md
 [23]: ../BaseDiscoveryCache/Remove_1.md
 [24]: ../BaseDiscoveryCache/SetCacheExpiryTime__1.md
-[25]: ../BaseDiscoveryCache/_cacheExpiryTimes.md
-[26]: ../../_icons/Help.png
+[25]: ../BaseDiscoveryCache/_cacheExpiryLimits.md
+[26]: ../BaseDiscoveryCache/_cacheExpiryTimes.md
+[27]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Public property]: ../../_icons/pubproperty.gif "Public property"
 [Protected method]: ../../_icons/protmethod.gif "Protected method"

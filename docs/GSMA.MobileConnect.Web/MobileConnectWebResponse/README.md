@@ -32,18 +32,20 @@ Constructors
 Properties
 ----------
 
-                   | Name               | Description                                                                             
------------------- | ------------------ | --------------------------------------------------------------------------------------- 
-![Public property] | [Action][4]        | Action to take for next step                                                            
-![Public property] | [Description][5]   | Error user friendly description if available                                            
-![Public property] | [Error][6]         | Error code if available                                                                 
-![Public property] | [Nonce][7]         | Nonce value used during Authorization, should be passed when handling the next redirect 
-![Public property] | [SdkSession][8]    | If caching is enabled this will be required in the steps following discovery            
-![Public property] | [State][9]         | State value used during Authorization, should be passed when handling the next redirect 
-![Public property] | [Status][10]       | "success" or "failure", if "success" the next step should be attempted                  
-![Public property] | [SubscriberId][11] | Encrypted MSISDN value returned from a successful Discovery call                        
-![Public property] | [Token][12]        | Token data returned from a successful RequestToken call                                 
-![Public property] | [Url][13]          | If next step requires visiting a url it will be returned with this property             
+                   | Name                      | Description                                                                                                    
+------------------ | ------------------------- | -------------------------------------------------------------------------------------------------------------- 
+![Public property] | [Action][4]               | Action to take for next step                                                                                   
+![Public property] | [ApplicationShortName][5] | Application short name returned by discovery service, this identifies the application requesting authorization 
+![Public property] | [Description][6]          | Error user friendly description if available                                                                   
+![Public property] | [Error][7]                | Error code if available                                                                                        
+![Public property] | [Nonce][8]                | Nonce value used during Authorization, should be passed when handling the next redirect                        
+![Public property] | [SdkSession][9]           | If caching is enabled this will be required in the steps following discovery                                   
+![Public property] | [State][10]               | State value used during Authorization, should be passed when handling the next redirect                        
+![Public property] | [Status][11]              | "success" or "failure", if "success" the next step should be attempted                                         
+![Public property] | [SubscriberId][12]        | Encrypted MSISDN value returned from a successful Discovery call                                               
+![Public property] | [Token][13]               | Token data returned from a successful RequestToken call                                                        
+![Public property] | [Url][14]                 | If next step requires visiting a url it will be returned with this property                                    
+![Public property] | [UserInfo][15]            | UserInfo data returned from successful RequestUserInfo call                                                    
 
 
 See Also
@@ -56,15 +58,17 @@ See Also
 [2]: ../README.md
 [3]: _ctor.md
 [4]: Action.md
-[5]: Description.md
-[6]: Error.md
-[7]: Nonce.md
-[8]: SdkSession.md
-[9]: State.md
-[10]: Status.md
-[11]: SubscriberId.md
-[12]: Token.md
-[13]: Url.md
-[14]: ../../_icons/Help.png
+[5]: ApplicationShortName.md
+[6]: Description.md
+[7]: Error.md
+[8]: Nonce.md
+[9]: SdkSession.md
+[10]: State.md
+[11]: Status.md
+[12]: SubscriberId.md
+[13]: Token.md
+[14]: Url.md
+[15]: UserInfo.md
+[16]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Public property]: ../../_icons/pubproperty.gif "Public property"

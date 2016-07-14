@@ -24,9 +24,10 @@ The **JsonWebToken** type exposes the following members.
 Methods
 -------
 
-                                 | Name               | Description                                                       
--------------------------------- | ------------------ | ----------------------------------------------------------------- 
-![Public method]![Static member] | [DecodePayload][3] | Decodes the payload of a JSON Web Token to a standard JSON string 
+                                 | Name               | Description                           
+-------------------------------- | ------------------ | ------------------------------------- 
+![Public method]![Static member] | [DecodePart][3]    | Decodes the specified token part      
+![Public method]![Static member] | [IsValidFormat][4] | Check if token is in valid JWT format 
 
 
 See Also
@@ -37,7 +38,8 @@ See Also
 
 [1]: http://msdn.microsoft.com/en-us/library/e5kfa45b
 [2]: ../README.md
-[3]: DecodePayload.md
-[4]: ../../_icons/Help.png
+[3]: DecodePart.md
+[4]: IsValidFormat.md
+[5]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Static member]: ../../_icons/static.gif "Static member"

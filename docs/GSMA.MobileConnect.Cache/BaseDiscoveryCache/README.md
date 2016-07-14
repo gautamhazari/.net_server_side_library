@@ -60,10 +60,11 @@ Methods
 Fields
 ------
 
-                                   | Name                    | Description                                                                              
----------------------------------- | ----------------------- | ---------------------------------------------------------------------------------------- 
-![Protected field]                 | [_cacheExpiryTimes][18] | Values configured for cache expiry times of types                                        
-![Protected field]![Static member] | [_completedTask][19]    | Convenience field to return when a non-async Task returning method needs to return early 
+                                   | Name                     | Description                                                                              
+---------------------------------- | ------------------------ | ---------------------------------------------------------------------------------------- 
+![Protected field]                 | [_cacheExpiryLimits][18] | Values configured for the minimum and maximum configurable cache expiry times            
+![Protected field]                 | [_cacheExpiryTimes][19]  | Values configured for cache expiry times of types                                        
+![Protected field]![Static member] | [_completedTask][20]     | Convenience field to return when a non-async Task returning method needs to return early 
 
 
 See Also
@@ -89,9 +90,10 @@ See Also
 [15]: Remove.md
 [16]: Remove_1.md
 [17]: SetCacheExpiryTime__1.md
-[18]: _cacheExpiryTimes.md
-[19]: _completedTask.md
-[20]: ../../_icons/Help.png
+[18]: _cacheExpiryLimits.md
+[19]: _cacheExpiryTimes.md
+[20]: _completedTask.md
+[21]: ../../_icons/Help.png
 [Protected method]: ../../_icons/protmethod.gif "Protected method"
 [Public property]: ../../_icons/pubproperty.gif "Public property"
 [Public method]: ../../_icons/pubmethod.gif "Public method"

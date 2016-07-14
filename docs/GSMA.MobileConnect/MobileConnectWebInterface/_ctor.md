@@ -12,6 +12,7 @@ Syntax
 public MobileConnectWebInterface(
 	IDiscovery discovery,
 	IAuthentication authentication,
+	IIdentityService identity,
 	MobileConnectConfig config
 )
 ```
@@ -26,8 +27,12 @@ Instance of IDiscovery concrete implementation
 Type: [GSMA.MobileConnect.Authentication.IAuthentication][3]  
 Instance of IAuthentication concrete implementation
 
+##### *identity*
+Type: [GSMA.MobileConnect.Identity.IIdentityService][4]  
+Instance of IIdentityService concrete implementation
+
 ##### *config*
-Type: [GSMA.MobileConnect.MobileConnectConfig][4]  
+Type: [GSMA.MobileConnect.MobileConnectConfig][5]  
 Configuration options
 
 
@@ -35,12 +40,13 @@ See Also
 --------
 
 #### Reference
-[MobileConnectWebInterface Class][5]  
+[MobileConnectWebInterface Class][6]  
 [GSMA.MobileConnect Namespace][1]  
 
 [1]: ../README.md
 [2]: ../../GSMA.MobileConnect.Discovery/IDiscovery/README.md
 [3]: ../../GSMA.MobileConnect.Authentication/IAuthentication/README.md
-[4]: ../MobileConnectConfig/README.md
-[5]: README.md
-[6]: ../../_icons/Help.png
+[4]: ../../GSMA.MobileConnect.Identity/IIdentityService/README.md
+[5]: ../MobileConnectConfig/README.md
+[6]: README.md
+[7]: ../../_icons/Help.png
