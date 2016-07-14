@@ -1,9 +1,4 @@
-﻿using GSMA.MobileConnect.Constants;
-using GSMA.MobileConnect.Discovery;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using GSMA.MobileConnect.Discovery;
 using System.Threading.Tasks;
 
 namespace GSMA.MobileConnect.Authentication

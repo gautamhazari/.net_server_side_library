@@ -4,8 +4,6 @@ using GSMA.MobileConnect.Exceptions;
 using GSMA.MobileConnect.Utils;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using GSMA.MobileConnect.Claims;
 using GSMA.MobileConnect.Identity;

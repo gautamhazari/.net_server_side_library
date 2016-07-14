@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GSMA.MobileConnect.Constants
+﻿namespace GSMA.MobileConnect.Constants
 {
     /// <summary>
     /// Constants for links provided from the discovery process

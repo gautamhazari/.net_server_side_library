@@ -2,12 +2,8 @@
 using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Exceptions;
 using GSMA.MobileConnect.Utils;
-using Newtonsoft.Json;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GSMA.MobileConnect.Test.Discovery

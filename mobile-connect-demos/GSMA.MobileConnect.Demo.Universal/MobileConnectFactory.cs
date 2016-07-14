@@ -3,11 +3,6 @@ using GSMA.MobileConnect.Demo.Config;
 using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Identity;
 using GSMA.MobileConnect.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GSMA.MobileConnect.Demo.Universal
 {

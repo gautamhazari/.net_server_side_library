@@ -1,13 +1,8 @@
 ﻿using GSMA.MobileConnect.Authentication;
 using GSMA.MobileConnect.Claims;
 using GSMA.MobileConnect.Discovery;
-using GSMA.MobileConnect.Exceptions;
 using GSMA.MobileConnect.Identity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace GSMA.MobileConnect

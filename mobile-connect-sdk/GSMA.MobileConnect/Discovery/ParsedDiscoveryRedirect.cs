@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GSMA.MobileConnect.Discovery
+﻿namespace GSMA.MobileConnect.Discovery
 {
     /// <summary>
     /// Class to hold details parsed from the discovery redirect
