@@ -24,18 +24,18 @@ The **IdentityService** type exposes the following members.
 Constructors
 ------------
 
-                 | Name                 | Description                                                 
----------------- | -------------------- | ----------------------------------------------------------- 
-![Public method] | [IdentityService][4] | Initializes a new instance of the **IdentityService** class 
+                 | Name                 | Description                                                                                              
+---------------- | -------------------- | -------------------------------------------------------------------------------------------------------- 
+![Public method] | [IdentityService][4] | Creates a new instance of the class IdentityService using the specified RestClient for all HTTP requests 
 
 
 Methods
 -------
 
-                 | Name                                                  | Description                                                                                                                                                                                                                                            
----------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ 
-![Public method] | [RequestUserInfo(String, String, ClaimsParameter)][5] | Convenience method alternative to [RequestUserInfo(String, String, String)][6] so claims can be specified using a ClaimsParameter which will be serialized to JSON                                                                                     
-![Public method] | [RequestUserInfo(String, String, String)][7]          | Request the user info for the provided access token. Some of the information returned by the user info service requires the authorization/authentication to be executed with additional scope values e.g. phone number [MOBILECONNECTIDENTITYPHONE][8] 
+                 | Name                 | Description                                                                                                                                                                                                                     
+---------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+![Public method] | [RequestIdentity][5] | Request the identity for the provided access token. Information returned by the identity service requires the authorization to be executed with additional scope values e.g. phone number [MOBILECONNECTIDENTITYPHONE][6]       
+![Public method] | [RequestUserInfo][7] | Request the user info for the provided access token. Some of the information returned by the user info service requires the authorization/authentication to be executed with additional scope values e.g. email => openid email 
 
 
 See Also
@@ -48,9 +48,8 @@ See Also
 [2]: http://msdn.microsoft.com/en-us/library/e5kfa45b
 [3]: ../README.md
 [4]: _ctor.md
-[5]: RequestUserInfo.md
-[6]: ../IIdentityService/RequestUserInfo_1.md
-[7]: RequestUserInfo_1.md
-[8]: ../../GSMA.MobileConnect/MobileConnectConstants/MOBILECONNECTIDENTITYPHONE.md
-[9]: ../../_icons/Help.png
+[5]: RequestIdentity.md
+[6]: ../../GSMA.MobileConnect/MobileConnectConstants/MOBILECONNECTIDENTITYPHONE.md
+[7]: RequestUserInfo.md
+[8]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"

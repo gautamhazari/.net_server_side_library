@@ -12,7 +12,7 @@ namespace GSMA.MobileConnect.Discovery
     /// <summary>
     /// Class to hold a discovery response. This potentially holds cached data as indicated by the cached property.
     /// </summary>
-    /// <seealso cref="IDiscovery"/>
+    /// <seealso cref="IDiscoveryService"/>
     public class DiscoveryResponse : ICacheable
     {
         private bool _cached;

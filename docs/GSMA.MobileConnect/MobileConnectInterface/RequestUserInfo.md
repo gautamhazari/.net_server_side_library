@@ -1,6 +1,6 @@
 MobileConnectInterface.RequestUserInfo Method
 =============================================
-Syncronous wrapper for [RequestTokenAsync(DiscoveryResponse, Uri, String, String)][1]
+Syncronous wrapper for [RequestUserInfoAsync(DiscoveryResponse, String, MobileConnectRequestOptions)][1]
 
 **Namespace:** [GSMA.MobileConnect][2]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
@@ -12,7 +12,6 @@ Syntax
 public MobileConnectStatus RequestUserInfo(
 	DiscoveryResponse discoveryResponse,
 	string accessToken,
-	ClaimsParameter claims,
 	MobileConnectRequestOptions options
 )
 ```
@@ -27,31 +26,26 @@ The response returned by the discovery process
 Type: [System.String][4]  
 Access token from RequestToken stage
 
-##### *claims*
-Type: [GSMA.MobileConnect.Claims.ClaimsParameter][5]  
-Claims requested from UserInfo service (Optional)
-
 ##### *options*
-Type: [GSMA.MobileConnect.MobileConnectRequestOptions][6]  
+Type: [GSMA.MobileConnect.MobileConnectRequestOptions][5]  
 Additional optional parameters
 
 #### Return Value
-Type: [MobileConnectStatus][7]  
+Type: [MobileConnectStatus][6]  
 MobileConnectStatus object with UserInfo information
 
 See Also
 --------
 
 #### Reference
-[MobileConnectInterface Class][8]  
+[MobileConnectInterface Class][7]  
 [GSMA.MobileConnect Namespace][2]  
 
-[1]: RequestTokenAsync.md
+[1]: RequestUserInfoAsync.md
 [2]: ../README.md
 [3]: ../../GSMA.MobileConnect.Discovery/DiscoveryResponse/README.md
 [4]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
-[5]: ../../GSMA.MobileConnect.Claims/ClaimsParameter/README.md
-[6]: ../MobileConnectRequestOptions/README.md
-[7]: ../MobileConnectStatus/README.md
-[8]: README.md
-[9]: ../../_icons/Help.png
+[5]: ../MobileConnectRequestOptions/README.md
+[6]: ../MobileConnectStatus/README.md
+[7]: README.md
+[8]: ../../_icons/Help.png

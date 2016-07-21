@@ -1,8 +1,6 @@
 ClaimsValue.WithValues Method
 =============================
-
-[Missing &lt;summary> documentation for "M:GSMA.MobileConnect.Claims.ClaimsValue.WithValues(System.Boolean,System.Object[])"]
-
+Creates a new ClaimsValue with Values set as specified
 
 **Namespace:** [GSMA.MobileConnect.Claims][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
@@ -21,21 +19,15 @@ public static ClaimsValue WithValues(
 
 ##### *required*
 Type: [System.Boolean][2]  
-
-[Missing &lt;param name="required"/> documentation for "M:GSMA.MobileConnect.Claims.ClaimsValue.WithValues(System.Boolean,System.Object[])"]
-
+If the claim is essential
 
 ##### *values*
 Type: [System.Object][3][]  
-
-[Missing &lt;param name="values"/> documentation for "M:GSMA.MobileConnect.Claims.ClaimsValue.WithValues(System.Boolean,System.Object[])"]
-
+The expected values array
 
 #### Return Value
 Type: [ClaimsValue][4]  
-
-[Missing &lt;returns> documentation for "M:GSMA.MobileConnect.Claims.ClaimsValue.WithValues(System.Boolean,System.Object[])"]
-
+A new ClaimsValue instance
 
 See Also
 --------

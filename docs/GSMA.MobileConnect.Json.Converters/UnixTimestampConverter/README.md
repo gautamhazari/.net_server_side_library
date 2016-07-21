@@ -42,12 +42,12 @@ Properties
 Methods
 -------
 
-                 | Name            | Description                                                                   
----------------- | --------------- | ----------------------------------------------------------------------------- 
-![Public method] | [CanConvert][4] | (Overrides JsonConverter.CanConvert(Type).)                                   
-![Public method] | GetSchema       |  **Obsolete.** (Inherited from JsonConverter.)                                
-![Public method] | [ReadJson][5]   | (Overrides JsonConverter.ReadJson(JsonReader, Type, Object, JsonSerializer).) 
-![Public method] | [WriteJson][6]  | (Overrides JsonConverter.WriteJson(JsonWriter, Object, JsonSerializer).)      
+                 | Name            | Description                                                                                                                        
+---------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------- 
+![Public method] | [CanConvert][4] | Returns true if the target type is DateTime or DateTime? (Overrides JsonConverter.CanConvert(Type).)                               
+![Public method] | GetSchema       |  **Obsolete.** (Inherited from JsonConverter.)                                                                                     
+![Public method] | [ReadJson][5]   | Reads a unix timestamp and returns a DateTime object (Overrides JsonConverter.ReadJson(JsonReader, Type, Object, JsonSerializer).) 
+![Public method] | [WriteJson][6]  | Writes a DateTime object as a unix timestamp (Overrides JsonConverter.WriteJson(JsonWriter, Object, JsonSerializer).)              
 
 
 See Also

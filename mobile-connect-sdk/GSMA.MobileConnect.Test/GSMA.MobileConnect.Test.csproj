@@ -59,13 +59,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Authentication\AuthenticationTests.cs" />
+    <Compile Include="Authentication\AuthenticationServiceTests.cs" />
     <Compile Include="Cache\ConcurrentDiscoveryCacheTests.cs" />
     <Compile Include="Claims\ClaimsDictionaryTests.cs" />
     <Compile Include="Claims\ClaimsParameterTests.cs" />
     <Compile Include="Claims\ClaimsValueTests.cs" />
     <Compile Include="Discovery\DiscoveryResponseTests.cs" />
-    <Compile Include="Discovery\DiscoveryTests.cs" />
+    <Compile Include="Discovery\DiscoveryServiceTests.cs" />
     <Compile Include="Discovery\SupportedVersionsTests.cs" />
     <Compile Include="EndToEndTests.cs" />
     <Compile Include="ErrorResponseTests.cs" />

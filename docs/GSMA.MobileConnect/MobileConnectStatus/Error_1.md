@@ -33,7 +33,7 @@ Exception encountered (allows null)
 
 ##### *response*
 Type: [GSMA.MobileConnect.Authentication.RequestTokenResponse][4]  
-RequestTokenResponse if returned from [IAuthentication][5]
+RequestTokenResponse if returned from [IAuthenticationService][5]
 
 #### Return Value
 Type: [MobileConnectStatus][6]  
@@ -50,6 +50,6 @@ See Also
 [2]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
 [3]: http://msdn.microsoft.com/en-us/library/c18k6c59
 [4]: ../../GSMA.MobileConnect.Authentication/RequestTokenResponse/README.md
-[5]: ../../GSMA.MobileConnect.Authentication/IAuthentication/README.md
+[5]: ../../GSMA.MobileConnect.Authentication/IAuthenticationService/README.md
 [6]: README.md
 [7]: ../../_icons/Help.png

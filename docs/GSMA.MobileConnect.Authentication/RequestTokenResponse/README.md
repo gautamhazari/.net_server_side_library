@@ -46,9 +46,9 @@ See Also
 
 #### Reference
 [GSMA.MobileConnect.Authentication Namespace][3]  
-[GSMA.MobileConnect.Authentication.IAuthentication][10]  
+[GSMA.MobileConnect.Authentication.IAuthenticationService][10]  
 
-[1]: ../IAuthentication/RequestTokenAsync.md
+[1]: ../IAuthenticationService/RequestTokenAsync.md
 [2]: http://msdn.microsoft.com/en-us/library/e5kfa45b
 [3]: ../README.md
 [4]: _ctor.md
@@ -57,7 +57,7 @@ See Also
 [7]: Headers.md
 [8]: ResponseCode.md
 [9]: ResponseData.md
-[10]: ../IAuthentication/README.md
+[10]: ../IAuthenticationService/README.md
 [11]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Public property]: ../../_icons/pubproperty.gif "Public property"

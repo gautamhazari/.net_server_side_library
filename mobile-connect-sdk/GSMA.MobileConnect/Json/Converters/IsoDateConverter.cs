@@ -8,7 +8,9 @@ namespace GSMA.MobileConnect.Json.Converters
     /// </summary>
     public class IsoDateConverter : JsonConverter
     {
-        /// <inheritdoc/>
+        /// <summary>
+        /// Returns true if the target type is DateTime or DateTime?
+        /// </summary>
         public override bool CanConvert(Type objectType)
         {
             return (objectType == typeof(DateTime) || objectType == typeof(DateTime?));

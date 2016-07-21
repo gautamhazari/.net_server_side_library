@@ -24,10 +24,10 @@ The **RestResponse** type exposes the following members.
 Constructors
 ------------
 
-                 | Name                                      | Description                                              
----------------- | ----------------------------------------- | -------------------------------------------------------- 
-![Public method] | [RestResponse()][3]                       | Initializes a new instance of the [Object][1] class.     
-![Public method] | [RestResponse(HttpStatusCode, String)][4] | Initializes a new instance of the **RestResponse** class 
+                 | Name                                      | Description                                                                                 
+---------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------- 
+![Public method] | [RestResponse()][3]                       | Creates a new instance of the RestResponse class                                            
+![Public method] | [RestResponse(HttpStatusCode, String)][4] | Creates a new instance of the RestResponse class with the specified status code and content 
 
 
 Properties

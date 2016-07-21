@@ -13,7 +13,10 @@ namespace GSMA.MobileConnect.Identity
     {
         private readonly RestClient _client;
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Creates a new instance of the class IdentityService using the specified RestClient for all HTTP requests
+        /// </summary>
+        /// <param name="client">RestClient for handling HTTP requests</param>
         public IdentityService(RestClient client)
         {
             this._client = client;

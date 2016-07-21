@@ -10,8 +10,8 @@ Syntax
 
 ```csharp
 public MobileConnectInterface(
-	IDiscovery discovery,
-	IAuthentication authentication,
+	IDiscoveryService discovery,
+	IAuthenticationService authentication,
 	IIdentityService identity,
 	MobileConnectConfig config
 )
@@ -20,11 +20,11 @@ public MobileConnectInterface(
 #### Parameters
 
 ##### *discovery*
-Type: [GSMA.MobileConnect.Discovery.IDiscovery][2]  
+Type: [GSMA.MobileConnect.Discovery.IDiscoveryService][2]  
 Instance of IDiscovery concrete implementation
 
 ##### *authentication*
-Type: [GSMA.MobileConnect.Authentication.IAuthentication][3]  
+Type: [GSMA.MobileConnect.Authentication.IAuthenticationService][3]  
 Instance of IAuthentication concrete implementation
 
 ##### *identity*
@@ -44,8 +44,8 @@ See Also
 [GSMA.MobileConnect Namespace][1]  
 
 [1]: ../README.md
-[2]: ../../GSMA.MobileConnect.Discovery/IDiscovery/README.md
-[3]: ../../GSMA.MobileConnect.Authentication/IAuthentication/README.md
+[2]: ../../GSMA.MobileConnect.Discovery/IDiscoveryService/README.md
+[3]: ../../GSMA.MobileConnect.Authentication/IAuthenticationService/README.md
 [4]: ../../GSMA.MobileConnect.Identity/IIdentityService/README.md
 [5]: ../MobileConnectConfig/README.md
 [6]: README.md

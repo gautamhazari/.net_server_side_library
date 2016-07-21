@@ -1,8 +1,6 @@
 IsoDateConverter.CanConvert Method
 ==================================
-
-[Missing &lt;summary> documentation for "M:GSMA.MobileConnect.Json.Converters.IsoDateConverter.CanConvert(System.Type)"]
-
+Returns true if the target type is DateTime or DateTime?
 
 **Namespace:** [GSMA.MobileConnect.Json.Converters][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

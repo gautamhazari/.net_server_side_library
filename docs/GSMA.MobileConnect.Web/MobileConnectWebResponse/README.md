@@ -38,14 +38,14 @@ Properties
 ![Public property] | [ApplicationShortName][5] | Application short name returned by discovery service, this identifies the application requesting authorization 
 ![Public property] | [Description][6]          | Error user friendly description if available                                                                   
 ![Public property] | [Error][7]                | Error code if available                                                                                        
-![Public property] | [Nonce][8]                | Nonce value used during Authorization, should be passed when handling the next redirect                        
-![Public property] | [SdkSession][9]           | If caching is enabled this will be required in the steps following discovery                                   
-![Public property] | [State][10]               | State value used during Authorization, should be passed when handling the next redirect                        
-![Public property] | [Status][11]              | "success" or "failure", if "success" the next step should be attempted                                         
-![Public property] | [SubscriberId][12]        | Encrypted MSISDN value returned from a successful Discovery call                                               
-![Public property] | [Token][13]               | Token data returned from a successful RequestToken call                                                        
-![Public property] | [Url][14]                 | If next step requires visiting a url it will be returned with this property                                    
-![Public property] | [UserInfo][15]            | UserInfo data returned from successful RequestUserInfo call                                                    
+![Public property] | [Identity][8]             | Identity data returned from successful RequestUserInfo or RequestIdentityInfo call                             
+![Public property] | [Nonce][9]                | Nonce value used during Authorization, should be passed when handling the next redirect                        
+![Public property] | [SdkSession][10]          | If caching is enabled this will be required in the steps following discovery                                   
+![Public property] | [State][11]               | State value used during Authorization, should be passed when handling the next redirect                        
+![Public property] | [Status][12]              | "success" or "failure", if "success" the next step should be attempted                                         
+![Public property] | [SubscriberId][13]        | Encrypted MSISDN value returned from a successful Discovery call                                               
+![Public property] | [Token][14]               | Token data returned from a successful RequestToken call                                                        
+![Public property] | [Url][15]                 | If next step requires visiting a url it will be returned with this property                                    
 
 
 See Also
@@ -61,14 +61,14 @@ See Also
 [5]: ApplicationShortName.md
 [6]: Description.md
 [7]: Error.md
-[8]: Nonce.md
-[9]: SdkSession.md
-[10]: State.md
-[11]: Status.md
-[12]: SubscriberId.md
-[13]: Token.md
-[14]: Url.md
-[15]: UserInfo.md
+[8]: Identity.md
+[9]: Nonce.md
+[10]: SdkSession.md
+[11]: State.md
+[12]: Status.md
+[13]: SubscriberId.md
+[14]: Token.md
+[15]: Url.md
 [16]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Public property]: ../../_icons/pubproperty.gif "Public property"

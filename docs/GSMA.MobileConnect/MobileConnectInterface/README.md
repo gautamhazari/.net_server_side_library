@@ -1,6 +1,6 @@
 MobileConnectInterface Class
 ============================
-Convenience wrapper for [IDiscovery][1] and [IAuthentication][2] methods for use with non-web .Net targets
+Convenience wrapper for [IDiscoveryService][1] and [IAuthenticationService][2] methods for use with non-web .Net targets
 
 
 Inheritance Hierarchy
@@ -40,11 +40,13 @@ Methods
 ![Public method] | [AttemptDiscoveryAsync][7]                       | Attempt discovery using the supplied parameters. If msisdn, mcc and mnc are null the result will be operator selection, otherwise valid parameters will result in a StartAuthorization status                                            
 ![Public method] | [HandleUrlRedirect][10]                          | Synchronous wrapper for [HandleUrlRedirectAsync(Uri, DiscoveryResponse, String, String)][11]                                                                                                                                             
 ![Public method] | [HandleUrlRedirectAsync][11]                     | Handles continuation of the process following a completed redirect. Only the redirectedUrl is required, however if the redirect being handled is the result of calling the Authorization URL then the remaining parameters are required. 
-![Public method] | [RequestToken][12]                               | Synchronous wrapper for [RequestTokenAsync(DiscoveryResponse, Uri, String, String)][13]                                                                                                                                                  
-![Public method] | [RequestTokenAsync][13]                          | Request token using the values returned from the authorization redirect                                                                                                                                                                  
-![Public method] | [RequestUserInfo][14]                            | Syncronous wrapper for [RequestTokenAsync(DiscoveryResponse, Uri, String, String)][13]                                                                                                                                                   
-![Public method] | [RequestUserInfoAsync][15]                       | Request user info using the access token returned by [RequestTokenAsync(DiscoveryResponse, Uri, String, String)][13]                                                                                                                     
-![Public method] | [StartAuthentication][16]                        | Creates an authorization url with parameters to begin the authorization process                                                                                                                                                          
+![Public method] | [RequestIdentity][12]                            | Syncronous wrapper for [RequestIdentityAsync(DiscoveryResponse, String, MobileConnectRequestOptions)][13]                                                                                                                                
+![Public method] | [RequestIdentityAsync][13]                       | Request user info using the access token returned by [RequestTokenAsync(DiscoveryResponse, Uri, String, String)][14]                                                                                                                     
+![Public method] | [RequestToken][15]                               | Synchronous wrapper for [RequestTokenAsync(DiscoveryResponse, Uri, String, String)][14]                                                                                                                                                  
+![Public method] | [RequestTokenAsync][14]                          | Request token using the values returned from the authorization redirect                                                                                                                                                                  
+![Public method] | [RequestUserInfo][16]                            | Syncronous wrapper for [RequestUserInfoAsync(DiscoveryResponse, String, MobileConnectRequestOptions)][17]                                                                                                                                
+![Public method] | [RequestUserInfoAsync][17]                       | Request user info using the access token returned by [RequestTokenAsync(DiscoveryResponse, Uri, String, String)][14]                                                                                                                     
+![Public method] | [StartAuthentication][18]                        | Creates an authorization url with parameters to begin the authorization process                                                                                                                                                          
 
 
 See Also
@@ -52,12 +54,12 @@ See Also
 
 #### Reference
 [GSMA.MobileConnect Namespace][4]  
-[GSMA.MobileConnect.MobileConnectWebInterface][17]  
-[GSMA.MobileConnect.MobileConnectStatus][18]  
-[GSMA.MobileConnect.MobileConnectConfig][19]  
+[GSMA.MobileConnect.MobileConnectWebInterface][19]  
+[GSMA.MobileConnect.MobileConnectStatus][20]  
+[GSMA.MobileConnect.MobileConnectConfig][21]  
 
-[1]: ../../GSMA.MobileConnect.Discovery/IDiscovery/README.md
-[2]: ../../GSMA.MobileConnect.Authentication/IAuthentication/README.md
+[1]: ../../GSMA.MobileConnect.Discovery/IDiscoveryService/README.md
+[2]: ../../GSMA.MobileConnect.Authentication/IAuthenticationService/README.md
 [3]: http://msdn.microsoft.com/en-us/library/e5kfa45b
 [4]: ../README.md
 [5]: _ctor.md
@@ -67,13 +69,15 @@ See Also
 [9]: AttemptDiscoveryAfterOperatorSelectionAsync.md
 [10]: HandleUrlRedirect.md
 [11]: HandleUrlRedirectAsync.md
-[12]: RequestToken.md
-[13]: RequestTokenAsync.md
-[14]: RequestUserInfo.md
-[15]: RequestUserInfoAsync.md
-[16]: StartAuthentication.md
-[17]: ../MobileConnectWebInterface/README.md
-[18]: ../MobileConnectStatus/README.md
-[19]: ../MobileConnectConfig/README.md
-[20]: ../../_icons/Help.png
+[12]: RequestIdentity.md
+[13]: RequestIdentityAsync.md
+[14]: RequestTokenAsync.md
+[15]: RequestToken.md
+[16]: RequestUserInfo.md
+[17]: RequestUserInfoAsync.md
+[18]: StartAuthentication.md
+[19]: ../MobileConnectWebInterface/README.md
+[20]: ../MobileConnectStatus/README.md
+[21]: ../MobileConnectConfig/README.md
+[22]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"

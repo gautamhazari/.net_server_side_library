@@ -12,7 +12,7 @@ Classes
 --------------- | --------------------- | --------------------------------------------------------------------------------------------- 
 ![Public class] | [ClaimsDictionary][1] | JSON Serializable class to store configured claims values for use with mobile connect methods 
 ![Public class] | [ClaimsParameter][2]  | Class to construct required claims for the mobile connect process                             
-![Public class] | [ClaimsValue][3]      |                                                                                               
+![Public class] | [ClaimsValue][3]      | Class representing a single claim to be requested                                             
 
 [1]: ClaimsDictionary/README.md
 [2]: ClaimsParameter/README.md

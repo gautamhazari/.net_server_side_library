@@ -103,7 +103,7 @@ namespace GSMA.MobileConnect
         /// <param name="error">Error code</param>
         /// <param name="message">User friendly error message</param>
         /// <param name="ex">Exception encountered (allows null)</param>
-        /// <param name="response">Discovery response if returned from <see cref="IDiscovery"/></param>
+        /// <param name="response">Discovery response if returned from <see cref="IDiscoveryService"/></param>
         /// <returns>MobileConnectStatus with ResponseType Error</returns>
         public static MobileConnectStatus Error(string error, string message, Exception ex, DiscoveryResponse response)
         {
@@ -119,7 +119,7 @@ namespace GSMA.MobileConnect
         /// <param name="error">Error code</param>
         /// <param name="message">User friendly error message</param>
         /// <param name="ex">Exception encountered (allows null)</param>
-        /// <param name="response">RequestTokenResponse if returned from <see cref="IAuthentication"/></param>
+        /// <param name="response">RequestTokenResponse if returned from <see cref="IAuthenticationService"/></param>
         /// <returns>MobileConnectStatus with ResponseType Error</returns>
         public static MobileConnectStatus Error(string error, string message, Exception ex, RequestTokenResponse response)
         {
@@ -132,7 +132,7 @@ namespace GSMA.MobileConnect
         /// Creates a Status with ResponseType OperatorSelection and url for next process step.
         /// Indicates that the next step should be navigating to the operator selection URL.
         /// </summary>
-        /// <param name="url">Operator selection URL returned from <see cref="IDiscovery"/></param>
+        /// <param name="url">Operator selection URL returned from <see cref="IDiscoveryService"/></param>
         /// <returns>MobileConnectStatus with ResponseType OperatorSelection</returns>
         public static MobileConnectStatus OperatorSelection(string url)
         {
@@ -147,7 +147,7 @@ namespace GSMA.MobileConnect
         /// Creates a Status with ResponseType StartAuthorization and the complete <see cref="DiscoveryResponse"/>.
         /// Indicates that the next step should be starting authorization.
         /// </summary>
-        /// <param name="response">DiscoveryResponse returned from <see cref="IDiscovery"/></param>
+        /// <param name="response">DiscoveryResponse returned from <see cref="IDiscoveryService"/></param>
         /// <returns>MobileConnectStatus with ResponseType StartAuthorization</returns>
         public static MobileConnectStatus StartAuthorization(DiscoveryResponse response)
         {
@@ -178,7 +178,7 @@ namespace GSMA.MobileConnect
         /// Creates a Status with ResponseType Authorization and url for next process step.
         /// Indicates that the next step should be navigating to the Authorization URL.
         /// </summary>
-        /// <param name="url">Url returned from <see cref="IAuthentication"/></param>
+        /// <param name="url">Url returned from <see cref="IAuthenticationService"/></param>
         /// <param name="state">The unique state string generated or passed in for the authorization url</param>
         /// <param name="nonce">The unique nonce string generated or passed in for the authorization url</param>
         /// <returns>MobileConnectStatus with ResponseType Authorization</returns>
@@ -197,7 +197,7 @@ namespace GSMA.MobileConnect
         /// Creates a Status with ResponseType Complete and the complete <see cref="RequestTokenResponse"/>.
         /// Indicates that the MobileConnect process is complete and the user is authenticated.
         /// </summary>
-        /// <param name="response">RequestTokenResponse returned from <see cref="IAuthentication"/></param>
+        /// <param name="response">RequestTokenResponse returned from <see cref="IAuthenticationService"/></param>
         /// <returns>MobileConnectStatus with ResponseType Complete</returns>
         public static MobileConnectStatus Complete(RequestTokenResponse response)
         {

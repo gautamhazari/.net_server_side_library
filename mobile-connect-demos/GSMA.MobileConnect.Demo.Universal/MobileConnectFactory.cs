@@ -9,8 +9,8 @@ namespace GSMA.MobileConnect.Demo.Universal
     public static class MobileConnectFactory
     {
         private static RestClient _client;
-        private static IDiscovery _discovery;
-        private static IAuthentication _authentication;
+        private static IDiscoveryService _discovery;
+        private static IAuthenticationService _authentication;
         private static IIdentityService _identity;
         private static MobileConnectConfig _config;
         private static MobileConnectInterface _mobileConnect;
@@ -18,9 +18,9 @@ namespace GSMA.MobileConnect.Demo.Universal
         static MobileConnectFactory()
         {
             _client = new RestClient();
-            _discovery = new Discovery.Discovery(null, _client);
-            _authentication = new Authentication.Authentication(_client);
-            _identity = new Identity.IdentityService(_client);
+            _discovery = new DiscoveryService(null, _client);
+            _authentication = new AuthenticationService(_client);
+            _identity = new IdentityService(_client);
             _config = CreateConfig();
             _mobileConnect = new MobileConnectInterface(_discovery, _authentication, _identity, _config);
         }

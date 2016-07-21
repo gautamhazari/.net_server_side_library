@@ -18,7 +18,7 @@ public static MobileConnectStatus Complete(
 
 ##### *response*
 Type: [GSMA.MobileConnect.Authentication.RequestTokenResponse][1]  
-RequestTokenResponse returned from [IAuthentication][3]
+RequestTokenResponse returned from [IAuthenticationService][3]
 
 #### Return Value
 Type: [MobileConnectStatus][4]  
@@ -33,6 +33,6 @@ See Also
 
 [1]: ../../GSMA.MobileConnect.Authentication/RequestTokenResponse/README.md
 [2]: ../README.md
-[3]: ../../GSMA.MobileConnect.Authentication/IAuthentication/README.md
+[3]: ../../GSMA.MobileConnect.Authentication/IAuthenticationService/README.md
 [4]: README.md
 [5]: ../../_icons/Help.png

@@ -50,7 +50,7 @@ See Also
 [GSMA.MobileConnect.Authentication Namespace][3]  
 [GSMA.MobileConnect.Authentication.RequestTokenResponse][12]  
 
-[1]: ../IAuthentication/RequestTokenAsync.md
+[1]: ../IAuthenticationService/RequestTokenAsync.md
 [2]: http://msdn.microsoft.com/en-us/library/e5kfa45b
 [3]: ../README.md
 [4]: _ctor.md

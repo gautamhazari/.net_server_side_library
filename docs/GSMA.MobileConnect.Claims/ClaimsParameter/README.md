@@ -35,7 +35,8 @@ Properties
                    | Name          | Description                                                                                            
 ------------------ | ------------- | ------------------------------------------------------------------------------------------------------ 
 ![Public property] | [IdToken][4]  | Claims that are requested to be included in the returned IdToken from Authentication and Authorization 
-![Public property] | [UserInfo][5] | Claims that are requested to be included in the returned UserInfo/Premium info response                
+![Public property] | [IsEmpty][5]  | Returns true if no claims will be requested using this claims parameter                                
+![Public property] | [UserInfo][6] | Claims that are requested to be included in the returned UserInfo/Premium info response                
 
 
 See Also
@@ -48,7 +49,8 @@ See Also
 [2]: ../README.md
 [3]: _ctor.md
 [4]: IdToken.md
-[5]: UserInfo.md
-[6]: ../../_icons/Help.png
+[5]: IsEmpty.md
+[6]: UserInfo.md
+[7]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Public property]: ../../_icons/pubproperty.gif "Public property"

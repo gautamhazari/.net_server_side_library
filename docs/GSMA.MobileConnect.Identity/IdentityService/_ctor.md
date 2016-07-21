@@ -1,8 +1,8 @@
 IdentityService Constructor
 ===========================
-Initializes a new instance of the [IdentityService][1] class
+Creates a new instance of the class IdentityService using the specified RestClient for all HTTP requests
 
-**Namespace:** [GSMA.MobileConnect.Identity][2]  
+**Namespace:** [GSMA.MobileConnect.Identity][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
 
 Syntax
@@ -17,20 +17,18 @@ public IdentityService(
 #### Parameters
 
 ##### *client*
-Type: [GSMA.MobileConnect.Utils.RestClient][3]  
-
-[Missing &lt;param name="client"/> documentation for "M:GSMA.MobileConnect.Identity.IdentityService.#ctor(GSMA.MobileConnect.Utils.RestClient)"]
-
+Type: [GSMA.MobileConnect.Utils.RestClient][2]  
+RestClient for handling HTTP requests
 
 
 See Also
 --------
 
 #### Reference
-[IdentityService Class][1]  
-[GSMA.MobileConnect.Identity Namespace][2]  
+[IdentityService Class][3]  
+[GSMA.MobileConnect.Identity Namespace][1]  
 
-[1]: README.md
-[2]: ../README.md
-[3]: ../../GSMA.MobileConnect.Utils/RestClient/README.md
+[1]: ../README.md
+[2]: ../../GSMA.MobileConnect.Utils/RestClient/README.md
+[3]: README.md
 [4]: ../../_icons/Help.png

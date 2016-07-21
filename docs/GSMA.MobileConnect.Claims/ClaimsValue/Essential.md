@@ -1,8 +1,6 @@
 ClaimsValue.Essential Property
 ==============================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Claims.ClaimsValue.Essential"]
-
+If the claim is essential
 
 **Namespace:** [GSMA.MobileConnect.Claims][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

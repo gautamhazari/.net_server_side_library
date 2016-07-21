@@ -62,7 +62,7 @@ See Also
 
 #### Reference
 [GSMA.MobileConnect.Discovery Namespace][2]  
-[GSMA.MobileConnect.Discovery.IDiscovery][18]  
+[GSMA.MobileConnect.Discovery.IDiscoveryService][18]  
 
 [1]: http://msdn.microsoft.com/en-us/library/e5kfa45b
 [2]: ../README.md
@@ -81,7 +81,7 @@ See Also
 [15]: Ttl.md
 [16]: IsMobileConnectServiceSupported.md
 [17]: MarkExpired.md
-[18]: ../IDiscovery/README.md
+[18]: ../IDiscoveryService/README.md
 [19]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Public property]: ../../_icons/pubproperty.gif "Public property"

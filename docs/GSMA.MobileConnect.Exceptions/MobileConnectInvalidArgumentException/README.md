@@ -1,6 +1,6 @@
 MobileConnectInvalidArgumentException Class
 ===========================================
-Exception raised when invalid arguments are passed to [IAuthentication][1] or [IDiscovery][2] methods
+Exception raised when invalid arguments are passed to [IAuthenticationService][1] or [IDiscoveryService][2] methods
 
 
 Inheritance Hierarchy
@@ -47,8 +47,8 @@ See Also
 #### Reference
 [GSMA.MobileConnect.Exceptions Namespace][5]  
 
-[1]: ../../GSMA.MobileConnect.Authentication/IAuthentication/README.md
-[2]: ../../GSMA.MobileConnect.Discovery/IDiscovery/README.md
+[1]: ../../GSMA.MobileConnect.Authentication/IAuthenticationService/README.md
+[2]: ../../GSMA.MobileConnect.Discovery/IDiscoveryService/README.md
 [3]: http://msdn.microsoft.com/en-us/library/e5kfa45b
 [4]: http://msdn.microsoft.com/en-us/library/c18k6c59
 [5]: ../README.md

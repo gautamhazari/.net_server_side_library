@@ -1,8 +1,6 @@
 ClaimsValue.Value Property
 ==========================
-
-[Missing &lt;summary> documentation for "P:GSMA.MobileConnect.Claims.ClaimsValue.Value"]
-
+The expected value of the claim, if set
 
 **Namespace:** [GSMA.MobileConnect.Claims][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

@@ -61,10 +61,10 @@ See Also
 
 #### Reference
 [GSMA.MobileConnect.Identity Namespace][4]  
-[GSMA.MobileConnect.Identity.UserInfoResponse][26]  
+[GSMA.MobileConnect.Identity.IdentityResponse][26]  
 
-[1]: ../UserInfoResponse/ResponseJson.md
-[2]: ../UserInfoResponse/ResponseDataAs__1.md
+[1]: ../IdentityResponse/ResponseJson.md
+[2]: ../IdentityResponse/ResponseDataAs__1.md
 [3]: http://msdn.microsoft.com/en-us/library/e5kfa45b
 [4]: ../README.md
 [5]: _ctor.md
@@ -88,7 +88,7 @@ See Also
 [23]: UpdatedAt.md
 [24]: Website.md
 [25]: ZoneInfo.md
-[26]: ../UserInfoResponse/README.md
+[26]: ../IdentityResponse/README.md
 [27]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Public property]: ../../_icons/pubproperty.gif "Public property"

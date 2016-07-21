@@ -1,8 +1,6 @@
 UnixTimestampConverter.ReadJson Method
 ======================================
-
-[Missing &lt;summary> documentation for "M:GSMA.MobileConnect.Json.Converters.UnixTimestampConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)"]
-
+Reads a unix timestamp and returns a DateTime object
 
 **Namespace:** [GSMA.MobileConnect.Json.Converters][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

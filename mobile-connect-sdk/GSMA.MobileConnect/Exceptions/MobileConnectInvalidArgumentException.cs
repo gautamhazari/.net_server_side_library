@@ -5,7 +5,7 @@ using System;
 namespace GSMA.MobileConnect.Exceptions
 {
     /// <summary>
-    /// Exception raised when invalid arguments are passed to <see cref="IAuthentication"/> or <see cref="IDiscovery"/> methods
+    /// Exception raised when invalid arguments are passed to <see cref="IAuthenticationService"/> or <see cref="IDiscoveryService"/> methods
     /// </summary>
     public class MobileConnectInvalidArgumentException : Exception
     {

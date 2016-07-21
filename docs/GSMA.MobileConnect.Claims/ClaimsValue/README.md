@@ -1,8 +1,6 @@
 ClaimsValue Class
 =================
-
-[Missing &lt;summary> documentation for "T:GSMA.MobileConnect.Claims.ClaimsValue"]
-
+Class representing a single claim to be requested
 
 
 Inheritance Hierarchy
@@ -26,21 +24,21 @@ The **ClaimsValue** type exposes the following members.
 Properties
 ----------
 
-                   | Name           | Description 
------------------- | -------------- | ----------- 
-![Public property] | [Essential][3] |             
-![Public property] | [Value][4]     |             
-![Public property] | [Values][5]    |             
+                   | Name           | Description                                    
+------------------ | -------------- | ---------------------------------------------- 
+![Public property] | [Essential][3] | If the claim is essential                      
+![Public property] | [Value][4]     | The expected value of the claim, if set        
+![Public property] | [Values][5]    | The expected values array of the claim, if set 
 
 
 Methods
 -------
 
-                                 | Name            | Description 
--------------------------------- | --------------- | ----------- 
-![Public method]![Static member] | [Required][6]   |             
-![Public method]![Static member] | [WithValue][7]  |             
-![Public method]![Static member] | [WithValues][8] |             
+                                 | Name            | Description                                            
+-------------------------------- | --------------- | ------------------------------------------------------ 
+![Public method]![Static member] | [Required][6]   | Creates a new ClaimsValue with Essential set to true   
+![Public method]![Static member] | [WithValue][7]  | Creates a new ClaimsValue with Value set as specified  
+![Public method]![Static member] | [WithValues][8] | Creates a new ClaimsValue with Values set as specified 
 
 
 See Also

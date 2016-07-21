@@ -4,9 +4,9 @@ using GSMA.MobileConnect.Constants;
 namespace GSMA.MobileConnect.Authentication
 {
     /// <summary>
-    /// Holds required and optional options for <see cref="IAuthentication.StartAuthentication(string, string, string, string, string, string, string, AuthenticationOptions)"/>
+    /// Holds required and optional options for <see cref="IAuthenticationService.StartAuthentication(string, string, string, string, string, string, Discovery.SupportedVersions, AuthenticationOptions)"/>
     /// </summary>
-    /// <seealso cref="IAuthentication"/>
+    /// <seealso cref="IAuthenticationService"/>
     public class AuthenticationOptions
     {
         /// <summary>

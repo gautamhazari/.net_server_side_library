@@ -1,8 +1,8 @@
 RestResponse Constructor
 ========================
-Initializes a new instance of the [Object][1] class.
+Creates a new instance of the RestResponse class
 
-**Namespace:** [GSMA.MobileConnect.Utils][2]  
+**Namespace:** [GSMA.MobileConnect.Utils][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
 
 Syntax
@@ -17,10 +17,9 @@ See Also
 --------
 
 #### Reference
-[RestResponse Class][3]  
-[GSMA.MobileConnect.Utils Namespace][2]  
+[RestResponse Class][2]  
+[GSMA.MobileConnect.Utils Namespace][1]  
 
-[1]: http://msdn.microsoft.com/en-us/library/e5kfa45b
-[2]: ../README.md
-[3]: README.md
-[4]: ../../_icons/Help.png
+[1]: ../README.md
+[2]: README.md
+[3]: ../../_icons/Help.png

@@ -4,7 +4,7 @@ using System;
 namespace GSMA.MobileConnect.Authentication
 {
     /// <summary>
-    /// A class that holds a valid response from <see cref="IAuthentication.RequestTokenAsync(string, string, string, string, string)"/>
+    /// A class that holds a valid response from <see cref="IAuthenticationService.RequestTokenAsync(string, string, string, string, string)"/>
     /// </summary>
     /// <seealso cref="RequestTokenResponse"/>
     public class RequestTokenResponseData

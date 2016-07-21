@@ -18,7 +18,7 @@ public static MobileConnectStatus OperatorSelection(
 
 ##### *url*
 Type: [System.String][2]  
-Operator selection URL returned from [IDiscovery][3]
+Operator selection URL returned from [IDiscoveryService][3]
 
 #### Return Value
 Type: [MobileConnectStatus][4]  
@@ -33,6 +33,6 @@ See Also
 
 [1]: ../README.md
 [2]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
-[3]: ../../GSMA.MobileConnect.Discovery/IDiscovery/README.md
+[3]: ../../GSMA.MobileConnect.Discovery/IDiscoveryService/README.md
 [4]: README.md
 [5]: ../../_icons/Help.png

@@ -18,7 +18,7 @@ public static MobileConnectStatus StartAuthorization(
 
 ##### *response*
 Type: [GSMA.MobileConnect.Discovery.DiscoveryResponse][3]  
-DiscoveryResponse returned from [IDiscovery][4]
+DiscoveryResponse returned from [IDiscoveryService][4]
 
 #### Return Value
 Type: [MobileConnectStatus][5]  
@@ -34,6 +34,6 @@ See Also
 [1]: DiscoveryResponse.md
 [2]: ../README.md
 [3]: ../../GSMA.MobileConnect.Discovery/DiscoveryResponse/README.md
-[4]: ../../GSMA.MobileConnect.Discovery/IDiscovery/README.md
+[4]: ../../GSMA.MobileConnect.Discovery/IDiscoveryService/README.md
 [5]: README.md
 [6]: ../../_icons/Help.png

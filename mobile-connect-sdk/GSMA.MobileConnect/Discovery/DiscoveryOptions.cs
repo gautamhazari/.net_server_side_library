@@ -5,10 +5,10 @@ using System.Collections.Generic;
 namespace GSMA.MobileConnect.Discovery
 {
     /// <summary>
-    /// Parameters for the <see cref="IDiscovery.StartAutomatedOperatorDiscoveryAsync(string, string, string, string, DiscoveryOptions, IEnumerable{Utils.BasicKeyValuePair})"/> method.
+    /// Parameters for the <see cref="IDiscoveryService.StartAutomatedOperatorDiscoveryAsync(string, string, string, string, DiscoveryOptions, IEnumerable{Utils.BasicKeyValuePair})"/> method.
     /// Object can be serialized to JSON to be a POST body.
     /// </summary>
-    /// <seealso cref="IDiscovery"/>
+    /// <seealso cref="IDiscoveryService"/>
     public class DiscoveryOptions
     {
         /// <summary>

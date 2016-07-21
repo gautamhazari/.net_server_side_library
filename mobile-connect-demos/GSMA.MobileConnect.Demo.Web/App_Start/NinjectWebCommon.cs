@@ -63,8 +63,8 @@ namespace GSMA.MobileConnect.Demo.Web.App_Start
         {
             kernel.Bind<Utils.RestClient>().ToSelf();
             kernel.Bind<Cache.IDiscoveryCache>().To<Cache.ConcurrentDiscoveryCache>();
-            kernel.Bind<Discovery.IDiscovery>().To<Discovery.Discovery>();
-            kernel.Bind<Authentication.IAuthentication>().To<Authentication.Authentication>();
+            kernel.Bind<Discovery.IDiscoveryService>().To<Discovery.DiscoveryService>();
+            kernel.Bind<Authentication.IAuthenticationService>().To<Authentication.AuthenticationService>();
             kernel.Bind<Identity.IIdentityService>().To<Identity.IdentityService>();
             kernel.Bind<MobileConnectConfig>().ToConstant(DemoConfiguration.Config);
             kernel.Bind<MobileConnectWebInterface>().ToSelf().InSingletonScope();

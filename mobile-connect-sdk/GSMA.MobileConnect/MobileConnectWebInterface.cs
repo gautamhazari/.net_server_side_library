@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace GSMA.MobileConnect
 {
     /// <summary>
-    /// Convenience wrapper for <see cref="IDiscovery"/> and <see cref="IAuthentication"/> methods for use with ASP.NET
+    /// Convenience wrapper for <see cref="IDiscoveryService"/> and <see cref="IAuthenticationService"/> methods for use with ASP.NET
     /// </summary>
     /// <seealso cref="MobileConnectInterface"/>
     /// <seealso cref="MobileConnectStatus"/>
@@ -17,8 +17,8 @@ namespace GSMA.MobileConnect
     /// <seealso cref="Web.ResponseConverter"/>
     public class MobileConnectWebInterface
     {
-        private readonly IDiscovery _discovery;
-        private readonly IAuthentication _authentication;
+        private readonly IDiscoveryService _discovery;
+        private readonly IAuthenticationService _authentication;
         private readonly IIdentityService _identity;
         private readonly MobileConnectConfig _config;
         private readonly bool _cacheWithSessionId;
@@ -30,7 +30,7 @@ namespace GSMA.MobileConnect
         /// <param name="authentication">Instance of IAuthentication concrete implementation</param>
         /// <param name="identity">Instance of IIdentityService concrete implementation</param>
         /// <param name="config">Configuration options</param>
-        public MobileConnectWebInterface(IDiscovery discovery, IAuthentication authentication, IIdentityService identity, MobileConnectConfig config)
+        public MobileConnectWebInterface(IDiscoveryService discovery, IAuthenticationService authentication, IIdentityService identity, MobileConnectConfig config)
         {
             this._discovery = discovery;
             this._authentication = authentication;

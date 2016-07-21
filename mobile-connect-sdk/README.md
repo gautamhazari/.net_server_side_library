@@ -61,6 +61,6 @@ This cache implementation will not share across application instances, if that f
 
 ## Resources
 
-- [SDK Class Documentation](../Docs/README.md)
+- [SDK Class Documentation](../docs/README.md)
 - [MobileConnect Discovery API Information](https://developer.mobileconnect.io/content/discovery-api-0)
 - [MobileConnect Authentication API Information](https://developer.mobileconnect.io/content/mobile-connect-api)

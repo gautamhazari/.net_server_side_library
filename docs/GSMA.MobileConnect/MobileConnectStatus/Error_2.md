@@ -33,7 +33,7 @@ Exception encountered (allows null)
 
 ##### *response*
 Type: [GSMA.MobileConnect.Discovery.DiscoveryResponse][4]  
-Discovery response if returned from [IDiscovery][5]
+Discovery response if returned from [IDiscoveryService][5]
 
 #### Return Value
 Type: [MobileConnectStatus][6]  
@@ -50,6 +50,6 @@ See Also
 [2]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
 [3]: http://msdn.microsoft.com/en-us/library/c18k6c59
 [4]: ../../GSMA.MobileConnect.Discovery/DiscoveryResponse/README.md
-[5]: ../../GSMA.MobileConnect.Discovery/IDiscovery/README.md
+[5]: ../../GSMA.MobileConnect.Discovery/IDiscoveryService/README.md
 [6]: README.md
 [7]: ../../_icons/Help.png

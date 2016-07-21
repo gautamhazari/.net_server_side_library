@@ -5,10 +5,10 @@ using System.Collections.Generic;
 namespace GSMA.MobileConnect.Authentication
 {
     /// <summary>
-    /// Class to hold the response of <see cref="IAuthentication.RequestTokenAsync(string, string, string, string, string)"/>
+    /// Class to hold the response of <see cref="IAuthenticationService.RequestTokenAsync(string, string, string, string, string)"/>
     /// Will contain either an error response or request data
     /// </summary>
-    /// <seealso cref="IAuthentication"/>
+    /// <seealso cref="IAuthenticationService"/>
     public class RequestTokenResponse
     {
         /// <summary>

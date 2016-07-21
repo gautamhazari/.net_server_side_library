@@ -31,8 +31,8 @@ namespace GSMA.MobileConnect.Test
         private MobileConnectConfig _config;
         private MockRestClient _restClient;
         private IDiscoveryCache _cache;
-        private MobileConnect.Discovery.IDiscovery _discovery;
-        private MobileConnect.Authentication.IAuthentication _authentication;
+        private MobileConnect.Discovery.IDiscoveryService _discovery;
+        private MobileConnect.Authentication.IAuthenticationService _authentication;
         private MobileConnect.Identity.IIdentityService _identity;
         private MobileConnectInterface _mobileConnect;
 
@@ -41,8 +41,8 @@ namespace GSMA.MobileConnect.Test
         {
             _restClient = new MockRestClient();
             _cache = new ConcurrentDiscoveryCache();
-            _discovery = new GSMA.MobileConnect.Discovery.Discovery(_cache, _restClient);
-            _authentication = new GSMA.MobileConnect.Authentication.Authentication(_restClient);
+            _discovery = new GSMA.MobileConnect.Discovery.DiscoveryService(_cache, _restClient);
+            _authentication = new GSMA.MobileConnect.Authentication.AuthenticationService(_restClient);
             _identity = new GSMA.MobileConnect.Identity.IdentityService(_restClient);
 
             _discoveryResponse = new MobileConnect.Discovery.DiscoveryResponse(_responses["authentication"]);

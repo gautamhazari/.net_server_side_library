@@ -5,9 +5,14 @@ using System.Collections.Generic;
 
 namespace GSMA.MobileConnect.Json.Converters
 {
+    /// <summary>
+    /// Converts an array of supported versions to a <see cref="Discovery.SupportedVersions"/> object
+    /// </summary>
     public class SupportedVersionsConverter : JsonConverter
     {
-        /// <inheritdoc/>
+        /// <summary>
+        /// Returns true if the target type is <see cref="Discovery.SupportedVersions"/>
+        /// </summary>
         public override bool CanConvert(Type objectType)
         {
             return (objectType == typeof(Discovery.SupportedVersions));

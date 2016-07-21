@@ -51,9 +51,9 @@ See Also
 
 #### Reference
 [GSMA.MobileConnect.Discovery Namespace][3]  
-[GSMA.MobileConnect.Discovery.IDiscovery][15]  
+[GSMA.MobileConnect.Discovery.IDiscoveryService][15]  
 
-[1]: ../IDiscovery/StartAutomatedOperatorDiscoveryAsync_1.md
+[1]: ../IDiscoveryService/StartAutomatedOperatorDiscoveryAsync_1.md
 [2]: http://msdn.microsoft.com/en-us/library/e5kfa45b
 [3]: ../README.md
 [4]: _ctor.md
@@ -67,7 +67,7 @@ See Also
 [12]: RedirectUrl.md
 [13]: SelectedMCC.md
 [14]: SelectedMNC.md
-[15]: ../IDiscovery/README.md
+[15]: ../IDiscoveryService/README.md
 [16]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Public property]: ../../_icons/pubproperty.gif "Public property"

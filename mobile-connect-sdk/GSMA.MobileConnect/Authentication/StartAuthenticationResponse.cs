@@ -1,9 +1,9 @@
 ﻿namespace GSMA.MobileConnect.Authentication
 {
     /// <summary>
-    /// Class to hold the response from <see cref="IAuthentication.StartAuthentication(string, string, string, string, string, string, int?, string, string, string, AuthenticationOptions)"/>
+    /// Class to hold the response from <see cref="IAuthenticationService.StartAuthentication(string, string, string, string, string, string, Discovery.SupportedVersions, AuthenticationOptions)"/>
     /// </summary>
-    /// <seealso cref="IAuthentication"/>
+    /// <seealso cref="IAuthenticationService"/>
     public class StartAuthenticationResponse
     {
         /// <summary>

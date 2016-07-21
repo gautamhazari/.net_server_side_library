@@ -20,7 +20,7 @@ public static MobileConnectStatus Authorization(
 
 ##### *url*
 Type: [System.String][2]  
-Url returned from [IAuthentication][3]
+Url returned from [IAuthenticationService][3]
 
 ##### *state*
 Type: [System.String][2]  
@@ -43,6 +43,6 @@ See Also
 
 [1]: ../README.md
 [2]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
-[3]: ../../GSMA.MobileConnect.Authentication/IAuthentication/README.md
+[3]: ../../GSMA.MobileConnect.Authentication/IAuthenticationService/README.md
 [4]: README.md
 [5]: ../../_icons/Help.png

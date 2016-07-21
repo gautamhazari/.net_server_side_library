@@ -1,5 +1,5 @@
-MobileConnectWebInterface.RequestUserInfoAsync Method (HttpRequestMessage, String, String, ClaimsParameter, MobileConnectRequestOptions)
-========================================================================================================================================
+MobileConnectWebInterface.RequestUserInfoAsync Method (HttpRequestMessage, String, String, MobileConnectRequestOptions)
+=======================================================================================================================
 Request user info using the access token returned by [RequestTokenAsync(HttpRequestMessage, DiscoveryResponse, Uri, String, String)][1]
 
 **Namespace:** [GSMA.MobileConnect][2]  
@@ -13,7 +13,6 @@ public Task<MobileConnectStatus> RequestUserInfoAsync(
 	HttpRequestMessage request,
 	string sdkSession,
 	string accessToken,
-	ClaimsParameter claims,
 	MobileConnectRequestOptions options
 )
 ```
@@ -32,32 +31,27 @@ SDKSession id used to fetch the discovery response with additional parameters th
 Type: [System.String][4]  
 Access token returned from RequestToken required to authenticate the request
 
-##### *claims*
-Type: [GSMA.MobileConnect.Claims.ClaimsParameter][5]  
-ClaimsParameter describing the requested claims (Optional)
-
 ##### *options*
-Type: [GSMA.MobileConnect.MobileConnectRequestOptions][6]  
+Type: [GSMA.MobileConnect.MobileConnectRequestOptions][5]  
 Additional optional parameters
 
 #### Return Value
-Type: [Task][7]&lt;[MobileConnectStatus][8]>  
+Type: [Task][6]&lt;[MobileConnectStatus][7]>  
 MobileConnectStatus object with requested UserInfo information
 
 See Also
 --------
 
 #### Reference
-[MobileConnectWebInterface Class][9]  
+[MobileConnectWebInterface Class][8]  
 [GSMA.MobileConnect Namespace][2]  
 
 [1]: RequestTokenAsync.md
 [2]: ../README.md
 [3]: http://msdn.microsoft.com/en-us/library/hh159020
 [4]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
-[5]: ../../GSMA.MobileConnect.Claims/ClaimsParameter/README.md
-[6]: ../MobileConnectRequestOptions/README.md
-[7]: http://msdn.microsoft.com/en-us/library/dd321424
-[8]: ../MobileConnectStatus/README.md
-[9]: README.md
-[10]: ../../_icons/Help.png
+[5]: ../MobileConnectRequestOptions/README.md
+[6]: http://msdn.microsoft.com/en-us/library/dd321424
+[7]: ../MobileConnectStatus/README.md
+[8]: README.md
+[9]: ../../_icons/Help.png

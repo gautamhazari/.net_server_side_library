@@ -10,13 +10,18 @@ namespace GSMA.MobileConnect.Json.Converters
     {
         private static readonly DateTime _epoch = new DateTime(1970, 1, 1);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Returns true if the target type is DateTime or DateTime?
+        /// </summary>
         public override bool CanConvert(Type objectType)
         {
             return (objectType == typeof(DateTime) || objectType == typeof(DateTime?));
         }
 
         /// <inheritdoc/>
+        /// <summary>
+        /// Reads a unix timestamp and returns a DateTime object
+        /// </summary>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             if(reader.Value == null || string.IsNullOrEmpty(reader.Value.ToString()))
@@ -30,6 +35,9 @@ namespace GSMA.MobileConnect.Json.Converters
         }
 
         /// <inheritdoc/>
+        /// <summary>
+        /// Writes a DateTime object as a unix timestamp
+        /// </summary>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             var date = value as DateTime?;

@@ -1,8 +1,6 @@
 UnixTimestampConverter.WriteJson Method
 =======================================
-
-[Missing &lt;summary> documentation for "M:GSMA.MobileConnect.Json.Converters.UnixTimestampConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)"]
-
+Writes a DateTime object as a unix timestamp
 
 **Namespace:** [GSMA.MobileConnect.Json.Converters][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

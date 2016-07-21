@@ -11,7 +11,7 @@ namespace GSMA.MobileConnect
 {
     internal static class MobileConnectInterfaceHelper
     {
-        internal static async Task<MobileConnectStatus> AttemptDiscovery(IDiscovery discovery, string msisdn, string mcc, string mnc, IEnumerable<BasicKeyValuePair> cookies, MobileConnectConfig config, MobileConnectRequestOptions options)
+        internal static async Task<MobileConnectStatus> AttemptDiscovery(IDiscoveryService discovery, string msisdn, string mcc, string mnc, IEnumerable<BasicKeyValuePair> cookies, MobileConnectConfig config, MobileConnectRequestOptions options)
         {
             DiscoveryResponse response = null;
             try
@@ -40,7 +40,7 @@ namespace GSMA.MobileConnect
             return GenerateStatusFromDiscoveryResponse(discovery, response);
         }
 
-        internal static async Task<MobileConnectStatus> AttemptDiscoveryAfterOperatorSelection(IDiscovery discovery, Uri redirectedUrl, MobileConnectConfig config)
+        internal static async Task<MobileConnectStatus> AttemptDiscoveryAfterOperatorSelection(IDiscoveryService discovery, Uri redirectedUrl, MobileConnectConfig config)
         {
             var parsedRedirect = discovery.ParseDiscoveryRedirect(redirectedUrl);
 
@@ -75,7 +75,7 @@ namespace GSMA.MobileConnect
             return GenerateStatusFromDiscoveryResponse(discovery, response);
         }
 
-        internal static MobileConnectStatus StartAuthentication(IAuthentication authentication, DiscoveryResponse discoveryResponse, string encryptedMSISDN, 
+        internal static MobileConnectStatus StartAuthentication(IAuthenticationService authentication, DiscoveryResponse discoveryResponse, string encryptedMSISDN, 
             string state, string nonce, MobileConnectConfig config, MobileConnectRequestOptions options)
         {
             StartAuthenticationResponse response;
@@ -101,7 +101,7 @@ namespace GSMA.MobileConnect
             return MobileConnectStatus.Authorization(response.Url, state, nonce);
         }
 
-        internal static async Task<MobileConnectStatus> RequestToken(IAuthentication authentication, DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState, string expectedNonce, MobileConnectConfig config)
+        internal static async Task<MobileConnectStatus> RequestToken(IAuthenticationService authentication, DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState, string expectedNonce, MobileConnectConfig config)
         {
             RequestTokenResponse response;
 
@@ -155,7 +155,7 @@ namespace GSMA.MobileConnect
             return MobileConnectStatus.Complete(response);
         }
 
-        internal static async Task<MobileConnectStatus> HandleUrlRedirect(IDiscovery discovery, IAuthentication authentication, Uri redirectedUrl, DiscoveryResponse discoveryResponse, string expectedState, string expectedNonce, MobileConnectConfig config)
+        internal static async Task<MobileConnectStatus> HandleUrlRedirect(IDiscoveryService discovery, IAuthenticationService authentication, Uri redirectedUrl, DiscoveryResponse discoveryResponse, string expectedState, string expectedNonce, MobileConnectConfig config)
         {
             if (HttpUtils.ExtractQueryValue(redirectedUrl.Query, "code") != null)
             {
@@ -195,7 +195,7 @@ namespace GSMA.MobileConnect
             return MobileConnectStatus.Identity(response);
         }
 
-        private static MobileConnectStatus GenerateStatusFromDiscoveryResponse(IDiscovery discovery, DiscoveryResponse response)
+        private static MobileConnectStatus GenerateStatusFromDiscoveryResponse(IDiscoveryService discovery, DiscoveryResponse response)
         {
             if (!response.Cached && response.ErrorResponse != null)
             {

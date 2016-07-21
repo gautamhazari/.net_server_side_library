@@ -30,8 +30,9 @@ Fields
 ![Public field]![Static member] | [AUTHORIZATION][4]          | Key for authorization url    
 ![Public field]![Static member] | [JWKS][5]                   | Key for jwks url             
 ![Public field]![Static member] | [OPENID_CONFIGURATION][6]   | Key for openid-configuration 
-![Public field]![Static member] | [TOKEN][7]                  | Key for token url            
-![Public field]![Static member] | [USERINFO][8]               | Key for userinfo url         
+![Public field]![Static member] | [PREMIUMINFO][7]            | Key for premiuminfo url      
+![Public field]![Static member] | [TOKEN][8]                  | Key for token url            
+![Public field]![Static member] | [USERINFO][9]               | Key for userinfo url         
 
 
 See Also
@@ -46,8 +47,9 @@ See Also
 [4]: AUTHORIZATION.md
 [5]: JWKS.md
 [6]: OPENID_CONFIGURATION.md
-[7]: TOKEN.md
-[8]: USERINFO.md
-[9]: ../../_icons/Help.png
+[7]: PREMIUMINFO.md
+[8]: TOKEN.md
+[9]: USERINFO.md
+[10]: ../../_icons/Help.png
 [Public field]: ../../_icons/pubfield.gif "Public field"
 [Static member]: ../../_icons/static.gif "Static member"

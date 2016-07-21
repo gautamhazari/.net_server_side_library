@@ -8,9 +8,9 @@ Classes
 
                 | Class                        | Description                                                                                                                                                                                                   
 --------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
-![Public class] | [Discovery][1]               | Concrete implementation of [IDiscovery][2]                                                                                                                                                                    
-![Public class] | [DiscoveryOptions][3]        | Parameters for the [StartAutomatedOperatorDiscoveryAsync(String, String, String, String, DiscoveryOptions, IEnumerable&lt;BasicKeyValuePair>)][4] method. Object can be serialized to JSON to be a POST body. 
-![Public class] | [DiscoveryResponse][5]       | Class to hold a discovery response. This potentially holds cached data as indicated by the cached property.                                                                                                   
+![Public class] | [DiscoveryOptions][1]        | Parameters for the [StartAutomatedOperatorDiscoveryAsync(String, String, String, String, DiscoveryOptions, IEnumerable&lt;BasicKeyValuePair>)][2] method. Object can be serialized to JSON to be a POST body. 
+![Public class] | [DiscoveryResponse][3]       | Class to hold a discovery response. This potentially holds cached data as indicated by the cached property.                                                                                                   
+![Public class] | [DiscoveryService][4]        | Concrete implementation of [IDiscoveryService][5]                                                                                                                                                             
 ![Public class] | [OperatorUrls][6]            | Object to hold the operator specific urls returned from a successful discovery process call                                                                                                                   
 ![Public class] | [ParsedDiscoveryRedirect][7] | Class to hold details parsed from the discovery redirect                                                                                                                                                      
 ![Public class] | [ProviderMetadata][8]        | Parsed Provider Metadata returned from openid-configuration url                                                                                                                                               
@@ -20,16 +20,16 @@ Classes
 Interfaces
 ----------
 
-                    | Interface          | Description                                                        
-------------------- | ------------------ | ------------------------------------------------------------------ 
-![Public interface] | [IDiscovery][2]    | Interface for Mobile Connect Discovery requests                    
-![Public interface] | [IPreferences][11] | Interface for specifying required options in the discovery process 
+                    | Interface              | Description                                                        
+------------------- | ---------------------- | ------------------------------------------------------------------ 
+![Public interface] | [IDiscoveryService][5] | Interface for Mobile Connect Discovery requests                    
+![Public interface] | [IPreferences][11]     | Interface for specifying required options in the discovery process 
 
-[1]: Discovery/README.md
-[2]: IDiscovery/README.md
-[3]: DiscoveryOptions/README.md
-[4]: IDiscovery/StartAutomatedOperatorDiscoveryAsync_1.md
-[5]: DiscoveryResponse/README.md
+[1]: DiscoveryOptions/README.md
+[2]: IDiscoveryService/StartAutomatedOperatorDiscoveryAsync_1.md
+[3]: DiscoveryResponse/README.md
+[4]: DiscoveryService/README.md
+[5]: IDiscoveryService/README.md
 [6]: OperatorUrls/README.md
 [7]: ParsedDiscoveryRedirect/README.md
 [8]: ProviderMetadata/README.md

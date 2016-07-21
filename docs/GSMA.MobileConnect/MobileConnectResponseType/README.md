@@ -25,6 +25,7 @@ Member name             | Value | Description
 **Authentication**      | 4     | ResponseType indicating the next step should be Authentication       
 **Complete**            | 5     | ResponseType indicating completion of the MobileConnectProcess       
 **UserInfo**            | 6     | ResponseType indicating userInfo has been received                   
+**Identity**            | 7     | ResponseType indicating identity has been received                   
 
 
 See Also

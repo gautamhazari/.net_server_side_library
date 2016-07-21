@@ -23,13 +23,19 @@ namespace GSMA.MobileConnect.Utils
         /// </summary>
         public string Content { get; set; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Creates a new instance of the RestResponse class
+        /// </summary>
         public RestResponse()
         {
 
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Creates a new instance of the RestResponse class with the specified status code and content
+        /// </summary>
+        /// <param name="code">Response HttpStatusCode</param>
+        /// <param name="content">Response content</param>
         public RestResponse(HttpStatusCode code, string content)
         {
             this.StatusCode = code;

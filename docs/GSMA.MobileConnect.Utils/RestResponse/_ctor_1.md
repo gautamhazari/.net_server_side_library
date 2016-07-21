@@ -1,8 +1,8 @@
 RestResponse Constructor (HttpStatusCode, String)
 =================================================
-Initializes a new instance of the [RestResponse][1] class
+Creates a new instance of the RestResponse class with the specified status code and content
 
-**Namespace:** [GSMA.MobileConnect.Utils][2]  
+**Namespace:** [GSMA.MobileConnect.Utils][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
 
 Syntax
@@ -18,27 +18,23 @@ public RestResponse(
 #### Parameters
 
 ##### *code*
-Type: [System.Net.HttpStatusCode][3]  
-
-[Missing &lt;param name="code"/> documentation for "M:GSMA.MobileConnect.Utils.RestResponse.#ctor(System.Net.HttpStatusCode,System.String)"]
-
+Type: [System.Net.HttpStatusCode][2]  
+Response HttpStatusCode
 
 ##### *content*
-Type: [System.String][4]  
-
-[Missing &lt;param name="content"/> documentation for "M:GSMA.MobileConnect.Utils.RestResponse.#ctor(System.Net.HttpStatusCode,System.String)"]
-
+Type: [System.String][3]  
+Response content
 
 
 See Also
 --------
 
 #### Reference
-[RestResponse Class][1]  
-[GSMA.MobileConnect.Utils Namespace][2]  
+[RestResponse Class][4]  
+[GSMA.MobileConnect.Utils Namespace][1]  
 
-[1]: README.md
-[2]: ../README.md
-[3]: http://msdn.microsoft.com/en-us/library/f92ssyy1
-[4]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
+[1]: ../README.md
+[2]: http://msdn.microsoft.com/en-us/library/f92ssyy1
+[3]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
+[4]: README.md
 [5]: ../../_icons/Help.png

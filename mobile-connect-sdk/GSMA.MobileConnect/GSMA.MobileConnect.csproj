@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Authentication\Authentication.cs" />
+    <Compile Include="Authentication\AuthenticationService.cs" />
     <Compile Include="Cache\BaseDiscoveryCache.cs" />
     <Compile Include="Cache\ICacheable.cs" />
     <Compile Include="Claims\ClaimsDictionary.cs" />
@@ -66,10 +66,10 @@
     <Compile Include="Constants\DefaultOptions.cs" />
     <Compile Include="Constants\Headers.cs" />
     <Compile Include="Constants\Parameters.cs" />
-    <Compile Include="Discovery\Discovery.cs" />
+    <Compile Include="Discovery\DiscoveryService.cs" />
     <Compile Include="Discovery\DiscoveryOptions.cs" />
     <Compile Include="Discovery\DiscoveryResponse.cs" />
-    <Compile Include="Discovery\IDiscovery.cs" />
+    <Compile Include="Discovery\IDiscoveryService.cs" />
     <Compile Include="Discovery\IPreferences.cs" />
     <Compile Include="Discovery\ParsedDiscoveryRedirect.cs" />
     <Compile Include="ErrorResponse.cs" />
@@ -85,7 +85,7 @@
     <Compile Include="MobileConnectStatus.cs" />
     <Compile Include="MobileConnectWebInterface.cs" />
     <Compile Include="Authentication\AuthenticationOptions.cs" />
-    <Compile Include="Authentication\IAuthentication.cs" />
+    <Compile Include="Authentication\IAuthenticationService.cs" />
     <Compile Include="Authentication\RequestTokenResponse.cs" />
     <Compile Include="Authentication\RequestTokenResponseData.cs" />
     <Compile Include="Authentication\StartAuthenticationResponse.cs" />

@@ -27,8 +27,8 @@ namespace GSMA.MobileConnect.Test
         {
             RestClient restClient = new RestClient();
             IDiscoveryCache cache = null;
-            IDiscovery discovery = new GSMA.MobileConnect.Discovery.Discovery(cache, restClient);
-            IAuthentication authentication = new GSMA.MobileConnect.Authentication.Authentication(restClient);
+            IDiscoveryService discovery = new GSMA.MobileConnect.Discovery.DiscoveryService(cache, restClient);
+            IAuthenticationService authentication = new GSMA.MobileConnect.Authentication.AuthenticationService(restClient);
             IIdentityService identity = new GSMA.MobileConnect.Identity.IdentityService(restClient);
 
             var testConfig = TestConfig.GetConfig(configKey);
@@ -81,8 +81,8 @@ namespace GSMA.MobileConnect.Test
         {
             RestClient restClient = new RestClient();
             IDiscoveryCache cache = null;
-            IDiscovery discovery = new GSMA.MobileConnect.Discovery.Discovery(cache, restClient);
-            IAuthentication authentication = new GSMA.MobileConnect.Authentication.Authentication(restClient);
+            IDiscoveryService discovery = new GSMA.MobileConnect.Discovery.DiscoveryService(cache, restClient);
+            IAuthenticationService authentication = new GSMA.MobileConnect.Authentication.AuthenticationService(restClient);
             IIdentityService identity = new GSMA.MobileConnect.Identity.IdentityService(restClient);
 
             var testConfig = TestConfig.GetConfig(configKey);
@@ -136,8 +136,8 @@ namespace GSMA.MobileConnect.Test
         {
             RestClient restClient = new RestClient();
             IDiscoveryCache cache = null;
-            IDiscovery discovery = new GSMA.MobileConnect.Discovery.Discovery(cache, restClient);
-            IAuthentication authentication = new GSMA.MobileConnect.Authentication.Authentication(restClient);
+            IDiscoveryService discovery = new GSMA.MobileConnect.Discovery.DiscoveryService(cache, restClient);
+            IAuthenticationService authentication = new GSMA.MobileConnect.Authentication.AuthenticationService(restClient);
             IIdentityService identity = new GSMA.MobileConnect.Identity.IdentityService(restClient);
 
             var testConfig = TestConfig.GetConfig(configKey);
@@ -191,8 +191,8 @@ namespace GSMA.MobileConnect.Test
         {
             RestClient restClient = new RestClient();
             IDiscoveryCache cache = null;
-            IDiscovery discovery = new GSMA.MobileConnect.Discovery.Discovery(cache, restClient);
-            IAuthentication authentication = new GSMA.MobileConnect.Authentication.Authentication(restClient);
+            IDiscoveryService discovery = new GSMA.MobileConnect.Discovery.DiscoveryService(cache, restClient);
+            IAuthenticationService authentication = new GSMA.MobileConnect.Authentication.AuthenticationService(restClient);
             IIdentityService identity = new GSMA.MobileConnect.Identity.IdentityService(restClient);
 
             var testConfig = TestConfig.GetConfig(configKey);
@@ -249,8 +249,8 @@ namespace GSMA.MobileConnect.Test
         {
             RestClient restClient = new RestClient();
             IDiscoveryCache cache = new ConcurrentDiscoveryCache();
-            IDiscovery discovery = new GSMA.MobileConnect.Discovery.Discovery(cache, restClient);
-            IAuthentication authentication = new GSMA.MobileConnect.Authentication.Authentication(restClient);
+            IDiscoveryService discovery = new GSMA.MobileConnect.Discovery.DiscoveryService(cache, restClient);
+            IAuthenticationService authentication = new GSMA.MobileConnect.Authentication.AuthenticationService(restClient);
             IIdentityService identity = new GSMA.MobileConnect.Identity.IdentityService(restClient);
 
             var testConfig = TestConfig.GetConfig(configKey);

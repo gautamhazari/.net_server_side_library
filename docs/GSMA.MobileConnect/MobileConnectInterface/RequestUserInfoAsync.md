@@ -12,7 +12,6 @@ Syntax
 public Task<MobileConnectStatus> RequestUserInfoAsync(
 	DiscoveryResponse discoveryResponse,
 	string accessToken,
-	ClaimsParameter claims,
 	MobileConnectRequestOptions options
 )
 ```
@@ -27,32 +26,27 @@ The response returned by the discovery process
 Type: [System.String][4]  
 Access token from RequestToken stage
 
-##### *claims*
-Type: [GSMA.MobileConnect.Claims.ClaimsParameter][5]  
-Claims requested from UserInfo service (Optional)
-
 ##### *options*
-Type: [GSMA.MobileConnect.MobileConnectRequestOptions][6]  
+Type: [GSMA.MobileConnect.MobileConnectRequestOptions][5]  
 Additional optional parameters
 
 #### Return Value
-Type: [Task][7]&lt;[MobileConnectStatus][8]>  
+Type: [Task][6]&lt;[MobileConnectStatus][7]>  
 MobileConnectStatus object with UserInfo information
 
 See Also
 --------
 
 #### Reference
-[MobileConnectInterface Class][9]  
+[MobileConnectInterface Class][8]  
 [GSMA.MobileConnect Namespace][2]  
 
 [1]: RequestTokenAsync.md
 [2]: ../README.md
 [3]: ../../GSMA.MobileConnect.Discovery/DiscoveryResponse/README.md
 [4]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
-[5]: ../../GSMA.MobileConnect.Claims/ClaimsParameter/README.md
-[6]: ../MobileConnectRequestOptions/README.md
-[7]: http://msdn.microsoft.com/en-us/library/dd321424
-[8]: ../MobileConnectStatus/README.md
-[9]: README.md
-[10]: ../../_icons/Help.png
+[5]: ../MobileConnectRequestOptions/README.md
+[6]: http://msdn.microsoft.com/en-us/library/dd321424
+[7]: ../MobileConnectStatus/README.md
+[8]: README.md
+[9]: ../../_icons/Help.png

@@ -1,8 +1,6 @@
 ClaimsValue.Required Method
 ===========================
-
-[Missing &lt;summary> documentation for "M:GSMA.MobileConnect.Claims.ClaimsValue.Required"]
-
+Creates a new ClaimsValue with Essential set to true
 
 **Namespace:** [GSMA.MobileConnect.Claims][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
@@ -16,9 +14,7 @@ public static ClaimsValue Required()
 
 #### Return Value
 Type: [ClaimsValue][2]  
-
-[Missing &lt;returns> documentation for "M:GSMA.MobileConnect.Claims.ClaimsValue.Required"]
-
+A new ClaimsValue instance
 
 See Also
 --------

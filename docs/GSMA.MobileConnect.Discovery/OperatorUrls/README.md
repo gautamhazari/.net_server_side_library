@@ -32,21 +32,22 @@ Constructors
 Properties
 ----------
 
-                   | Name                     | Description                
------------------- | ------------------------ | -------------------------- 
-![Public property] | [AuthorizationUrl][4]    | Url for authorization call 
-![Public property] | [JWKSUrl][5]             | Url for JWKS info          
-![Public property] | [ProviderMetadataUrl][6] | Url for Provider Metadata  
-![Public property] | [RequestTokenUrl][7]     | Url for token request call 
-![Public property] | [UserInfoUrl][8]         | Url for user info call     
+                   | Name                     | Description                    
+------------------ | ------------------------ | ------------------------------ 
+![Public property] | [AuthorizationUrl][4]    | Url for authorization call     
+![Public property] | [JWKSUrl][5]             | Url for JWKS info              
+![Public property] | [PremiumInfoUrl][6]      | Url for identity services call 
+![Public property] | [ProviderMetadataUrl][7] | Url for Provider Metadata      
+![Public property] | [RequestTokenUrl][8]     | Url for token request call     
+![Public property] | [UserInfoUrl][9]         | Url for user info call         
 
 
 Methods
 -------
 
-                                 | Name       | Description                                                    
--------------------------------- | ---------- | -------------------------------------------------------------- 
-![Public method]![Static member] | [Parse][9] | Parses the operator urls from the parsed DiscoveryResponseData 
+                                 | Name        | Description                                                    
+-------------------------------- | ----------- | -------------------------------------------------------------- 
+![Public method]![Static member] | [Parse][10] | Parses the operator urls from the parsed DiscoveryResponseData 
 
 
 See Also
@@ -60,11 +61,12 @@ See Also
 [3]: _ctor.md
 [4]: AuthorizationUrl.md
 [5]: JWKSUrl.md
-[6]: ProviderMetadataUrl.md
-[7]: RequestTokenUrl.md
-[8]: UserInfoUrl.md
-[9]: Parse.md
-[10]: ../../_icons/Help.png
+[6]: PremiumInfoUrl.md
+[7]: ProviderMetadataUrl.md
+[8]: RequestTokenUrl.md
+[9]: UserInfoUrl.md
+[10]: Parse.md
+[11]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Public property]: ../../_icons/pubproperty.gif "Public property"
 [Static member]: ../../_icons/static.gif "Static member"
