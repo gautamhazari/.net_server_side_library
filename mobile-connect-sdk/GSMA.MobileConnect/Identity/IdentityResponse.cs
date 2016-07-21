@@ -8,7 +8,7 @@ namespace GSMA.MobileConnect.Identity
     /// <summary>
     /// Class to hold response from UserInfo service
     /// </summary>
-    public class UserInfoResponse
+    public class IdentityResponse
     {
         private object _convertedResponseData;
 
@@ -32,7 +32,7 @@ namespace GSMA.MobileConnect.Identity
         /// Creates a new instance of the UserInfoResponse class
         /// </summary>
         [JsonConstructor]
-        public UserInfoResponse(string responseJson)
+        public IdentityResponse(string responseJson)
         {
             ParseResponseData(responseJson);
             this.ResponseJson = responseJson;
@@ -42,7 +42,7 @@ namespace GSMA.MobileConnect.Identity
         /// Creates a new instance of the UserInfoResponse class using a the json content of a RestResponse for construction
         /// </summary>
         /// <param name="rawResponse">Response from UserInfo endpoint</param>
-        public UserInfoResponse(RestResponse rawResponse)
+        public IdentityResponse(RestResponse rawResponse)
         {
             this.ResponseCode = (int)rawResponse.StatusCode;
             if (this.ResponseCode < 400)
@@ -78,10 +78,11 @@ namespace GSMA.MobileConnect.Identity
         }
 
         /// <summary>
-        /// Converts response JSON to custom provided user info class
+        /// Converts response JSON to custom provided identity class
         /// </summary>
         /// <typeparam name="T">User info class with properties linking to keys in userinfo response json</typeparam>
         /// <seealso cref="UserInfoData"/>
+        /// <seealso cref="IdentityData"/>
         /// <remarks>The last used object will be cached for subsequent method calls with the same type</remarks>
         /// <returns>JSON Deserialized to instance of Type T</returns>
         public T ResponseDataAs<T>() where T : class

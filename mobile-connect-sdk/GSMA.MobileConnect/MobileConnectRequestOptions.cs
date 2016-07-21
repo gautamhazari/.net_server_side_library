@@ -1,4 +1,5 @@
 ﻿using GSMA.MobileConnect.Authentication;
+using GSMA.MobileConnect.Claims;
 using GSMA.MobileConnect.Discovery;
 
 namespace GSMA.MobileConnect
@@ -122,6 +123,20 @@ namespace GSMA.MobileConnect
         {
             get { return _authOptions.BindingMessage; }
             set { _authOptions.BindingMessage = value; }
+        }
+
+        /// <inheritdoc cref="AuthenticationOptions.ClaimsJson" />
+        public string ClaimsJson
+        {
+            get { return _authOptions.ClaimsJson; }
+            set { _authOptions.ClaimsJson = value; }
+        }
+
+        /// <inheritdoc cref="AuthenticationOptions.ClaimsJson" />
+        public ClaimsParameter Claims
+        {
+            get { return _authOptions.Claims; }
+            set { _authOptions.Claims = value; }
         }
 
         /// <summary>

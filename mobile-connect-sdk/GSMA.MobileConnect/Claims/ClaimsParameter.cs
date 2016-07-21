@@ -18,5 +18,14 @@ namespace GSMA.MobileConnect.Claims
         /// </summary>
         [JsonProperty("id_token", NullValueHandling = NullValueHandling.Ignore)]
         public ClaimsDictionary IdToken { get; set; } = new ClaimsDictionary();
+
+        /// <summary>
+        /// Returns true if no claims will be requested using this claims parameter
+        /// </summary>
+        [JsonIgnore]
+        public bool IsEmpty
+        {
+            get { return UserInfo.Count == 0 && IdToken.Count == 0; }
+        }
     }
 }

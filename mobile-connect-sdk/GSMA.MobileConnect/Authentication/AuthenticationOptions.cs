@@ -1,4 +1,5 @@
-﻿using GSMA.MobileConnect.Constants;
+﻿using GSMA.MobileConnect.Claims;
+using GSMA.MobileConnect.Constants;
 
 namespace GSMA.MobileConnect.Authentication
 {
@@ -145,5 +146,16 @@ namespace GSMA.MobileConnect.Authentication
         /// the user to identify the authorization request. This is optional.
         /// </summary>
         public string BindingMessage { get; set; }
+
+        /// <summary>
+        /// JSON claims to be requested during authentication/authorization as specified in openid-connect-core-1_0 section 5.5.
+        /// </summary>
+        public string ClaimsJson { get; set; }
+
+        /// <summary>
+        /// Claims to be requested during authentication/authorization, this will be serialized as JSON that conforms to the required claims format.
+        /// If <see cref="ClaimsJson"/> is specified then this property will be ignored
+        /// </summary>
+        public ClaimsParameter Claims { get; set; }
     }
 }

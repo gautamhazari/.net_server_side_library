@@ -21,6 +21,7 @@ namespace GSMA.MobileConnect.Web
             { MobileConnectResponseType.StartAuthentication, STATUS_SUCCESS },
             { MobileConnectResponseType.StartDiscovery, STATUS_SUCCESS },
             { MobileConnectResponseType.UserInfo, STATUS_SUCCESS },
+            { MobileConnectResponseType.Identity, STATUS_SUCCESS },
         };
 
         private static Dictionary<MobileConnectResponseType, string> _actionDict = new Dictionary<MobileConnectResponseType, string>()
@@ -32,6 +33,7 @@ namespace GSMA.MobileConnect.Web
             { MobileConnectResponseType.StartAuthentication, "start_authentication" },
             { MobileConnectResponseType.StartDiscovery, "discovery" },
             { MobileConnectResponseType.UserInfo, "user_info" },
+            { MobileConnectResponseType.Identity, "identity" },
         };
 
         /// <summary>
@@ -65,7 +67,7 @@ namespace GSMA.MobileConnect.Web
                 SdkSession = status.SDKSession,
                 SubscriberId = status.DiscoveryResponse?.ResponseData?.subscriber_id,
                 Token = status.TokenResponse?.ResponseData,
-                UserInfo = status.UserInfoResponse?.ResponseJson != null ? new Newtonsoft.Json.Linq.JRaw(status.UserInfoResponse.ResponseJson) : null,
+                Identity = status.IdentityResponse?.ResponseJson != null ? new Newtonsoft.Json.Linq.JRaw(status.IdentityResponse.ResponseJson) : null,
             };
 
             if(status.ResponseType == MobileConnectResponseType.Error)

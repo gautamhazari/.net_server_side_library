@@ -142,13 +142,10 @@ namespace GSMA.MobileConnect.Test
         public async Task RequestUserInfoReturnsUserInfo()
         {
             _restClient.NextExpectedResponse = _responses["user-info"];
-            var claims = new ClaimsParameter();
-            claims.UserInfo.AddRequired("test");
-            claims.IdToken.AddWithValue("testvalue", false, "this value");
 
-            var result = await _mobileConnect.RequestUserInfoAsync(_request, _discoveryResponse, "zaqwsxcderfvbgtyhnmjukilop", claims, new MobileConnectRequestOptions());
+            var result = await _mobileConnect.RequestUserInfoAsync(_request, _discoveryResponse, "zaqwsxcderfvbgtyhnmjukilop", new MobileConnectRequestOptions());
 
-            Assert.IsNotNull(result.UserInfoResponse);
+            Assert.IsNotNull(result.IdentityResponse);
             Assert.AreEqual(MobileConnectResponseType.UserInfo, result.ResponseType);
         }
 
@@ -156,13 +153,11 @@ namespace GSMA.MobileConnect.Test
         public async Task RequestUserInfoReturnsErrorWhenNoUserInfoUrl()
         {
             var claims = new ClaimsParameter();
-            claims.UserInfo.AddRequired("test");
-            claims.IdToken.AddWithValue("testvalue", false, "this value");
             _discoveryResponse.OperatorUrls.UserInfoUrl = null;
 
-            var result = await _mobileConnect.RequestUserInfoAsync(_request, _discoveryResponse, "zaqwsxcderfvbgtyhnmjukilop", claims, new MobileConnectRequestOptions());
+            var result = await _mobileConnect.RequestUserInfoAsync(_request, _discoveryResponse, "zaqwsxcderfvbgtyhnmjukilop", new MobileConnectRequestOptions());
 
-            Assert.IsNull(result.UserInfoResponse);
+            Assert.IsNull(result.IdentityResponse);
             Assert.IsNotNull(result.ErrorCode);
             Assert.IsNotNull(result.ErrorMessage);
             Assert.AreEqual(MobileConnectResponseType.Error, result.ResponseType);
@@ -172,13 +167,10 @@ namespace GSMA.MobileConnect.Test
         public async Task RequestUserInfoShouldUseSdkSessionCache()
         {
             _restClient.NextExpectedResponse = _responses["user-info"];
-            var claims = new ClaimsParameter();
-            claims.UserInfo.AddRequired("test");
-            claims.IdToken.AddWithValue("testvalue", false, "this value");
 
-            var result = await _mobileConnect.RequestUserInfoAsync(_request, _validSdkSession, "zaqwsxcderfvbgtyhnmjukilop", claims, new MobileConnectRequestOptions());
+            var result = await _mobileConnect.RequestUserInfoAsync(_request, _validSdkSession, "zaqwsxcderfvbgtyhnmjukilop", new MobileConnectRequestOptions());
 
-            Assert.IsNotNull(result.UserInfoResponse);
+            Assert.IsNotNull(result.IdentityResponse);
             Assert.AreEqual(MobileConnectResponseType.UserInfo, result.ResponseType);
         }
 

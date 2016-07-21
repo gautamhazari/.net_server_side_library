@@ -69,9 +69,10 @@
     <Compile Include="Discovery\SupportedVersionsTests.cs" />
     <Compile Include="EndToEndTests.cs" />
     <Compile Include="ErrorResponseTests.cs" />
+    <Compile Include="Identity\IdentityDataTests.cs" />
     <Compile Include="Identity\IdentityServiceTests.cs" />
     <Compile Include="Identity\UserInfoDataTests.cs" />
-    <Compile Include="Identity\UserInfoResponseTests.cs" />
+    <Compile Include="Identity\IdentityResponseTests.cs" />
     <Compile Include="MobileConnectInterfaceIntegrationTests.cs" />
     <Compile Include="MobileConnectInterfaceMockTests.cs" />
     <Compile Include="MobileConnectRequestOptionsTests.cs" />

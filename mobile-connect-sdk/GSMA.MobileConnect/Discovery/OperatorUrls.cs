@@ -26,6 +26,11 @@ namespace GSMA.MobileConnect.Discovery
         public string UserInfoUrl { get; set; }
 
         /// <summary>
+        /// Url for identity services call
+        /// </summary>
+        public string PremiumInfoUrl { get; set; }
+
+        /// <summary>
         /// Url for JWKS info
         /// </summary>
         public string JWKSUrl { get; set; }
@@ -53,6 +58,7 @@ namespace GSMA.MobileConnect.Discovery
                 AuthorizationUrl = GetUrl(links, LinkRels.AUTHORIZATION),
                 RequestTokenUrl = GetUrl(links, LinkRels.TOKEN),
                 UserInfoUrl = GetUrl(links, LinkRels.USERINFO),
+                PremiumInfoUrl = GetUrl(links, LinkRels.PREMIUMINFO),
                 JWKSUrl = GetUrl(links, LinkRels.JWKS),
                 ProviderMetadataUrl = GetUrl(links, LinkRels.OPENID_CONFIGURATION),
             };
@@ -73,6 +79,7 @@ namespace GSMA.MobileConnect.Discovery
             AuthorizationUrl = metadata.AuthorizationEndpoint ?? AuthorizationUrl;
             RequestTokenUrl = metadata.TokenEndpoint ?? RequestTokenUrl;
             UserInfoUrl = metadata.UserInfoEndpoint ?? UserInfoUrl;
+            PremiumInfoUrl = metadata.PremiumInfoEndpoint ?? PremiumInfoUrl;
             JWKSUrl = metadata.JwksUri ?? JWKSUrl;
         }
 

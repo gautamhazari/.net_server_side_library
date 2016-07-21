@@ -21,6 +21,11 @@
         public const string USERINFO = "userinfo";
 
         /// <summary>
+        /// Key for premiuminfo url
+        /// </summary>
+        public const string PREMIUMINFO = "premiuminfo";
+
+        /// <summary>
         /// Key for jwks url
         /// </summary>
         public const string JWKS = "jwks";

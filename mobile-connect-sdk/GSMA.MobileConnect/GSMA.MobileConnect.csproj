@@ -50,10 +50,11 @@
     <Compile Include="Exceptions\MobileConnectInvalidArgumentException.cs" />
     <Compile Include="Exceptions\MobileConnectProviderMetadataUnavailableException.cs" />
     <Compile Include="Identity\AddressData.cs" />
+    <Compile Include="Identity\IdentityData.cs" />
     <Compile Include="Identity\IdentityService.cs" />
     <Compile Include="Identity\IIdentityService.cs" />
     <Compile Include="Identity\UserInfoData.cs" />
-    <Compile Include="Identity\UserInfoResponse.cs" />
+    <Compile Include="Identity\IdentityResponse.cs" />
     <Compile Include="Json\Converters\IsoDateConverter.cs" />
     <Compile Include="Json\Converters\SupportedVersionsConverter.cs" />
     <Compile Include="Json\Converters\UnixTimestampConverter.cs" />

@@ -5,7 +5,6 @@ using GSMA.MobileConnect.Utils;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GSMA.MobileConnect.Claims;
 using GSMA.MobileConnect.Identity;
 
 namespace GSMA.MobileConnect
@@ -172,15 +171,28 @@ namespace GSMA.MobileConnect
             return MobileConnectStatus.Error(errorCode, errorDesc, null);
         }
 
-        internal static async Task<MobileConnectStatus> RequestUserInfo(IIdentityService _identity, DiscoveryResponse discoveryResponse, string accessToken, ClaimsParameter claims, MobileConnectConfig _config, MobileConnectRequestOptions options)
+        internal static async Task<MobileConnectStatus> RequestUserInfo(IIdentityService _identity, DiscoveryResponse discoveryResponse, string accessToken, MobileConnectConfig _config, MobileConnectRequestOptions options)
         {
-            if(string.IsNullOrEmpty(discoveryResponse?.OperatorUrls?.UserInfoUrl))
+            string userInfoUrl = discoveryResponse?.OperatorUrls?.UserInfoUrl;
+            if (string.IsNullOrEmpty(userInfoUrl))
             {
                 return MobileConnectStatus.Error("not_supported", "UserInfo not supported with current operator", null);
             }
 
-            var response = await _identity.RequestUserInfo(discoveryResponse.OperatorUrls.UserInfoUrl, accessToken, claims);
+            var response = await _identity.RequestUserInfo(userInfoUrl, accessToken);
             return MobileConnectStatus.UserInfo(response);
+        }
+
+        internal static async Task<MobileConnectStatus> RequestIdentity(IIdentityService _identity, DiscoveryResponse discoveryResponse, string accessToken, MobileConnectConfig _config, MobileConnectRequestOptions options)
+        {
+            string identityUrl = discoveryResponse?.OperatorUrls?.PremiumInfoUrl;
+            if (string.IsNullOrEmpty(identityUrl))
+            {
+                return MobileConnectStatus.Error("not_supported", "Identity not supported with current operator", null);
+            }
+
+            var response = await _identity.RequestIdentity(identityUrl, accessToken);
+            return MobileConnectStatus.Identity(response);
         }
 
         private static MobileConnectStatus GenerateStatusFromDiscoveryResponse(IDiscovery discovery, DiscoveryResponse response)

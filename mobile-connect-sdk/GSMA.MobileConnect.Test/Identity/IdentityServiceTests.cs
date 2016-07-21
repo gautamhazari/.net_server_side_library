@@ -1,5 +1,4 @@
-﻿using GSMA.MobileConnect.Claims;
-using GSMA.MobileConnect.Exceptions;
+﻿using GSMA.MobileConnect.Exceptions;
 using GSMA.MobileConnect.Identity;
 using GSMA.MobileConnect.Utils;
 using NUnit.Framework;
@@ -37,7 +36,7 @@ namespace GSMA.MobileConnect.Test.Identity
             var response = _responses["user-info"];
             _restClient.NextExpectedResponse = response;
 
-            var result = _identityService.RequestUserInfo("user info url", "zmalqpxnskwocbdjeivbfhru", "").Result;
+            var result = _identityService.RequestUserInfo("user info url", "zmalqpxnskwocbdjeivbfhru").Result;
 
             Assert.IsNotNull(result);
             Assert.AreEqual(200, result.ResponseCode);
@@ -50,7 +49,7 @@ namespace GSMA.MobileConnect.Test.Identity
             var response = _responses["unauthorized"];
             _restClient.NextExpectedResponse = response;
 
-            var result = _identityService.RequestUserInfo("user info url", "zmalqpxnskwocbdjeivbfhru", "").Result;
+            var result = _identityService.RequestUserInfo("user info url", "zmalqpxnskwocbdjeivbfhru").Result;
 
             Assert.IsNotNull(result);
             Assert.AreEqual(401, result.ResponseCode);
@@ -65,7 +64,7 @@ namespace GSMA.MobileConnect.Test.Identity
         {
             _restClient.NextException = new System.Net.Http.HttpRequestException("This is the message");
 
-            Assert.ThrowsAsync<MobileConnectEndpointHttpException>(() => _identityService.RequestUserInfo("user info url", "zmalqpxnskwocbdjeivbfhru", ""));
+            Assert.ThrowsAsync<MobileConnectEndpointHttpException>(() => _identityService.RequestUserInfo("user info url", "zmalqpxnskwocbdjeivbfhru"));
         }
 
         [Test]
@@ -73,22 +72,7 @@ namespace GSMA.MobileConnect.Test.Identity
         {
             _restClient.NextException = new System.Net.WebException("This is the message");
 
-            Assert.ThrowsAsync<MobileConnectEndpointHttpException>(() => _identityService.RequestUserInfo("user info url", "zmalqpxnskwocbdjeivbfhru", ""));
-        }
-
-        [Test]
-        public void RequestUserInfoShouldAcceptClaimsParameter()
-        {
-            _restClient.NextExpectedResponse = _responses["user-info"];
-            var claims = new ClaimsParameter();
-            claims.UserInfo.AddRequired("test");
-            claims.IdToken.AddWithValue("testvalue", false, "this value");
-
-            var result = _identityService.RequestUserInfo("user info url", "zmalqpxnskwocbdjeivbfhru", claims).Result;
-
-            Assert.IsNotNull(result);
-            Assert.AreEqual(200, result.ResponseCode);
-            Assert.IsNotNull(result.ResponseJson);
+            Assert.ThrowsAsync<MobileConnectEndpointHttpException>(() => _identityService.RequestUserInfo("user info url", "zmalqpxnskwocbdjeivbfhru"));
         }
 
         #region Argument Validation
@@ -96,13 +80,13 @@ namespace GSMA.MobileConnect.Test.Identity
         [Test]
         public void RequestUserInfoShouldThrowWhenUserInfoUrlNull()
         {
-            Assert.ThrowsAsync<MobileConnectInvalidArgumentException>(() => _identityService.RequestUserInfo(null, "zmalqpxnskwocndjeivbfhru", ""));
+            Assert.ThrowsAsync<MobileConnectInvalidArgumentException>(() => _identityService.RequestUserInfo(null, "zmalqpxnskwocndjeivbfhru"));
         }
 
         [Test]
         public void RequestUserInfoShouldThrowWhenAccessTokenNull()
         {
-            Assert.ThrowsAsync<MobileConnectInvalidArgumentException>(() => _identityService.RequestUserInfo("user info url", null, ""));
+            Assert.ThrowsAsync<MobileConnectInvalidArgumentException>(() => _identityService.RequestUserInfo("user info url", null));
         }
 
         #endregion

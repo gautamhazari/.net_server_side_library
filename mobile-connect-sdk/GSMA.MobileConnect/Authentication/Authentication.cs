@@ -6,6 +6,7 @@ using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Utils;
 using GSMA.MobileConnect.Exceptions;
 using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace GSMA.MobileConnect.Authentication
 {
@@ -14,6 +15,7 @@ namespace GSMA.MobileConnect.Authentication
     /// </summary>
     public class Authentication : IAuthentication
     {
+        private readonly static JsonSerializerSettings _jsonSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
         private readonly RestClient _client;
 
         /// <inheritdoc/>
@@ -48,25 +50,28 @@ namespace GSMA.MobileConnect.Authentication
             options.RedirectUrl = redirectUrl;
             options.ClientId = clientId;
 
-            options.Scope = CoerceAuthenticationScope(options.Scope, versions, shouldUseAuthorize);
+            string version;
+            options.Scope = CoerceAuthenticationScope(options.Scope, versions, shouldUseAuthorize, out version);
 
             UriBuilder build = new UriBuilder(authorizeUrl);
-            build.AddQueryParams(GetAuthenticationQueryParams(options, shouldUseAuthorize));
+            build.AddQueryParams(GetAuthenticationQueryParams(options, shouldUseAuthorize, version));
 
             return new StartAuthenticationResponse() { Url = build.Uri.AbsoluteUri };
         }
 
         private bool ShouldUseAuthorize(AuthenticationOptions options)
         {
-            // If a mobile connect product is requested and it isn't authn then use authorize
-            if (options.Scope.IndexOf(Constants.Scope.MCPREFIX, StringComparison.OrdinalIgnoreCase) > -1 
-                && options.Scope.IndexOf(Constants.Scope.AUTHN, StringComparison.OrdinalIgnoreCase) == -1)
+            int authnIndex = options.Scope.IndexOf(Constants.Scope.AUTHN, StringComparison.OrdinalIgnoreCase);
+            bool authnRequested = authnIndex > -1;
+            bool mcProductRequested = options.Scope.LastIndexOf(Constants.Scope.MCPREFIX, StringComparison.OrdinalIgnoreCase) != authnIndex;
+
+            if(mcProductRequested)
             {
                 return true;
             }
 
-            // If context is passed then use authorize
-            if(!string.IsNullOrEmpty(options.Context))
+            // If context is passed and authn not specifically requested then use authorize
+            if(!authnRequested && !string.IsNullOrEmpty(options.Context))
             {
                 return true;
             }
@@ -81,13 +86,13 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="versions">SupportedVersions from ProviderMetadata, used for finding the supported version for the requested auth type</param>
         /// <param name="shouldUseAuthorize">If mc_authz should be used over mc_authn</param>
         /// <returns>Returns a modified scope value with mc_authn removed or added</returns>
-        private string CoerceAuthenticationScope(string scopeRequested, SupportedVersions versions, bool shouldUseAuthorize)
+        private string CoerceAuthenticationScope(string scopeRequested, SupportedVersions versions, bool shouldUseAuthorize, out string version)
         {
             var requiredScope = shouldUseAuthorize ? MobileConnectConstants.MOBILECONNECTAUTHORIZATION : MobileConnectConstants.MOBILECONNECTAUTHENTICATION;
             var disallowedScope = shouldUseAuthorize ? Constants.Scope.AUTHN : Constants.Scope.AUTHZ;
 
             versions = versions ?? new SupportedVersions(null);
-            string version = versions.GetSupportedVersion(requiredScope);
+            version = versions.GetSupportedVersion(requiredScope);
 
             var splitScope = scopeRequested.Split().ToList();
             splitScope = Scope.CoerceOpenIdScope(splitScope, requiredScope);
@@ -138,7 +143,7 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        private List<BasicKeyValuePair> GetAuthenticationQueryParams(AuthenticationOptions options, bool useAuthorize)
+        private List<BasicKeyValuePair> GetAuthenticationQueryParams(AuthenticationOptions options, bool useAuthorize, string version)
         {
             var authParameters = new List<BasicKeyValuePair>
             {
@@ -157,6 +162,8 @@ namespace GSMA.MobileConnect.Authentication
                 new BasicKeyValuePair(Constants.Parameters.ID_TOKEN_HINT, options.IdTokenHint),
                 new BasicKeyValuePair(Constants.Parameters.LOGIN_HINT, options.LoginHint),
                 new BasicKeyValuePair(Constants.Parameters.DTBS, options.Dtbs),
+                new BasicKeyValuePair(Constants.Parameters.CLAIMS, GetClaimsString(options)),
+                new BasicKeyValuePair(Constants.Parameters.VERSION, version),
             };
 
             if(useAuthorize)
@@ -167,6 +174,16 @@ namespace GSMA.MobileConnect.Authentication
             }
 
             return authParameters;
+        }
+
+        private string GetClaimsString(AuthenticationOptions options)
+        {
+            if (!string.IsNullOrEmpty(options.ClaimsJson))
+            {
+                return options.ClaimsJson;
+            }
+
+            return options.Claims != null && !options.Claims.IsEmpty ? JsonConvert.SerializeObject(options.Claims, _jsonSettings) : null;
         }
     }
 }

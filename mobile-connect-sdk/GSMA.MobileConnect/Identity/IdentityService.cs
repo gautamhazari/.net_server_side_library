@@ -3,8 +3,6 @@ using GSMA.MobileConnect.Utils;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using GSMA.MobileConnect.Claims;
-using Newtonsoft.Json;
 
 namespace GSMA.MobileConnect.Identity
 {
@@ -22,14 +20,14 @@ namespace GSMA.MobileConnect.Identity
         }
 
         /// <inheritdoc/>
-        public async Task<UserInfoResponse> RequestUserInfo(string userInfoUrl, string accessToken, ClaimsParameter claims)
+        public async Task<IdentityResponse> RequestIdentity(string premiumInfoUrl, string accessToken)
         {
-            string claimsJson = JsonConvert.SerializeObject(claims);
-            return await RequestUserInfo(userInfoUrl, accessToken, claimsJson);
+            Validation.RejectNullOrEmpty(premiumInfoUrl, "premiumInfoUrl");
+            return await RequestUserInfo(premiumInfoUrl, accessToken);
         }
 
         /// <inheritdoc/>
-        public async Task<UserInfoResponse> RequestUserInfo(string userInfoUrl, string accessToken, string claims)
+        public async Task<IdentityResponse> RequestUserInfo(string userInfoUrl, string accessToken)
         {
             Validation.RejectNullOrEmpty(userInfoUrl, "userInfoUrl");
             Validation.RejectNullOrEmpty(accessToken, "accessToken");
@@ -38,16 +36,9 @@ namespace GSMA.MobileConnect.Identity
             {
                 RestResponse response;
                 var auth = RestAuthentication.Bearer(accessToken);
-                if(string.IsNullOrEmpty(claims))
-                {
-                    response = await _client.GetAsync(userInfoUrl, auth, null, null, null);
-                }
-                else
-                {
-                    response = await _client.PostAsync(userInfoUrl, auth, claims, null, null);
-                }
+                response = await _client.GetAsync(userInfoUrl, auth, null, null, null);
 
-                return new UserInfoResponse(response);
+                return new IdentityResponse(response);
             }
             catch (Exception e) when (e is HttpRequestException || e is System.Net.WebException || e is TaskCanceledException)
             {

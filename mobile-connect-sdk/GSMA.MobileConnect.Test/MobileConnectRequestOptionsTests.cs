@@ -37,6 +37,8 @@ namespace GSMA.MobileConnect.Test
             var scope = "scope value";
             var acr = "acr value";
             var maxAge = 1200;
+            var claimsJson = "claims json";
+            var claims = new MobileConnect.Claims.ClaimsParameter();
 
             var actual = new MobileConnectRequestOptions
             {
@@ -50,6 +52,8 @@ namespace GSMA.MobileConnect.Test
                 Scope = scope,
                 AcrValues = acr,
                 MaxAge = maxAge,
+                ClaimsJson = claimsJson,
+                Claims = claims,
             };
 
             Assert.AreEqual(display, actual.Display);
@@ -62,6 +66,8 @@ namespace GSMA.MobileConnect.Test
             Assert.AreEqual(scope, actual.Scope);
             Assert.AreEqual(acr, actual.AcrValues);
             Assert.AreEqual(maxAge, actual.MaxAge);
+            Assert.AreEqual(claimsJson, actual.ClaimsJson);
+            Assert.AreEqual(claims, actual.Claims);
         }
     }
 }

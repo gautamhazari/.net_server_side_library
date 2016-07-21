@@ -110,11 +110,15 @@
             <h2 class="subheader">Auth Type To Request</h2>
             <label class="auth-radio"><input type="radio" id="authn-toggle" value="authn" name="auth" checked/>Authentication</label>
             <label class="auth-radio"><input type="radio" id="authz-toggle" value="authz" name="auth" />Authorization</label>
-            <h2 class="subheader">User Permissions To Request</h2>
+            <h2 class="subheader">UserInfo Permissions To Request</h2>
             <label class="permissions-check"><input type="checkbox" id="address-toggle" data-scope="address" />Address</label>
             <label class="permissions-check"><input type="checkbox" id="email-toggle" data-scope="email"/>Email</label>
             <label class="permissions-check"><input type="checkbox" id="phone-toggle" data-scope="phone"/>Phone</label>
             <label class="permissions-check"><input type="checkbox" id="profile-toggle" data-scope="profile"/>Profile</label>
+            <h2 class="subheader">Identity Permissions To Request</h2>
+            <label class="permissions-check identity-permission"><input type="checkbox" id="identity-phone-toggle" data-scope="mc_identity_phonenumber" />Phone</label>
+            <label class="permissions-check identity-permission"><input type="checkbox" id="identity-signup-toggle" data-scope="mc_identity_signup" />Signup</label>
+            <label class="permissions-check identity-permission"><input type="checkbox" id="identity-nationalid-toggle" data-scope="mc_identity_nationalid" />National ID</label>
         </div>
         <div id="logged-in" class="responsive logged-in hidden">
             <div id="logged-in-message">Succesfully Logged In</div>
@@ -123,9 +127,14 @@
             <div id="value-id-token" class="display-value"></div>
             <div id="value-time-received" class="display-value"></div>
             <input class="feature-button" type="button" id="user-info-button" name="user-info-button" value="Request UserInfo" />
+            <input class="feature-button" type="button" id="identity-button" name="identity-button" value="Request Identity" />
         </div>
         <div id="user-info" class="responsive user-info hidden">
             <div id="value-user" class="display-value pre-whitespace"></div>
+            <input class="feature-button return-button" type="button" value="Back" />
+        </div>
+        <div id="identity" class="responsive identity hidden">
+            <div id="value-identity" class="display-value pre-whitespace"></div>
             <input class="feature-button return-button" type="button" value="Back" />
         </div>
     </div>
@@ -133,6 +142,7 @@
         var discoveryUrl = '/api/mobileconnect/start_discovery';
         var authorizationUrl = '/api/mobileconnect/start_authentication';
         var userInfoUrl = '/api/mobileconnect/user_info';
+        var identityUrl = '/api/mobileconnect/identity';
 
         var openWindow = function openWindow(url) {
             var width = 400,
@@ -289,8 +299,21 @@
                 $.get(userInfoUrl + queryString, api.httpCallback);
             },
             user_info: function user_info(response) {
-                setContent('#value-user', JSON.stringify(response.userInfo, null, 2));
+                setContent('#value-user', JSON.stringify(response.identity, null, 2));
                 show('#user-info');
+                hide('#logged-in');
+            },
+            request_identity: function request_identity() {
+                var queryString = '?' + generateParams({
+                    sdkSession: api.currentAttempt.session,
+                    accessToken: api.currentAttempt.token.access_token,
+                });
+
+                $.get(identityUrl + queryString, api.httpCallback);
+            },
+            identity: function identity(response) {
+                setContent('#value-identity', JSON.stringify(response.identity, null, 2));
+                show('#identity');
                 hide('#logged-in');
             },
             error: function error(response) {
@@ -321,9 +344,14 @@
             api.request_user_info();
         });
 
+        $('#identity-button').click(function (e) {
+            api.request_identity();
+        });
+
         $('.return-button').click(function (e) {
             show('#logged-in');
             hide('#user-info');
+            hide('#identity');
         });
     </script>
 </body>

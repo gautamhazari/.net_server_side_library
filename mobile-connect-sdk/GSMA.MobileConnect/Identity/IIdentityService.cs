@@ -1,5 +1,4 @@
-﻿using GSMA.MobileConnect.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace GSMA.MobileConnect.Identity
 {
@@ -11,22 +10,20 @@ namespace GSMA.MobileConnect.Identity
     {
         /// <summary>
         /// Request the user info for the provided access token. Some of the information returned by the user info service requires the authorization/authentication to be 
-        /// executed with additional scope values e.g. phone number <see cref="MobileConnectConstants.MOBILECONNECTIDENTITYPHONE"/>
+        /// executed with additional scope values e.g. email => openid email
         /// </summary>
         /// <param name="userInfoUrl">Url for accessing user info (Returned in discovery response)</param>
         /// <param name="accessToken">Access token for authorising user info request</param>
-        /// <param name="claims">List of claims to request (optional)</param>
         /// <returns>UserInfo object if request succeeds</returns>
-        Task<UserInfoResponse> RequestUserInfo(string userInfoUrl, string accessToken, string claims);
+        Task<IdentityResponse> RequestUserInfo(string userInfoUrl, string accessToken);
 
         /// <summary>
-        /// Convenience method alternative to <see cref="RequestUserInfo(string, string, string)"/> so claims can be specified using a ClaimsParameter
-        /// which will be serialized to JSON
+        /// Request the identity for the provided access token. Information returned by the identity service requires the authorization to be 
+        /// executed with additional scope values e.g. phone number <see cref="MobileConnectConstants.MOBILECONNECTIDENTITYPHONE"/>
         /// </summary>
-        /// <param name="userInfoUrl">Url for accessing user info (Returned in discovery response)</param>
-        /// <param name="accessToken">Access token for authorising user info request</param>
-        /// <param name="claims">Claims parameter with requested claims (optional)</param>
+        /// <param name="premiumInfoUrl">Url for accessing premium info identity services (Returned in discovery response)</param>
+        /// <param name="accessToken">Access token for authorising identity request</param>
         /// <returns>UserInfo object if request succeeds</returns>
-        Task<UserInfoResponse> RequestUserInfo(string userInfoUrl, string accessToken, ClaimsParameter claims);
+        Task<IdentityResponse> RequestIdentity(string premiumInfoUrl, string accessToken);
     }
 }

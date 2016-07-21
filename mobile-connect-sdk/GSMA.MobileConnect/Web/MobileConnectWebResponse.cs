@@ -44,9 +44,9 @@ namespace GSMA.MobileConnect.Web
         /// </summary>
         public RequestTokenResponseData Token { get; set; }
         /// <summary>
-        /// UserInfo data returned from successful RequestUserInfo call
+        /// Identity data returned from successful RequestUserInfo or RequestIdentityInfo call
         /// </summary>
-        public Newtonsoft.Json.Linq.JRaw UserInfo { get; set; }
+        public Newtonsoft.Json.Linq.JRaw Identity { get; set; }
 
         /// <summary>
         /// Error code if available

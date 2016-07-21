@@ -1,6 +1,8 @@
 ﻿using GSMA.MobileConnect.Authentication;
+using GSMA.MobileConnect.Claims;
 using GSMA.MobileConnect.Exceptions;
 using GSMA.MobileConnect.Utils;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -57,7 +59,7 @@ namespace GSMA.MobileConnect.Test.Authentication
         }
 
         [Test]
-        public void StartAuthenticationWith1_1VersionShouldLeaveAuthnArgumentInScope()
+        public void StartAuthenticationWith1_2VersionShouldLeaveAuthnArgumentInScope()
         {
             var initialScope = "openid mc_authn";
             var expectedScope = "openid mc_authn";
@@ -70,7 +72,7 @@ namespace GSMA.MobileConnect.Test.Authentication
         }
 
         [Test]
-        public void StartAuthenticationWithout1_1VersionShouldAddAuthnArgumentToScope()
+        public void StartAuthenticationWithout1_2VersionShouldAddAuthnArgumentToScope()
         {
             var initialScope = "openid";
             var expectedScope = "openid mc_authn";
@@ -104,7 +106,7 @@ namespace GSMA.MobileConnect.Test.Authentication
         [Test]
         public void StartAuthenticationWithContextShouldUseAuthorizationScope()
         {
-            var initialScope = "openid mc_authn";
+            var initialScope = "openid";
             var expectedScope = "openid mc_authz";
             var options = new AuthenticationOptions { Scope = initialScope, ClientName = "clientName", Context = "context" };
 
@@ -115,16 +117,41 @@ namespace GSMA.MobileConnect.Test.Authentication
         }
 
         [Test]
-        public void StartAuthenticationWithMobileConnectProductScopeShouldUseAuthorizationScope()
+        public void StartAuthenticationWithMobileConnectProductScopeShouldUseAuthorization()
         {
             var initialScope = "openid mc_authn mc_identity_phone";
-            var expectedScope = "openid mc_authz mc_identity_phone";
-            var options = new AuthenticationOptions { Scope = initialScope, ClientName = "clientName", Context = "context" };
+            var options = new AuthenticationOptions { Scope = initialScope };
+
+            Assert.Throws<MobileConnectInvalidArgumentException>(() => _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", "nonce", null, _defaultVersions, options));
+        }
+
+        [Test]
+        public void StartAuthenticationWithClaimsShouldEncodeAndIncludeClaims()
+        {
+            var claims = new ClaimsParameter();
+            claims.IdToken.AddRequired("test1");
+            claims.UserInfo.AddWithValue("test2", false, "testvalue");
+            var options = new AuthenticationOptions { Claims = claims };
+            var expectedClaims = JsonConvert.SerializeObject(claims, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             var result = _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", "nonce", null, _defaultVersions, options);
-            var actualScope = HttpUtils.ExtractQueryValue(result.Url, "scope");
+            var actualClaims = HttpUtils.ExtractQueryValue(result.Url, "claims");
 
-            Assert.AreEqual(expectedScope, actualScope);
+            Assert.IsNotEmpty(actualClaims);
+            Assert.AreEqual(expectedClaims, actualClaims);
+        }
+
+        [Test]
+        public void StartAuthenticationWithClaimsShouldEncodeAndIncludeClaimsJson()
+        {
+            var claims = "{\"user_info\":{\"test1\":{\"value\":\"test\"}}}";
+            var options = new AuthenticationOptions { ClaimsJson = claims };
+
+            var result = _authentication.StartAuthentication(_config.ClientId, AUTHORIZE_URL, REDIRECT_URL, "state", "nonce", null, _defaultVersions, options);
+            var actualClaims = HttpUtils.ExtractQueryValue(result.Url, "claims");
+
+            Assert.IsNotEmpty(actualClaims);
+            Assert.AreEqual(claims, actualClaims);
         }
 
         [Test]

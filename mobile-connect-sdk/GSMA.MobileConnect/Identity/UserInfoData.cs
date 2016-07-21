@@ -5,11 +5,11 @@ using System;
 namespace GSMA.MobileConnect.Identity
 {
     /// <summary>
-    /// Class containing properties for all available openid connect 1.0 UserInfo claims, can be used to retrieve <see cref="UserInfoResponse.ResponseJson"/> as a concrete object.
-    /// Use the <see cref="UserInfoResponse.ResponseDataAs{T}"/> method with this type as the parameter T. 
+    /// Class containing properties for all available openid connect 1.0 UserInfo claims, can be used to retrieve <see cref="IdentityResponse.ResponseJson"/> as a concrete object.
+    /// Use the <see cref="IdentityResponse.ResponseDataAs{T}"/> method with this type as the parameter T. 
     /// Alternatively a leaner type or type with additional custom properties can be provided for more control over the deserialization process.
     /// </summary>
-    /// <seealso cref="UserInfoResponse"/>
+    /// <seealso cref="IdentityResponse"/>
     public class UserInfoData
     {
         /// <summary>

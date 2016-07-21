@@ -29,12 +29,11 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
         [Route("start_authentication")]
         public async Task<IHttpActionResult> StartAuthentication(string sdksession = null, string subscriberId = null, string scope = null)
         {
-            bool authz = scope.Contains("mc_authz");
             var options = new MobileConnectRequestOptions
             {
                 Scope = scope,
-                Context = authz ? "demo" : null,
-                BindingMessage = authz ? "demo auth" : null,
+                Context = "demo",
+                BindingMessage = "demo auth",
             };
 
             var response = await _mobileConnect.StartAuthentication(Request, sdksession, subscriberId, null, null, options);
@@ -45,7 +44,15 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
         [Route("user_info")]
         public async Task<IHttpActionResult> RequestUserInfo(string sdksession = null, string accessToken = null)
         {
-            var response = await _mobileConnect.RequestUserInfoAsync(Request, sdksession, accessToken, null, new MobileConnectRequestOptions());
+            var response = await _mobileConnect.RequestUserInfoAsync(Request, sdksession, accessToken, new MobileConnectRequestOptions());
+            return CreateResponse(response);
+        }
+
+        [HttpGet]
+        [Route("identity")]
+        public async Task<IHttpActionResult> RequestIdentity(string sdksession = null, string accessToken = null)
+        {
+            var response = await _mobileConnect.RequestIdentityAsync(Request, sdksession, accessToken, new MobileConnectRequestOptions());
             return CreateResponse(response);
         }
 

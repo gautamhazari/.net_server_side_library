@@ -68,9 +68,9 @@ namespace GSMA.MobileConnect
         public RequestTokenResponse TokenResponse { get; set; }
 
         /// <summary>
-        /// Complete user info response if included
+        /// Complete identity response if included
         /// </summary>
-        public UserInfoResponse UserInfoResponse { get; set; }
+        public IdentityResponse IdentityResponse { get; set; }
 
         /// <summary>
         /// Exception encountered during request if included
@@ -209,17 +209,32 @@ namespace GSMA.MobileConnect
         }
 
         /// <summary>
-        /// Creates a status with ResponseType UserInfo and the complete <see cref="UserInfoResponse"/>.
+        /// Creates a status with ResponseType UserInfo and the complete <see cref="IdentityResponse"/>.
         /// Indicates that a user info request has been successful.
         /// </summary>
         /// <param name="response">UserInfoResponse returned from <see cref="IIdentityService"/></param>
         /// <returns>MobileConnectStatus with ResponseType UserInfo</returns>
-        public static MobileConnectStatus UserInfo(UserInfoResponse response)
+        public static MobileConnectStatus UserInfo(IdentityResponse response)
         {
             return new MobileConnectStatus
             {
                 ResponseType = MobileConnectResponseType.UserInfo,
-                UserInfoResponse = response,
+                IdentityResponse = response,
+            };
+        }
+
+        /// <summary>
+        /// Creates a status with ResponseType Identity and the complete <see cref="IdentityResponse"/>.
+        /// Indicates that an identity request has been successful.
+        /// </summary>
+        /// <param name="response">UserInfoResponse returned from <see cref="IIdentityService"/></param>
+        /// <returns>MobileConnectStatus with ResponseType Identity</returns>
+        public static MobileConnectStatus Identity(IdentityResponse response)
+        {
+            return new MobileConnectStatus
+            {
+                ResponseType = MobileConnectResponseType.Identity,
+                IdentityResponse = response,
             };
         }
 
@@ -260,6 +275,10 @@ namespace GSMA.MobileConnect
         /// <summary>
         /// ResponseType indicating userInfo has been received
         /// </summary>
-        UserInfo
+        UserInfo,
+        /// <summary>
+        /// ResponseType indicating identity has been received
+        /// </summary>
+        Identity
     }
 }

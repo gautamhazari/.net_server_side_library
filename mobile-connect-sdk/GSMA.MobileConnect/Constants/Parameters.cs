@@ -26,6 +26,7 @@
         internal const string ACR_VALUES = "acr_values";
         internal const string STATE = "state";
         internal const string NONCE = "nonce";
+        internal const string VERSION = "version";
 
         //Optional params for authentication
         internal const string DISPLAY = "display";
@@ -36,6 +37,7 @@
         internal const string ID_TOKEN_HINT = "id_token_hint";
         internal const string LOGIN_HINT = "login_hint";
         internal const string DTBS = "dtbs";
+        internal const string CLAIMS = "claims";
 
         //Required params for authorization
         internal const string CLIENT_NAME = "client_name";

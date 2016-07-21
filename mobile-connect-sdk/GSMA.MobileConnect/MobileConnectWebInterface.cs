@@ -1,5 +1,4 @@
 ﻿using GSMA.MobileConnect.Authentication;
-using GSMA.MobileConnect.Claims;
 using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Identity;
 using GSMA.MobileConnect.Utils;
@@ -188,12 +187,11 @@ namespace GSMA.MobileConnect
         /// <param name="request">Originating web request</param>
         /// <param name="discoveryResponse">The response returned by the discovery process</param>
         /// <param name="accessToken">Access token returned from RequestToken required to authenticate the request</param>
-        /// <param name="claims">ClaimsParameter describing the requested claims (Optional)</param>
         /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with requested UserInfo information</returns>
-        public async Task<MobileConnectStatus> RequestUserInfoAsync(HttpRequestMessage request, DiscoveryResponse discoveryResponse, string accessToken, ClaimsParameter claims, MobileConnectRequestOptions options)
+        public async Task<MobileConnectStatus> RequestUserInfoAsync(HttpRequestMessage request, DiscoveryResponse discoveryResponse, string accessToken, MobileConnectRequestOptions options)
         {
-            return await MobileConnectInterfaceHelper.RequestUserInfo(_identity, discoveryResponse, accessToken, claims, _config, options);
+            return await MobileConnectInterfaceHelper.RequestUserInfo(_identity, discoveryResponse, accessToken, _config, options);
         }
 
         /// <summary>
@@ -202,10 +200,9 @@ namespace GSMA.MobileConnect
         /// <param name="request">Originating web request</param>
         /// <param name="sdkSession">SDKSession id used to fetch the discovery response with additional parameters that are required to request a user info</param>
         /// <param name="accessToken">Access token returned from RequestToken required to authenticate the request</param>
-        /// <param name="claims">ClaimsParameter describing the requested claims (Optional)</param>
         /// <param name="options">Additional optional parameters</param>
         /// <returns>MobileConnectStatus object with requested UserInfo information</returns>
-        public async Task<MobileConnectStatus> RequestUserInfoAsync(HttpRequestMessage request, string sdkSession, string accessToken, ClaimsParameter claims, MobileConnectRequestOptions options)
+        public async Task<MobileConnectStatus> RequestUserInfoAsync(HttpRequestMessage request, string sdkSession, string accessToken, MobileConnectRequestOptions options)
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -214,7 +211,40 @@ namespace GSMA.MobileConnect
                 return GetCacheError();
             }
 
-            return await RequestUserInfoAsync(request, discoveryResponse, accessToken, claims, options);
+            return await RequestUserInfoAsync(request, discoveryResponse, accessToken, options);
+        }
+
+        /// <summary>
+        /// Request identity using the access token returned by <see cref="RequestTokenAsync(HttpRequestMessage, DiscoveryResponse, Uri, string, string)"/>
+        /// </summary>
+        /// <param name="request">Originating web request</param>
+        /// <param name="discoveryResponse">The response returned by the discovery process</param>
+        /// <param name="accessToken">Access token returned from RequestToken required to authenticate the request</param>
+        /// <param name="options">Optional parameters</param>
+        /// <returns>MobileConnectStatus object with requested Identity information</returns>
+        public async Task<MobileConnectStatus> RequestIdentityAsync(HttpRequestMessage request, DiscoveryResponse discoveryResponse, string accessToken, MobileConnectRequestOptions options)
+        {
+            return await MobileConnectInterfaceHelper.RequestIdentity(_identity, discoveryResponse, accessToken, _config, options);
+        }
+
+        /// <summary>
+        /// Request identity using the access token returned by <see cref="RequestTokenAsync(HttpRequestMessage, DiscoveryResponse, Uri, string, string)"/>
+        /// </summary>
+        /// <param name="request">Originating web request</param>
+        /// <param name="sdkSession">SDKSession id used to fetch the discovery response with additional parameters that are required to request a user info</param>
+        /// <param name="accessToken">Access token returned from RequestToken required to authenticate the request</param>
+        /// <param name="options">Additional optional parameters</param>
+        /// <returns>MobileConnectStatus object with requested Identity information</returns>
+        public async Task<MobileConnectStatus> RequestIdentityAsync(HttpRequestMessage request, string sdkSession, string accessToken, MobileConnectRequestOptions options)
+        {
+            var discoveryResponse = await GetSessionFromCache(sdkSession);
+
+            if (discoveryResponse == null)
+            {
+                return GetCacheError();
+            }
+
+            return await RequestIdentityAsync(request, discoveryResponse, accessToken, options);
         }
 
         private string GenerateUniqueString()
