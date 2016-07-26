@@ -20,9 +20,9 @@ namespace GSMA.MobileConnect.Test
             new BasicKeyValuePair("Accept", "image/gif, image/jpeg, image/pjpeg, application/x-ms-application, application/xaml+xml, application/x-ms-xbap, */*"),
         };
 
-        //[TestCase("sandbox-v1")]
-        [TestCase("sandbox-v2")]
-        [TestCase("r2-ref")]
+        //[TestCase("SandboxV1")]
+        [TestCase("SandboxV2")]
+        //[TestCase("SandboxR2")]
         public async Task MobileConnectInterfaceShouldWorkEndToEnd(string configKey)
         {
             RestClient restClient = new RestClient();
@@ -74,9 +74,9 @@ namespace GSMA.MobileConnect.Test
             Assert.IsNotEmpty(status.TokenResponse.ResponseData.AccessToken);
         }
 
-        //[TestCase("sandbox-v1")]
-        [TestCase("sandbox-v2")]
-        [TestCase("r2-ref")]
+        //[TestCase("SandboxV1")]
+        [TestCase("SandboxV2")]
+        //[TestCase("SandboxR2")]
         public async Task MobileConnectInterfaceShouldRejectIncorrectState(string configKey)
         {
             RestClient restClient = new RestClient();
@@ -129,9 +129,9 @@ namespace GSMA.MobileConnect.Test
             Assert.IsNotEmpty(status.ErrorMessage);
         }
 
-        //[TestCase("sandbox-v1")]
-        [TestCase("sandbox-v2")]
-        [TestCase("r2-ref")]
+        //[TestCase("SandboxV1")]
+        [TestCase("SandboxV2")]
+        //[TestCase("SandboxR2")]
         public async Task MobileConnectInterfaceShouldRejectIncorrectNonce(string configKey)
         {
             RestClient restClient = new RestClient();
@@ -184,9 +184,9 @@ namespace GSMA.MobileConnect.Test
             Assert.IsNotEmpty(status.ErrorMessage);
         }
 
-        //[TestCase("sandbox-v1")]
-        [TestCase("sandbox-v2")]
-        [TestCase("r2-ref")]
+        //[TestCase("SandboxV1")]
+        [TestCase("SandboxV2")]
+        //[TestCase("SandboxR2")]
         public async Task MobileConnectWebInterfaceShouldWorkEndToEnd(string configKey)
         {
             RestClient restClient = new RestClient();
@@ -242,9 +242,9 @@ namespace GSMA.MobileConnect.Test
             Assert.IsNotEmpty(status.TokenResponse.ResponseData.AccessToken);
         }
 
-        //[TestCase("sandbox-v1")]
-        [TestCase("sandbox-v2")]
-        [TestCase("r2-ref")]
+        //[TestCase("SandboxV1")]
+        [TestCase("SandboxV2")]
+        //[TestCase("SandboxR2")]
         public async Task MobileConnectWebInterfaceShouldWorkEndToEndWithCache(string configKey)
         {
             RestClient restClient = new RestClient();

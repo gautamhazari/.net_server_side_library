@@ -1,9 +1,0 @@
-﻿{
-	"default" : "sandbox-v1",
-	"sandbox-v1": {
-		"DiscoveryUrl": "http://discovery.sandbox2.mobileconnect.io/v2/discovery",
-		"RedirectUrl": "http://localhost:8001/mobileconnect.html",
-		"ClientId": "",
-		"ClientSecret": ""
-	}
-}
