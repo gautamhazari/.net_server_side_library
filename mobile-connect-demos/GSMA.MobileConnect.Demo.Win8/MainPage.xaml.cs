@@ -119,13 +119,14 @@ namespace GSMA.MobileConnect.Demo.Win8
 
         private string GetScope()
         {
-            //Create scope from checked checkboxes
-            var elements = userInfoScopes.Children.Concat(identityScopes.Children);
             var scopes = new List<string> { };
+
+            //Create scope from checked checkboxes
+            var elements = authScopes.Children.Concat(userInfoScopes.Children.Concat(identityScopes.Children));
 
             foreach (var element in elements)
             {
-                var check = element as CheckBox;
+                var check = element as Windows.UI.Xaml.Controls.Primitives.ToggleButton;
                 if(check != null && check.Tag != null && check.IsChecked == true)
                 {
                     scopes.Add(check.Tag.ToString());

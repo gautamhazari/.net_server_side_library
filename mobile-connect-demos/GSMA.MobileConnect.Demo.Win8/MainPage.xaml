@@ -23,6 +23,8 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <TextBox x:Name="msisdn" Grid.Row="0" PlaceholderText="MSISDN" Visibility="Collapsed" Text="+447700200200"/>
@@ -39,15 +41,20 @@
                 </Grid>
 
                 <TextBlock x:Name="errorText" Grid.Row="2" Foreground="Red" FontSize="18" TextWrapping="Wrap"/>
-                <TextBlock  Grid.Row="3" FontSize="24" TextWrapping="Wrap" Text="UserInfo Permissions To Request"/>
-                <StackPanel x:Name="userInfoScopes" Grid.Row="4" Margin="10">
+                <TextBlock  Grid.Row="3" FontSize="24" TextWrapping="Wrap" Text="Auth Type To Request"/>
+                <StackPanel Grid.Row="4" Orientation="Horizontal" x:Name="authScopes">
+                    <RadioButton Tag="mc_authn" GroupName="auth" Content="Authentication" IsChecked="True" Margin="10"/>
+                    <RadioButton Tag="mc_authz" GroupName="auth" Content="Authorization" Margin="10"/>
+                </StackPanel>
+                <TextBlock  Grid.Row="5" FontSize="24" TextWrapping="Wrap" Text="UserInfo Permissions To Request"/>
+                <StackPanel x:Name="userInfoScopes" Grid.Row="6" Margin="10">
                     <CheckBox Tag="address" Content="Address"/>
                     <CheckBox Tag="email" Content="Email"/>
                     <CheckBox Tag="phone" Content="Phone"/>
                     <CheckBox Tag="profile" Content="Profile"/>
                 </StackPanel>
-                <TextBlock  Grid.Row="5" FontSize="24" TextWrapping="Wrap" Text="Identity Permissions To Request"/>
-                <StackPanel x:Name="identityScopes" Grid.Row="6" Margin="10">
+                <TextBlock  Grid.Row="7" FontSize="24" TextWrapping="Wrap" Text="Identity Permissions To Request"/>
+                <StackPanel x:Name="identityScopes" Grid.Row="8" Margin="10">
                     <CheckBox Tag="mc_identity_phonenumber" Content="Phone"/>
                     <CheckBox Tag="mc_identity_signup" Content="Signup"/>
                     <CheckBox Tag="mc_identity_nationalid" Content="National ID"/>
