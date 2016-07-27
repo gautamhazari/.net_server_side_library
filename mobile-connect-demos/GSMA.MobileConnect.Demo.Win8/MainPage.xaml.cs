@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using System.Linq;
+using System.Text;
+using System.Collections.Generic;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -55,7 +58,7 @@ namespace GSMA.MobileConnect.Demo.Win8
                     await StartDiscovery(null);
                     break;
                 case MobileConnectResponseType.StartAuthentication:
-                    await StartAuthorization(response);
+                    await StartAuthentication(response);
                     break;
                 case MobileConnectResponseType.Complete:
                     Complete(response);
@@ -73,13 +76,13 @@ namespace GSMA.MobileConnect.Demo.Win8
             progress.Visibility = Visibility.Collapsed;
         }
 
-        private async Task StartAuthorization(MobileConnectStatus response)
+        private async Task StartAuthentication(MobileConnectStatus response)
         {
-            _state = Guid.NewGuid().ToString("N");
-            _nonce = Guid.NewGuid().ToString("N");
+            _state = GenerateUniqueString();
+            _nonce = GenerateUniqueString();
             _discoveryResponse = response.DiscoveryResponse;
             var newResponse = _mobileConnect.StartAuthentication(_discoveryResponse,
-                response.DiscoveryResponse.ResponseData.subscriber_id, _state, _nonce, new MobileConnectRequestOptions());
+                response.DiscoveryResponse.ResponseData.subscriber_id, _state, _nonce, new MobileConnectRequestOptions { Scope = GetScope() });
 
             await HandleResponse(newResponse);
         }
@@ -112,6 +115,24 @@ namespace GSMA.MobileConnect.Demo.Win8
 
             var json = new Newtonsoft.Json.Linq.JRaw(status.IdentityResponse.ResponseJson);
             identity.Text = json.ToString(Newtonsoft.Json.Formatting.Indented);
+        }
+
+        private string GetScope()
+        {
+            //Create scope from checked checkboxes
+            var elements = userInfoScopes.Children.Concat(identityScopes.Children);
+            var scopes = new List<string> { };
+
+            foreach (var element in elements)
+            {
+                var check = element as CheckBox;
+                if(check != null && check.Tag != null && check.IsChecked == true)
+                {
+                    scopes.Add(check.Tag.ToString());
+                }
+            }
+
+            return string.Join(" ", scopes);
         }
 
         #endregion
@@ -185,5 +206,10 @@ namespace GSMA.MobileConnect.Demo.Win8
         }
 
         #endregion
+
+        private string GenerateUniqueString()
+        {
+            return Guid.NewGuid().ToString("N");
+        }
     }
 }
