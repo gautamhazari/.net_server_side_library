@@ -81,8 +81,16 @@ namespace GSMA.MobileConnect.Demo.Win8
             _state = GenerateUniqueString();
             _nonce = GenerateUniqueString();
             _discoveryResponse = response.DiscoveryResponse;
+
+            var options = new MobileConnectRequestOptions
+            {
+                Scope = GetScope(),
+                Context = "demo",
+                BindingMessage = "demo auth",
+            };
+
             var newResponse = _mobileConnect.StartAuthentication(_discoveryResponse,
-                response.DiscoveryResponse.ResponseData.subscriber_id, _state, _nonce, new MobileConnectRequestOptions { Scope = GetScope() });
+                response.DiscoveryResponse.ResponseData.subscriber_id, _state, _nonce, options);
 
             await HandleResponse(newResponse);
         }
@@ -117,6 +125,10 @@ namespace GSMA.MobileConnect.Demo.Win8
             identity.Text = json.ToString(Newtonsoft.Json.Formatting.Indented);
         }
 
+        #endregion
+
+        #region Helper Methods
+
         private string GetScope()
         {
             var scopes = new List<string> { };
@@ -127,13 +139,18 @@ namespace GSMA.MobileConnect.Demo.Win8
             foreach (var element in elements)
             {
                 var check = element as Windows.UI.Xaml.Controls.Primitives.ToggleButton;
-                if(check != null && check.Tag != null && check.IsChecked == true)
+                if (check != null && check.Tag != null && check.IsChecked == true)
                 {
                     scopes.Add(check.Tag.ToString());
                 }
             }
 
             return string.Join(" ", scopes);
+        }
+
+        private string GenerateUniqueString()
+        {
+            return Guid.NewGuid().ToString("N");
         }
 
         #endregion
@@ -207,10 +224,5 @@ namespace GSMA.MobileConnect.Demo.Win8
         }
 
         #endregion
-
-        private string GenerateUniqueString()
-        {
-            return Guid.NewGuid().ToString("N");
-        }
     }
 }

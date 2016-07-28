@@ -20,22 +20,46 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBox x:Name="msisdn" Grid.Row="1" PlaceholderText="MSISDN" Visibility="Collapsed" Text="+447700900250"/>
-                <Grid Grid.Row="2">
+                <TextBox x:Name="msisdn" Grid.Row="0" PlaceholderText="MSISDN" Visibility="Collapsed" Text="+447700200200"/>
+                <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <CheckBox x:Name="toggle" Content="Enter MSISDN" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" VerticalAlignment="Center"/>
-                    <Button Grid.Column="1" Content="MobileConnect" HorizontalAlignment="Right" Margin="0,10" Click="Button_Click"/>
-                    <TextBlock x:Name="errorText" Grid.Row="1" Grid.ColumnSpan="2" Foreground="Red" TextWrapping="Wrap"/>
+                    <CheckBox x:Name="toggle" Content="Enter MSISDN" Checked="MSISDNCheckBox_Checked" Unchecked="MSISDNCheckBox_Unchecked" VerticalAlignment="Center"/>
+                    <Button Grid.Column="1" Content="MobileConnect" HorizontalAlignment="Right" Margin="0,10" Click="MobileConnectButton_Click"/>
                 </Grid>
+
+                <TextBlock x:Name="errorText" Grid.Row="2" Foreground="Red" FontSize="18" TextWrapping="Wrap"/>
+                <TextBlock  Grid.Row="3" FontSize="24" TextWrapping="Wrap" Text="Auth Type To Request"/>
+                <StackPanel Grid.Row="4" Orientation="Horizontal" x:Name="authScopes">
+                    <RadioButton Tag="mc_authn" GroupName="auth" Content="Authentication" IsChecked="True" Margin="10"/>
+                    <RadioButton Tag="mc_authz" GroupName="auth" Content="Authorization" Margin="10"/>
+                </StackPanel>
+                <TextBlock  Grid.Row="5" FontSize="24" TextWrapping="Wrap" Text="UserInfo Permissions To Request"/>
+                <StackPanel x:Name="userInfoScopes" Grid.Row="6" Margin="10">
+                    <CheckBox Tag="address" Content="Address"/>
+                    <CheckBox Tag="email" Content="Email"/>
+                    <CheckBox Tag="phone" Content="Phone"/>
+                    <CheckBox Tag="profile" Content="Profile"/>
+                </StackPanel>
+                <TextBlock  Grid.Row="7" FontSize="24" TextWrapping="Wrap" Text="Identity Permissions To Request"/>
+                <StackPanel x:Name="identityScopes" Grid.Row="8" Margin="10">
+                    <CheckBox Tag="mc_identity_phonenumber" Content="Phone"/>
+                    <CheckBox Tag="mc_identity_signup" Content="Signup"/>
+                    <CheckBox Tag="mc_identity_nationalid" Content="National ID"/>
+                </StackPanel>
 
                 <Grid x:Name="progress" Grid.RowSpan="99" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Visibility="Collapsed">
                     <ProgressBar Height="25" VerticalAlignment="Center" IsIndeterminate="True"/>
@@ -46,8 +70,28 @@
                      NavigationStarting="WebView_NavigationStarting" LoadCompleted="web_LoadCompleted"/>
         </Grid>
         <StackPanel x:Name="loggedPanel" Margin="50" Orientation="Vertical" Visibility="Collapsed">
-            <TextBlock Text="Successfully Logged In" FontSize="18" HorizontalAlignment="Center"/>
-            <TextBlock x:Name="accessToken" Text="" FontSize="18" HorizontalAlignment="Center"/>
+            <TextBlock Text="Successfully Logged In" FontSize="18" TextAlignment="Center" TextWrapping="Wrap"/>
+            <TextBlock x:Name="applicationName" Text="" FontSize="18" TextAlignment="Center" TextWrapping="Wrap"/>
+            <TextBlock x:Name="accessToken" Text="" FontSize="18" TextAlignment="Center" TextWrapping="Wrap"/>
+            <TextBlock x:Name="idToken" Text="" FontSize="18" TextAlignment="Center" TextWrapping="Wrap"/>
+            <TextBlock x:Name="timeReceived" Text="" FontSize="18" TextAlignment="Center" TextWrapping="Wrap"/>
+            <Grid HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="userInfoButton" Grid.Column="0"
+                        Content="Request UserInfo" 
+                        Click="UserInfoButton_Click"/>
+                <Button x:Name="identityButton" Grid.Column="1"
+                        Content="Request Identity"
+                        Click="IdentityButton_Click"/>
+            </Grid>
+        </StackPanel>
+        <StackPanel x:Name="identityPanel" Margin="50" Orientation="Vertical" Visibility="Collapsed">
+            <TextBlock x:Name="identity" Text="" FontSize="18" TextAlignment="Center" TextWrapping="Wrap"/>
+            <Button Click="ReturnButton_Click" Content="Return" HorizontalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Page>
