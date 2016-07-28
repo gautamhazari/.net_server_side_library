@@ -188,6 +188,11 @@ namespace GSMA.MobileConnect.Demo.Win8
             identityPanel.Visibility = Visibility.Collapsed;
         }
 
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(MainPage));
+        }
+
         private void MSISDNCheckBox_Checked(object sender, RoutedEventArgs e)
         {
             msisdn.Visibility = Visibility.Visible;

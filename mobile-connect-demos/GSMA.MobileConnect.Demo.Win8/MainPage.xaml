@@ -82,11 +82,18 @@
 
                 <Button x:Name="userInfoButton" Grid.Column="0"
                         Content="Request UserInfo" 
-                        Click="UserInfoButton_Click"/>
+                        Click="UserInfoButton_Click"
+                        Margin="10"/>
                 <Button x:Name="identityButton" Grid.Column="1"
                         Content="Request Identity"
-                        Click="IdentityButton_Click"/>
+                        Click="IdentityButton_Click"
+                        Margin="10"/>
             </Grid>
+            <Button x:Name="resetButton"
+                    Content="Reset Login"
+                    Click="ResetButton_Click" 
+                    Margin="50"
+                    HorizontalAlignment="Center"/>
         </StackPanel>
         <StackPanel x:Name="identityPanel" Margin="50" Orientation="Vertical" Visibility="Collapsed">
             <TextBlock x:Name="identity" Text="" FontSize="18" TextAlignment="Center" TextWrapping="Wrap"/>
