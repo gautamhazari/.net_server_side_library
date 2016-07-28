@@ -70,10 +70,10 @@ namespace GSMA.MobileConnect.Test.Discovery
             var serialized = JsonConvert.SerializeObject(discoveryResponse);
             var actual = JsonConvert.DeserializeObject<MobileConnect.Discovery.DiscoveryResponse>(serialized);
 
-            Assert.AreEqual(authzEndpoint, discoveryResponse.OperatorUrls.AuthorizationUrl);
-            Assert.AreEqual(tokenEndpoint, discoveryResponse.OperatorUrls.RequestTokenUrl);
-            Assert.AreEqual(userInfoEndpoint, discoveryResponse.OperatorUrls.UserInfoUrl);
-            Assert.AreEqual(jwksEndpoint, discoveryResponse.OperatorUrls.JWKSUrl);
+            Assert.AreEqual(authzEndpoint, actual.OperatorUrls.AuthorizationUrl);
+            Assert.AreEqual(tokenEndpoint, actual.OperatorUrls.RequestTokenUrl);
+            Assert.AreEqual(userInfoEndpoint, actual.OperatorUrls.UserInfoUrl);
+            Assert.AreEqual(jwksEndpoint, actual.OperatorUrls.JWKSUrl);
         }
 
         [Test]

@@ -41,7 +41,6 @@ namespace GSMA.MobileConnect.Test.Cache
             var mnc = "01";
 
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(response, new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore });
-            var cached = Newtonsoft.Json.JsonConvert.DeserializeObject<DiscoveryResponse>(json);
 
             await cache.Add(mcc, mnc, response);
             var actual = await cache.Get(mcc, mnc);
