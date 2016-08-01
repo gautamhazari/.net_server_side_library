@@ -88,11 +88,11 @@ namespace GSMA.MobileConnect.Identity
         public string Gender { get; set; }
 
         /// <summary>
-        /// End-User's birthday
+        /// End-User's birthday in ISO Date format, the year may be omitted in which case the year will be specified as 0000, the month and day may also be omitted in 
+        /// which case the year will be the only component returned
         /// </summary>
         [JsonProperty("birthdate")]
-        [JsonConverter(typeof(IsoDateConverter))]
-        public DateTime? Birthdate { get; set; }
+        public string Birthdate { get; set; }
 
         /// <summary>
         /// String from zoneinfo time zone database representing the End-User's time zone. For example, Europe/Paris or America/Los_Angeles.

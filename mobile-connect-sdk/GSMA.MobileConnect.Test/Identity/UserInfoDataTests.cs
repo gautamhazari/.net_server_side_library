@@ -18,28 +18,5 @@ namespace GSMA.MobileConnect.Test.Identity
 
             Assert.AreEqual(responseJson, actual);
         }
-
-        [Test]
-        public void UserInfoDataShouldSerializeAndDeserializeNullDates()
-        {
-            string responseJson = "{\"birthdate\":null,\"updated_at\":null}";
-            var userInfoData = JsonConvert.DeserializeObject<UserInfoData>(responseJson);
-            var actual = JsonConvert.SerializeObject(userInfoData, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
-
-            Assert.IsNull(userInfoData.Birthdate);
-            Assert.IsNull(userInfoData.UpdatedAt);
-            Assert.AreEqual("{}", actual);
-        }
-
-        [Test]
-        public void UserInfoDataShouldSerializeAndDeserializeBirthdateWithWithheldYear()
-        {
-            string responseJson = "{\"birthdate\":\"0000-06-19\"}";
-            var userInfoData = JsonConvert.DeserializeObject<UserInfoData>(responseJson);
-            var actual = JsonConvert.SerializeObject(userInfoData, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore });
-
-            Assert.AreEqual(new DateTime(9999, 6, 19), userInfoData.Birthdate);
-            Assert.AreEqual(responseJson, actual);
-        }
     }
 }

@@ -89,7 +89,7 @@ namespace GSMA.MobileConnect.Test.Identity
             Assert.IsNotNull(actual.Address);
             Assert.AreEqual("123 Fake Street \r\n Manchester", actual.Address.Formatted);
             Assert.AreEqual("M1 1AB", actual.Address.PostalCode);
-            Assert.AreEqual(new DateTime(1990, 4, 11), actual.Birthdate);
+            Assert.AreEqual("1990-04-11", actual.Birthdate);
             Assert.AreEqual(new DateTime(2016, 4, 16, 4, 5, 6), actual.UpdatedAt);
         }
 

@@ -104,8 +104,7 @@ namespace GSMA.MobileConnect.Identity
         /// User's birthdate
         /// </summary>
         [JsonProperty("birthdate")]
-        [JsonConverter(typeof(IsoDateConverter))]
-        public DateTime? BirthDate { get; set; }
+        public string BirthDate { get; set; }
 
         /// <summary>
         /// User’s Identifier (eIDAS), any national identifier like Social Security Identifier, passport etc. (depends on the local regulations)
