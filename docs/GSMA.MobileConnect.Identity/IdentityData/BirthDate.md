@@ -9,21 +9,20 @@ Syntax
 ------
 
 ```csharp
-public Nullable<DateTime> BirthDate { get; set; }
+public string BirthDate { get; set; }
 ```
 
 #### Property Value
-Type: [Nullable][2]&lt;[DateTime][3]>
+Type: [String][2]
 
 See Also
 --------
 
 #### Reference
-[IdentityData Class][4]  
+[IdentityData Class][3]  
 [GSMA.MobileConnect.Identity Namespace][1]  
 
 [1]: ../README.md
-[2]: http://msdn.microsoft.com/en-us/library/b3h38hb0
-[3]: http://msdn.microsoft.com/en-us/library/03ybds8y
-[4]: README.md
-[5]: ../../_icons/Help.png
+[2]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
+[3]: README.md
+[4]: ../../_icons/Help.png

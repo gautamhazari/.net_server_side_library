@@ -1,6 +1,6 @@
 UserInfoData.Birthdate Property
 ===============================
-End-User's birthday
+End-User's birthday in ISO Date format, the year may be omitted in which case the year will be specified as 0000, the month and day may also be omitted in which case the year will be the only component returned
 
 **Namespace:** [GSMA.MobileConnect.Identity][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
@@ -9,21 +9,20 @@ Syntax
 ------
 
 ```csharp
-public Nullable<DateTime> Birthdate { get; set; }
+public string Birthdate { get; set; }
 ```
 
 #### Property Value
-Type: [Nullable][2]&lt;[DateTime][3]>
+Type: [String][2]
 
 See Also
 --------
 
 #### Reference
-[UserInfoData Class][4]  
+[UserInfoData Class][3]  
 [GSMA.MobileConnect.Identity Namespace][1]  
 
 [1]: ../README.md
-[2]: http://msdn.microsoft.com/en-us/library/b3h38hb0
-[3]: http://msdn.microsoft.com/en-us/library/03ybds8y
-[4]: README.md
-[5]: ../../_icons/Help.png
+[2]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
+[3]: README.md
+[4]: ../../_icons/Help.png
