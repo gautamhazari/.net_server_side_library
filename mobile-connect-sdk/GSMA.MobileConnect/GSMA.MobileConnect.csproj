@@ -36,7 +36,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Authentication\AuthenticationService.cs" />
-    <Compile Include="Cache\BaseDiscoveryCache.cs" />
+    <Compile Include="Authentication\IJWKeysetService.cs" />
+    <Compile Include="Authentication\JWKey.cs" />
+    <Compile Include="Authentication\JWKeyset.cs" />
+    <Compile Include="Authentication\JWKeysetService.cs" />
+    <Compile Include="Cache\BaseCache.cs" />
     <Compile Include="Cache\ICacheable.cs" />
     <Compile Include="Claims\ClaimsDictionary.cs" />
     <Compile Include="Claims\ClaimsParameter.cs" />
@@ -59,8 +63,8 @@
     <Compile Include="Json\Converters\UnixTimestampConverter.cs" />
     <Compile Include="MobileConnectConstants.cs" />
     <Compile Include="MobileConnectInterfaceHelper.cs" />
-    <Compile Include="Cache\ConcurrentDiscoveryCache.cs" />
-    <Compile Include="Cache\IDiscoveryCache.cs" />
+    <Compile Include="Cache\ConcurrentCache.cs" />
+    <Compile Include="Cache\ICache.cs" />
     <Compile Include="Constants\Cookies.cs" />
     <Compile Include="Constants\DefaultOptions.cs" />
     <Compile Include="Constants\Headers.cs" />
@@ -105,19 +109,17 @@
     <Compile Include="Web\ResponseConverter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    <None Include="packages.config" />
+    <None Include="publishnuget.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="publishnuget.bat" />
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

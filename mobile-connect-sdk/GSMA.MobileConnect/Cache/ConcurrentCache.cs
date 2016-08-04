@@ -5,9 +5,9 @@ using Newtonsoft.Json;
 namespace GSMA.MobileConnect.Cache
 {
     /// <summary>
-    /// Concrete implementation of <see cref="IDiscoveryCache"/> using a ConcurrentDictionary as the internal caching mechanism
+    /// Concrete implementation of <see cref="ICache"/> using a ConcurrentDictionary as the internal caching mechanism
     /// </summary>
-    public class ConcurrentDiscoveryCache : BaseDiscoveryCache
+    public class ConcurrentCache : BaseCache
     {
         private readonly ConcurrentDictionary<string, string> _internalCache = new ConcurrentDictionary<string, string>();
         private static JsonSerializerSettings _serializerSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };

@@ -17,6 +17,7 @@ namespace GSMA.MobileConnect
         private readonly IDiscoveryService _discovery;
         private readonly IAuthenticationService _authentication;
         private readonly IIdentityService _identity;
+        private readonly IJWKeysetService _jwks;
         private readonly MobileConnectConfig _config;
 
         /// <summary>
@@ -26,11 +27,12 @@ namespace GSMA.MobileConnect
         /// <param name="authentication">Instance of IAuthentication concrete implementation</param>
         /// <param name="identity">Instance of IIdentityService concrete implementation</param>
         /// <param name="config">Configuration options</param>
-        public MobileConnectInterface(IDiscoveryService discovery, IAuthenticationService authentication, IIdentityService identity, MobileConnectConfig config)
+        public MobileConnectInterface(IDiscoveryService discovery, IAuthenticationService authentication, IIdentityService identity, IJWKeysetService jwks, MobileConnectConfig config)
         {
             this._discovery = discovery;
             this._authentication = authentication;
             this._identity = identity;
+            this._jwks = jwks;
             this._config = config;
         }
 
@@ -104,7 +106,7 @@ namespace GSMA.MobileConnect
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
         public async Task<MobileConnectStatus> RequestTokenAsync(DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState, string expectedNonce)
         {
-            return await MobileConnectInterfaceHelper.RequestToken(_authentication, discoveryResponse, redirectedUrl, expectedState, expectedNonce, _config);
+            return await MobileConnectInterfaceHelper.RequestToken(_authentication, _jwks, discoveryResponse, redirectedUrl, expectedState, expectedNonce, _config);
         }
 
         /// <summary>
@@ -117,7 +119,7 @@ namespace GSMA.MobileConnect
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
         public MobileConnectStatus RequestToken(DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState, string expectedNonce)
         {
-            return MobileConnectInterfaceHelper.RequestToken(_authentication, discoveryResponse, redirectedUrl, expectedState, expectedNonce, _config).Result;
+            return MobileConnectInterfaceHelper.RequestToken(_authentication, _jwks, discoveryResponse, redirectedUrl, expectedState, expectedNonce, _config).Result;
         }
 
         /// <summary>
@@ -131,7 +133,7 @@ namespace GSMA.MobileConnect
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
         public async Task<MobileConnectStatus> HandleUrlRedirectAsync(Uri redirectedUrl, DiscoveryResponse discoveryResponse = null, string expectedState = null, string expectedNonce = null)
         {
-            return await MobileConnectInterfaceHelper.HandleUrlRedirect(_discovery, _authentication, redirectedUrl, discoveryResponse, expectedState, expectedNonce, _config);
+            return await MobileConnectInterfaceHelper.HandleUrlRedirect(_discovery, _authentication, _jwks, redirectedUrl, discoveryResponse, expectedState, expectedNonce, _config);
         }
 
         /// <summary>
@@ -145,7 +147,7 @@ namespace GSMA.MobileConnect
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
         public MobileConnectStatus HandleUrlRedirect(Uri redirectedUrl, DiscoveryResponse discoveryResponse = null, string expectedState = null, string expectedNonce = null, string requestTokenUrl = null)
         {
-            return MobileConnectInterfaceHelper.HandleUrlRedirect(_discovery, _authentication, redirectedUrl, discoveryResponse, expectedState, expectedNonce, _config).Result;
+            return MobileConnectInterfaceHelper.HandleUrlRedirect(_discovery, _authentication, _jwks, redirectedUrl, discoveryResponse, expectedState, expectedNonce, _config).Result;
         }
 
         /// <summary>

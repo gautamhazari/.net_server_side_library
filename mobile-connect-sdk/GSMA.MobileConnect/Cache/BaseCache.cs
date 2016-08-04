@@ -10,7 +10,7 @@ namespace GSMA.MobileConnect.Cache
     /// <summary>
     /// Base class for Discovery Caches that implements basic cache control mechanisms and type casting reducing the amount of implementation needed in each derived cache class
     /// </summary>
-    public abstract class BaseDiscoveryCache : IDiscoveryCache
+    public abstract class BaseCache : ICache
     {
         /// <summary>
         /// Convenience field to return when a non-async Task returning method needs to return early

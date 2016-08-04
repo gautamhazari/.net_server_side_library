@@ -7,7 +7,7 @@ namespace GSMA.MobileConnect.Cache
     /// <summary>
     /// Interface for the cache used during the discovery process, cache is mainly used to cache DiscoveryResponse objects but can also be used to cache any data used during the Discovery process
     /// </summary>
-    public interface IDiscoveryCache
+    public interface ICache
     {
         /// <summary>
         /// Returns true if cache is empty

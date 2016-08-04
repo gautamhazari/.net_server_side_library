@@ -30,20 +30,22 @@ namespace GSMA.MobileConnect.Test
 
         private MobileConnectConfig _config;
         private MockRestClient _restClient;
-        private IDiscoveryCache _cache;
+        private ICache _cache;
         private MobileConnect.Discovery.IDiscoveryService _discovery;
         private MobileConnect.Authentication.IAuthenticationService _authentication;
         private MobileConnect.Identity.IIdentityService _identity;
+        private MobileConnect.Authentication.IJWKeysetService _jwks;
         private MobileConnectInterface _mobileConnect;
 
         [SetUp]
         public void Setup()
         {
             _restClient = new MockRestClient();
-            _cache = new ConcurrentDiscoveryCache();
+            _cache = new ConcurrentCache();
             _discovery = new GSMA.MobileConnect.Discovery.DiscoveryService(_cache, _restClient);
             _authentication = new GSMA.MobileConnect.Authentication.AuthenticationService(_restClient);
             _identity = new GSMA.MobileConnect.Identity.IdentityService(_restClient);
+            _jwks = new GSMA.MobileConnect.Authentication.JWKeysetService(_restClient, _cache);
 
             _discoveryResponse = new MobileConnect.Discovery.DiscoveryResponse(_responses["authentication"]);
 
@@ -55,7 +57,7 @@ namespace GSMA.MobileConnect.Test
                 RedirectUrl = "http://qwertyuiop",
             };
 
-            _mobileConnect = new MobileConnectInterface(_discovery, _authentication, _identity, _config);
+            _mobileConnect = new MobileConnectInterface(_discovery, _authentication, _identity, _jwks, _config);
         }
 
         [Test]

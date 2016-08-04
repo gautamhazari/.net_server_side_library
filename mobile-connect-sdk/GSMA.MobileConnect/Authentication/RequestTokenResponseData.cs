@@ -42,6 +42,7 @@ namespace GSMA.MobileConnect.Authentication
         /// <summary>
         /// The time the response will expire, this is calculated using the time received and expires in values.
         /// </summary>
+        [JsonIgnore]
         public DateTime? Expiry { get; set; }
 
         private int? _expiresIn;
@@ -55,7 +56,7 @@ namespace GSMA.MobileConnect.Authentication
             set
             {
                 _expiresIn = value;
-                CalculateExpiry(TimeReceived, value);
+                Expiry = CalculateExpiry(TimeReceived, value);
             }
         }
 

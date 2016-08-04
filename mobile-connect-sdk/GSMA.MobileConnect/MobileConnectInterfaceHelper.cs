@@ -78,6 +78,11 @@ namespace GSMA.MobileConnect
         internal static MobileConnectStatus StartAuthentication(IAuthenticationService authentication, DiscoveryResponse discoveryResponse, string encryptedMSISDN, 
             string state, string nonce, MobileConnectConfig config, MobileConnectRequestOptions options)
         {
+            if (!IsUsableDiscoveryResponse(discoveryResponse))
+            {
+                return MobileConnectStatus.StartDiscovery();
+            }
+
             StartAuthenticationResponse response;
             try
             {
@@ -85,7 +90,7 @@ namespace GSMA.MobileConnect
                 string authorizationUrl = discoveryResponse?.OperatorUrls?.AuthorizationUrl;
                 SupportedVersions supportedVersions = discoveryResponse?.ProviderMetadata?.MobileConnectVersionSupported;
                 AuthenticationOptions authOptions = options?.AuthenticationOptions ?? new AuthenticationOptions();
-                authOptions.ClientName = discoveryResponse?.ApplicationShortName;
+                authOptions.ClientName = discoveryResponse?.ApplicationShortName ?? "cs-sdk";
 
                 response = authentication.StartAuthentication(clientId, authorizationUrl, config.RedirectUrl, state, nonce, encryptedMSISDN, supportedVersions, authOptions);
             }
@@ -101,9 +106,14 @@ namespace GSMA.MobileConnect
             return MobileConnectStatus.Authorization(response.Url, state, nonce);
         }
 
-        internal static async Task<MobileConnectStatus> RequestToken(IAuthenticationService authentication, DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState, string expectedNonce, MobileConnectConfig config)
+        internal static async Task<MobileConnectStatus> RequestToken(IAuthenticationService authentication, IJWKeysetService jwks, DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState, string expectedNonce, MobileConnectConfig config)
         {
             RequestTokenResponse response;
+
+            if(!IsUsableDiscoveryResponse(discoveryResponse))
+            {
+                return MobileConnectStatus.StartDiscovery();
+            }
 
             if(string.IsNullOrEmpty(expectedState))
             {
@@ -124,10 +134,17 @@ namespace GSMA.MobileConnect
             try
             {
                 var code = HttpUtils.ExtractQueryValue(redirectedUrl.Query, "code");
-                var clientId = discoveryResponse?.ResponseData?.response?.client_id ?? config.ClientId;
-                var clientSecret = discoveryResponse?.ResponseData?.response?.client_secret ?? config.ClientSecret;
-                var requestTokenUrl = discoveryResponse?.OperatorUrls?.RequestTokenUrl;
-                response = await authentication.RequestTokenAsync(clientId, clientSecret, requestTokenUrl, config.RedirectUrl, code);
+                var clientId = discoveryResponse.ResponseData?.response?.client_id ?? config.ClientId;
+                var clientSecret = discoveryResponse.ResponseData?.response?.client_secret ?? config.ClientSecret;
+                var requestTokenUrl = discoveryResponse.OperatorUrls.RequestTokenUrl;
+
+                var tokenTask = authentication.RequestTokenAsync(clientId, clientSecret, requestTokenUrl, config.RedirectUrl, code);
+                var jwksTask = jwks.RetrieveJWKSAsync(discoveryResponse.OperatorUrls.JWKSUrl);
+
+                // execute both tasks in parallel
+                await Task.WhenAll(tokenTask).ConfigureAwait(false);
+
+                response = tokenTask.Result;
 
                 if(response.ErrorResponse != null)
                 {
@@ -155,11 +172,11 @@ namespace GSMA.MobileConnect
             return MobileConnectStatus.Complete(response);
         }
 
-        internal static async Task<MobileConnectStatus> HandleUrlRedirect(IDiscoveryService discovery, IAuthenticationService authentication, Uri redirectedUrl, DiscoveryResponse discoveryResponse, string expectedState, string expectedNonce, MobileConnectConfig config)
+        internal static async Task<MobileConnectStatus> HandleUrlRedirect(IDiscoveryService discovery, IAuthenticationService authentication, IJWKeysetService jwks, Uri redirectedUrl, DiscoveryResponse discoveryResponse, string expectedState, string expectedNonce, MobileConnectConfig config)
         {
             if (HttpUtils.ExtractQueryValue(redirectedUrl.Query, "code") != null)
             {
-                return await RequestToken(authentication, discoveryResponse, redirectedUrl, expectedState, expectedNonce, config);
+                return await RequestToken(authentication, jwks, discoveryResponse, redirectedUrl, expectedState, expectedNonce, config);
             }
             else if (HttpUtils.ExtractQueryValue(redirectedUrl.Query, "mcc_mnc") != null)
             {
@@ -209,6 +226,12 @@ namespace GSMA.MobileConnect
             }
 
             return MobileConnectStatus.StartAuthorization(response);
+        }
+
+        private static bool IsUsableDiscoveryResponse(DiscoveryResponse response)
+        {
+            // if response is null or does not have operator urls then it isn't usable for the process after discovery
+            return response?.OperatorUrls != null;
         }
     }
 }

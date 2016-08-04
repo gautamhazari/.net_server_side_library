@@ -17,7 +17,7 @@ namespace GSMA.MobileConnect.Discovery
         /// <summary>
         /// Discovery response cache
         /// </summary>
-        IDiscoveryCache Cache { get; }
+        ICache Cache { get; }
 
         /// <summary>
         /// Synchronous wrapper for <see cref="IDiscoveryService.StartAutomatedOperatorDiscoveryAsync(string, string, string, string, DiscoveryOptions, IEnumerable{BasicKeyValuePair})"/>

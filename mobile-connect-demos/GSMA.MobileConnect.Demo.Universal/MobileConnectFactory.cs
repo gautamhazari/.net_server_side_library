@@ -12,6 +12,7 @@ namespace GSMA.MobileConnect.Demo.Universal
         private static IDiscoveryService _discovery;
         private static IAuthenticationService _authentication;
         private static IIdentityService _identity;
+        private static IJWKeysetService _jwks;
         private static MobileConnectConfig _config;
         private static MobileConnectInterface _mobileConnect;
 
@@ -21,8 +22,9 @@ namespace GSMA.MobileConnect.Demo.Universal
             _discovery = new DiscoveryService(null, _client);
             _authentication = new AuthenticationService(_client);
             _identity = new IdentityService(_client);
+            _jwks = new JWKeysetService(_client, null);
             _config = CreateConfig();
-            _mobileConnect = new MobileConnectInterface(_discovery, _authentication, _identity, _config);
+            _mobileConnect = new MobileConnectInterface(_discovery, _authentication, _identity, _jwks, _config);
         }
 
         private static MobileConnectConfig CreateConfig()

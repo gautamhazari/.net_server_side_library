@@ -9,7 +9,7 @@ namespace GSMA.MobileConnect.Test
         private const string INVALID_MSISDN = "+447700900987";
         private const string REDIRECT_URL = "http://localhost:8001/mobileconnect.html";
 
-        public static string DEFAULT_TEST_CONFIG = "SandboxV2";
+        public static string DEFAULT_TEST_CONFIG = "SandboxR2";
 
         private static Dictionary<string, TestConfigurationData> _availablesConfigs;
         private static List<string> _availableTestEnvironments = new List<string>

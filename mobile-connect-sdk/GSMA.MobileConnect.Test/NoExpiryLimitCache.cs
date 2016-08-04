@@ -3,7 +3,7 @@ using System;
 
 namespace GSMA.MobileConnect.Test
 {
-    public class NoExpiryLimitCache : ConcurrentDiscoveryCache
+    public class NoExpiryLimitCache : ConcurrentCache
     {
         public NoExpiryLimitCache()
         {

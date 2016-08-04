@@ -27,7 +27,7 @@ namespace GSMA.MobileConnect.Test.Cache
         [Test]
         public void ConstructorShouldCreateEmptyCache()
         {
-            var cache = new ConcurrentDiscoveryCache();
+            var cache = new ConcurrentCache();
 
             Assert.IsTrue(cache.IsEmpty);
         }
@@ -35,7 +35,7 @@ namespace GSMA.MobileConnect.Test.Cache
         [Test]
         public async Task AddShouldStoreDiscoveryResponse()
         {
-            var cache = new ConcurrentDiscoveryCache();
+            var cache = new ConcurrentCache();
             var response = new DiscoveryResponse(_responses[0]);
             var mcc = "001";
             var mnc = "01";
@@ -54,7 +54,7 @@ namespace GSMA.MobileConnect.Test.Cache
         [Test]
         public async Task CacheShouldGetResponseWhenMultipleStored()
         {
-            var cache = new ConcurrentDiscoveryCache();
+            var cache = new ConcurrentCache();
             var expected = new DiscoveryResponse(_responses[1]);
             var mcc = "001";
             var mnc = "01";
@@ -71,7 +71,7 @@ namespace GSMA.MobileConnect.Test.Cache
         [Test]
         public async Task RemoveShouldRemoveStoredResponse()
         {
-            var cache = new ConcurrentDiscoveryCache();
+            var cache = new ConcurrentCache();
             var mcc = "001";
             var mnc = "01";
 
@@ -85,7 +85,7 @@ namespace GSMA.MobileConnect.Test.Cache
         [Test]
         public async Task ClearShouldClearStore()
         {
-            var cache = new ConcurrentDiscoveryCache();
+            var cache = new ConcurrentCache();
 
             await cache.Add("001", "01", new DiscoveryResponse(_responses[0]));
             await cache.Add("002", "02", new DiscoveryResponse(_responses[1]));
@@ -100,7 +100,7 @@ namespace GSMA.MobileConnect.Test.Cache
         [TestCase("001", "")]
         public async Task CacheShouldNotAddWithEmptyOrNullArguments(string mcc, string mnc)
         {
-            var cache = new ConcurrentDiscoveryCache();
+            var cache = new ConcurrentCache();
 
             await cache.Add(mcc, mnc, new DiscoveryResponse(_responses[0]));
 
@@ -141,7 +141,7 @@ namespace GSMA.MobileConnect.Test.Cache
         [Test]
         public async Task CacheShouldReturnDefaultValueIfKeyNull()
         {
-            var cache = new ConcurrentDiscoveryCache();
+            var cache = new ConcurrentCache();
 
             var cached = await cache.Get<ProviderMetadata>(null, true);
 

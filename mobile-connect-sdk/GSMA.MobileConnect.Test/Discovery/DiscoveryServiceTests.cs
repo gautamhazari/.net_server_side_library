@@ -21,7 +21,7 @@ namespace GSMA.MobileConnect.Test.Discovery
         };
 
         private IDiscoveryService _discovery;
-        private IDiscoveryCache _cache;
+        private ICache _cache;
         private MockRestClient _restClient;
         private MobileConnectConfig _config;
 
@@ -31,7 +31,7 @@ namespace GSMA.MobileConnect.Test.Discovery
             Setup(null);
         }
 
-        private void Setup(IDiscoveryCache cache)
+        private void Setup(ICache cache)
         {
             _restClient = new MockRestClient();
             _cache = cache;
@@ -41,7 +41,7 @@ namespace GSMA.MobileConnect.Test.Discovery
 
         private void SetupWithCache()
         {
-            Setup(new ConcurrentDiscoveryCache());
+            Setup(new ConcurrentCache());
         }
 
         [Test]

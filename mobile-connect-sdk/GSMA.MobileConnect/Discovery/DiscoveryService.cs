@@ -15,11 +15,11 @@ namespace GSMA.MobileConnect.Discovery
     /// </summary>
     public class DiscoveryService : IDiscoveryService
     {
-        private readonly IDiscoveryCache _cache;
+        private readonly ICache _cache;
         private readonly RestClient _client;
 
         /// <inheritdoc/>
-        public IDiscoveryCache Cache
+        public ICache Cache
         {
             get { return _cache; }
         }
@@ -29,7 +29,7 @@ namespace GSMA.MobileConnect.Discovery
         /// </summary>
         /// <param name="cache">Cache implmentation to use for storage of <see cref="DiscoveryResponse"/> and <see cref="ProviderMetadata"/></param>
         /// <param name="client">RestClient for handling HTTP requests</param>
-        public DiscoveryService(IDiscoveryCache cache, RestClient client)
+        public DiscoveryService(ICache cache, RestClient client)
         {
             this._cache = cache;
             this._client = client;
