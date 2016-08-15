@@ -40,6 +40,7 @@
     <Compile Include="Authentication\JWKey.cs" />
     <Compile Include="Authentication\JWKeyset.cs" />
     <Compile Include="Authentication\JWKeysetService.cs" />
+    <Compile Include="Authentication\LoginHint.cs" />
     <Compile Include="Authentication\TokenValidationOptions.cs" />
     <Compile Include="Authentication\TokenValidationResult.cs" />
     <Compile Include="Cache\BaseCache.cs" />
@@ -48,6 +49,7 @@
     <Compile Include="Claims\ClaimsParameter.cs" />
     <Compile Include="Claims\ClaimsValue.cs" />
     <Compile Include="Constants\LinkRels.cs" />
+    <Compile Include="Constants\LoginHintPrefixes.cs" />
     <Compile Include="Constants\Scope.cs" />
     <Compile Include="Discovery\OperatorUrls.cs" />
     <Compile Include="Discovery\ProviderMetadata.cs" />
@@ -97,7 +99,6 @@
     <Compile Include="Authentication\RequestTokenResponseData.cs" />
     <Compile Include="Authentication\StartAuthenticationResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\BasicAuthentication.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\HttpUtils.cs" />
     <Compile Include="Utils\JsonWebToken.cs" />

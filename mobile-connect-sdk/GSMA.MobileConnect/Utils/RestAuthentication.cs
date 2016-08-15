@@ -1,4 +1,6 @@
-﻿namespace GSMA.MobileConnect.Utils
+﻿using System.Text;
+
+namespace GSMA.MobileConnect.Utils
 {
     /// <summary>
     /// Helper class for holding authentication values for calling rest endpoints using <see cref="RestClient"/>
@@ -33,7 +35,7 @@
         /// <returns>A new instance of RestAuthentication configured for Basic auth</returns>
         public static RestAuthentication Basic(string key, string secret)
         {
-            return new RestAuthentication("Basic", BasicAuthentication.Encode(key, secret));
+            return new RestAuthentication("Basic", EncodeBasicAuthentication(key, secret));
         }
 
         /// <summary>
@@ -44,6 +46,13 @@
         public static RestAuthentication Bearer(string token)
         {
             return new RestAuthentication("Bearer", token);
+        }
+
+        private static string EncodeBasicAuthentication(string clientId, string secret)
+        {
+            var temp = string.Format("{0}:{1}", clientId, secret);
+            byte[] authentication = Encoding.UTF8.GetBytes(temp);
+            return StringUtils.EncodeAsBase64(authentication);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace GSMA.MobileConnect
+﻿using GSMA.MobileConnect.Constants;
+
+namespace GSMA.MobileConnect
 {
     /// <summary>
     /// Constants relating to Mobile Connect such as available scope values
@@ -8,36 +10,36 @@
         /// <summary>
         /// Default required scope value
         /// </summary>
-        public const string MOBILECONNECT = "openid";
+        public static readonly string MOBILECONNECT = Scope.OPENID;
 
         /// <summary>
         /// Scope value for Authentication
         /// </summary>
-        public const string MOBILECONNECTAUTHENTICATION = "openid mc_authn";
+        public static readonly string MOBILECONNECTAUTHENTICATION = $"{Scope.OPENID} {Scope.AUTHN}";
 
         /// <summary>
         /// Scope value for Authorization
         /// </summary>
-        public const string MOBILECONNECTAUTHORIZATION = "openid mc_authz";
+        public static readonly string MOBILECONNECTAUTHORIZATION = $"{Scope.OPENID} {Scope.AUTHZ}";
 
         /// <summary>
         /// Scope value for Identity Phone Number
         /// </summary>
-        public const string MOBILECONNECTIDENTITYPHONE = "openid mc_identity_phonenumber";
+        public static readonly string MOBILECONNECTIDENTITYPHONE = $"{Scope.OPENID} {Scope.IDENTITYPHONE}";
 
         /// <summary>
         /// Scope value for Identity Signup
         /// </summary>
-        public const string MOBILECONNECTIDENTITYSIGNUP = "openid mc_identity_signup";
+        public static readonly string MOBILECONNECTIDENTITYSIGNUP = $"{Scope.OPENID} {Scope.IDENTITYSIGNUP}";
 
         /// <summary>
         /// Scope value for Identity Signup Plus
         /// </summary>
-        public const string MOBILECONNECTIDENTITYSIGNUPPLUS = "openid mc_identity_signupplus";
+        public static readonly string MOBILECONNECTIDENTITYSIGNUPPLUS = $"{Scope.OPENID} {Scope.IDENTITYSIGNUPPLUS}";
 
         /// <summary>
         /// Scope value for Identity National ID
         /// </summary>
-        public const string MOBILECONNECTIDENTITYNATIONALID = "openid mc_identity_nationalid";
+        public static readonly string MOBILECONNECTIDENTITYNATIONALID = $"{Scope.OPENID} {Scope.IDENTITYNATIONALID}";
     }
 }
