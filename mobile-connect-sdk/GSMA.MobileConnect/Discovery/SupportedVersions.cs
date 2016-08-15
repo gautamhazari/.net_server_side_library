@@ -14,8 +14,13 @@ namespace GSMA.MobileConnect.Discovery
         private static readonly Regex _versionRegex = new Regex(@"(?:\d+\.?){1,4}");
         private static readonly List<string> _recognisedScopes = new List<string>
         {
-            Scope.OPENID, Scope.AUTHN, Scope.AUTHZ,
-            Scope.IDENTITYNATIONALID, Scope.IDENTITYPHONE, Scope.IDENTITYSIGNUP, Scope.IDENTITYSIGNUPPLUS
+            MobileConnectConstants.MOBILECONNECT,
+            MobileConnectConstants.MOBILECONNECTAUTHENTICATION,
+            MobileConnectConstants.MOBILECONNECTAUTHORIZATION,
+            MobileConnectConstants.MOBILECONNECTIDENTITYNATIONALID,
+            MobileConnectConstants.MOBILECONNECTIDENTITYPHONE,
+            MobileConnectConstants.MOBILECONNECTIDENTITYSIGNUP,
+            MobileConnectConstants.MOBILECONNECTIDENTITYSIGNUPPLUS
         };
 
         private readonly Dictionary<string, string> _initialValuesDict;
@@ -39,7 +44,7 @@ namespace GSMA.MobileConnect.Discovery
         private static Version IdentifyMaxSupportedVersion(Dictionary<string, string> versionSupport)
         {
             // Use default scope as default max version
-            Version max = new Version(Utils.MobileConnectVersions.CoerceVersion(null, MobileConnectConstants.MOBILECONNECT));
+            Version max = GetAsVersion(Utils.MobileConnectVersions.CoerceVersion(null, MobileConnectConstants.MOBILECONNECT));
             foreach (var kvp in versionSupport)
             {
                 var version = GetAsVersion(kvp.Value);

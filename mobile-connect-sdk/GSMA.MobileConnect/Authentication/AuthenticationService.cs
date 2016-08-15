@@ -50,7 +50,7 @@ namespace GSMA.MobileConnect.Authentication
 
             options.State = state;
             options.Nonce = nonce;
-            options.LoginHint = options.LoginHint ?? (string.IsNullOrEmpty(encryptedMSISDN) ? null : string.Format("ENCR_MSISDN:{0}", encryptedMSISDN));
+            options.LoginHint = options.LoginHint ?? LoginHint.GenerateForEncryptedMSISDN(encryptedMSISDN);
             options.RedirectUrl = redirectUrl;
             options.ClientId = clientId;
 

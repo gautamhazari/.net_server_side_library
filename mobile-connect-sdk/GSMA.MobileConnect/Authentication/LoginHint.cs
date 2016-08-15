@@ -92,8 +92,6 @@ namespace GSMA.MobileConnect.Authentication
         /// <returns>Correctly formatted login hint parameter for MSISDN</returns>
         public static string GenerateForMSISDN(string msisdn)
         {
-            Validate.RejectNullOrEmpty(msisdn, nameof(msisdn));
-
             return GenerateFor(LoginHintPrefixes.MSISDN, msisdn.TrimStart('+'));
         }
 
@@ -105,8 +103,6 @@ namespace GSMA.MobileConnect.Authentication
         /// <returns>Correctly formatted login hint parameter for Encrypted MSISDN (SubscriberId)</returns>
         public static string GenerateForEncryptedMSISDN(string encryptedMSISDN)
         {
-            Validate.RejectNullOrEmpty(encryptedMSISDN, nameof(encryptedMSISDN));
-
             return GenerateFor(LoginHintPrefixes.EncryptedMSISDN, encryptedMSISDN);
         }
 
@@ -118,8 +114,6 @@ namespace GSMA.MobileConnect.Authentication
         /// <returns>Correctly formatted login hint parameter for PCR (Pseudonymous Customer Reference)</returns>
         public static string GenerateForPCR(string pcr)
         {
-            Validate.RejectNullOrEmpty(pcr, nameof(pcr));
-
             return GenerateFor(LoginHintPrefixes.PCR, pcr);
         }
 
@@ -134,6 +128,11 @@ namespace GSMA.MobileConnect.Authentication
         /// <returns>Correctly formatted login hint for prefix and value</returns>
         public static string GenerateFor(string prefix, string value)
         {
+            if(string.IsNullOrEmpty(value) || string.IsNullOrEmpty(prefix))
+            {
+                return null;
+            }
+
             return $"{prefix}:{value}";
         }
     }

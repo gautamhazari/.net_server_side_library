@@ -10,10 +10,10 @@ namespace GSMA.MobileConnect.Test.Discovery
         [Test]
         public void GetSupportedVersionShouldReturnVersionForScope()
         {
-            var versions = new SupportedVersions(new Dictionary<string, string> { ["openid"] = "1", ["test"] = "2" });
-            var expected = "2";
+            var versions = new SupportedVersions(new Dictionary<string, string> { ["openid"] = "1.2", ["openid mc_authn"] = "2.0" });
+            var expected = "2.0";
 
-            var actual = versions.GetSupportedVersion("test");
+            var actual = versions.GetSupportedVersion("openid mc_authn");
 
             Assert.AreEqual(expected, actual);
         }
@@ -21,10 +21,10 @@ namespace GSMA.MobileConnect.Test.Discovery
         [Test]
         public void GetSupportedVersionShouldReturnVersionForOpenidIfScopeNotFound()
         {
-            var versions = new SupportedVersions(new Dictionary<string, string> { ["openid"] = "1", ["test2"] = "2" });
-            var expected = "1";
+            var versions = new SupportedVersions(new Dictionary<string, string> { ["openid"] = "1.2", ["openid mc_authn"] = "2.0" });
+            var expected = "1.2";
 
-            var actual = versions.GetSupportedVersion("test");
+            var actual = versions.GetSupportedVersion("openid mc_authz");
 
             Assert.AreEqual(expected, actual);
         }
@@ -38,6 +38,71 @@ namespace GSMA.MobileConnect.Test.Discovery
             var actual = versions.GetSupportedVersion("openid mc_authz");
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GetSupportedVersionShouldReturnNullIfScopeNotRecognised()
+        {
+            var versions = new SupportedVersions(null);
+
+            var actual = versions.GetSupportedVersion("testest");
+
+            Assert.IsNull(actual);
+        }
+
+        [Test]
+        public void IsVersionSupportedShouldReturnFalseIfVersionNull()
+        {
+            var versions = new SupportedVersions(null);
+            string version = null;
+
+            var actual = versions.IsVersionSupported(version);
+
+            Assert.IsFalse(actual);
+        }
+
+        [Test]
+        public void IsVersionSupportedShouldReturnFalseIfVersionEmpty()
+        {
+            var versions = new SupportedVersions(null);
+            string version = "";
+
+            var actual = versions.IsVersionSupported(version);
+
+            Assert.IsFalse(actual);
+        }
+
+        [Test]
+        public void IsVersionSupportedShouldReturnTrueIfMaxVersionSupported()
+        {
+            var versions = new SupportedVersions(null);
+            string version = "mc_v1.1";
+
+            var actual = versions.IsVersionSupported(version);
+
+            Assert.IsTrue(actual);
+        }
+
+        [Test]
+        public void IsVersionSupportedShouldReturnTrueIfLowerThanMaxVersionSupported()
+        {
+            var versions = new SupportedVersions(new Dictionary<string, string> { ["openid"] = "mc_v1.2" });
+            string version = "mc_v1.1";
+
+            var actual = versions.IsVersionSupported(version);
+
+            Assert.IsTrue(actual);
+        }
+
+        [Test]
+        public void IsVersionSupportedShouldReturnFalseIfHigherThanMaxVersionSupported()
+        {
+            var versions = new SupportedVersions(new Dictionary<string, string> { ["openid"] = "mc_v1.2" });
+            string version = "mc_v1.3";
+
+            var actual = versions.IsVersionSupported(version);
+
+            Assert.IsFalse(actual);
         }
     }
 }

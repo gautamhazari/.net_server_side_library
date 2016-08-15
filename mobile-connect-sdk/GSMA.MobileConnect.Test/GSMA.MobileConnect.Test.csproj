@@ -90,6 +90,7 @@
     <Compile Include="Authentication\AuthenticationServiceTests.cs" />
     <Compile Include="Authentication\JWKeysetServiceTests.cs" />
     <Compile Include="Authentication\JWKeyTests.cs" />
+    <Compile Include="Authentication\LoginHintTests.cs" />
     <Compile Include="Authentication\RequestTokenResponseDataTests.cs" />
     <Compile Include="Cache\ConcurrentDiscoveryCacheTests.cs" />
     <Compile Include="Claims\ClaimsDictionaryTests.cs" />
