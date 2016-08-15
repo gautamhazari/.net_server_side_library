@@ -49,7 +49,7 @@ namespace GSMA.MobileConnect.Claims
         /// <param name="value">Claim value</param>
         public void Add(string key, ClaimsValue value)
         {
-            Validation.RejectNullOrEmpty(key, "key");
+            Validate.RejectNullOrEmpty(key, "key");
 
             this[key] = value;
         }

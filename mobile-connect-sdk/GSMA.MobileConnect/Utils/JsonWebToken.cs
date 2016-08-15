@@ -35,11 +35,7 @@ namespace GSMA.MobileConnect.Utils
                 return stringPart;
             }
 
-            var base64 = stringPart.Replace('-', '+').Replace('_', '/');
-            var padding = 4 - (base64.Length % 4);
-            var base64Padded = padding < 4 ? base64.PadRight(base64.Length + padding, '=') : base64;
-
-            var decoded = Convert.FromBase64String(base64Padded);
+            var decoded = StringUtils.DecodeFromBase64Url(stringPart);
             var decodedString = Encoding.UTF8.GetString(decoded, 0, decoded.Length);
 
             return decodedString;
@@ -58,7 +54,7 @@ namespace GSMA.MobileConnect.Utils
         /// <summary>
         /// Second part of the JSON Web Token containing data and required claims
         /// </summary>
-        Payload = 1,
+        Claims = 1,
         /// <summary>
         /// Third part of the JSON Web Token used to verify the token authenticity
         /// </summary>

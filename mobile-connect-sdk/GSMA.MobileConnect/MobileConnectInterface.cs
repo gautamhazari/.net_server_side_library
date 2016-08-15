@@ -26,6 +26,7 @@ namespace GSMA.MobileConnect
         /// <param name="discovery">Instance of IDiscovery concrete implementation</param>
         /// <param name="authentication">Instance of IAuthentication concrete implementation</param>
         /// <param name="identity">Instance of IIdentityService concrete implementation</param>
+        /// <param name="jwks">Instance of IJWKeysetService concrete implementation</param>
         /// <param name="config">Configuration options</param>
         public MobileConnectInterface(IDiscoveryService discovery, IAuthenticationService authentication, IIdentityService identity, IJWKeysetService jwks, MobileConnectConfig config)
         {
@@ -103,23 +104,25 @@ namespace GSMA.MobileConnect
         /// <param name="redirectedUrl">Uri redirected to by the completion of the authorization UI</param>
         /// <param name="expectedState">The state value returned from the StartAuthorization call should be passed here, it will be used to validate the authenticity of the authorization process</param>
         /// <param name="expectedNonce">The nonce value returned from the StartAuthorization call should be passed here, it will be used to ensure the token was not requested using a replay attack</param>
+        /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public async Task<MobileConnectStatus> RequestTokenAsync(DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState, string expectedNonce)
+        public async Task<MobileConnectStatus> RequestTokenAsync(DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState, string expectedNonce, MobileConnectRequestOptions options)
         {
-            return await MobileConnectInterfaceHelper.RequestToken(_authentication, _jwks, discoveryResponse, redirectedUrl, expectedState, expectedNonce, _config);
+            return await MobileConnectInterfaceHelper.RequestToken(_authentication, _jwks, discoveryResponse, redirectedUrl, expectedState, expectedNonce, _config, options);
         }
 
         /// <summary>
-        /// Synchronous wrapper for <see cref="MobileConnectInterface.RequestTokenAsync(DiscoveryResponse, Uri, string, string)"/>
+        /// Synchronous wrapper for <see cref="MobileConnectInterface.RequestTokenAsync(DiscoveryResponse, Uri, string, string, MobileConnectRequestOptions)"/>
         /// </summary>
         /// <param name="discoveryResponse">The response returned by the discovery process</param>
         /// <param name="redirectedUrl">Uri redirected to by the completion of the authorization UI</param>
         /// <param name="expectedState">The state value returned from the StartAuthorization call should be passed here, it will be used to validate the authenticity of the authorization process</param>
         /// <param name="expectedNonce">The nonce value returned from the StartAuthorization call should be passed here, it will be used to ensure the token was not requested using a replay attack</param>
+        /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public MobileConnectStatus RequestToken(DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState, string expectedNonce)
+        public MobileConnectStatus RequestToken(DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState, string expectedNonce, MobileConnectRequestOptions options)
         {
-            return MobileConnectInterfaceHelper.RequestToken(_authentication, _jwks, discoveryResponse, redirectedUrl, expectedState, expectedNonce, _config).Result;
+            return MobileConnectInterfaceHelper.RequestToken(_authentication, _jwks, discoveryResponse, redirectedUrl, expectedState, expectedNonce, _config, options).Result;
         }
 
         /// <summary>
@@ -130,28 +133,29 @@ namespace GSMA.MobileConnect
         /// <param name="discoveryResponse">The response returned by the discovery process</param>
         /// <param name="expectedState">The state value returned from the StartAuthorization call should be passed here, it will be used to validate the authenticity of the authorization process</param>
         /// <param name="expectedNonce">The nonce value returned from the StartAuthorization call should be passed here, it will be used to ensure the token was not requested using a replay attack</param>
+        /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public async Task<MobileConnectStatus> HandleUrlRedirectAsync(Uri redirectedUrl, DiscoveryResponse discoveryResponse = null, string expectedState = null, string expectedNonce = null)
+        public async Task<MobileConnectStatus> HandleUrlRedirectAsync(Uri redirectedUrl, DiscoveryResponse discoveryResponse = null, string expectedState = null, string expectedNonce = null, MobileConnectRequestOptions options = null)
         {
-            return await MobileConnectInterfaceHelper.HandleUrlRedirect(_discovery, _authentication, _jwks, redirectedUrl, discoveryResponse, expectedState, expectedNonce, _config);
+            return await MobileConnectInterfaceHelper.HandleUrlRedirect(_discovery, _authentication, _jwks, redirectedUrl, discoveryResponse, expectedState, expectedNonce, _config, options);
         }
 
         /// <summary>
-        /// Synchronous wrapper for <see cref="MobileConnectInterface.HandleUrlRedirectAsync(Uri, DiscoveryResponse, string, string)"/>
+        /// Synchronous wrapper for <see cref="MobileConnectInterface.HandleUrlRedirectAsync(Uri, DiscoveryResponse, string, string, MobileConnectRequestOptions)"/>
         /// </summary>
         /// <param name="redirectedUrl">Url redirected to by the completion of the previous step</param>
         /// <param name="discoveryResponse">The response returned by the discovery process</param>
         /// <param name="expectedState">The state value returned from the StartAuthorization call should be passed here, it will be used to validate the authenticity of the authorization process</param>
         /// <param name="expectedNonce">The nonce value returned from the StartAuthorization call should be passed here, it will be used to ensure the token was not requested using a replay attack</param>
-        /// <param name="requestTokenUrl">Url for token request, this is returned by the discovery process. An error status will be returned if the redirected url triggers a token request and this parameter has not been provided.</param>
+        /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public MobileConnectStatus HandleUrlRedirect(Uri redirectedUrl, DiscoveryResponse discoveryResponse = null, string expectedState = null, string expectedNonce = null, string requestTokenUrl = null)
+        public MobileConnectStatus HandleUrlRedirect(Uri redirectedUrl, DiscoveryResponse discoveryResponse = null, string expectedState = null, string expectedNonce = null, MobileConnectRequestOptions options = null)
         {
-            return MobileConnectInterfaceHelper.HandleUrlRedirect(_discovery, _authentication, _jwks, redirectedUrl, discoveryResponse, expectedState, expectedNonce, _config).Result;
+            return MobileConnectInterfaceHelper.HandleUrlRedirect(_discovery, _authentication, _jwks, redirectedUrl, discoveryResponse, expectedState, expectedNonce, _config, options).Result;
         }
 
         /// <summary>
-        /// Request user info using the access token returned by <see cref="RequestTokenAsync(DiscoveryResponse, Uri, string, string)"/>
+        /// Request user info using the access token returned by <see cref="RequestTokenAsync(DiscoveryResponse, Uri, string, string, MobileConnectRequestOptions)"/>
         /// </summary>
         /// <param name="discoveryResponse">The response returned by the discovery process</param>
         /// <param name="accessToken">Access token from RequestToken stage</param>
@@ -175,7 +179,7 @@ namespace GSMA.MobileConnect
         }
 
         /// <summary>
-        /// Request user info using the access token returned by <see cref="RequestTokenAsync(DiscoveryResponse, Uri, string, string)"/>
+        /// Request user info using the access token returned by <see cref="RequestTokenAsync(DiscoveryResponse, Uri, string, string, MobileConnectRequestOptions)"/>
         /// </summary>
         /// <param name="discoveryResponse">The response returned by the discovery process</param>
         /// <param name="accessToken">Access token from RequestToken stage</param>

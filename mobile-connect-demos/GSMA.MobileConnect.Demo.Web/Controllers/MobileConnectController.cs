@@ -60,7 +60,7 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
         [Route("")]
         public async Task<IHttpActionResult> HandleRedirect(string sdksession=null, string mcc_mnc=null, string code=null, string expectedState=null, string expectedNonce=null)
         {
-            var response = await _mobileConnect.HandleUrlRedirectAsync(Request, Request.RequestUri, sdksession, expectedState, expectedNonce);
+            var response = await _mobileConnect.HandleUrlRedirectAsync(Request, Request.RequestUri, sdksession, expectedState, expectedNonce, new MobileConnectRequestOptions());
             
             return CreateResponse(response);
         }

@@ -40,6 +40,8 @@
     <Compile Include="Authentication\JWKey.cs" />
     <Compile Include="Authentication\JWKeyset.cs" />
     <Compile Include="Authentication\JWKeysetService.cs" />
+    <Compile Include="Authentication\TokenValidationOptions.cs" />
+    <Compile Include="Authentication\TokenValidationResult.cs" />
     <Compile Include="Cache\BaseCache.cs" />
     <Compile Include="Cache\ICacheable.cs" />
     <Compile Include="Claims\ClaimsDictionary.cs" />
@@ -52,7 +54,9 @@
     <Compile Include="Discovery\SupportedVersions.cs" />
     <Compile Include="Exceptions\MobileConnectCacheExpiryLimitException.cs" />
     <Compile Include="Exceptions\MobileConnectInvalidArgumentException.cs" />
+    <Compile Include="Exceptions\MobileConnectInvalidJWKException.cs" />
     <Compile Include="Exceptions\MobileConnectProviderMetadataUnavailableException.cs" />
+    <Compile Include="Exceptions\MobileConnectUnsupportedJWKException.cs" />
     <Compile Include="Identity\AddressData.cs" />
     <Compile Include="Identity\IdentityData.cs" />
     <Compile Include="Identity\IdentityService.cs" />
@@ -104,17 +108,32 @@
     <Compile Include="Utils\RestClient.cs" />
     <Compile Include="Utils\RestResponse.cs" />
     <Compile Include="Utils\Scope.cs" />
-    <Compile Include="Utils\Validation.cs" />
+    <Compile Include="Utils\StringUtils.cs" />
+    <Compile Include="Utils\UnixTimestamp.cs" />
+    <Compile Include="Utils\Validate.cs" />
     <Compile Include="Web\MobileConnectWebResponse.cs" />
     <Compile Include="Web\ResponseConverter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="publishnuget.bat" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="jose-pcl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\jose-pcl.0.0.3\lib\portable-net45+netcore45+wpa81+wp8\jose-pcl.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PCLCrypto, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d4421c8a4786956c, processorArchitecture=MSIL">
+      <HintPath>..\packages\PCLCrypto.1.0.86\lib\portable-net40+sl50+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10\PCLCrypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Validation, Version=2.0.0.0, Culture=neutral, PublicKeyToken=2fc06f0d701809a7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Validation.2.0.6.15003\lib\portable-net40+sl50+win+wpa81+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\Validation.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>

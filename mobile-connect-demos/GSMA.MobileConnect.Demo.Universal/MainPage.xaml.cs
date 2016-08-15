@@ -21,6 +21,7 @@ namespace GSMA.MobileConnect.Demo.Universal
         private string _nonce;
         private Discovery.DiscoveryResponse _discoveryResponse;
         private RequestTokenResponseData _token;
+        private MobileConnectRequestOptions _authOptions;
 
         public MainPage()
         {
@@ -34,7 +35,7 @@ namespace GSMA.MobileConnect.Demo.Universal
 
         private async Task HandleRedirect(Uri url)
         {
-            var response = await _mobileConnect.HandleUrlRedirectAsync(url, _discoveryResponse, _state, _nonce);
+            var response = await _mobileConnect.HandleUrlRedirectAsync(url, _discoveryResponse, _state, _nonce, _authOptions);
             await HandleResponse(response);
         }
 
@@ -77,8 +78,7 @@ namespace GSMA.MobileConnect.Demo.Universal
             _state = GenerateUniqueString();
             _nonce = GenerateUniqueString();
             _discoveryResponse = response.DiscoveryResponse;
-
-            var options = new MobileConnectRequestOptions
+            _authOptions = new MobileConnectRequestOptions
             {
                 Scope = GetScope(),
                 Context = "demo",
@@ -86,7 +86,7 @@ namespace GSMA.MobileConnect.Demo.Universal
             };
 
             var newResponse = _mobileConnect.StartAuthentication(_discoveryResponse,
-                response.DiscoveryResponse.ResponseData.subscriber_id, _state, _nonce, options);
+                response.DiscoveryResponse.ResponseData.subscriber_id, _state, _nonce, _authOptions);
 
             await HandleResponse(newResponse);
         }
@@ -107,6 +107,7 @@ namespace GSMA.MobileConnect.Demo.Universal
             idToken.Text = _token.IdToken;
             timeReceived.Text = _token.TimeReceived.ToString("u");
             applicationName.Text = _discoveryResponse.ApplicationShortName;
+            validationResult.Text = response.TokenResponse.ValidationResult.ToString();
 
             loginPanel.Visibility = Visibility.Collapsed;
             loggedPanel.Visibility = Visibility.Visible;

@@ -1,0 +1,88 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GSMA.MobileConnect.Authentication
+{
+    /// <summary>
+    /// Enum for available token validation results
+    /// </summary>
+    [Flags]
+    public enum TokenValidationResult
+    {
+        /// <summary>
+        /// No validation has occured
+        /// </summary>
+        None,
+        /// <summary>
+        /// Token when signed does not match signature
+        /// </summary>
+        InvalidSignature,
+        /// <summary>
+        /// Token passed all validation steps
+        /// </summary>
+        Valid,
+        /// <summary>
+        /// Key was not retrieved from the jwks url or a jwks url was not present
+        /// </summary>
+        JWKSError,
+        /// <summary>
+        /// The alg claim in the id token header does not match the alg requested or the default alg of RS256
+        /// </summary>
+        IncorrectAlgorithm,
+        /// <summary>
+        /// Neither the azp nor the aud claim in the id token match the client id used to make the auth request
+        /// </summary>
+        InvalidAudAndAzp,
+        /// <summary>
+        /// The iss claim in the id token does not match the expected issuer
+        /// </summary>
+        InvalidIssuer,
+        /// <summary>
+        /// The IdToken has expired
+        /// </summary>
+        IdTokenExpired,
+        /// <summary>
+        /// No key matching the requested key id was found
+        /// </summary>
+        NoMatchingKey,
+        /// <summary>
+        /// Key does not contain the required information to validate against the requested algorithm
+        /// </summary>
+        KeyMisformed,
+        /// <summary>
+        /// Algorithm is unsupported for validation
+        /// </summary>
+        UnsupportedAlgorithm,
+        /// <summary>
+        /// The access token has expired
+        /// </summary>
+        AccessTokenExpired,
+        /// <summary>
+        /// The access token is null or empty in the token response
+        /// </summary>
+        AccessTokenMissing,
+        /// <summary>
+        /// The id token is null or empty in the token response
+        /// </summary>
+        IdTokenMissing,
+        /// <summary>
+        /// The id token is older than the max age specified in the auth stage
+        /// </summary>
+        MaxAgePassed,
+        /// <summary>
+        /// A longer time than the configured limit has passed since the token was issued
+        /// </summary>
+        TokenIssueTimeLimitPassed,
+        /// <summary>
+        /// The nonce in the id token claims does not match the nonce specified in the auth stage
+        /// </summary>
+        InvalidNonce,
+        /// <summary>
+        /// The token response is null or missing required data
+        /// </summary>
+        IncompleteTokenResponse,
+    }
+}

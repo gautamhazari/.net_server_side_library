@@ -6,11 +6,27 @@
     <title>GSMA MobileConnect</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <projectUrl>https://developer.mobileconnect.io/content/sdks-and-example-applications</projectUrl>
+    <projectUrl>https://developer.mobileconnect.io/dotnet-sdk</projectUrl>
     <!-- <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl> -->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright>Copyright 2016</copyright>
     <tags>GSMA OpenId Auth</tags>
+    <dependencies>
+      <group>
+        <dependency id="jose-pcl" version="0.0.3"/>
+        <dependency id="Newtonsoft.Json" version="8.0.3"/>
+        <dependency id="PCLCrypto" version="1.0.86"/>
+      </group>
+      <group targetFramework="dotnet">
+        <dependency id="PCLCrypto" version="2.0.147"/>
+      </group>
+      <group targetFramework="uwp10">
+        <dependency id="PCLCrypto" version="2.0.147"/>
+      </group>
+      <group targetFramework="net45">
+        <dependency id="PCLCrypto" version="2.0.147"/>
+      </group>
+    </dependencies>
   </metadata>
 </package>

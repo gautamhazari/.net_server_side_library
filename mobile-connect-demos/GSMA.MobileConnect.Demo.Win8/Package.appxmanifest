@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="06c7d171-011d-4b58-a2f8-2b2eeb65e956" Publisher="CN=bonyj" Version="1.0.0.3" />
+  <Identity Name="06c7d171-011d-4b58-a2f8-2b2eeb65e956" Publisher="CN=bonyj" Version="1.0.0.4" />
   <Properties>
     <DisplayName>GSMA.MobileConnect.Demo.Win8</DisplayName>
     <PublisherDisplayName>bonyj</PublisherDisplayName>

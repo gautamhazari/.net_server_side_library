@@ -75,6 +75,7 @@
             <TextBlock x:Name="accessToken" Text="" FontSize="18" TextAlignment="Center" TextWrapping="Wrap"/>
             <TextBlock x:Name="idToken" Text="" FontSize="18" TextAlignment="Center" TextWrapping="Wrap"/>
             <TextBlock x:Name="timeReceived" Text="" FontSize="18" TextAlignment="Center" TextWrapping="Wrap"/>
+            <TextBlock x:Name="validationResult" Text="" FontSize="18" TextAlignment="Center" TextWrapping="Wrap"/>
             <Grid HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -93,7 +94,7 @@
             <Button x:Name="resetButton"
                     Content="Reset Login"
                     Click="ResetButton_Click" 
-                    Margin="50"
+                    Margin="25"
                     HorizontalAlignment="Center"/>
         </StackPanel>
         <StackPanel x:Name="identityPanel" Margin="50" Orientation="Vertical" Visibility="Collapsed">

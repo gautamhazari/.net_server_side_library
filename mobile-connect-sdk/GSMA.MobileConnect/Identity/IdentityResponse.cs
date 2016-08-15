@@ -71,7 +71,7 @@ namespace GSMA.MobileConnect.Identity
 
             if (JsonWebToken.IsValidFormat(responseData))
             {
-                return JsonWebToken.DecodePart(responseData, JWTPart.Payload);
+                return JsonWebToken.DecodePart(responseData, JWTPart.Claims);
             }
 
             return "{\"error\":\"invalid_format\",\"error_description\":\"Recieved UserInfo response that is not JSON or JWT format\"}";

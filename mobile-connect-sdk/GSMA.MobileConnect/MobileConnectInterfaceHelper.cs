@@ -106,7 +106,8 @@ namespace GSMA.MobileConnect
             return MobileConnectStatus.Authorization(response.Url, state, nonce);
         }
 
-        internal static async Task<MobileConnectStatus> RequestToken(IAuthenticationService authentication, IJWKeysetService jwks, DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState, string expectedNonce, MobileConnectConfig config)
+        internal static async Task<MobileConnectStatus> RequestToken(IAuthenticationService authentication, IJWKeysetService jwks, DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState, 
+            string expectedNonce, MobileConnectConfig config, MobileConnectRequestOptions options)
         {
             RequestTokenResponse response;
 
@@ -137,12 +138,13 @@ namespace GSMA.MobileConnect
                 var clientId = discoveryResponse.ResponseData?.response?.client_id ?? config.ClientId;
                 var clientSecret = discoveryResponse.ResponseData?.response?.client_secret ?? config.ClientSecret;
                 var requestTokenUrl = discoveryResponse.OperatorUrls.RequestTokenUrl;
+                var issuer = discoveryResponse.ProviderMetadata.Issuer;
 
                 var tokenTask = authentication.RequestTokenAsync(clientId, clientSecret, requestTokenUrl, config.RedirectUrl, code);
                 var jwksTask = jwks.RetrieveJWKSAsync(discoveryResponse.OperatorUrls.JWKSUrl);
 
                 // execute both tasks in parallel
-                await Task.WhenAll(tokenTask).ConfigureAwait(false);
+                await Task.WhenAll(tokenTask, jwksTask).ConfigureAwait(false);
 
                 response = tokenTask.Result;
 
@@ -151,9 +153,11 @@ namespace GSMA.MobileConnect
                     return MobileConnectStatus.Error(response.ErrorResponse.Error, response.ErrorResponse.ErrorDescription, null, response);
                 }
 
-                if(!Validation.IsExpectedNonce(response.ResponseData.IdToken, expectedNonce))
+                response.ValidationResult = authentication.ValidateTokenResponse(response, clientId, issuer, expectedNonce, options?.MaxAge, jwksTask.Result);
+                var validationOptions = options?.TokenValidationOptions ?? new TokenValidationOptions();
+                if(!validationOptions.AcceptedValidationResults.HasFlag(response.ValidationResult))
                 {
-                    return MobileConnectStatus.Error("invalid_nonce", "Nonce values do not match, this could suggest an attempted Replay Attack", null);
+                    return MobileConnectStatus.Error("invalid_token", $"The token was found to be invalid with the validtion result {response.ValidationResult}", null, response);
                 }
             }
             catch (MobileConnectInvalidArgumentException e)
@@ -172,11 +176,11 @@ namespace GSMA.MobileConnect
             return MobileConnectStatus.Complete(response);
         }
 
-        internal static async Task<MobileConnectStatus> HandleUrlRedirect(IDiscoveryService discovery, IAuthenticationService authentication, IJWKeysetService jwks, Uri redirectedUrl, DiscoveryResponse discoveryResponse, string expectedState, string expectedNonce, MobileConnectConfig config)
+        internal static async Task<MobileConnectStatus> HandleUrlRedirect(IDiscoveryService discovery, IAuthenticationService authentication, IJWKeysetService jwks, Uri redirectedUrl, DiscoveryResponse discoveryResponse, string expectedState, string expectedNonce, MobileConnectConfig config, MobileConnectRequestOptions options)
         {
             if (HttpUtils.ExtractQueryValue(redirectedUrl.Query, "code") != null)
             {
-                return await RequestToken(authentication, jwks, discoveryResponse, redirectedUrl, expectedState, expectedNonce, config);
+                return await RequestToken(authentication, jwks, discoveryResponse, redirectedUrl, expectedState, expectedNonce, config, options);
             }
             else if (HttpUtils.ExtractQueryValue(redirectedUrl.Query, "mcc_mnc") != null)
             {

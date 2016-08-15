@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,12 +34,21 @@ namespace GSMA.MobileConnect.Authentication
         {
             var cached = await RetrieveFromCache(url);
 
-            if (cached != null)
+            if (cached != null && !cached.HasExpired)
             {
                 return cached;
             }
 
-            var response = await _client.GetAsync(url, null);
+            RestResponse response;
+            try
+            {
+                response = await _client.GetAsync(url, null);
+            }
+            catch (Exception e) when (e is HttpRequestException || e is System.Net.WebException || e is TaskCanceledException)
+            {
+                return cached;
+            }
+
             var jwks = JsonConvert.DeserializeObject<JWKeyset>(response.Content);
 
             await AddToCache(url, jwks).ConfigureAwait(false);
@@ -57,7 +67,7 @@ namespace GSMA.MobileConnect.Authentication
             if (_cache == null)
                 return null;
 
-            return await _cache.Get<JWKeyset>(url);
+            return await _cache.Get<JWKeyset>(url, false);
         }
 
         private async Task AddToCache(string url, JWKeyset keyset)

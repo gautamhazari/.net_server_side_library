@@ -111,6 +111,7 @@ namespace GSMA.MobileConnect.Demo.Win8
             idToken.Text = _token.IdToken;
             timeReceived.Text = _token.TimeReceived.ToString("u");
             applicationName.Text = _discoveryResponse.ApplicationShortName;
+            validationResult.Text = response.TokenResponse.ValidationResult.ToString();
 
             loginPanel.Visibility = Visibility.Collapsed;
             loggedPanel.Visibility = Visibility.Visible;

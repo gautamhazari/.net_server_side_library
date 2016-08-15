@@ -37,6 +37,11 @@ namespace GSMA.MobileConnect.Authentication
         public ErrorResponse ErrorResponse { get; set; }
 
         /// <summary>
+        /// Result of token response validation
+        /// </summary>
+        public TokenValidationResult ValidationResult { get; set; }
+
+        /// <summary>
         /// Creates a valid token response from the raw RestResponse
         /// </summary>
         /// <param name="rawResponse">RestResponse returned from RestClient</param>
@@ -52,7 +57,7 @@ namespace GSMA.MobileConnect.Authentication
             else
             {
                 this.ResponseData = JsonConvert.DeserializeObject<RequestTokenResponseData>(rawResponse.Content);
-                this.DecodedIdTokenPayload = JsonWebToken.DecodePart(this.ResponseData.IdToken, JWTPart.Payload);
+                this.DecodedIdTokenPayload = this.ResponseData != null ? JsonWebToken.DecodePart(this.ResponseData.IdToken, JWTPart.Claims) : null;
             }
         }
     }

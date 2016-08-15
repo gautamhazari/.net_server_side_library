@@ -179,7 +179,7 @@ namespace GSMA.MobileConnect.Test
         [Test]
         public async Task RequestTokenShouldReturnErrorForInvalidSession()
         {
-            var result = await _mobileConnect.RequestTokenAsync(_request, _invalidSdkSession, new Uri("http://localhost"), "state", "nonce");
+            var result = await _mobileConnect.RequestTokenAsync(_request, _invalidSdkSession, new Uri("http://localhost"), "state", "nonce", new MobileConnectRequestOptions());
 
             Assert.AreEqual(MobileConnectResponseType.Error, result.ResponseType);
             Assert.AreEqual("sdksession_not_found", result.ErrorCode);
@@ -191,7 +191,7 @@ namespace GSMA.MobileConnect.Test
             _config.CacheResponsesWithSessionId = false;
             _mobileConnect = new MobileConnectWebInterface(_discovery, _authentication, _identity, _jwks, _config);
 
-            var result = await _mobileConnect.RequestTokenAsync(_request, _invalidSdkSession, new Uri("http://localhost"), "state", "nonce");
+            var result = await _mobileConnect.RequestTokenAsync(_request, _invalidSdkSession, new Uri("http://localhost"), "state", "nonce", new MobileConnectRequestOptions());
 
             Assert.AreEqual(MobileConnectResponseType.Error, result.ResponseType);
             Assert.AreEqual("cache_disabled", result.ErrorCode);

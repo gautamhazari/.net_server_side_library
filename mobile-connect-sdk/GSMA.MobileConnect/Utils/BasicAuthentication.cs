@@ -18,7 +18,7 @@ namespace GSMA.MobileConnect.Utils
         {
             var temp = string.Format("{0}:{1}", clientId, secret);
             byte[] authentication = Encoding.UTF8.GetBytes(temp);
-            return Convert.ToBase64String(authentication);
+            return StringUtils.EncodeAsBase64(authentication);
         }
     }
 }

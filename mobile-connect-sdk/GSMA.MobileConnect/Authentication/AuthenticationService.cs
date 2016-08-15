@@ -7,6 +7,7 @@ using GSMA.MobileConnect.Utils;
 using GSMA.MobileConnect.Exceptions;
 using System.Net.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace GSMA.MobileConnect.Authentication
 {
@@ -31,11 +32,11 @@ namespace GSMA.MobileConnect.Authentication
         public StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce,
             string encryptedMSISDN, SupportedVersions versions, AuthenticationOptions options)
         {
-            Validation.RejectNullOrEmpty(clientId, "clientId");
-            Validation.RejectNullOrEmpty(authorizeUrl, "authorizeUrl");
-            Validation.RejectNullOrEmpty(redirectUrl, "redirectUrl");
-            Validation.RejectNullOrEmpty(state, "state");
-            Validation.RejectNullOrEmpty(nonce, "nonce");
+            Validate.RejectNullOrEmpty(clientId, "clientId");
+            Validate.RejectNullOrEmpty(authorizeUrl, "authorizeUrl");
+            Validate.RejectNullOrEmpty(redirectUrl, "redirectUrl");
+            Validate.RejectNullOrEmpty(state, "state");
+            Validate.RejectNullOrEmpty(nonce, "nonce");
 
             options = options ?? new AuthenticationOptions();
             options.Scope = options.Scope ?? "";
@@ -43,8 +44,8 @@ namespace GSMA.MobileConnect.Authentication
 
             if(shouldUseAuthorize)
             {
-                Validation.RejectNullOrEmpty(options.Context, "options.Context");
-                Validation.RejectNullOrEmpty(options.ClientName, "options.ClientName");
+                Validate.RejectNullOrEmpty(options.Context, "options.Context");
+                Validate.RejectNullOrEmpty(options.ClientName, "options.ClientName");
             }
 
             options.State = state;
@@ -114,11 +115,11 @@ namespace GSMA.MobileConnect.Authentication
         /// <inheritdoc/>
         public async Task<RequestTokenResponse> RequestTokenAsync(string clientId, string clientSecret, string requestTokenUrl, string redirectUrl, string code)
         {
-            Validation.RejectNullOrEmpty(clientId, "clientId");
-            Validation.RejectNullOrEmpty(clientSecret, "clientSecret");
-            Validation.RejectNullOrEmpty(requestTokenUrl, "requestTokenUrl");
-            Validation.RejectNullOrEmpty(redirectUrl, "redirectUrl");
-            Validation.RejectNullOrEmpty(code, "code");
+            Validate.RejectNullOrEmpty(clientId, "clientId");
+            Validate.RejectNullOrEmpty(clientSecret, "clientSecret");
+            Validate.RejectNullOrEmpty(requestTokenUrl, "requestTokenUrl");
+            Validate.RejectNullOrEmpty(redirectUrl, "redirectUrl");
+            Validate.RejectNullOrEmpty(code, "code");
 
             try
             {
@@ -144,6 +145,23 @@ namespace GSMA.MobileConnect.Authentication
         public RequestTokenResponse RequestToken(string clientId, string clientSecret, string requestTokenUrl, string redirectUrl, string code)
         {
             return RequestTokenAsync(clientId, clientSecret, requestTokenUrl, redirectUrl, code).Result;
+        }
+
+        /// <inheritdoc/>
+        public TokenValidationResult ValidateTokenResponse(RequestTokenResponse tokenResponse, string clientId, string issuer, string nonce, int? maxAge, JWKeyset keyset)
+        {
+            if (tokenResponse?.ResponseData == null)
+            {
+                return TokenValidationResult.IncompleteTokenResponse;
+            }
+
+            TokenValidationResult result = Validate.ValidateAccessToken(tokenResponse.ResponseData);
+            if(result != TokenValidationResult.Valid)
+            {
+                return result;
+            }
+
+            return Validate.ValidateIdToken(tokenResponse.ResponseData.IdToken, clientId, issuer, nonce, maxAge, keyset);
         }
 
         /// <inheritdoc/>

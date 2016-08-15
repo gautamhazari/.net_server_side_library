@@ -45,5 +45,18 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="redirectUrl">Confirms the redirectURI that the application used when the authorization request (Required)</param>
         /// <param name="code">The authorization code provided to the application via the call to the authentication/authorization API (Required)</param>
         Task<RequestTokenResponse> RequestTokenAsync(string clientId, string clientSecret, string requestTokenUrl, string redirectUrl, string code);
+
+        /// <summary>
+        /// Executes a series of validation methods on the token response, if the access token or id token are invalid the result will indicate what 
+        /// validation criteria was not met
+        /// </summary>
+        /// <param name="tokenResponse">Token response to validate</param>
+        /// <param name="clientId">Client id required for validating Id token claims</param>
+        /// <param name="issuer">Token issuer value required for validating Id token claims</param>
+        /// <param name="nonce">Nonce value required for validating Id token claims</param>
+        /// <param name="maxAge">MaxAge value required for validating Id token claims</param>
+        /// <param name="keyset">Keyset required for validating Id token signature</param>
+        /// <returns>TokenValidationResult indicating the token response is valid or why the token response is invalid</returns>
+        TokenValidationResult ValidateTokenResponse(RequestTokenResponse tokenResponse, string clientId, string issuer, string nonce, int? maxAge, JWKeyset keyset);
     }
 }

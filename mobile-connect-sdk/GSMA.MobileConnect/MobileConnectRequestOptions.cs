@@ -5,12 +5,14 @@ using GSMA.MobileConnect.Discovery;
 namespace GSMA.MobileConnect
 {
     /// <summary>
-    /// Options for a single request to <see cref="MobileConnectInterface"/>
+    /// Options for a single request to <see cref="MobileConnectInterface"/>. 
+    /// Not all options are valid for all calls that accept an instance of this class, only options that are relevant to the method being called will be used.
     /// </summary>
     public class MobileConnectRequestOptions
     {
         private readonly DiscoveryOptions _discoveryOptions = new DiscoveryOptions();
         private readonly AuthenticationOptions _authOptions = new AuthenticationOptions();
+        private readonly TokenValidationOptions _validationOptions = new TokenValidationOptions();
 
         /// <inheritdoc cref="DiscoveryOptions.IsUsingMobileData"/>
         public bool IsUsingMobileData
@@ -145,6 +147,21 @@ namespace GSMA.MobileConnect
         public AuthenticationOptions AuthenticationOptions
         {
             get { return _authOptions; }
+        }
+
+        /// <inheritdoc cref="TokenValidationOptions.AcceptedValidationResults"/>
+        public TokenValidationResult AcceptedValidationResults
+        {
+            get { return _validationOptions.AcceptedValidationResults; }
+            set { _validationOptions.AcceptedValidationResults = value; }
+        }
+
+        /// <summary>
+        /// Filled token validation options instance
+        /// </summary>
+        public TokenValidationOptions TokenValidationOptions
+        {
+            get { return _validationOptions; }
         }
     }
 }

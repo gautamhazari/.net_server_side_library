@@ -310,9 +310,10 @@ namespace GSMA.MobileConnect.Test
         public async Task RequestTokenAsyncShouldHandleInvalidArgumentException()
         {
             var discoveryResponse = new DiscoveryResponse(new RestResponse(System.Net.HttpStatusCode.OK, responseJson));
+            discoveryResponse.ProviderMetadata = ProviderMetadata.Default;
             discoveryResponse.OperatorUrls.RequestTokenUrl = null;
             var uri = new Uri("http://localhost?state=state&nonce=nonce");
-            var response = await _mobileConnect.RequestTokenAsync(discoveryResponse, uri, "state", "nonce");
+            var response = await _mobileConnect.RequestTokenAsync(discoveryResponse, uri, "state", "nonce", new MobileConnectRequestOptions());
 
             Assert.IsNotNull(response);
             Assert.AreEqual(MobileConnectResponseType.Error, response.ResponseType);
@@ -325,10 +326,11 @@ namespace GSMA.MobileConnect.Test
             var mockClient = SetupForMockRest();
 
             var discoveryResponse = new DiscoveryResponse(new RestResponse(System.Net.HttpStatusCode.OK, responseJson));
+            discoveryResponse.ProviderMetadata = ProviderMetadata.Default;
             var uri = new Uri("http://localhost?code=code&state=state&nonce=nonce");
             mockClient.QueueParallelResponses(Tuple.Create<string, object>(discoveryResponse.OperatorUrls.JWKSUrl, new RestResponse(System.Net.HttpStatusCode.OK, jwksJson)), 
                 Tuple.Create<string, object>(discoveryResponse.OperatorUrls.RequestTokenUrl, new HttpRequestException()));
-            var response = await _mobileConnect.RequestTokenAsync(discoveryResponse, uri, "state", "nonce");
+            var response = await _mobileConnect.RequestTokenAsync(discoveryResponse, uri, "state", "nonce", new MobileConnectRequestOptions());
 
             Assert.IsNotNull(response);
             Assert.AreEqual(MobileConnectResponseType.Error, response.ResponseType);
@@ -339,9 +341,10 @@ namespace GSMA.MobileConnect.Test
         public void RequestTokenShouldHandleInvalidArgumentException()
         {
             var discoveryResponse = new DiscoveryResponse(new RestResponse(System.Net.HttpStatusCode.OK, responseJson));
+            discoveryResponse.ProviderMetadata = ProviderMetadata.Default;
             discoveryResponse.OperatorUrls.RequestTokenUrl = null;
             var uri = new Uri("http://localhost?state=state&nonce=nonce");
-            var response = _mobileConnect.RequestToken(discoveryResponse, uri, "state", "nonce");
+            var response = _mobileConnect.RequestToken(discoveryResponse, uri, "state", "nonce", new MobileConnectRequestOptions());
 
             Assert.IsNotNull(response);
             Assert.AreEqual(MobileConnectResponseType.Error, response.ResponseType);
@@ -354,10 +357,11 @@ namespace GSMA.MobileConnect.Test
             var mockClient = SetupForMockRest();
 
             var discoveryResponse = new DiscoveryResponse(new RestResponse(System.Net.HttpStatusCode.OK, responseJson));
+            discoveryResponse.ProviderMetadata = ProviderMetadata.Default;
             var uri = new Uri("http://localhost?code=code&state=state&nonce=nonce");
             mockClient.QueueParallelResponses(Tuple.Create<string, object>(discoveryResponse.OperatorUrls.JWKSUrl, new RestResponse(System.Net.HttpStatusCode.OK, jwksJson)),
                 Tuple.Create<string, object>(discoveryResponse.OperatorUrls.RequestTokenUrl, new HttpRequestException()));
-            var response = _mobileConnect.RequestToken(discoveryResponse, uri, "state", "nonce");
+            var response = _mobileConnect.RequestToken(discoveryResponse, uri, "state", "nonce", new MobileConnectRequestOptions());
 
             Assert.IsNotNull(response);
             Assert.AreEqual(MobileConnectResponseType.Error, response.ResponseType);

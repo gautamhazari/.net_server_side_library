@@ -37,10 +37,10 @@ namespace GSMA.MobileConnect.Discovery
 
         private async Task<DiscoveryResponse> CallDiscoveryEndpoint(string clientId, string clientSecret, string discoveryUrl, DiscoveryOptions options, IEnumerable<BasicKeyValuePair> currentCookies, bool cacheDiscoveryResponse)
         {
-            Validation.RejectNullOrEmpty(clientId, "clientId");
-            Validation.RejectNullOrEmpty(clientSecret, "clientSecret");
-            Validation.RejectNullOrEmpty(discoveryUrl, "discoveryUrl");
-            Validation.RejectNullOrEmpty(options.RedirectUrl, "redirectUrl");
+            Validate.RejectNullOrEmpty(clientId, "clientId");
+            Validate.RejectNullOrEmpty(clientSecret, "clientSecret");
+            Validate.RejectNullOrEmpty(discoveryUrl, "discoveryUrl");
+            Validate.RejectNullOrEmpty(options.RedirectUrl, "redirectUrl");
 
             if (cacheDiscoveryResponse)
             {
@@ -86,7 +86,7 @@ namespace GSMA.MobileConnect.Discovery
         /// <inheritdoc/>
         public async Task<DiscoveryResponse> StartAutomatedOperatorDiscoveryAsync(IPreferences preferences, string redirectUrl, DiscoveryOptions options, IEnumerable<BasicKeyValuePair> currentCookies)
         {
-            Validation.RejectNull(preferences, "preferences");
+            Validate.RejectNull(preferences, "preferences");
 
             return await StartAutomatedOperatorDiscoveryAsync(preferences.ClientId, preferences.ClientSecret, preferences.DiscoveryUrl, redirectUrl, options, currentCookies);
         }
@@ -103,7 +103,7 @@ namespace GSMA.MobileConnect.Discovery
         /// <inheritdoc/>
         public DiscoveryResponse StartAutomatedOperatorDiscovery(IPreferences preferences, string redirectUrl, DiscoveryOptions options, IEnumerable<BasicKeyValuePair> currentCookies)
         {
-            Validation.RejectNull(preferences, "preferences");
+            Validate.RejectNull(preferences, "preferences");
 
             return StartAutomatedOperatorDiscovery(preferences.ClientId, preferences.ClientSecret, preferences.DiscoveryUrl, redirectUrl, options, currentCookies);
         }
@@ -117,7 +117,7 @@ namespace GSMA.MobileConnect.Discovery
         /// <inheritdoc/>
         public async Task<DiscoveryResponse> GetOperatorSelectionURLAsync(IPreferences preferences, string redirectUrl)
         {
-            Validation.RejectNull(preferences, "preferences");
+            Validate.RejectNull(preferences, "preferences");
 
             return await GetOperatorSelectionURLAsync(preferences.ClientId, preferences.ClientSecret, preferences.DiscoveryUrl, redirectUrl);
         }
@@ -132,7 +132,7 @@ namespace GSMA.MobileConnect.Discovery
         /// <inheritdoc/>
         public DiscoveryResponse GetOperatorSelectionURL(IPreferences preferences, string redirectUrl)
         {
-            Validation.RejectNull(preferences, "preferences");
+            Validate.RejectNull(preferences, "preferences");
 
             return GetOperatorSelectionURL(preferences.ClientId, preferences.ClientSecret, preferences.DiscoveryUrl, redirectUrl);
         }
@@ -146,7 +146,7 @@ namespace GSMA.MobileConnect.Discovery
         /// <inheritdoc/>
         public ParsedDiscoveryRedirect ParseDiscoveryRedirect(Uri redirectUrl)
         {
-            Validation.RejectNull(redirectUrl, "redirectUrl");
+            Validate.RejectNull(redirectUrl, "redirectUrl");
 
             var query = redirectUrl.Query;
 
@@ -176,7 +176,7 @@ namespace GSMA.MobileConnect.Discovery
         /// <inheritdoc/>
         public async Task<DiscoveryResponse> CompleteSelectedOperatorDiscoveryAsync(IPreferences preferences, string redirectUrl, string selectedMCC, string selectedMNC)
         {
-            Validation.RejectNull(preferences, "preferences");
+            Validate.RejectNull(preferences, "preferences");
 
             return await CompleteSelectedOperatorDiscoveryAsync(preferences.ClientId, preferences.ClientSecret, preferences.DiscoveryUrl, redirectUrl, selectedMCC, selectedMNC);
         }
@@ -184,8 +184,8 @@ namespace GSMA.MobileConnect.Discovery
         /// <inheritdoc/>
         public async Task<DiscoveryResponse> CompleteSelectedOperatorDiscoveryAsync(string clientId, string clientSecret, string discoveryUrl, string redirectUrl, string selectedMCC, string selectedMNC)
         {
-            Validation.RejectNullOrEmpty(selectedMCC, "selectedMCC");
-            Validation.RejectNullOrEmpty(selectedMNC, "selectedMNC");
+            Validate.RejectNullOrEmpty(selectedMCC, "selectedMCC");
+            Validate.RejectNullOrEmpty(selectedMNC, "selectedMNC");
 
             var discoveryOptions = new DiscoveryOptions { RedirectUrl = redirectUrl, SelectedMCC = selectedMCC, SelectedMNC = selectedMNC };
             return await CallDiscoveryEndpoint(clientId, clientSecret, discoveryUrl, discoveryOptions, null, true);
@@ -194,7 +194,7 @@ namespace GSMA.MobileConnect.Discovery
         /// <inheritdoc/>
         public DiscoveryResponse CompleteSelectedOperatorDiscovery(IPreferences preferences, string redirectUrl, string selectedMCC, string selectedMNC)
         {
-            Validation.RejectNull(preferences, "preferences");
+            Validate.RejectNull(preferences, "preferences");
 
             return CompleteSelectedOperatorDiscovery(preferences.ClientId, preferences.ClientSecret, preferences.DiscoveryUrl, redirectUrl, selectedMCC, selectedMNC);
         }
@@ -299,7 +299,7 @@ namespace GSMA.MobileConnect.Discovery
         /// <exception cref="MobileConnectInvalidArgumentException">Throws if response is null</exception>
         public async Task<ProviderMetadata> GetProviderMetadata(DiscoveryResponse response, bool forceCacheBypass)
         {
-            Validation.RejectNull(response, "response");
+            Validate.RejectNull(response, "response");
 
             var metadata = await RetrieveProviderMetada(response.OperatorUrls?.ProviderMetadataUrl, forceCacheBypass);
             response.ProviderMetadata = metadata;

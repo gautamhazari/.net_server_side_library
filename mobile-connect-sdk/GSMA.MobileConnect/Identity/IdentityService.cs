@@ -25,15 +25,15 @@ namespace GSMA.MobileConnect.Identity
         /// <inheritdoc/>
         public async Task<IdentityResponse> RequestIdentity(string premiumInfoUrl, string accessToken)
         {
-            Validation.RejectNullOrEmpty(premiumInfoUrl, "premiumInfoUrl");
+            Validate.RejectNullOrEmpty(premiumInfoUrl, "premiumInfoUrl");
             return await RequestUserInfo(premiumInfoUrl, accessToken);
         }
 
         /// <inheritdoc/>
         public async Task<IdentityResponse> RequestUserInfo(string userInfoUrl, string accessToken)
         {
-            Validation.RejectNullOrEmpty(userInfoUrl, "userInfoUrl");
-            Validation.RejectNullOrEmpty(accessToken, "accessToken");
+            Validate.RejectNullOrEmpty(userInfoUrl, "userInfoUrl");
+            Validate.RejectNullOrEmpty(accessToken, "accessToken");
 
             try
             {
