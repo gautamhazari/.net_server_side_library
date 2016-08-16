@@ -86,11 +86,11 @@ namespace GSMA.MobileConnect
             StartAuthenticationResponse response;
             try
             {
-                string clientId = discoveryResponse?.ResponseData?.response?.client_id ?? config.ClientId;
-                string authorizationUrl = discoveryResponse?.OperatorUrls?.AuthorizationUrl;
-                SupportedVersions supportedVersions = discoveryResponse?.ProviderMetadata?.MobileConnectVersionSupported;
+                string clientId = discoveryResponse.ResponseData.response.client_id ?? config.ClientId;
+                string authorizationUrl = discoveryResponse.OperatorUrls.AuthorizationUrl;
+                SupportedVersions supportedVersions = discoveryResponse.ProviderMetadata?.MobileConnectVersionSupported;
                 AuthenticationOptions authOptions = options?.AuthenticationOptions ?? new AuthenticationOptions();
-                authOptions.ClientName = discoveryResponse?.ApplicationShortName ?? "cs-sdk";
+                authOptions.ClientName = discoveryResponse.ApplicationShortName;
 
                 response = authentication.StartAuthentication(clientId, authorizationUrl, config.RedirectUrl, state, nonce, encryptedMSISDN, supportedVersions, authOptions);
             }
@@ -104,6 +104,46 @@ namespace GSMA.MobileConnect
             }
 
             return MobileConnectStatus.Authorization(response.Url, state, nonce);
+        }
+
+        internal static async Task<MobileConnectStatus> RequestHeadlessAuthentication(IAuthenticationService authentication, IJWKeysetService jwks, DiscoveryResponse discoveryResponse, string encryptedMSISDN, 
+            string state, string nonce, MobileConnectConfig config, MobileConnectRequestOptions options)
+        {
+            if (!IsUsableDiscoveryResponse(discoveryResponse))
+            {
+                return MobileConnectStatus.StartDiscovery();
+            }
+
+            RequestTokenResponse response;
+            try
+            {
+                string clientId = discoveryResponse.ResponseData.response.client_id ?? config.ClientId;
+                string clientSecret = discoveryResponse.ResponseData.response.client_secret;
+                string authorizationUrl = discoveryResponse.OperatorUrls.AuthorizationUrl;
+                string tokenUrl = discoveryResponse.OperatorUrls.RequestTokenUrl;
+                string issuer = discoveryResponse.ProviderMetadata.Issuer;
+                SupportedVersions supportedVersions = discoveryResponse.ProviderMetadata.MobileConnectVersionSupported;
+                AuthenticationOptions authOptions = options?.AuthenticationOptions ?? new AuthenticationOptions();
+                authOptions.ClientName = discoveryResponse.ApplicationShortName;
+
+                var jwksTask = jwks.RetrieveJWKSAsync(discoveryResponse.OperatorUrls.JWKSUrl);
+                var tokenTask = authentication.RequestHeadlessAuthentication(clientId, clientSecret, authorizationUrl, tokenUrl, config.RedirectUrl, state, nonce, encryptedMSISDN, supportedVersions, authOptions);
+
+                // execute both tasks in parallel
+                await Task.WhenAll(tokenTask, jwksTask).ConfigureAwait(false);
+
+                response = tokenTask.Result;
+
+                return HandleTokenResponse(authentication, response, clientId, issuer, nonce, jwksTask.Result, options);
+            }
+            catch (MobileConnectInvalidArgumentException e)
+            {
+                return MobileConnectStatus.Error("invalid_argument", string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+            }
+            catch (Exception e)
+            {
+                return MobileConnectStatus.Error("unknown_error", "An unknown error occured while generating an authorization url", e);
+            }
         }
 
         internal static async Task<MobileConnectStatus> RequestToken(IAuthenticationService authentication, IJWKeysetService jwks, DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState, 
@@ -135,8 +175,8 @@ namespace GSMA.MobileConnect
             try
             {
                 var code = HttpUtils.ExtractQueryValue(redirectedUrl.Query, "code");
-                var clientId = discoveryResponse.ResponseData?.response?.client_id ?? config.ClientId;
-                var clientSecret = discoveryResponse.ResponseData?.response?.client_secret ?? config.ClientSecret;
+                var clientId = discoveryResponse.ResponseData.response.client_id ?? config.ClientId;
+                var clientSecret = discoveryResponse.ResponseData.response.client_secret ?? config.ClientSecret;
                 var requestTokenUrl = discoveryResponse.OperatorUrls.RequestTokenUrl;
                 var issuer = discoveryResponse.ProviderMetadata.Issuer;
 
@@ -148,17 +188,7 @@ namespace GSMA.MobileConnect
 
                 response = tokenTask.Result;
 
-                if(response.ErrorResponse != null)
-                {
-                    return MobileConnectStatus.Error(response.ErrorResponse.Error, response.ErrorResponse.ErrorDescription, null, response);
-                }
-
-                response.ValidationResult = authentication.ValidateTokenResponse(response, clientId, issuer, expectedNonce, options?.MaxAge, jwksTask.Result);
-                var validationOptions = options?.TokenValidationOptions ?? new TokenValidationOptions();
-                if(!validationOptions.AcceptedValidationResults.HasFlag(response.ValidationResult))
-                {
-                    return MobileConnectStatus.Error("invalid_token", $"The token was found to be invalid with the validtion result {response.ValidationResult}", null, response);
-                }
+                return HandleTokenResponse(authentication, response, clientId, issuer, expectedNonce, jwksTask.Result, options);
             }
             catch (MobileConnectInvalidArgumentException e)
             {
@@ -171,6 +201,21 @@ namespace GSMA.MobileConnect
             catch (Exception e)
             {
                 return MobileConnectStatus.Error("unknown_error", "A failure occured while requesting a token", e);
+            }
+        }
+
+        private static MobileConnectStatus HandleTokenResponse(IAuthenticationService authentication, RequestTokenResponse response, string clientId, string issuer, string expectedNonce, JWKeyset jwks, MobileConnectRequestOptions options)
+        {
+            if (response.ErrorResponse != null)
+            {
+                return MobileConnectStatus.Error(response.ErrorResponse.Error, response.ErrorResponse.ErrorDescription, null, response);
+            }
+
+            response.ValidationResult = authentication.ValidateTokenResponse(response, clientId, issuer, expectedNonce, options?.MaxAge, jwks);
+            var validationOptions = options?.TokenValidationOptions ?? new TokenValidationOptions();
+            if (!validationOptions.AcceptedValidationResults.HasFlag(response.ValidationResult))
+            {
+                return MobileConnectStatus.Error("invalid_token", $"The token was found to be invalid with the validtion result {response.ValidationResult}", null, response);
             }
 
             return MobileConnectStatus.Complete(response);
@@ -235,7 +280,7 @@ namespace GSMA.MobileConnect
         private static bool IsUsableDiscoveryResponse(DiscoveryResponse response)
         {
             // if response is null or does not have operator urls then it isn't usable for the process after discovery
-            return response?.OperatorUrls != null;
+            return response != null && response.OperatorUrls != null && response.ResponseData != null && response.ResponseData.response != null;
         }
     }
 }

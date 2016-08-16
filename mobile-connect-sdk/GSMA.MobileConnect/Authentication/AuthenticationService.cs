@@ -63,6 +63,21 @@ namespace GSMA.MobileConnect.Authentication
             return new StartAuthenticationResponse() { Url = build.Uri.AbsoluteUri };
         }
 
+        /// <inheritdoc/>
+        public async Task<RequestTokenResponse> RequestHeadlessAuthentication(string clientId, string clientSecret, string authorizeUrl, string tokenUrl, string redirectUrl, 
+            string state, string nonce, string encryptedMSISDN, SupportedVersions versions, AuthenticationOptions options)
+        {
+            options = options ?? new AuthenticationOptions();
+            options.Prompt = "mobile";
+
+            string authUrl = StartAuthentication(clientId, authorizeUrl, redirectUrl, state, nonce, encryptedMSISDN, versions, options).Url;
+
+            var finalRedirect = await _client.GetFinalRedirect(authUrl, redirectUrl);
+            var code = HttpUtils.ExtractQueryValue(finalRedirect.AbsoluteUri, "code");
+
+            return await RequestTokenAsync(clientId, clientSecret, tokenUrl, redirectUrl, code);
+        }
+
         private bool ShouldUseAuthorize(AuthenticationOptions options)
         {
             int authnIndex = options.Scope.IndexOf(Constants.Scope.AUTHN, StringComparison.OrdinalIgnoreCase);

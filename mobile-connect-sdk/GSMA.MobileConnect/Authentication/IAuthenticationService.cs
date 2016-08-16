@@ -23,6 +23,24 @@ namespace GSMA.MobileConnect.Authentication
         StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce, string encryptedMSISDN, SupportedVersions versions, AuthenticationOptions options);
 
         /// <summary>
+        /// Initiates headless authentication, if authentication is successful a token will be returned. 
+        /// This may be a long running operation as response from the user on their authentication device is required.
+        /// </summary>
+        /// <param name="clientId">The application ClientId returned by the discovery process (Required)</param>
+        /// <param name="clientSecret">The ClientSecret returned by the discovery response (Required)</param>
+        /// <param name="authorizeUrl">The authorization url returned by the discovery process (Required)</param>
+        /// <param name="tokenUrl">The token url returned by the discovery process (Required)</param>
+        /// <param name="redirectUrl">On completion or error where the result information is sent using a HTTP 302 redirect (Required)</param>
+        /// <param name="state">Application specified unique state value (Required)</param>
+        /// <param name="nonce">Application specified nonce value. (Required)</param>
+        /// <param name="encryptedMSISDN">Encrypted MSISDN for user if returned from discovery service</param>
+        /// <param name="versions">SupportedVersions from <see cref="ProviderMetadata"/> if null default supported versions will be used to generate the auth url</param>
+        /// <param name="options">Optional parameters</param>
+        /// <returns>Token if headless authentication is successful</returns>
+        Task<RequestTokenResponse> RequestHeadlessAuthentication(string clientId, string clientSecret, string authorizeUrl, string tokenUrl, string redirectUrl,
+            string state, string nonce, string encryptedMSISDN, SupportedVersions versions, AuthenticationOptions options);
+
+        /// <summary>
         /// Synchronous wrapper for <see cref="IAuthenticationService.RequestTokenAsync(string, string, string, string, string)"/>
         /// </summary>
         /// <param name="clientId">The registered application ClientId (Required)</param>

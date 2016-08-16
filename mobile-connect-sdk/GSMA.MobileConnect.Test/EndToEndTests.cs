@@ -22,7 +22,7 @@ namespace GSMA.MobileConnect.Test
 
         //[TestCase("SandboxV1")]
         [TestCase("SandboxV2")]
-        //[TestCase("SandboxR2")]
+        [TestCase("SandboxR2")]
         public async Task MobileConnectInterfaceShouldWorkEndToEnd(string configKey)
         {
             RestClient restClient = new RestClient();
@@ -77,7 +77,7 @@ namespace GSMA.MobileConnect.Test
 
         //[TestCase("SandboxV1")]
         [TestCase("SandboxV2")]
-        //[TestCase("SandboxR2")]
+        [TestCase("SandboxR2")]
         public async Task MobileConnectInterfaceShouldRejectIncorrectState(string configKey)
         {
             RestClient restClient = new RestClient();
@@ -133,7 +133,7 @@ namespace GSMA.MobileConnect.Test
 
         //[TestCase("SandboxV1")]
         [TestCase("SandboxV2")]
-        //[TestCase("SandboxR2")]
+        [TestCase("SandboxR2")]
         public async Task MobileConnectInterfaceShouldRejectIncorrectNonce(string configKey)
         {
             RestClient restClient = new RestClient();
@@ -189,8 +189,65 @@ namespace GSMA.MobileConnect.Test
 
         //[TestCase("SandboxV1")]
         [TestCase("SandboxV2")]
-        //[TestCase("SandboxR2")]
+        [TestCase("SandboxR2")]
         public async Task MobileConnectWebInterfaceShouldWorkEndToEnd(string configKey)
+        {
+            RestClient restClient = new RestClient();
+            ICache cache = null;
+            IDiscoveryService discovery = new GSMA.MobileConnect.Discovery.DiscoveryService(cache, restClient);
+            IAuthenticationService authentication = new GSMA.MobileConnect.Authentication.AuthenticationService(restClient);
+            IIdentityService identity = new GSMA.MobileConnect.Identity.IdentityService(restClient);
+            IJWKeysetService jwks = new GSMA.MobileConnect.Authentication.JWKeysetService(restClient, cache);
+
+            var testConfig = TestConfig.GetConfig(configKey);
+            MobileConnectConfig config = new MobileConnectConfig()
+            {
+                DiscoveryUrl = testConfig.DiscoveryUrl,
+                ClientId = testConfig.ClientId,
+                ClientSecret = testConfig.ClientSecret,
+                RedirectUrl = testConfig.RedirectUrl
+            };
+
+            MobileConnectRequestOptions blankOptions = new MobileConnectRequestOptions();
+            MobileConnectWebInterface mobileConnect = new MobileConnectWebInterface(discovery, authentication, identity, jwks, config);
+
+            //Attempt discovery
+            var request = new HttpRequestMessage();
+            var status = await mobileConnect.AttemptDiscoveryAsync(request, "+447700900250", null, null, true, blankOptions);
+
+            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType);
+
+            var discoveryResponse = status.DiscoveryResponse;
+            var encryptedMsisdn = status.DiscoveryResponse.ResponseData.subscriber_id;
+            var state = "zmxncbvalskdjfhgqpwoeiruty";
+            var nonce = "qpwoeirutyalskdjfhgzmxncbv";
+
+            //Start Authorization
+            request = new HttpRequestMessage();
+            status = mobileConnect.StartAuthentication(request, discoveryResponse, encryptedMsisdn, state, nonce, blankOptions);
+
+            Assert.AreEqual(MobileConnectResponseType.Authentication, status.ResponseType);
+
+            //Inconclusive at this point because the sandbox no longer allows us to follow redirects easily
+            Assert.Inconclusive("Can't follow redirects in sandbox");
+
+            //Authorization
+            request = new HttpRequestMessage();
+            var redirectedUrl = await FollowRedirects(status.Url, _basicRequestHeaders, testConfig.RedirectUrl);
+
+            Assert.That(() => redirectedUrl.AbsoluteUri.StartsWith(testConfig.RedirectUrl));
+            Assert.AreEqual(state, HttpUtils.ExtractQueryValue(redirectedUrl.Query, "state"));
+
+            //Handle auth redirect and request token
+            request = new HttpRequestMessage();
+            status = await mobileConnect.HandleUrlRedirectAsync(request, redirectedUrl, discoveryResponse, state, nonce);
+
+            Assert.AreEqual(MobileConnectResponseType.Complete, status.ResponseType);
+            Assert.IsNotEmpty(status.TokenResponse.ResponseData.AccessToken);
+        }
+
+        [TestCase("SandboxR2")]
+        public async Task MobileConnectWebInterfaceShouldWorkEndToEndHeadless(string configKey)
         {
             RestClient restClient = new RestClient();
             ICache cache = null;
@@ -224,23 +281,7 @@ namespace GSMA.MobileConnect.Test
 
             //Start Authorization
             request = new HttpRequestMessage();
-            status = mobileConnect.StartAuthentication(request, discoveryResponse, encryptedMsisdn, state, nonce, blankOptions);
-
-            Assert.AreEqual(MobileConnectResponseType.Authentication, status.ResponseType);
-
-            //Inconclusive at this point because the sandbox no longer allows us to follow redirects easily
-            Assert.Inconclusive("Can't follow redirects in sandbox");
-
-            //Authorization
-            request = new HttpRequestMessage();
-            var redirectedUrl = await FollowRedirects(status.Url, _basicRequestHeaders, testConfig.RedirectUrl);
-
-            Assert.That(() => redirectedUrl.AbsoluteUri.StartsWith(testConfig.RedirectUrl));
-            Assert.AreEqual(state, HttpUtils.ExtractQueryValue(redirectedUrl.Query, "state"));
-
-            //Handle auth redirect and request token
-            request = new HttpRequestMessage();
-            status = await mobileConnect.HandleUrlRedirectAsync(request, redirectedUrl, discoveryResponse, state, nonce);
+            status = await mobileConnect.RequestHeadlessAuthenticationAsync(request, discoveryResponse, encryptedMsisdn, state, nonce, blankOptions);
 
             Assert.AreEqual(MobileConnectResponseType.Complete, status.ResponseType);
             Assert.IsNotEmpty(status.TokenResponse.ResponseData.AccessToken);
@@ -248,7 +289,7 @@ namespace GSMA.MobileConnect.Test
 
         //[TestCase("SandboxV1")]
         [TestCase("SandboxV2")]
-        //[TestCase("SandboxR2")]
+        [TestCase("SandboxR2")]
         public async Task MobileConnectWebInterfaceShouldWorkEndToEndWithCache(string configKey)
         {
             RestClient restClient = new RestClient();

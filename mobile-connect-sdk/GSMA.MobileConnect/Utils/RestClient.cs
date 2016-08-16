@@ -17,6 +17,8 @@ namespace GSMA.MobileConnect.Utils
         private bool _disposed;
         private readonly HttpClientHandler _handler;
         private readonly HttpClient _client;
+        private readonly HttpClientHandler _noRedirectHandler;
+        private readonly HttpClient _noRedirectClient;
 
         /// <summary>
         /// Creates a new instance of RestClient with optional timeout specified
@@ -28,6 +30,10 @@ namespace GSMA.MobileConnect.Utils
             _client = new HttpClient(_handler, true);
             _client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             _client.Timeout = timeout ?? TimeSpan.FromSeconds(30);
+
+            _noRedirectHandler = new HttpClientHandler { UseCookies = false, AllowAutoRedirect = false };
+            _noRedirectClient = new HttpClient(_noRedirectHandler, true);
+            _noRedirectClient.Timeout = TimeSpan.FromMinutes(2);
         }
 
         /// <summary>
@@ -39,19 +45,19 @@ namespace GSMA.MobileConnect.Utils
         {
             var message = new HttpRequestMessage(method, uri);
 
-            if(cookies != null && cookies.Any())
+            if (cookies != null && cookies.Any())
             {
                 var cookieKeyValues = cookies.Select(x => string.Format("{0}={1}", x.Key, x.Value));
                 var cookieString = string.Join("; ", cookieKeyValues);
                 message.Headers.Add("Cookie", cookieString);
             }
 
-            if(!string.IsNullOrEmpty(sourceIp))
+            if (!string.IsNullOrEmpty(sourceIp))
             {
                 message.Headers.Add(Headers.X_SOURCE_IP, sourceIp);
             }
 
-            if(authentication != null)
+            if (authentication != null)
             {
                 message.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(authentication.Scheme, authentication.Parameter);
             }
@@ -152,10 +158,73 @@ namespace GSMA.MobileConnect.Utils
             return restResponse;
         }
 
+        /// <summary>
+        /// Attempts to follow a redirect path until a concrete url is loaded or the expectedRedirectUrl is reached
+        /// </summary>
+        /// <param name="uri">Target uri to attempt a HTTP GET</param>
+        /// <param name="expectedRedirectUrl">Redirect url expected, if a redirect with this location is hit the absolute uri of the location will be returned</param>
+        /// <returns>Final redirected url</returns>
+        public async Task<Uri> GetFinalRedirect(string uri, string expectedRedirectUrl)
+        {
+            return await FollowRedirects(uri, expectedRedirectUrl);
+        }
+
+        private async Task<Uri> FollowRedirects(string targetUrl, string expectedUrl, int maxRedirects = 50)
+        {
+            HttpResponseMessage response = null;
+            var nextUrl = new Uri(targetUrl);
+            var numRedirects = 0;
+
+            do
+            {
+                try
+                {
+                    if (numRedirects > maxRedirects)
+                    {
+                        throw new HttpRequestException("Stuck in redirect loop");
+                    }
+
+                    if (response != null)
+                    {
+                        nextUrl = RetrieveLocation(response);
+                        numRedirects++;
+                    }
+
+                    response = await _noRedirectClient.GetAsync(nextUrl);
+                }
+                catch (HttpRequestException)
+                {
+                    //If the final redirect is a non-working url then it may cause a request exception, if we verify it is the redirect url then just return it.
+                    //Otherwise it was a request failure at some other point in the redirect chain
+                    if (nextUrl.AbsoluteUri.StartsWith(expectedUrl))
+                    {
+                        return nextUrl;
+                    }
+                    throw;
+                }
+            } while (((int)response.StatusCode).ToString().StartsWith("3"));
+
+            return response.RequestMessage.RequestUri;
+        }
+
+        private Uri RetrieveLocation(HttpResponseMessage message)
+        {
+            var uri = message.Headers.Location;
+
+            if (!uri.IsAbsoluteUri && uri.OriginalString.StartsWith("/"))
+            {
+                var requestUri = message.RequestMessage.RequestUri;
+                var absolute = string.Format("{0}://{1}{2}", requestUri.Scheme, requestUri.Authority, uri.OriginalString);
+                uri = new Uri(absolute);
+            }
+
+            return uri;
+        }
+
         /// <inheritdoc/>
         public void Dispose()
         {
-            if(!_disposed)
+            if (!_disposed)
             {
                 _client.Dispose();
                 _disposed = true;

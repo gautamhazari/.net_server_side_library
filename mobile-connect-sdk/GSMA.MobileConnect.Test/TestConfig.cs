@@ -17,6 +17,7 @@ namespace GSMA.MobileConnect.Test
             "SandboxV1",
             "SandboxV2",
             "SandboxR2",
+            "R2"
         };
 
         public static TestConfigurationData GetConfig(string key)
