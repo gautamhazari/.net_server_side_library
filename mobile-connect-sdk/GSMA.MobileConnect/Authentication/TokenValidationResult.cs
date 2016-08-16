@@ -15,74 +15,74 @@ namespace GSMA.MobileConnect.Authentication
         /// <summary>
         /// No validation has occured
         /// </summary>
-        None,
+        None = 0,
         /// <summary>
         /// Token when signed does not match signature
         /// </summary>
-        InvalidSignature,
+        InvalidSignature = 1,
         /// <summary>
         /// Token passed all validation steps
         /// </summary>
-        Valid,
+        Valid = 2,
         /// <summary>
         /// Key was not retrieved from the jwks url or a jwks url was not present
         /// </summary>
-        JWKSError,
+        JWKSError = 4,
         /// <summary>
         /// The alg claim in the id token header does not match the alg requested or the default alg of RS256
         /// </summary>
-        IncorrectAlgorithm,
+        IncorrectAlgorithm = 8,
         /// <summary>
         /// Neither the azp nor the aud claim in the id token match the client id used to make the auth request
         /// </summary>
-        InvalidAudAndAzp,
+        InvalidAudAndAzp = 16,
         /// <summary>
         /// The iss claim in the id token does not match the expected issuer
         /// </summary>
-        InvalidIssuer,
+        InvalidIssuer = 32,
         /// <summary>
         /// The IdToken has expired
         /// </summary>
-        IdTokenExpired,
+        IdTokenExpired = 64,
         /// <summary>
         /// No key matching the requested key id was found
         /// </summary>
-        NoMatchingKey,
+        NoMatchingKey = 128,
         /// <summary>
         /// Key does not contain the required information to validate against the requested algorithm
         /// </summary>
-        KeyMisformed,
+        KeyMisformed = 256,
         /// <summary>
         /// Algorithm is unsupported for validation
         /// </summary>
-        UnsupportedAlgorithm,
+        UnsupportedAlgorithm = 512,
         /// <summary>
         /// The access token has expired
         /// </summary>
-        AccessTokenExpired,
+        AccessTokenExpired = 1024,
         /// <summary>
         /// The access token is null or empty in the token response
         /// </summary>
-        AccessTokenMissing,
+        AccessTokenMissing = 2048,
         /// <summary>
         /// The id token is null or empty in the token response
         /// </summary>
-        IdTokenMissing,
+        IdTokenMissing = 4096,
         /// <summary>
         /// The id token is older than the max age specified in the auth stage
         /// </summary>
-        MaxAgePassed,
+        MaxAgePassed = 8192,
         /// <summary>
         /// A longer time than the configured limit has passed since the token was issued
         /// </summary>
-        TokenIssueTimeLimitPassed,
+        TokenIssueTimeLimitPassed = 16384,
         /// <summary>
         /// The nonce in the id token claims does not match the nonce specified in the auth stage
         /// </summary>
-        InvalidNonce,
+        InvalidNonce = 32768,
         /// <summary>
         /// The token response is null or missing required data
         /// </summary>
-        IncompleteTokenResponse,
+        IncompleteTokenResponse = 65536,
     }
 }

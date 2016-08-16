@@ -1,6 +1,10 @@
-﻿using GSMA.MobileConnect.Cache;
+﻿using GSMA.MobileConnect.Authentication;
+using GSMA.MobileConnect.Cache;
+using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Utils;
+using Newtonsoft.Json;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -23,6 +27,8 @@ namespace GSMA.MobileConnect.Test
             ["error"] = new RestResponse(System.Net.HttpStatusCode.OK, "{\"error\":\"Not_Found_Entity\",\"description\":\"Operator Not Found\"}"),
             ["provider-metadata"] = new RestResponse(System.Net.HttpStatusCode.OK, "{\"version\":\"3.0\",\"issuer\":\"https://reference.mobileconnect.io/mobileconnect\",\"authorization_endpoint\":\"https://reference.mobileconnect.io/mobileconnect/index.php/auth\",\"token_endpoint\":\"https://reference.mobileconnect.io/mobileconnect/index.php/token\",\"userinfo_endpoint\":\"https://reference.mobileconnect.io/mobileconnect/index.php/userinfo\",\"check_session_iframe\":\"https://reference.mobileconnect.io/mobileconnect/opframe.php\",\"end_session_endpoint\":\"https://reference.mobileconnect.io/mobileconnect/index.php/endsession\",\"jwks_uri\":\"https://reference.mobileconnect.io/mobileconnect/op.jwk\",\"scopes_supported\":[\"openid\",\"mc_authn\",\"mc_authz\",\"profile\",\"email\",\"address\"],\"response_types_supported\":[\"code\",\"code token\",\"code id_token\",\"token\",\"token id_token\",\"code token id_token\",\"id_token\"],\"grant_types_supported\":[\"authorization_code\"],\"acr_values_supported\":[\"2\",\"3\"],\"subject_types_supported\":[\"public\",\"pairwise\"],\"userinfo_signing_alg_values_supported\":[\"HS256\",\"HS384\",\"HS512\",\"RS256\",\"RS384\",\"RS512\"],\"userinfo_encryption_alg_values_supported\":[\"RSA1_5\",\"RSA-OAEP\"],\"userinfo_encryption_enc_values_supported\":[\"A128CBC-HS256\",\"A256CBC-HS512\",\"A128GCM\",\"A256GCM\"],\"id_token_signing_alg_values_supported\":[\"HS256\",\"HS384\",\"HS512\",\"RS256\",\"RS384\",\"RS512\"],\"id_token_encryption_alg_values_supported\":[\"RSA1_5\",\"RSA-OAEP\"],\"id_token_encryption_enc_values_supported\":[\"A128CBC-HS256\",\"A256CBC-HS512\",\"A128GCM\",\"A256GCM\"],\"request_object_signing_alg_values_supported\":[\"HS256\",\"HS384\",\"HS512\",\"RS256\",\"RS384\",\"RS512\"],\"request_object_encryption_alg_values_supported\":[\"RSA1_5\",\"RSA-OAEP\"],\"request_object_encryption_enc_values_supported\":[\"A128CBC-HS256\",\"A256CBC-HS512\",\"A128GCM\",\"A256GCM\"],\"token_endpoint_auth_methods_supported\":[\"client_secret_post\",\"client_secret_basic\",\"client_secret_jwt\",\"private_key_jwt\"],\"token_endpoint_auth_signing_alg_values_supported\":[\"HS256\",\"HS384\",\"HS512\",\"RS256\",\"RS384\",\"RS512\"],\"display_values_supported\":[\"page\"],\"claim_types_supported\":[\"normal\"],\"claims_supported\":[\"name\",\"given_name\",\"family_name\",\"middle_name\",\"nickname\",\"preferred_username\",\"profile\",\"picture\",\"website\",\"email\",\"email_verified\",\"gender\",\"birthdate\",\"zoneinfo\",\"locale\",\"phone_number\",\"phone_number_verified\",\"address\",\"updated_at\"],\"service_documentation\":\"https://reference.mobileconnect.io/mobileconnect/index.php/servicedocs\",\"claims_locales_supported\":[\"en-US\"],\"ui_locales_supported\":[\"en-US\"],\"require_request_uri_registration\":false,\"op_policy_uri\":\"https://reference.mobileconnect.io/mobileconnect/index.php/op_policy\",\"op_tos_uri\":\"https://reference.mobileconnect.io/mobileconnect/index.php/op_tos\",\"claims_parameter_supported\":true,\"request_parameter_supported\":true,\"request_uri_parameter_supported\":true,\"mobile_connect_version_supported\":[{\"openid\":\"mc_v1.1\"},{\"openid mc_authn\":\"mc_v1.2\"},{\"openid mc_authz\":\"mc_v1.2\"}],\"login_hint_methods_supported\":[\"MSISDN\",\"ENCR_MSISDN\",\"PCR\"]} "),
             ["user-info"] = new RestResponse(System.Net.HttpStatusCode.OK, "{\"sub\":\"411421B0-38D6-6568-A53A-DF99691B7EB6\",\"email\":\"test2@example.com\",\"email_verified\":true}"),
+            ["jwks"] = new RestResponse(System.Net.HttpStatusCode.OK, "{\"keys\":[{\"alg\":\"RS256\",\"e\":\"AQAB\",\"n\":\"hzr2li5ABVbbQ4BvdDskl6hejaVw0tIDYO-C0GBr5lRA-AXtmCO7bh0CEC9-R6mqctkzUhVnU22Vrj-B1J0JtJoaya9VTC3DdhzI_-7kxtIc5vrHq-ss5wo8-tK7UqtKLSRf9DcyZA0H9FEABbO5Qfvh-cfK4EI_ytA5UBZgO322RVYgQ9Do0D_-jf90dcuUgoxz_JTAOpVNc0u_m9LxGnGL3GhMbxLaX3eUublD40aK0nS2k37dOYOpQHxuAS8BZxLvS6900qqaZ6z0kwZ2WFq-hhk3Imd6fweS724fzqVslY7rHpM5n7z5m7s1ArurU1dBC1Dxw1Hzn6ZeJkEaZQ\",\"kty\":\"RSA\",\"use\":\"sig\"}]}"),
+            ["token"] = new RestResponse(System.Net.HttpStatusCode.Accepted, "{\"access_token\":\"966ad150-16c5-11e6-944f-43079d13e2f3\",\"token_type\":\"Bearer\",\"expires_in\":3600,\"id_token\":\"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjEyMzQ1Njc4OTAiLCJhdWQiOiJ4LVpXUmhOalUzT1dJM01HSXdZVFJoIiwiYXpwIjoieC1aV1JoTmpVM09XSTNNR0l3WVRSaCIsImlzcyI6Imh0dHBzOi8vcmVmZXJlbmNlLm1vYmlsZWNvbm5lY3QuaW8vbW9iaWxlY29ubmVjdCIsImV4cCI6MjE0NzQ4MzY0NywiYXV0aF90aW1lIjoyMTQ3NDgzNjQ3LCJpYXQiOjE0NzEzMzk3MTB9.f0DkOkD6uQPvKZXf2uUHBmIpDaW84mlRmI3dexfMBFP9vk5HEXu-rxsLTtUCDX3QDp56nZTyQVdvGXrm6QG2ew20VSDdn3_-_Bx1oMO36WYpSve37l3eJXNNPiUSsWex72o4CpCeRd6F6u8GToF-F4rq1NwEf6WTGxtggE0O1NR0X-agPomdMvfGDwk0FXEIqd0lEmxBJI5PU3FQIILEDDjW2CCz62MqZEvPzvSnCAWtSqiDiuKNvfNDPD5oPqGMhZv4D2AuWmh9fztbsFIoM671Ug89N-8Pte7zE6hgSl98hZP9ak3YbLdYvqjbn9QY2hJbf0ceVkKnqNY7cTnb-A\"}"),
             ["unauthorized"] = _unauthorizedResponse,
         };
 
@@ -42,12 +48,13 @@ namespace GSMA.MobileConnect.Test
         {
             _restClient = new MockRestClient();
             _cache = new ConcurrentCache();
-            _discovery = new GSMA.MobileConnect.Discovery.DiscoveryService(_cache, _restClient);
+            _discovery = new DiscoveryService(_cache, _restClient);
             _authentication = new GSMA.MobileConnect.Authentication.AuthenticationService(_restClient);
             _identity = new GSMA.MobileConnect.Identity.IdentityService(_restClient);
             _jwks = new GSMA.MobileConnect.Authentication.JWKeysetService(_restClient, _cache);
 
-            _discoveryResponse = new MobileConnect.Discovery.DiscoveryResponse(_responses["authentication"]);
+            _discoveryResponse = new DiscoveryResponse(_responses["authentication"]);
+            _discoveryResponse.ProviderMetadata = JsonConvert.DeserializeObject<ProviderMetadata>(_responses["provider-metadata"].Content);
 
             _config = new MobileConnectConfig
             {
@@ -82,6 +89,44 @@ namespace GSMA.MobileConnect.Test
             Assert.IsNotNull(result.ErrorCode);
             Assert.IsNotNull(result.ErrorMessage);
             Assert.AreEqual(MobileConnectResponseType.Error, result.ResponseType);
+        }
+
+        [Test]
+        public async Task RequestTokenAcceptsValidToken()
+        {
+            _restClient.QueueParallelResponses(Tuple.Create<string, object>(_discoveryResponse.OperatorUrls.JWKSUrl, _responses["jwks"]), 
+                Tuple.Create<string, object>(_discoveryResponse.OperatorUrls.RequestTokenUrl, _responses["token"]));
+
+            var result = await _mobileConnect.RequestTokenAsync(_discoveryResponse, new Uri($"{_config.RedirectUrl}?code=123123123456&state=zxcvbnm"), "zxcvbnm", "1234567890", null);
+
+            Assert.AreEqual(MobileConnectResponseType.Complete, result.ResponseType);
+            Assert.AreEqual(TokenValidationResult.Valid, result.TokenResponse.ValidationResult);
+        }
+
+        [Test]
+        public async Task RequestTokenRejectsInvalidToken()
+        {
+            _restClient.QueueParallelResponses(Tuple.Create<string, object>(_discoveryResponse.OperatorUrls.JWKSUrl, _responses["jwks"]),
+                Tuple.Create<string, object>(_discoveryResponse.OperatorUrls.RequestTokenUrl, _responses["token"]));
+
+            var result = await _mobileConnect.RequestTokenAsync(_discoveryResponse, new Uri($"{_config.RedirectUrl}?code=123123123456&state=zxcvbnm"), "zxcvbnm", "12345678", null);
+
+            Assert.AreEqual(MobileConnectResponseType.Error, result.ResponseType);
+            Assert.AreEqual("invalid_token", result.ErrorCode);
+            Assert.AreEqual(TokenValidationResult.InvalidNonce, result.TokenResponse.ValidationResult);
+        }
+
+        [Test]
+        public async Task RequestTokenAcceptInvalidTokenIfFlaggedAsAcceptedResult()
+        {
+            var options = new MobileConnectRequestOptions { AcceptedValidationResults = TokenValidationResult.Valid | TokenValidationResult.InvalidNonce };
+            _restClient.QueueParallelResponses(Tuple.Create<string, object>(_discoveryResponse.OperatorUrls.JWKSUrl, _responses["jwks"]),
+                Tuple.Create<string, object>(_discoveryResponse.OperatorUrls.RequestTokenUrl, _responses["token"]));
+
+            var result = await _mobileConnect.RequestTokenAsync(_discoveryResponse, new Uri($"{_config.RedirectUrl}?code=123123123456&state=zxcvbnm"), "zxcvbnm", "12345678", options);
+
+            Assert.AreEqual(MobileConnectResponseType.Complete, result.ResponseType);
+            Assert.AreEqual(TokenValidationResult.InvalidNonce, result.TokenResponse.ValidationResult);
         }
     }
 }
