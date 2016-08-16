@@ -73,8 +73,15 @@ namespace GSMA.MobileConnect.Authentication
             string authUrl = StartAuthentication(clientId, authorizeUrl, redirectUrl, state, nonce, encryptedMSISDN, versions, options).Url;
 
             var finalRedirect = await _client.GetFinalRedirect(authUrl, redirectUrl);
-            var code = HttpUtils.ExtractQueryValue(finalRedirect.AbsoluteUri, "code");
 
+            var error = ErrorResponse.CreateFromUrl(finalRedirect.AbsoluteUri);
+
+            if(error != null)
+            {
+                return new RequestTokenResponse(error);
+            }
+
+            var code = HttpUtils.ExtractQueryValue(finalRedirect.AbsoluteUri, "code");
             return await RequestTokenAsync(clientId, clientSecret, tokenUrl, redirectUrl, code);
         }
 

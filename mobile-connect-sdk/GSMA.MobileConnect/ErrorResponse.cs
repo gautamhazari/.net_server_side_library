@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using GSMA.MobileConnect.Utils;
+using Newtonsoft.Json;
 
 namespace GSMA.MobileConnect
 {
@@ -24,5 +25,22 @@ namespace GSMA.MobileConnect
         /// </summary>
         [JsonProperty("error_uri")]
         public string ErrorUri { get; set; }
+
+        public static ErrorResponse CreateFromUrl(string url)
+        {
+            if(string.IsNullOrEmpty(url))
+            {
+                return null;
+            }
+
+            string error = HttpUtils.ExtractQueryValue(url, "error");
+
+            if(string.IsNullOrEmpty(error))
+            {
+                return null;
+            }
+
+            return new ErrorResponse { Error = error, ErrorDescription = HttpUtils.ExtractQueryValue(url, "error_description") };
+        }
     }
 }

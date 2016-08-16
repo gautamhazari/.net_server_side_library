@@ -60,5 +60,14 @@ namespace GSMA.MobileConnect.Authentication
                 this.DecodedIdTokenPayload = this.ResponseData != null ? JsonWebToken.DecodePart(this.ResponseData.IdToken, JWTPart.Claims) : null;
             }
         }
+
+        /// <summary>
+        /// Creates a token response with an embedded error response
+        /// </summary>
+        /// <param name="error">ErrorResponse</param>
+        public RequestTokenResponse(ErrorResponse error)
+        {
+            this.ErrorResponse = error;
+        }
     }
 }
