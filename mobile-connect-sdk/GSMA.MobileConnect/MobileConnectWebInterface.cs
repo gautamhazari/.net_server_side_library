@@ -4,6 +4,7 @@ using GSMA.MobileConnect.Identity;
 using GSMA.MobileConnect.Utils;
 using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GSMA.MobileConnect
@@ -122,13 +123,15 @@ namespace GSMA.MobileConnect
         /// <param name="state">Unique string to be used to prevent Cross Site Forgery Request attacks during request token process (defaults to guid if not supplied, value will be returned in MobileConnectStatus object)</param>
         /// <param name="nonce">Unique string to be used to prevent replay attacks during request token process (defaults to guid if not supplied, value will be returned in MobileConnectStatus object)</param>
         /// <param name="options">Optional parameters</param>
+        /// <param name="cancellationToken">Cancellation token that can be used to cancel long running requests</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public async Task<MobileConnectStatus> RequestHeadlessAuthenticationAsync(HttpRequestMessage request, DiscoveryResponse discoveryResponse, string encryptedMSISDN, string state, string nonce, MobileConnectRequestOptions options)
+        public async Task<MobileConnectStatus> RequestHeadlessAuthenticationAsync(HttpRequestMessage request, DiscoveryResponse discoveryResponse, string encryptedMSISDN, string state, string nonce, 
+            MobileConnectRequestOptions options, CancellationToken cancellationToken = default(CancellationToken))
         {
             state = string.IsNullOrEmpty(state) ? GenerateUniqueString() : state;
             nonce = string.IsNullOrEmpty(nonce) ? GenerateUniqueString() : nonce;
 
-            return await MobileConnectInterfaceHelper.RequestHeadlessAuthentication(_authentication, _jwks, discoveryResponse, encryptedMSISDN, state, nonce, _config, options);
+            return await MobileConnectInterfaceHelper.RequestHeadlessAuthentication(_authentication, _jwks, discoveryResponse, encryptedMSISDN, state, nonce, _config, options, cancellationToken);
         }
 
         /// <summary>
@@ -141,8 +144,10 @@ namespace GSMA.MobileConnect
         /// <param name="state">Unique string to be used to prevent Cross Site Forgery Request attacks during request token process (defaults to guid if not supplied, value will be returned in MobileConnectStatus object)</param>
         /// <param name="nonce">Unique string to be used to prevent replay attacks during request token process (defaults to guid if not supplied, value will be returned in MobileConnectStatus object)</param>
         /// <param name="options">Optional parameters</param>
+        /// <param name="cancellationToken">Cancellation token that can be used to cancel long running requests</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public async Task<MobileConnectStatus> RequestHeadlessAuthenticationAsync(HttpRequestMessage request, string sdkSession, string encryptedMSISDN, string state, string nonce, MobileConnectRequestOptions options)
+        public async Task<MobileConnectStatus> RequestHeadlessAuthenticationAsync(HttpRequestMessage request, string sdkSession, string encryptedMSISDN, string state, string nonce, 
+            MobileConnectRequestOptions options, CancellationToken cancellationToken = default(CancellationToken))
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -151,7 +156,7 @@ namespace GSMA.MobileConnect
                 return GetCacheError();
             }
 
-            return await RequestHeadlessAuthenticationAsync(request, discoveryResponse, encryptedMSISDN, state, nonce, options);
+            return await RequestHeadlessAuthenticationAsync(request, discoveryResponse, encryptedMSISDN, state, nonce, options, cancellationToken);
         }
 
         /// <summary>

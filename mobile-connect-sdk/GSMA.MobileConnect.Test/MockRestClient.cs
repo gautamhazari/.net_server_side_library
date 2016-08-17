@@ -44,7 +44,7 @@ namespace GSMA.MobileConnect.Test
             }
         }
 
-        public MockRestClient(TimeSpan? timeout = null) : base(timeout)
+        public MockRestClient(TimeSpan? timeout = null, TimeSpan? headlessTimeout = null) : base(timeout, headlessTimeout)
         {
             ResponseQueue = new Queue<object>();
             ParallelResponses = new List<Tuple<string, object>>();

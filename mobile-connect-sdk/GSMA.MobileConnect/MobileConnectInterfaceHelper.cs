@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GSMA.MobileConnect.Identity;
+using System.Threading;
 
 namespace GSMA.MobileConnect
 {
@@ -107,7 +108,7 @@ namespace GSMA.MobileConnect
         }
 
         internal static async Task<MobileConnectStatus> RequestHeadlessAuthentication(IAuthenticationService authentication, IJWKeysetService jwks, DiscoveryResponse discoveryResponse, string encryptedMSISDN,
-            string state, string nonce, MobileConnectConfig config, MobileConnectRequestOptions options)
+            string state, string nonce, MobileConnectConfig config, MobileConnectRequestOptions options, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (!IsUsableDiscoveryResponse(discoveryResponse))
             {
@@ -127,7 +128,8 @@ namespace GSMA.MobileConnect
                 authOptions.ClientName = discoveryResponse.ApplicationShortName;
 
                 var jwksTask = jwks.RetrieveJWKSAsync(discoveryResponse.OperatorUrls.JWKSUrl);
-                var tokenTask = authentication.RequestHeadlessAuthentication(clientId, clientSecret, authorizationUrl, tokenUrl, config.RedirectUrl, state, nonce, encryptedMSISDN, supportedVersions, authOptions);
+                var tokenTask = authentication.RequestHeadlessAuthentication(clientId, clientSecret, authorizationUrl, tokenUrl, config.RedirectUrl, state, nonce, 
+                    encryptedMSISDN, supportedVersions, authOptions, cancellationToken);
 
                 // execute both tasks in parallel
                 await Task.WhenAll(tokenTask, jwksTask).ConfigureAwait(false);

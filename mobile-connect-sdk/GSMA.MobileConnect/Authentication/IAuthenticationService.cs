@@ -1,4 +1,5 @@
 ﻿using GSMA.MobileConnect.Discovery;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GSMA.MobileConnect.Authentication
@@ -36,9 +37,10 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="encryptedMSISDN">Encrypted MSISDN for user if returned from discovery service</param>
         /// <param name="versions">SupportedVersions from <see cref="ProviderMetadata"/> if null default supported versions will be used to generate the auth url</param>
         /// <param name="options">Optional parameters</param>
+        /// <param name="cancellationToken">Cancellation token that can be used to cancel long running requests</param>
         /// <returns>Token if headless authentication is successful</returns>
         Task<RequestTokenResponse> RequestHeadlessAuthentication(string clientId, string clientSecret, string authorizeUrl, string tokenUrl, string redirectUrl,
-            string state, string nonce, string encryptedMSISDN, SupportedVersions versions, AuthenticationOptions options);
+            string state, string nonce, string encryptedMSISDN, SupportedVersions versions, AuthenticationOptions options, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Synchronous wrapper for <see cref="IAuthenticationService.RequestTokenAsync(string, string, string, string, string)"/>

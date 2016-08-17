@@ -8,6 +8,7 @@ using GSMA.MobileConnect.Exceptions;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Threading;
 
 namespace GSMA.MobileConnect.Authentication
 {
@@ -65,14 +66,26 @@ namespace GSMA.MobileConnect.Authentication
 
         /// <inheritdoc/>
         public async Task<RequestTokenResponse> RequestHeadlessAuthentication(string clientId, string clientSecret, string authorizeUrl, string tokenUrl, string redirectUrl, 
-            string state, string nonce, string encryptedMSISDN, SupportedVersions versions, AuthenticationOptions options)
+            string state, string nonce, string encryptedMSISDN, SupportedVersions versions, AuthenticationOptions options, CancellationToken cancellationToken = default(CancellationToken))
         {
             options = options ?? new AuthenticationOptions();
             options.Prompt = "mobile";
 
             string authUrl = StartAuthentication(clientId, authorizeUrl, redirectUrl, state, nonce, encryptedMSISDN, versions, options).Url;
+            Uri finalRedirect = null;
 
-            var finalRedirect = await _client.GetFinalRedirect(authUrl, redirectUrl);
+            try
+            {
+                finalRedirect = await _client.GetFinalRedirect(authUrl, redirectUrl, cancellationToken);
+            }
+            catch (Exception e) when (e is System.Net.WebException || e is TaskCanceledException)
+            {
+                return new RequestTokenResponse(new ErrorResponse { Error = "auth_cancelled", ErrorDescription = "Headless authentication was cancelled or a timeout occurred" });
+            }
+            catch (HttpRequestException e)
+            {
+                throw new MobileConnectEndpointHttpException(e.Message, e);
+            }
 
             var error = ErrorResponse.CreateFromUrl(finalRedirect.AbsoluteUri);
 

@@ -37,7 +37,7 @@ namespace GSMA.MobileConnect.Test
         public void Setup()
         {
             _testConfig = TestConfig.GetConfig(TestConfig.DEFAULT_TEST_CONFIG);
-            Setup(new RestClient(TimeSpan.FromSeconds(20)));
+            Setup(new RestClient());
         }
 
         public void Setup(RestClient client)
