@@ -149,6 +149,11 @@ namespace GSMA.MobileConnect
             get { return _authOptions; }
         }
 
+        /// <summary>
+        /// Whether identity should be automatically retrieved when making a headless Authentication call
+        /// </summary>
+        public bool AutoRetrieveIdentityHeadless { get; set; }
+
         /// <inheritdoc cref="TokenValidationOptions.AcceptedValidationResults"/>
         public TokenValidationResult AcceptedValidationResults
         {

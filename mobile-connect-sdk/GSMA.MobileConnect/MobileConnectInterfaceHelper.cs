@@ -107,7 +107,7 @@ namespace GSMA.MobileConnect
             return MobileConnectStatus.Authorization(response.Url, state, nonce);
         }
 
-        internal static async Task<MobileConnectStatus> RequestHeadlessAuthentication(IAuthenticationService authentication, IJWKeysetService jwks, DiscoveryResponse discoveryResponse, string encryptedMSISDN,
+        internal static async Task<MobileConnectStatus> RequestHeadlessAuthentication(IAuthenticationService authentication, IJWKeysetService jwks, IIdentityService identity, DiscoveryResponse discoveryResponse, string encryptedMSISDN,
             string state, string nonce, MobileConnectConfig config, MobileConnectRequestOptions options, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (!IsUsableDiscoveryResponse(discoveryResponse))
@@ -115,7 +115,7 @@ namespace GSMA.MobileConnect
                 return MobileConnectStatus.StartDiscovery();
             }
 
-            RequestTokenResponse response;
+            MobileConnectStatus status;
             try
             {
                 string clientId = discoveryResponse.ResponseData.response.client_id ?? config.ClientId;
@@ -134,9 +134,9 @@ namespace GSMA.MobileConnect
                 // execute both tasks in parallel
                 await Task.WhenAll(tokenTask, jwksTask).ConfigureAwait(false);
 
-                response = tokenTask.Result;
+                RequestTokenResponse response = tokenTask.Result;
 
-                return HandleTokenResponse(authentication, response, clientId, issuer, nonce, jwksTask.Result, options);
+                status = HandleTokenResponse(authentication, response, clientId, issuer, nonce, jwksTask.Result, options);
             }
             catch (MobileConnectInvalidArgumentException e)
             {
@@ -150,6 +150,17 @@ namespace GSMA.MobileConnect
             {
                 return MobileConnectStatus.Error("unknown_error", "An unknown error occured while generating an authorization url", e);
             }
+
+            if(status.ResponseType == MobileConnectResponseType.Error
+                || !options.AutoRetrieveIdentityHeadless || string.IsNullOrEmpty(discoveryResponse.OperatorUrls.PremiumInfoUrl))
+            {
+                return status;
+            }
+
+            var identityStatus = await RequestIdentity(identity, discoveryResponse, status.TokenResponse.ResponseData.AccessToken, config, options);
+            status.IdentityResponse = identityStatus.IdentityResponse;
+
+            return status;
         }
 
         internal static async Task<MobileConnectStatus> RequestToken(IAuthenticationService authentication, IJWKeysetService jwks, DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState,

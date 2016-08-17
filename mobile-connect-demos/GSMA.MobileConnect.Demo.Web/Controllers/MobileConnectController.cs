@@ -49,6 +49,7 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
                 Scope = scope,
                 Context = "headless",
                 BindingMessage = "demo headless",
+                AutoRetrieveIdentityHeadless = true,
             };
 
             var response = await _mobileConnect.RequestHeadlessAuthenticationAsync(Request, sdksession, subscriberId, null, null, options);

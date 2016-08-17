@@ -131,7 +131,7 @@ namespace GSMA.MobileConnect
             state = string.IsNullOrEmpty(state) ? GenerateUniqueString() : state;
             nonce = string.IsNullOrEmpty(nonce) ? GenerateUniqueString() : nonce;
 
-            return await MobileConnectInterfaceHelper.RequestHeadlessAuthentication(_authentication, _jwks, discoveryResponse, encryptedMSISDN, state, nonce, _config, options, cancellationToken);
+            return await MobileConnectInterfaceHelper.RequestHeadlessAuthentication(_authentication, _jwks, _identity, discoveryResponse, encryptedMSISDN, state, nonce, _config, options, cancellationToken);
         }
 
         /// <summary>
