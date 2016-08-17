@@ -26,6 +26,11 @@ namespace GSMA.MobileConnect
         [JsonProperty("error_uri")]
         public string ErrorUri { get; set; }
 
+        /// <summary>
+        /// Creates an instance of the class ErrorResponse using a redirect url as the source for the error arguments
+        /// </summary>
+        /// <param name="url">Url with potential error arguments</param>
+        /// <returns>ErrorResponse with filled arguments or null if url does not contain an error</returns>
         public static ErrorResponse CreateFromUrl(string url)
         {
             if(string.IsNullOrEmpty(url))

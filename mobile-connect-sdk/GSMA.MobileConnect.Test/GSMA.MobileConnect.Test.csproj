@@ -92,6 +92,7 @@
     <Compile Include="Authentication\JWKeyTests.cs" />
     <Compile Include="Authentication\LoginHintTests.cs" />
     <Compile Include="Authentication\RequestTokenResponseDataTests.cs" />
+    <Compile Include="Authentication\TokenValidationTests.cs" />
     <Compile Include="Cache\ConcurrentDiscoveryCacheTests.cs" />
     <Compile Include="Claims\ClaimsDictionaryTests.cs" />
     <Compile Include="Claims\ClaimsParameterTests.cs" />
@@ -120,7 +121,6 @@
     <Compile Include="Utils\ScopeTests.cs" />
     <Compile Include="Utils\StringUtilsTests.cs" />
     <Compile Include="Utils\UnixTimestampTests.cs" />
-    <Compile Include="Utils\ValidateTests.cs" />
     <Compile Include="Web\ResponseConverterTests.cs" />
   </ItemGroup>
   <ItemGroup>

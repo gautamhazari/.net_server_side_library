@@ -177,13 +177,13 @@ namespace GSMA.MobileConnect.Authentication
                 return TokenValidationResult.IncompleteTokenResponse;
             }
 
-            TokenValidationResult result = Validate.ValidateAccessToken(tokenResponse.ResponseData);
+            TokenValidationResult result = TokenValidation.ValidateAccessToken(tokenResponse.ResponseData);
             if(result != TokenValidationResult.Valid)
             {
                 return result;
             }
 
-            return Validate.ValidateIdToken(tokenResponse.ResponseData.IdToken, clientId, issuer, nonce, maxAge, keyset);
+            return TokenValidation.ValidateIdToken(tokenResponse.ResponseData.IdToken, clientId, issuer, nonce, maxAge, keyset);
         }
 
         /// <inheritdoc/>

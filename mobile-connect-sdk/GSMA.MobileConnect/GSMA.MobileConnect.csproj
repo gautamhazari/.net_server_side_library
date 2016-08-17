@@ -41,6 +41,7 @@
     <Compile Include="Authentication\JWKeyset.cs" />
     <Compile Include="Authentication\JWKeysetService.cs" />
     <Compile Include="Authentication\LoginHint.cs" />
+    <Compile Include="Authentication\TokenValidation.cs" />
     <Compile Include="Authentication\TokenValidationOptions.cs" />
     <Compile Include="Authentication\TokenValidationResult.cs" />
     <Compile Include="Cache\BaseCache.cs" />
