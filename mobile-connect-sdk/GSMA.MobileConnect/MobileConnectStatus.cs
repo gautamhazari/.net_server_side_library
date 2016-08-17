@@ -97,6 +97,17 @@ namespace GSMA.MobileConnect
         }
 
         /// <summary>
+        /// Creates a status with ResponseType erorr and error related properties filled.
+        /// Indicates that the MobileConnect process has been aborted due to an issue encountered.
+        /// </summary>
+        /// <param name="error">ErrorResponse to retrieve error information from (Required)</param>
+        /// <returns>MobileConnectStatus with ResponseType Error</returns>
+        public static MobileConnectStatus Error(ErrorResponse error)
+        {
+            return Error(error.Error, error.ErrorDescription, null);
+        }
+
+        /// <summary>
         /// Creates a Status with ResponseType error and error related properties filled.
         /// Indicates that the MobileConnect process has been aborted due to an issue encountered.
         /// </summary>
@@ -216,6 +227,11 @@ namespace GSMA.MobileConnect
         /// <returns>MobileConnectStatus with ResponseType UserInfo</returns>
         public static MobileConnectStatus UserInfo(IdentityResponse response)
         {
+            if (response.ErrorResponse != null)
+            {
+                return Error(response.ErrorResponse);
+            }
+
             return new MobileConnectStatus
             {
                 ResponseType = MobileConnectResponseType.UserInfo,
@@ -231,6 +247,11 @@ namespace GSMA.MobileConnect
         /// <returns>MobileConnectStatus with ResponseType Identity</returns>
         public static MobileConnectStatus Identity(IdentityResponse response)
         {
+            if(response.ErrorResponse != null)
+            {
+                return Error(response.ErrorResponse);
+            }
+
             return new MobileConnectStatus
             {
                 ResponseType = MobileConnectResponseType.Identity,

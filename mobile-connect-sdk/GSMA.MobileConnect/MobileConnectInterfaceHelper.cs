@@ -24,7 +24,7 @@ namespace GSMA.MobileConnect
 
                 response = await discovery.StartAutomatedOperatorDiscoveryAsync(config, config.RedirectUrl, discoveryOptions, cookies);
             }
-            catch(MobileConnectInvalidArgumentException e)
+            catch (MobileConnectInvalidArgumentException e)
             {
                 return MobileConnectStatus.Error("invalid_argument", string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
             }
@@ -54,7 +54,7 @@ namespace GSMA.MobileConnect
             {
                 response = await discovery.CompleteSelectedOperatorDiscoveryAsync(config, config.RedirectUrl, parsedRedirect.SelectedMCC, parsedRedirect.SelectedMNC);
 
-                if(response.ResponseData?.subscriber_id == null)
+                if (response.ResponseData?.subscriber_id == null)
                 {
                     response.ResponseData.subscriber_id = parsedRedirect.EncryptedMSISDN;
                 }
@@ -75,7 +75,7 @@ namespace GSMA.MobileConnect
             return GenerateStatusFromDiscoveryResponse(discovery, response);
         }
 
-        internal static MobileConnectStatus StartAuthentication(IAuthenticationService authentication, DiscoveryResponse discoveryResponse, string encryptedMSISDN, 
+        internal static MobileConnectStatus StartAuthentication(IAuthenticationService authentication, DiscoveryResponse discoveryResponse, string encryptedMSISDN,
             string state, string nonce, MobileConnectConfig config, MobileConnectRequestOptions options)
         {
             if (!IsUsableDiscoveryResponse(discoveryResponse))
@@ -106,7 +106,7 @@ namespace GSMA.MobileConnect
             return MobileConnectStatus.Authorization(response.Url, state, nonce);
         }
 
-        internal static async Task<MobileConnectStatus> RequestHeadlessAuthentication(IAuthenticationService authentication, IJWKeysetService jwks, DiscoveryResponse discoveryResponse, string encryptedMSISDN, 
+        internal static async Task<MobileConnectStatus> RequestHeadlessAuthentication(IAuthenticationService authentication, IJWKeysetService jwks, DiscoveryResponse discoveryResponse, string encryptedMSISDN,
             string state, string nonce, MobileConnectConfig config, MobileConnectRequestOptions options)
         {
             if (!IsUsableDiscoveryResponse(discoveryResponse))
@@ -146,17 +146,17 @@ namespace GSMA.MobileConnect
             }
         }
 
-        internal static async Task<MobileConnectStatus> RequestToken(IAuthenticationService authentication, IJWKeysetService jwks, DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState, 
+        internal static async Task<MobileConnectStatus> RequestToken(IAuthenticationService authentication, IJWKeysetService jwks, DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState,
             string expectedNonce, MobileConnectConfig config, MobileConnectRequestOptions options)
         {
             RequestTokenResponse response;
 
-            if(!IsUsableDiscoveryResponse(discoveryResponse))
+            if (!IsUsableDiscoveryResponse(discoveryResponse))
             {
                 return MobileConnectStatus.StartDiscovery();
             }
 
-            if(string.IsNullOrEmpty(expectedState))
+            if (string.IsNullOrEmpty(expectedState))
             {
                 return MobileConnectStatus.Error("required_arg_missing", "ExpectedState argument was not supplied, this is needed to prevent Cross-Site Request Forgery", null);
             }
@@ -245,8 +245,23 @@ namespace GSMA.MobileConnect
                 return MobileConnectStatus.Error("not_supported", "UserInfo not supported with current operator", null);
             }
 
-            var response = await _identity.RequestUserInfo(userInfoUrl, accessToken);
-            return MobileConnectStatus.UserInfo(response);
+            try
+            {
+                var response = await _identity.RequestUserInfo(userInfoUrl, accessToken);
+                return MobileConnectStatus.UserInfo(response);
+            }
+            catch (MobileConnectInvalidArgumentException e)
+            {
+                return MobileConnectStatus.Error("invalid_argument", string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+            }
+            catch (MobileConnectEndpointHttpException e)
+            {
+                return MobileConnectStatus.Error("http_failure", "An HTTP failure occured while calling the operator token endpoint, the endpoint may be inaccessible", e);
+            }
+            catch (Exception e)
+            {
+                return MobileConnectStatus.Error("unknown_error", "A failure occured while requesting a token", e);
+            }
         }
 
         internal static async Task<MobileConnectStatus> RequestIdentity(IIdentityService _identity, DiscoveryResponse discoveryResponse, string accessToken, MobileConnectConfig _config, MobileConnectRequestOptions options)
@@ -257,8 +272,23 @@ namespace GSMA.MobileConnect
                 return MobileConnectStatus.Error("not_supported", "Identity not supported with current operator", null);
             }
 
-            var response = await _identity.RequestIdentity(identityUrl, accessToken);
-            return MobileConnectStatus.Identity(response);
+            try
+            {
+                var response = await _identity.RequestIdentity(identityUrl, accessToken);
+                return MobileConnectStatus.Identity(response);
+            }
+            catch (MobileConnectInvalidArgumentException e)
+            {
+                return MobileConnectStatus.Error("invalid_argument", string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+            }
+            catch (MobileConnectEndpointHttpException e)
+            {
+                return MobileConnectStatus.Error("http_failure", "An HTTP failure occured while calling the operator token endpoint, the endpoint may be inaccessible", e);
+            }
+            catch (Exception e)
+            {
+                return MobileConnectStatus.Error("unknown_error", "A failure occured while requesting a token", e);
+            }
         }
 
         private static MobileConnectStatus GenerateStatusFromDiscoveryResponse(IDiscoveryService discovery, DiscoveryResponse response)
