@@ -142,6 +142,10 @@ namespace GSMA.MobileConnect
             {
                 return MobileConnectStatus.Error("invalid_argument", string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
             }
+            catch (MobileConnectEndpointHttpException e)
+            {
+                return MobileConnectStatus.Error("http_failure", "An HTTP failure occured while calling the discovery endpoint, the endpoint may be inaccessible", e);
+            }
             catch (Exception e)
             {
                 return MobileConnectStatus.Error("unknown_error", "An unknown error occured while generating an authorization url", e);
