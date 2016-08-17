@@ -41,6 +41,21 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
         }
 
         [HttpGet]
+        [Route("headless_authentication")]
+        public async Task<IHttpActionResult> RequestHeadlessAuthentication(string sdksession = null, string subscriberId = null, string scope = null)
+        {
+            var options = new MobileConnectRequestOptions
+            {
+                Scope = scope,
+                Context = "headless",
+                BindingMessage = "demo headless",
+            };
+
+            var response = await _mobileConnect.RequestHeadlessAuthenticationAsync(Request, sdksession, subscriberId, null, null, options);
+            return CreateResponse(response);
+        }
+
+        [HttpGet]
         [Route("user_info")]
         public async Task<IHttpActionResult> RequestUserInfo(string sdksession = null, string accessToken = null)
         {

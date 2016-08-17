@@ -33,6 +33,7 @@ namespace GSMA.MobileConnect.Utils
 
             _noRedirectHandler = new HttpClientHandler { UseCookies = false, AllowAutoRedirect = false };
             _noRedirectClient = new HttpClient(_noRedirectHandler, true);
+            _noRedirectClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             _noRedirectClient.Timeout = TimeSpan.FromMinutes(2);
         }
 
