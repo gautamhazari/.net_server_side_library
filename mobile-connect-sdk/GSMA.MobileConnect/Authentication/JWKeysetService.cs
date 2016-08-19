@@ -27,6 +27,8 @@ namespace GSMA.MobileConnect.Authentication
         {
             _client = client;
             _cache = cache;
+
+            Log.Debug(() => cache != null ? $"JWKeysetService caching enabled with {cache.GetType().AssemblyQualifiedName}" : "JWKeysetService caching disabled");
         }
 
         /// <inheritdoc/>
@@ -46,6 +48,7 @@ namespace GSMA.MobileConnect.Authentication
             }
             catch (Exception e) when (e is HttpRequestException || e is System.Net.WebException || e is TaskCanceledException)
             {
+                Log.Warning(() => cached != null ? $"Falling back to expired cached JWKS, url={url}" : $"Unable to retrieve JWKS, url={url}");
                 return cached;
             }
 

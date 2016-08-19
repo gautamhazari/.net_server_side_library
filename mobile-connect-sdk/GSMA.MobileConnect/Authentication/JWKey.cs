@@ -169,6 +169,7 @@ namespace GSMA.MobileConnect.Authentication
                 return _key;
             }
 
+            Log.Warning(() => $"Unsupported was used for token signing KeyType={KeyType}");
             throw new MobileConnectUnsupportedJWKException($"Unsupported key type {KeyType}");
         }
 
@@ -188,6 +189,7 @@ namespace GSMA.MobileConnect.Authentication
         {
             if(string.IsNullOrEmpty(Key))
             {
+                Log.Warning(() => $"HMAC key does not have a secret Algorithm={Algorithm}");
                 throw new MobileConnectInvalidJWKException("HMAC key does not have secret");
             }
 
@@ -212,6 +214,7 @@ namespace GSMA.MobileConnect.Authentication
                 return _signer;
             }
 
+            Log.Warning(() => $"Unsupported alogrithm was used for token signing Algorithm={alg}");
             throw new MobileConnectUnsupportedJWKException($"Unsupported algorithm {alg} for key type {KeyType}");
         }
 

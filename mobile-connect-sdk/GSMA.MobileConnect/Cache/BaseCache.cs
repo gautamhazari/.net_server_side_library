@@ -56,7 +56,9 @@ namespace GSMA.MobileConnect.Cache
             }
 
             value.TimeCachedUtc = DateTime.UtcNow;
+            Log.Info(() => $"Adding to cache key={key}");
             await InternalAdd<T>(key, value).ConfigureAwait(false);
+            Log.Info(() => $"Key was added to cache key={key}");
         }
 
         /// <summary>
@@ -165,6 +167,7 @@ namespace GSMA.MobileConnect.Cache
             Tuple<TimeSpan?, TimeSpan?> limits;
             if(!_cacheExpiryLimits.TryGetValue(type, out limits))
             {
+                Log.Debug(() => $"Cache expiry time for was set, type={type.FullName} cacheTime={cacheTime}");
                 _cacheExpiryTimes[typeof(T)] = cacheTime;
                 return;
             }
@@ -172,8 +175,12 @@ namespace GSMA.MobileConnect.Cache
             if ((limits.Item1.HasValue && limits.Item1.Value.CompareTo(cacheTime) > 0) || 
                 (limits.Item2.HasValue && limits.Item2.Value.CompareTo(cacheTime) < 0))
             {
+                Log.Error(() => $"Attempt was made to set cache limit outside the allowed limits, type={type.FullName} cacheTime={cacheTime} lower={limits.Item1} upper={limits.Item2}");
                 throw new MobileConnectCacheExpiryLimitException(type, limits.Item1, limits.Item2);
             }
+
+            _cacheExpiryTimes[typeof(T)] = cacheTime;
+            Log.Debug(() => $"Cache expiry time for was set, type={type.FullName} cacheTime={cacheTime}");
         }
     }
 }

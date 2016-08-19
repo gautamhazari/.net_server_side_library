@@ -45,6 +45,7 @@ namespace GSMA.MobileConnect.Identity
             }
             catch (Exception e) when (e is HttpRequestException || e is System.Net.WebException || e is TaskCanceledException)
             {
+                Log.Error(() => $"Error occurred while requesting identity url={userInfoUrl}", e);
                 throw new MobileConnectEndpointHttpException(e.Message, e);
             }
         }

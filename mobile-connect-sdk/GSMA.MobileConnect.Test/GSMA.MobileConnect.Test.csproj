@@ -106,6 +106,7 @@
     <Compile Include="Identity\IdentityServiceTests.cs" />
     <Compile Include="Identity\UserInfoDataTests.cs" />
     <Compile Include="Identity\IdentityResponseTests.cs" />
+    <Compile Include="LogTests.cs" />
     <Compile Include="MobileConnectInterfaceIntegrationTests.cs" />
     <Compile Include="MobileConnectInterfaceMockTests.cs" />
     <Compile Include="MobileConnectRequestOptionsTests.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Utils\ExtensionsTests.cs" />
     <Compile Include="Utils\HttpUtilsTests.cs" />
     <Compile Include="Utils\ScopeTests.cs" />
+    <Compile Include="Utils\SecurityTests.cs" />
     <Compile Include="Utils\StringUtilsTests.cs" />
     <Compile Include="Utils\UnixTimestampTests.cs" />
     <Compile Include="Web\ResponseConverterTests.cs" />

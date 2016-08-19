@@ -66,11 +66,13 @@ namespace GSMA.MobileConnect.Identity
             if(responseData.IndexOf('{') > -1)
             {
                 // Already JSON
+                Log.Info("Indentity recieved as JSON");
                 return responseData;
             }
 
             if (JsonWebToken.IsValidFormat(responseData))
             {
+                Log.Info("Identity received as JWT");
                 return JsonWebToken.DecodePart(responseData, JWTPart.Claims);
             }
 
@@ -89,8 +91,11 @@ namespace GSMA.MobileConnect.Identity
         {
             if(string.IsNullOrEmpty(ResponseJson))
             {
+                Log.Debug(() => $"Defaulting type={typeof(T).AssemblyQualifiedName} because IdentityResponse.ResponseJson is empty");
                 return default(T);
             }
+
+            Log.Debug(() => $"Attempting to convert IdentityResponse.ResponseJson to type={typeof(T).AssemblyQualifiedName}");
 
             T convertedResponse = _convertedResponseData as T;
 

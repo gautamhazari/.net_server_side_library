@@ -61,12 +61,11 @@ namespace GSMA.MobileConnect.Demo.Web.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<Utils.RestClient>().ToSelf();
-            kernel.Bind<Cache.ICache>().To<Cache.ConcurrentCache>().InSingletonScope();
-            kernel.Bind<Discovery.IDiscoveryService>().To<Discovery.DiscoveryService>();
-            kernel.Bind<Authentication.IAuthenticationService>().To<Authentication.AuthenticationService>();
-            kernel.Bind<Identity.IIdentityService>().To<Identity.IdentityService>();
-            kernel.Bind<Authentication.IJWKeysetService>().To<Authentication.JWKeysetService>();
+            //var client = new Utils.RestClient();
+            //var cache = new Cache.ConcurrentCache();
+            //var mobileConnect = new MobileConnectWebInterface()
+
+            kernel.Bind<Cache.ICache>().To<Cache.ConcurrentCache>();
             kernel.Bind<MobileConnectConfig>().ToConstant(DemoConfiguration.Config);
             kernel.Bind<MobileConnectWebInterface>().ToSelf().InSingletonScope();
         }        

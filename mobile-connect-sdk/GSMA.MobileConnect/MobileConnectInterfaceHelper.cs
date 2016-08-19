@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GSMA.MobileConnect.Identity;
 using System.Threading;
+using GSMA.MobileConnect.Constants;
 
 namespace GSMA.MobileConnect
 {
@@ -27,15 +28,18 @@ namespace GSMA.MobileConnect
             }
             catch (MobileConnectInvalidArgumentException e)
             {
-                return MobileConnectStatus.Error("invalid_argument", string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+                Log.Error(() => $"An invalid argument was passed to AttemptDiscovery arg={e.Argument}");
+                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
             }
             catch (MobileConnectEndpointHttpException e)
             {
-                return MobileConnectStatus.Error("http_failure", "An HTTP failure occured while calling the discovery endpoint, the endpoint may be inaccessible", e);
+                Log.Error(() => $"A general http error occurred in AttemptDiscovery msisdn={!string.IsNullOrEmpty(msisdn)} mcc={mcc} mnc={mnc} discoveryUrl={config.DiscoveryUrl}");
+                return MobileConnectStatus.Error(ErrorCodes.HttpFailure, "An HTTP failure occured while calling the discovery endpoint, the endpoint may be inaccessible", e);
             }
             catch (Exception e)
             {
-                return MobileConnectStatus.Error("unknown_error", "An unknown error occured while calling the Discovery service to obtain operator details", e);
+                Log.Error(() => $"A general error occurred in AttemptDiscovery msisdn={!string.IsNullOrEmpty(msisdn)} mcc={mcc} mnc={mnc} discoveryUrl={config.DiscoveryUrl}");
+                return MobileConnectStatus.Error(ErrorCodes.Unknown, "An unknown error occured while calling the Discovery service to obtain operator details", e);
             }
 
             return GenerateStatusFromDiscoveryResponse(discovery, response);
@@ -62,15 +66,18 @@ namespace GSMA.MobileConnect
             }
             catch (MobileConnectInvalidArgumentException e)
             {
-                return MobileConnectStatus.Error("invalid_argument", string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+                Log.Error(() => $"An invalid argument was passed to AttemptDiscoveryAfterOperatorSelection arg={e.Argument}");
+                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
             }
             catch (MobileConnectEndpointHttpException e)
             {
-                return MobileConnectStatus.Error("http_failure", "An HTTP failure occured while calling the discovery endpoint, the endpoint may be inaccessible", e);
+                Log.Error(() => $"A general http error occurred in AttemptDiscoveryAfterOperatorSelection redirectedUrl={redirectedUrl} discoveryUrl={config.DiscoveryUrl}");
+                return MobileConnectStatus.Error(ErrorCodes.HttpFailure, "An HTTP failure occured while calling the discovery endpoint, the endpoint may be inaccessible", e);
             }
             catch (Exception e)
             {
-                return MobileConnectStatus.Error("unknown_error", "An unknown error occured while calling the Discovery service to obtain operator details", e);
+                Log.Error(() => $"A general error occurred in AttemptDiscoveryAfterOperatorSelection redirectedUrl={redirectedUrl} discoveryUrl={config.DiscoveryUrl}");
+                return MobileConnectStatus.Error(ErrorCodes.Unknown, "An unknown error occured while calling the Discovery service to obtain operator details", e);
             }
 
             return GenerateStatusFromDiscoveryResponse(discovery, response);
@@ -97,14 +104,16 @@ namespace GSMA.MobileConnect
             }
             catch (MobileConnectInvalidArgumentException e)
             {
-                return MobileConnectStatus.Error("invalid_argument", string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+                Log.Error(() => $"An invalid argument was passed to StartAuthentication arg={e.Argument}");
+                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
             }
             catch (Exception e)
             {
-                return MobileConnectStatus.Error("unknown_error", "An unknown error occured while generating an authorization url", e);
+                Log.Error(() => $"A general error occurred in AttemptDiscoveryAfterOperatorSelection state={state} nonce={nonce} authUrl={discoveryResponse.OperatorUrls.AuthorizationUrl}");
+                return MobileConnectStatus.Error(ErrorCodes.Unknown, "An unknown error occured while generating an authorization url", e);
             }
 
-            return MobileConnectStatus.Authorization(response.Url, state, nonce);
+            return MobileConnectStatus.Authentication(response.Url, state, nonce);
         }
 
         internal static async Task<MobileConnectStatus> RequestHeadlessAuthentication(IAuthenticationService authentication, IJWKeysetService jwks, IIdentityService identity, DiscoveryResponse discoveryResponse, string encryptedMSISDN,
@@ -140,15 +149,18 @@ namespace GSMA.MobileConnect
             }
             catch (MobileConnectInvalidArgumentException e)
             {
-                return MobileConnectStatus.Error("invalid_argument", string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+                Log.Error(() => $"An invalid argument was passed to RequestHeadlessAuthentication arg={e.Argument}");
+                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
             }
             catch (MobileConnectEndpointHttpException e)
             {
-                return MobileConnectStatus.Error("http_failure", "An HTTP failure occured while calling the discovery endpoint, the endpoint may be inaccessible", e);
+                Log.Error(() => $"A general http error occurred in RequestHeadlessAuthentication state={state} nonce={nonce} authUrl={discoveryResponse.OperatorUrls.AuthorizationUrl} tokenUrl={discoveryResponse.OperatorUrls.RequestTokenUrl}");
+                return MobileConnectStatus.Error(ErrorCodes.HttpFailure, "An HTTP failure occured while calling the discovery endpoint, the endpoint may be inaccessible", e);
             }
             catch (Exception e)
             {
-                return MobileConnectStatus.Error("unknown_error", "An unknown error occured while generating an authorization url", e);
+                Log.Error(() => $"A general error occurred in RequestHeadlessAuthentication state={state} nonce={nonce} authUrl={discoveryResponse.OperatorUrls.AuthorizationUrl} tokenUrl={discoveryResponse.OperatorUrls.RequestTokenUrl}");
+                return MobileConnectStatus.Error(ErrorCodes.Unknown, "An unknown error occured while generating an authorization url", e);
             }
 
             if(status.ResponseType == MobileConnectResponseType.Error
@@ -175,18 +187,18 @@ namespace GSMA.MobileConnect
 
             if (string.IsNullOrEmpty(expectedState))
             {
-                return MobileConnectStatus.Error("required_arg_missing", "ExpectedState argument was not supplied, this is needed to prevent Cross-Site Request Forgery", null);
+                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, "ExpectedState argument was not supplied, this is needed to prevent Cross-Site Request Forgery", null);
             }
 
             if (string.IsNullOrEmpty(expectedNonce))
             {
-                return MobileConnectStatus.Error("required_arg_missing", "expectedNonce argument was not supplied, this is needed to prevent Replay Attacks", null);
+                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, "expectedNonce argument was not supplied, this is needed to prevent Replay Attacks", null);
             }
 
             var actualState = HttpUtils.ExtractQueryValue(redirectedUrl.Query, "state");
             if (expectedState != actualState)
             {
-                return MobileConnectStatus.Error("invalid_state", "State values do not match, this could suggest an attempted Cross-Site Request Forgery", null);
+                return MobileConnectStatus.Error(ErrorCodes.InvalidState, "State values do not match, this could suggest an attempted Cross-Site Request Forgery", null);
             }
 
             try
@@ -209,15 +221,18 @@ namespace GSMA.MobileConnect
             }
             catch (MobileConnectInvalidArgumentException e)
             {
-                return MobileConnectStatus.Error("invalid_argument", string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+                Log.Error(() => $"An invalid argument was passed to RequestToken arg={e.Argument}");
+                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
             }
             catch (MobileConnectEndpointHttpException e)
             {
-                return MobileConnectStatus.Error("http_failure", "An HTTP failure occured while calling the operator token endpoint, the endpoint may be inaccessible", e);
+                Log.Error(() => $"A general http error occurred in RequestToken redirectedUrl={redirectedUrl} requestTokenUrl={discoveryResponse.OperatorUrls.RequestTokenUrl} jwksUrl={discoveryResponse.OperatorUrls.JWKSUrl}");
+                return MobileConnectStatus.Error(ErrorCodes.HttpFailure, "An HTTP failure occured while calling the operator token endpoint, the endpoint may be inaccessible", e);
             }
             catch (Exception e)
             {
-                return MobileConnectStatus.Error("unknown_error", "A failure occured while requesting a token", e);
+                Log.Error(() => $"A general error occurred in RequestToken redirectedUrl={redirectedUrl} requestTokenUrl={discoveryResponse.OperatorUrls.RequestTokenUrl} jwksUrl={discoveryResponse.OperatorUrls.JWKSUrl}");
+                return MobileConnectStatus.Error(ErrorCodes.Unknown, "A failure occured while requesting a token", e);
             }
         }
 
@@ -232,7 +247,8 @@ namespace GSMA.MobileConnect
             var validationOptions = options?.TokenValidationOptions ?? new TokenValidationOptions();
             if (!validationOptions.AcceptedValidationResults.HasFlag(response.ValidationResult))
             {
-                return MobileConnectStatus.Error("invalid_token", $"The token was found to be invalid with the validtion result {response.ValidationResult}", null, response);
+                Log.Error(() => $"A generated tokenResponse was invalid issuer={issuer} result={response.ValidationResult}");
+                return MobileConnectStatus.Error(ErrorCodes.InvalidToken, $"The token was found to be invalid with the validation result {response.ValidationResult}", null, response);
             }
 
             return MobileConnectStatus.Complete(response);
@@ -249,8 +265,8 @@ namespace GSMA.MobileConnect
                 return await AttemptDiscoveryAfterOperatorSelection(discovery, redirectedUrl, config);
             }
 
-            string errorCode = HttpUtils.ExtractQueryValue(redirectedUrl.Query, "error") ?? "invalid_request";
-            string errorDesc = HttpUtils.ExtractQueryValue(redirectedUrl.Query, "error_description") ?? string.Format("Unable to parse next step using {0}", redirectedUrl.AbsoluteUri);
+            string errorCode = HttpUtils.ExtractQueryValue(redirectedUrl.Query, "error") ?? ErrorCodes.InvalidRedirect;
+            string errorDesc = HttpUtils.ExtractQueryValue(redirectedUrl.Query, "error_description") ?? HttpUtils.ExtractQueryValue(redirectedUrl.Query, "description") ?? string.Format("Unable to parse next step using {0}", redirectedUrl.AbsoluteUri);
             return MobileConnectStatus.Error(errorCode, errorDesc, null);
         }
 
@@ -259,7 +275,8 @@ namespace GSMA.MobileConnect
             string userInfoUrl = discoveryResponse?.OperatorUrls?.UserInfoUrl;
             if (string.IsNullOrEmpty(userInfoUrl))
             {
-                return MobileConnectStatus.Error("not_supported", "UserInfo not supported with current operator", null);
+                Log.Error(() => $"UserInfo was not supported for issuer={discoveryResponse?.ProviderMetadata?.Issuer}");
+                return MobileConnectStatus.Error(ErrorCodes.NotSupported, "UserInfo not supported with current operator", null);
             }
 
             try
@@ -269,15 +286,18 @@ namespace GSMA.MobileConnect
             }
             catch (MobileConnectInvalidArgumentException e)
             {
-                return MobileConnectStatus.Error("invalid_argument", string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+                Log.Error(() => $"An invalid argument was passed to RequestUserInfo arg={e.Argument}");
+                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
             }
             catch (MobileConnectEndpointHttpException e)
             {
-                return MobileConnectStatus.Error("http_failure", "An HTTP failure occured while calling the operator token endpoint, the endpoint may be inaccessible", e);
+                Log.Error(() => $"A general http error occurred in RequestUserInfo userInfoUrl={userInfoUrl}");
+                return MobileConnectStatus.Error(ErrorCodes.HttpFailure, "An HTTP failure occured while calling the operator token endpoint, the endpoint may be inaccessible", e);
             }
             catch (Exception e)
             {
-                return MobileConnectStatus.Error("unknown_error", "A failure occured while requesting a token", e);
+                Log.Error(() => $"A general error occurred in RequestUserInfo userInfoUrl={userInfoUrl}");
+                return MobileConnectStatus.Error(ErrorCodes.Unknown, "A failure occured while requesting a token", e);
             }
         }
 
@@ -286,7 +306,8 @@ namespace GSMA.MobileConnect
             string identityUrl = discoveryResponse?.OperatorUrls?.PremiumInfoUrl;
             if (string.IsNullOrEmpty(identityUrl))
             {
-                return MobileConnectStatus.Error("not_supported", "Identity not supported with current operator", null);
+                Log.Error(() => $"Identity was not supported for issuer={discoveryResponse?.ProviderMetadata?.Issuer}");
+                return MobileConnectStatus.Error(ErrorCodes.NotSupported, "Identity not supported with current operator", null);
             }
 
             try
@@ -296,15 +317,18 @@ namespace GSMA.MobileConnect
             }
             catch (MobileConnectInvalidArgumentException e)
             {
-                return MobileConnectStatus.Error("invalid_argument", string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+                Log.Error(() => $"An invalid argument was passed to RequestIdentity arg={e.Argument}");
+                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
             }
             catch (MobileConnectEndpointHttpException e)
             {
-                return MobileConnectStatus.Error("http_failure", "An HTTP failure occured while calling the operator token endpoint, the endpoint may be inaccessible", e);
+                Log.Error(() => $"A general http error occurred in RequestUserInfo identityUrl={identityUrl}");
+                return MobileConnectStatus.Error(ErrorCodes.HttpFailure, "An HTTP failure occured while calling the operator token endpoint, the endpoint may be inaccessible", e);
             }
             catch (Exception e)
             {
-                return MobileConnectStatus.Error("unknown_error", "A failure occured while requesting a token", e);
+                Log.Error(() => $"A general error occurred in RequestUserInfo identityUrl={identityUrl}");
+                return MobileConnectStatus.Error(ErrorCodes.Unknown, "A failure occured while requesting a token", e);
             }
         }
 
@@ -321,13 +345,21 @@ namespace GSMA.MobileConnect
                 return MobileConnectStatus.OperatorSelection(operatorSelectionUrl);
             }
 
-            return MobileConnectStatus.StartAuthorization(response);
+            return MobileConnectStatus.StartAuthentication(response);
         }
 
         private static bool IsUsableDiscoveryResponse(DiscoveryResponse response)
         {
             // if response is null or does not have operator urls then it isn't usable for the process after discovery
-            return response != null && response.OperatorUrls != null && response.ResponseData != null && response.ResponseData.response != null;
+            var usable = response != null && response.OperatorUrls != null && response.ResponseData != null && response.ResponseData.response != null;
+
+            if(!usable)
+            {
+                Log.Warning("Discovery response was unusable");
+                Log.Debug(() => $"Unusable response={Newtonsoft.Json.JsonConvert.SerializeObject(response)}");
+            }
+
+            return usable;
         }
     }
 }

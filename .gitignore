@@ -261,3 +261,4 @@ Help/
 
 deploy/web/
 reports/
+mobile-connect-demos/**/log.txt

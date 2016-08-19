@@ -291,6 +291,7 @@
                 $.get(url + queryString, api.httpCallback);
             },
             complete: function complete(response) {
+                $('.error').html('');
                 if (response.token) {
                     closeChildWindow();
                     api.currentAttempt.token = response.token;
@@ -327,6 +328,7 @@
                 hide('#logged-in');
             },
             error: function error(response) {
+                closeChildWindow();
                 $('.error').html(response.description);
             }
         }

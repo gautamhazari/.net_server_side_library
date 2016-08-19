@@ -5,7 +5,9 @@
     /// </summary>
     public class Response
     {
-        // TODO: remove when SandboxR2 sends properly?
+        /// <summary>
+        /// Parsed from JSON response
+        /// </summary>
         public string applicationShortName { get; set; }
         /// <summary>
         /// Parsed from JSON response

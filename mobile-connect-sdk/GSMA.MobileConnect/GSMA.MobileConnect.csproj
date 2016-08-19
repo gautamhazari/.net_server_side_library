@@ -49,6 +49,7 @@
     <Compile Include="Claims\ClaimsDictionary.cs" />
     <Compile Include="Claims\ClaimsParameter.cs" />
     <Compile Include="Claims\ClaimsValue.cs" />
+    <Compile Include="Constants\ErrorCodes.cs" />
     <Compile Include="Constants\LinkRels.cs" />
     <Compile Include="Constants\LoginHintPrefixes.cs" />
     <Compile Include="Constants\Scope.cs" />
@@ -66,8 +67,10 @@
     <Compile Include="Identity\IIdentityService.cs" />
     <Compile Include="Identity\UserInfoData.cs" />
     <Compile Include="Identity\IdentityResponse.cs" />
+    <Compile Include="ILogger.cs" />
     <Compile Include="Json\Converters\SupportedVersionsConverter.cs" />
     <Compile Include="Json\Converters\UnixTimestampConverter.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="MobileConnectConstants.cs" />
     <Compile Include="MobileConnectInterfaceHelper.cs" />
     <Compile Include="Cache\ConcurrentCache.cs" />
@@ -110,6 +113,7 @@
     <Compile Include="Utils\RestClient.cs" />
     <Compile Include="Utils\RestResponse.cs" />
     <Compile Include="Utils\Scope.cs" />
+    <Compile Include="Utils\Security.cs" />
     <Compile Include="Utils\StringUtils.cs" />
     <Compile Include="Utils\UnixTimestamp.cs" />
     <Compile Include="Utils\Validate.cs" />

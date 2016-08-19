@@ -33,6 +33,8 @@ namespace GSMA.MobileConnect.Discovery
         {
             this._cache = cache;
             this._client = client;
+
+            Log.Debug(() => cache != null ? $"DiscoveryService caching enabled with type={cache.GetType().AssemblyQualifiedName}" : "DiscoveryService caching disabled");
         }
 
         private async Task<DiscoveryResponse> CallDiscoveryEndpoint(string clientId, string clientSecret, string discoveryUrl, DiscoveryOptions options, IEnumerable<BasicKeyValuePair> currentCookies, bool cacheDiscoveryResponse)
@@ -79,6 +81,7 @@ namespace GSMA.MobileConnect.Discovery
             }
             catch (Exception e) when (e is HttpRequestException || e is System.Net.WebException || e is TaskCanceledException)
             {
+                Log.Error("Error occured while calling discovery endpoint", e);
                 throw new MobileConnectEndpointHttpException(e.Message, e);
             }
         }
@@ -311,6 +314,7 @@ namespace GSMA.MobileConnect.Discovery
         {
             if (url == null)
             {
+                Log.Warning("Provider metadata was defaulted as no url found");
                 return ProviderMetadata.Default;
             }
 
@@ -347,6 +351,7 @@ namespace GSMA.MobileConnect.Discovery
                 {
                     metadata = cached;
                 }
+                Log.Warning(() => cached != null ? $"Falling back to expired cached provider metadata, url={url}" : $"Falling back to default provider metadata, url={url}");
             }
 
             return metadata ?? ProviderMetadata.Default;

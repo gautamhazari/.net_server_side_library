@@ -75,8 +75,8 @@ namespace GSMA.MobileConnect.Demo.Universal
 
         private async Task StartAuthentication(MobileConnectStatus response)
         {
-            _state = GenerateUniqueString();
-            _nonce = GenerateUniqueString();
+            _state = Utils.Security.GenerateSecureNonce();
+            _nonce = Utils.Security.GenerateSecureNonce();
             _discoveryResponse = response.DiscoveryResponse;
             _authOptions = new MobileConnectRequestOptions
             {
@@ -142,11 +142,6 @@ namespace GSMA.MobileConnect.Demo.Universal
             }
 
             return string.Join(" ", scopes);
-        }
-
-        private string GenerateUniqueString()
-        {
-            return Guid.NewGuid().ToString("N");
         }
 
         #endregion

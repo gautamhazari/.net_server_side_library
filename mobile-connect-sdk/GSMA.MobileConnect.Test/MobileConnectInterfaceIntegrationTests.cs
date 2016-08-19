@@ -57,7 +57,7 @@ namespace GSMA.MobileConnect.Test
                 RedirectUrl = _testConfig.RedirectUrl,
             };
 
-            _mobileConnect = new MobileConnectInterface(_discovery, _authentication, _identity, _jwks, _config);
+            _mobileConnect = new MobileConnectInterface(_config, _discovery, _authentication, _identity, _jwks);
         }
 
         public MockRestClient SetupForMockRest()

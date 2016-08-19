@@ -1,4 +1,6 @@
 ﻿using GSMA.MobileConnect.Authentication;
+using GSMA.MobileConnect.Cache;
+using GSMA.MobileConnect.Constants;
 using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Identity;
 using GSMA.MobileConnect.Utils;
@@ -41,6 +43,46 @@ namespace GSMA.MobileConnect
             this._jwks = jwks;
             this._config = config;
             this._cacheWithSessionId = config.CacheResponsesWithSessionId && discovery.Cache != null;
+
+            Log.Debug(() => _cacheWithSessionId ? $"MobileConnectWebInterface caching enabled with type={discovery.Cache.GetType().AssemblyQualifiedName}" : "MobileConnectWebInterface caching disabled");
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the MobileConnectWebInterface class using default concrete implementations
+        /// </summary>
+        /// <param name="config">Configuration options</param>
+        /// <param name="cache">Concrete implementation of ICache</param>
+        public MobileConnectWebInterface(MobileConnectConfig config, ICache cache)
+            : this(config, cache, new RestClient()) { }
+
+        /// <summary>
+        /// Initializes a new instance of the MobileConnectWebInterface class using default concrete implementations
+        /// </summary>
+        /// <param name="config">Configuration options</param>
+        /// <param name="cache">Concrete implementation of ICache</param>
+        /// <param name="client">Restclient for all http requests. Will default if null.</param>
+        public MobileConnectWebInterface(MobileConnectConfig config, ICache cache, RestClient client)
+            : this(new DiscoveryService(cache, client), new AuthenticationService(client), new IdentityService(client), new JWKeysetService(client, cache), config) { }
+
+        /// <summary>
+        /// R1 supporting constructor, identity and jwks services will be defaulted
+        /// </summary>
+        /// <param name="discovery">Instance of IDiscovery concrete implementation</param>
+        /// <param name="authentication">Instance of IAuthentication concrete implementation</param>
+        /// <param name="config">Configuration options</param>
+        [Obsolete("Constructor will be removed in v3")]
+        public MobileConnectWebInterface(IDiscoveryService discovery, IAuthenticationService authentication, MobileConnectConfig config)
+        {
+            var cache = discovery.Cache;
+            var client = new Utils.RestClient();
+            this._discovery = discovery;
+            this._authentication = authentication;
+            this._identity = new IdentityService(client);
+            this._jwks = new JWKeysetService(client, cache);
+            this._config = config;
+            this._cacheWithSessionId = config.CacheResponsesWithSessionId && _discovery.Cache != null;
+
+            Log.Debug(() => _cacheWithSessionId ? $"MobileConnectWebInterface caching enabled with type={cache.GetType().AssemblyQualifiedName}" : "MobileConnectWebInterface caching disabled");
         }
 
         /// <summary>
@@ -85,8 +127,8 @@ namespace GSMA.MobileConnect
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
         public MobileConnectStatus StartAuthentication(HttpRequestMessage request, DiscoveryResponse discoveryResponse, string encryptedMSISDN, string state, string nonce, MobileConnectRequestOptions options)
         {
-            state = string.IsNullOrEmpty(state) ? GenerateUniqueString() : state;
-            nonce = string.IsNullOrEmpty(nonce) ? GenerateUniqueString() : nonce;
+            state = string.IsNullOrEmpty(state) ? Security.GenerateSecureNonce() : state;
+            nonce = string.IsNullOrEmpty(nonce) ? Security.GenerateSecureNonce() : nonce;
 
             return MobileConnectInterfaceHelper.StartAuthentication(_authentication, discoveryResponse, encryptedMSISDN, state, nonce, _config, options);
         }
@@ -128,8 +170,8 @@ namespace GSMA.MobileConnect
         public async Task<MobileConnectStatus> RequestHeadlessAuthenticationAsync(HttpRequestMessage request, DiscoveryResponse discoveryResponse, string encryptedMSISDN, string state, string nonce, 
             MobileConnectRequestOptions options, CancellationToken cancellationToken = default(CancellationToken))
         {
-            state = string.IsNullOrEmpty(state) ? GenerateUniqueString() : state;
-            nonce = string.IsNullOrEmpty(nonce) ? GenerateUniqueString() : nonce;
+            state = string.IsNullOrEmpty(state) ? Security.GenerateSecureNonce() : state;
+            nonce = string.IsNullOrEmpty(nonce) ? Security.GenerateSecureNonce() : nonce;
 
             return await MobileConnectInterfaceHelper.RequestHeadlessAuthentication(_authentication, _jwks, _identity, discoveryResponse, encryptedMSISDN, state, nonce, _config, options, cancellationToken);
         }
@@ -301,11 +343,6 @@ namespace GSMA.MobileConnect
             return await RequestIdentityAsync(request, discoveryResponse, accessToken, options);
         }
 
-        private string GenerateUniqueString()
-        {
-            return Guid.NewGuid().ToString("N");
-        }
-
         private async Task<MobileConnectStatus> CacheIfRequired(MobileConnectStatus status)
         {
             if (!_cacheWithSessionId || status.ResponseType != MobileConnectResponseType.StartAuthentication || status.DiscoveryResponse == null)
@@ -313,7 +350,7 @@ namespace GSMA.MobileConnect
                 return status;
             }
 
-            var sessionId = GenerateUniqueString();
+            var sessionId = Security.GenerateSecureNonce();
             await _discovery.Cache.Add(sessionId, status.DiscoveryResponse).ConfigureAwait(false);
             status.SDKSession = sessionId;
 
@@ -334,10 +371,10 @@ namespace GSMA.MobileConnect
         {
             if (!_cacheWithSessionId)
             {
-                return MobileConnectStatus.Error("cache_disabled", "cache is not enabled for session id caching of discovery responses", null);
+                return MobileConnectStatus.Error(ErrorCodes.CacheDisabled, "cache is not enabled for session id caching of discovery responses", null);
             }
 
-            return MobileConnectStatus.Error("sdksession_not_found", "session not found or expired, please try again", null);
+            return MobileConnectStatus.Error(ErrorCodes.InvalidSdkSession, "session not found or expired, please try again", null);
         }
     }
 }

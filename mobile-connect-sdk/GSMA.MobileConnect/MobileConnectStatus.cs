@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace GSMA.MobileConnect
 {
@@ -15,8 +16,6 @@ namespace GSMA.MobileConnect
     /// </summary>
     public class MobileConnectStatus
     {
-        private const string INTERNAL_ERROR_CODE = "internal error";
-
         /// <summary>
         /// Type of response, indicates the step in the process that should be triggered next
         /// </summary>
@@ -84,12 +83,15 @@ namespace GSMA.MobileConnect
         /// <param name="error">Error code</param>
         /// <param name="message">User friendly error message</param>
         /// <param name="ex">Exception encountered (allows null)</param>
+        /// <param name="caller">Name of calling method</param>
         /// <returns>MobileConnectStatus with ResponseType Error</returns>
-        public static MobileConnectStatus Error(string error, string message, Exception ex)
+        public static MobileConnectStatus Error(string error, string message, Exception ex, [CallerMemberName]string caller = null)
         {
+            Log.Error($"Error was encountered during MobileConnect process caller={caller} error={error}, message={message}", ex);
+
             return new MobileConnectStatus
             {
-                ErrorCode = error ?? INTERNAL_ERROR_CODE,
+                ErrorCode = error ?? ErrorCodes.Unknown,
                 ErrorMessage = message,
                 Exception = ex,
                 ResponseType = MobileConnectResponseType.Error
@@ -101,10 +103,11 @@ namespace GSMA.MobileConnect
         /// Indicates that the MobileConnect process has been aborted due to an issue encountered.
         /// </summary>
         /// <param name="error">ErrorResponse to retrieve error information from (Required)</param>
+        /// <param name="caller">Name of calling method</param>
         /// <returns>MobileConnectStatus with ResponseType Error</returns>
-        public static MobileConnectStatus Error(ErrorResponse error)
+        public static MobileConnectStatus Error(ErrorResponse error, [CallerMemberName]string caller = null)
         {
-            return Error(error.Error, error.ErrorDescription, null);
+            return Error(error.Error, error.ErrorDescription, null, caller);
         }
 
         /// <summary>
@@ -115,10 +118,11 @@ namespace GSMA.MobileConnect
         /// <param name="message">User friendly error message</param>
         /// <param name="ex">Exception encountered (allows null)</param>
         /// <param name="response">Discovery response if returned from <see cref="IDiscoveryService"/></param>
+        /// <param name="caller">Name of calling method</param>
         /// <returns>MobileConnectStatus with ResponseType Error</returns>
-        public static MobileConnectStatus Error(string error, string message, Exception ex, DiscoveryResponse response)
+        public static MobileConnectStatus Error(string error, string message, Exception ex, DiscoveryResponse response, [CallerMemberName]string caller = null)
         {
-            var status = Error(error, message, ex);
+            var status = Error(error, message, ex, caller);
             status.DiscoveryResponse = response;
             return status;
         }
@@ -131,10 +135,11 @@ namespace GSMA.MobileConnect
         /// <param name="message">User friendly error message</param>
         /// <param name="ex">Exception encountered (allows null)</param>
         /// <param name="response">RequestTokenResponse if returned from <see cref="IAuthenticationService"/></param>
+        /// <param name="caller">Name of calling method</param>
         /// <returns>MobileConnectStatus with ResponseType Error</returns>
-        public static MobileConnectStatus Error(string error, string message, Exception ex, RequestTokenResponse response)
+        public static MobileConnectStatus Error(string error, string message, Exception ex, RequestTokenResponse response, [CallerMemberName]string caller = null)
         {
-            var status = Error(error, message, ex);
+            var status = Error(error, message, ex, caller);
             status.TokenResponse = response;
             return status;
         }
@@ -144,9 +149,11 @@ namespace GSMA.MobileConnect
         /// Indicates that the next step should be navigating to the operator selection URL.
         /// </summary>
         /// <param name="url">Operator selection URL returned from <see cref="IDiscoveryService"/></param>
+        /// <param name="caller">Name of calling method</param>
         /// <returns>MobileConnectStatus with ResponseType OperatorSelection</returns>
-        public static MobileConnectStatus OperatorSelection(string url)
+        public static MobileConnectStatus OperatorSelection(string url, [CallerMemberName]string caller = null)
         {
+            Log.Info(() => $"MobileConnectStatus OperatorSelection returned url={url} caller={caller}");
             return new MobileConnectStatus
             {
                 Url = url,
@@ -159,9 +166,11 @@ namespace GSMA.MobileConnect
         /// Indicates that the next step should be starting authorization.
         /// </summary>
         /// <param name="response">DiscoveryResponse returned from <see cref="IDiscoveryService"/></param>
+        /// <param name="caller">Name of calling method</param>
         /// <returns>MobileConnectStatus with ResponseType StartAuthorization</returns>
-        public static MobileConnectStatus StartAuthorization(DiscoveryResponse response)
+        public static MobileConnectStatus StartAuthentication(DiscoveryResponse response, [CallerMemberName]string caller = null)
         {
+            Log.Info(() => $"MobileConnectStatus StartAuthentication returned url={response?.OperatorUrls?.AuthorizationUrl} caller={caller}");
             IEnumerable<string> setCookie = response.Headers?.FirstOrDefault(x => x.Key == Headers.SET_COOKIE)?.Value?.Split(',');
 
             return new MobileConnectStatus
@@ -176,9 +185,11 @@ namespace GSMA.MobileConnect
         /// Creates a Status with ResponseType StartDiscovery.
         /// Indicates that some required data was missing and the discovery process needs to be restarted.
         /// </summary>
+        /// <param name="caller">Name of calling method</param>
         /// <returns>MobileConnectStatus with ResponseType StartDiscovery</returns>
-        public static MobileConnectStatus StartDiscovery()
+        public static MobileConnectStatus StartDiscovery([CallerMemberName]string caller = null)
         {
+            Log.Info(() => $"MobileConnectStatus StartDiscovery returned caller={caller}");
             return new MobileConnectStatus
             {
                 ResponseType = MobileConnectResponseType.StartDiscovery
@@ -192,9 +203,11 @@ namespace GSMA.MobileConnect
         /// <param name="url">Url returned from <see cref="IAuthenticationService"/></param>
         /// <param name="state">The unique state string generated or passed in for the authorization url</param>
         /// <param name="nonce">The unique nonce string generated or passed in for the authorization url</param>
+        /// <param name="caller">Name of calling method</param>
         /// <returns>MobileConnectStatus with ResponseType Authorization</returns>
-        public static MobileConnectStatus Authorization(string url, string state, string nonce)
+        public static MobileConnectStatus Authentication(string url, string state, string nonce, [CallerMemberName]string caller = null)
         {
+            Log.Info(() => $"MobileConnectStatus Authentication returned url={url} caller={caller}");
             return new MobileConnectStatus
             {
                 ResponseType = MobileConnectResponseType.Authentication,
@@ -209,9 +222,11 @@ namespace GSMA.MobileConnect
         /// Indicates that the MobileConnect process is complete and the user is authenticated.
         /// </summary>
         /// <param name="response">RequestTokenResponse returned from <see cref="IAuthenticationService"/></param>
+        /// <param name="caller">Name of calling method</param>
         /// <returns>MobileConnectStatus with ResponseType Complete</returns>
-        public static MobileConnectStatus Complete(RequestTokenResponse response)
+        public static MobileConnectStatus Complete(RequestTokenResponse response, [CallerMemberName]string caller = null)
         {
+            Log.Info(() => $"MobileConnectStatus Complete returned caller={caller}");
             return new MobileConnectStatus
             {
                 ResponseType = MobileConnectResponseType.Complete,
@@ -224,13 +239,16 @@ namespace GSMA.MobileConnect
         /// Indicates that a user info request has been successful.
         /// </summary>
         /// <param name="response">UserInfoResponse returned from <see cref="IIdentityService"/></param>
+        /// <param name="caller">Name of calling method</param>
         /// <returns>MobileConnectStatus with ResponseType UserInfo</returns>
-        public static MobileConnectStatus UserInfo(IdentityResponse response)
+        public static MobileConnectStatus UserInfo(IdentityResponse response, [CallerMemberName]string caller = null)
         {
             if (response.ErrorResponse != null)
             {
                 return Error(response.ErrorResponse);
             }
+
+            Log.Info(() => $"MobileConnectStatus UserInfo returned caller={caller}");
 
             return new MobileConnectStatus
             {
@@ -244,13 +262,16 @@ namespace GSMA.MobileConnect
         /// Indicates that an identity request has been successful.
         /// </summary>
         /// <param name="response">UserInfoResponse returned from <see cref="IIdentityService"/></param>
+        /// <param name="caller">Name of calling method</param>
         /// <returns>MobileConnectStatus with ResponseType Identity</returns>
-        public static MobileConnectStatus Identity(IdentityResponse response)
+        public static MobileConnectStatus Identity(IdentityResponse response, [CallerMemberName]string caller = null)
         {
             if(response.ErrorResponse != null)
             {
                 return Error(response.ErrorResponse);
             }
+
+            Log.Info(() => $"MobileConnectStatus Identity returned caller={caller}");
 
             return new MobileConnectStatus
             {

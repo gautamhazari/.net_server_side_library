@@ -1,6 +1,8 @@
 ﻿using GSMA.MobileConnect.Authentication;
+using GSMA.MobileConnect.Cache;
 using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Identity;
+using GSMA.MobileConnect.Utils;
 using System;
 using System.Threading.Tasks;
 
@@ -23,17 +25,52 @@ namespace GSMA.MobileConnect
         /// <summary>
         /// Initializes a new instance of the MobileConnectInterface class
         /// </summary>
+        /// <param name="config">Configuration options</param>
         /// <param name="discovery">Instance of IDiscovery concrete implementation</param>
         /// <param name="authentication">Instance of IAuthentication concrete implementation</param>
         /// <param name="identity">Instance of IIdentityService concrete implementation</param>
         /// <param name="jwks">Instance of IJWKeysetService concrete implementation</param>
-        /// <param name="config">Configuration options</param>
-        public MobileConnectInterface(IDiscoveryService discovery, IAuthenticationService authentication, IIdentityService identity, IJWKeysetService jwks, MobileConnectConfig config)
+        public MobileConnectInterface(MobileConnectConfig config, IDiscoveryService discovery, IAuthenticationService authentication, IIdentityService identity, IJWKeysetService jwks)
         {
             this._discovery = discovery;
             this._authentication = authentication;
             this._identity = identity;
             this._jwks = jwks;
+            this._config = config;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the MobileConnectInterface class using default concrete implementations
+        /// </summary>
+        /// <param name="config">Configuration options</param>
+        /// <param name="cache">Concrete implementation of ICache</param>
+        public MobileConnectInterface(MobileConnectConfig config, ICache cache)
+            : this(config, cache, new RestClient()) { }
+
+        /// <summary>
+        /// Initializes a new instance of the MobileConnectInterface class using default concrete implementations
+        /// </summary>
+        /// <param name="config">Configuration options</param>
+        /// <param name="cache">Concrete implementation of ICache</param>
+        /// <param name="client">Restclient for all http requests. Will default if null.</param>
+        public MobileConnectInterface(MobileConnectConfig config, ICache cache, RestClient client)
+            : this(config, new DiscoveryService(cache, client), new AuthenticationService(client), new IdentityService(client), new JWKeysetService(client, cache)) { }
+
+        /// <summary>
+        /// R1 supporting constructor, identity and jwks services will be defaulted
+        /// </summary>
+        /// <param name="discovery">Instance of IDiscovery concrete implementation</param>
+        /// <param name="authentication">Instance of IAuthentication concrete implementation</param>
+        /// <param name="config">Configuration options</param>
+        [Obsolete("Constructor will be removed in v3")]
+        public MobileConnectInterface(IDiscoveryService discovery, IAuthenticationService authentication, MobileConnectConfig config)
+        {
+            var cache = discovery.Cache;
+            var client = new Utils.RestClient();
+            this._discovery = discovery;
+            this._authentication = authentication;
+            this._identity = new IdentityService(client);
+            this._jwks = new JWKeysetService(client, cache);
             this._config = config;
         }
 

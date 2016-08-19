@@ -56,11 +56,14 @@ namespace GSMA.MobileConnect.Authentication
             options.ClientId = clientId;
 
             string version;
-            options.Scope = CoerceAuthenticationScope(options.Scope, versions, shouldUseAuthorize, out version);
+            string coercedScope = CoerceAuthenticationScope(options.Scope, versions, shouldUseAuthorize, out version);
+            Log.Info(() => $"scope={options.Scope} => coercedScope={coercedScope}");
+            options.Scope = coercedScope;
 
             UriBuilder build = new UriBuilder(authorizeUrl);
             build.AddQueryParams(GetAuthenticationQueryParams(options, shouldUseAuthorize, version));
 
+            Log.Info(() => $"Authentication URI={build.Uri.AbsoluteUri}");
             return new StartAuthenticationResponse() { Url = build.Uri.AbsoluteUri };
         }
 
@@ -80,10 +83,12 @@ namespace GSMA.MobileConnect.Authentication
             }
             catch (Exception e) when (e is System.Net.WebException || e is TaskCanceledException)
             {
-                return new RequestTokenResponse(new ErrorResponse { Error = "auth_cancelled", ErrorDescription = "Headless authentication was cancelled or a timeout occurred" });
+                Log.Error("Headless authentication was cancelled", e);
+                return new RequestTokenResponse(new ErrorResponse { Error = Constants.ErrorCodes.AuthCancelled, ErrorDescription = "Headless authentication was cancelled or a timeout occurred" });
             }
             catch (HttpRequestException e)
             {
+                Log.Error("Headless authentication failed", e);
                 throw new MobileConnectEndpointHttpException(e.Message, e);
             }
 
@@ -172,6 +177,7 @@ namespace GSMA.MobileConnect.Authentication
             }
             catch (Exception e) when (e is HttpRequestException || e is System.Net.WebException || e is TaskCanceledException)
             {
+                Log.Error(() => $"Error occurred while requesting token url={requestTokenUrl}", e);
                 throw new MobileConnectEndpointHttpException(e.Message, e);
             }
         }
@@ -187,16 +193,24 @@ namespace GSMA.MobileConnect.Authentication
         {
             if (tokenResponse?.ResponseData == null)
             {
+                Log.Warning(() => $"Token was incomplete from issuer={issuer}");
                 return TokenValidationResult.IncompleteTokenResponse;
             }
 
             TokenValidationResult result = TokenValidation.ValidateAccessToken(tokenResponse.ResponseData);
             if(result != TokenValidationResult.Valid)
             {
+                Log.Warning(() => $"Access token was invalid from issuer={issuer}");
                 return result;
             }
 
-            return TokenValidation.ValidateIdToken(tokenResponse.ResponseData.IdToken, clientId, issuer, nonce, maxAge, keyset);
+            result = TokenValidation.ValidateIdToken(tokenResponse.ResponseData.IdToken, clientId, issuer, nonce, maxAge, keyset);
+            if(result != TokenValidationResult.Valid)
+            {
+                Log.Warning(() => $"IDToken was invalid from issuer={issuer} for reason={result}");
+            }
+
+            return result;
         }
 
         /// <inheritdoc/>

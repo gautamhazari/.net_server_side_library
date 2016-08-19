@@ -39,7 +39,7 @@ namespace GSMA.MobileConnect.Test.Web
         {
             var session = "session";
             var response = new DiscoveryResponse(_responses["authentication"]);
-            var status = MobileConnectStatus.StartAuthorization(response);
+            var status = MobileConnectStatus.StartAuthentication(response);
             status.SDKSession = session;
 
             var actual = ResponseConverter.Convert(status);
@@ -56,7 +56,7 @@ namespace GSMA.MobileConnect.Test.Web
         {
             var state = "qpwoeirurytalsksjdhdgf";
             var nonce = "qpwowieuryrttalksjsggdfj";
-            var status = MobileConnectStatus.Authorization(AUTHORIZE_URL, state, nonce);
+            var status = MobileConnectStatus.Authentication(AUTHORIZE_URL, state, nonce);
 
             var actual = ResponseConverter.Convert(status);
 

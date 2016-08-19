@@ -64,7 +64,7 @@ namespace GSMA.MobileConnect.Test
                 RedirectUrl = "http://qwertyuiop",
             };
 
-            _mobileConnect = new MobileConnectInterface(_discovery, _authentication, _identity, _jwks, _config);
+            _mobileConnect = new MobileConnectInterface(_config, _discovery, _authentication, _identity, _jwks);
         }
 
         [Test]
