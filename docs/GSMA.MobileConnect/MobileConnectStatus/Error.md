@@ -1,6 +1,6 @@
-MobileConnectStatus.Error Method (String, String, Exception)
-============================================================
-Creates a Status with ResponseType error and error related properties filled. Indicates that the MobileConnect process has been aborted due to an issue encountered.
+MobileConnectStatus.Error Method (ErrorResponse, String)
+========================================================
+Creates a status with ResponseType erorr and error related properties filled. Indicates that the MobileConnect process has been aborted due to an issue encountered.
 
 **Namespace:** [GSMA.MobileConnect][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
@@ -10,25 +10,20 @@ Syntax
 
 ```csharp
 public static MobileConnectStatus Error(
-	string error,
-	string message,
-	Exception ex
+	ErrorResponse error,
+	string caller = null
 )
 ```
 
 #### Parameters
 
 ##### *error*
-Type: [System.String][2]  
-Error code
+Type: [GSMA.MobileConnect.ErrorResponse][2]  
+ErrorResponse to retrieve error information from (Required)
 
-##### *message*
-Type: [System.String][2]  
-User friendly error message
-
-##### *ex*
-Type: [System.Exception][3]  
-Exception encountered (allows null)
+##### *caller* (Optional)
+Type: [System.String][3]  
+Name of calling method
 
 #### Return Value
 Type: [MobileConnectStatus][4]  
@@ -42,7 +37,7 @@ See Also
 [GSMA.MobileConnect Namespace][1]  
 
 [1]: ../README.md
-[2]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
-[3]: http://msdn.microsoft.com/en-us/library/c18k6c59
+[2]: ../ErrorResponse/README.md
+[3]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
 [4]: README.md
 [5]: ../../_icons/Help.png

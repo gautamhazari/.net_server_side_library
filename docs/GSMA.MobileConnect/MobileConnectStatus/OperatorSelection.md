@@ -10,7 +10,8 @@ Syntax
 
 ```csharp
 public static MobileConnectStatus OperatorSelection(
-	string url
+	string url,
+	string caller = null
 )
 ```
 
@@ -19,6 +20,10 @@ public static MobileConnectStatus OperatorSelection(
 ##### *url*
 Type: [System.String][2]  
 Operator selection URL returned from [IDiscoveryService][3]
+
+##### *caller* (Optional)
+Type: [System.String][2]  
+Name of calling method
 
 #### Return Value
 Type: [MobileConnectStatus][4]  

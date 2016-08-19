@@ -9,7 +9,7 @@ Syntax
 ------
 
 ```csharp
-public const string MOBILECONNECTIDENTITYPHONE = "openid mc_identity_phonenumber"
+public static readonly string MOBILECONNECTIDENTITYPHONE
 ```
 
 #### Field Value

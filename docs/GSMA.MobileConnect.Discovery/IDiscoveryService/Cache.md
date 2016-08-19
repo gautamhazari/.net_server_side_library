@@ -9,11 +9,11 @@ Syntax
 ------
 
 ```csharp
-IDiscoveryCache Cache { get; }
+ICache Cache { get; }
 ```
 
 #### Property Value
-Type: [IDiscoveryCache][2]
+Type: [ICache][2]
 
 See Also
 --------
@@ -23,6 +23,6 @@ See Also
 [GSMA.MobileConnect.Discovery Namespace][1]  
 
 [1]: ../README.md
-[2]: ../../GSMA.MobileConnect.Cache/IDiscoveryCache/README.md
+[2]: ../../GSMA.MobileConnect.Cache/ICache/README.md
 [3]: README.md
 [4]: ../../_icons/Help.png

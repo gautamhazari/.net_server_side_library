@@ -39,6 +39,14 @@ Properties
 ![Public property] | [ErrorUri][6]         | The error URI         
 
 
+Methods
+-------
+
+                                 | Name               | Description                                                                                               
+-------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------------- 
+![Public method]![Static member] | [CreateFromUrl][7] | Creates an instance of the class ErrorResponse using a redirect url as the source for the error arguments 
+
+
 See Also
 --------
 
@@ -51,6 +59,8 @@ See Also
 [4]: Error.md
 [5]: ErrorDescription.md
 [6]: ErrorUri.md
-[7]: ../../_icons/Help.png
+[7]: CreateFromUrl.md
+[8]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Public property]: ../../_icons/pubproperty.gif "Public property"
+[Static member]: ../../_icons/static.gif "Static member"

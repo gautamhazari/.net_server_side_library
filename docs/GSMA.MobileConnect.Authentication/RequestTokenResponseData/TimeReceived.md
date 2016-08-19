@@ -9,7 +9,7 @@ Syntax
 ------
 
 ```csharp
-public DateTime TimeReceived { get; set; }
+public DateTime TimeReceived { get; }
 ```
 
 #### Property Value

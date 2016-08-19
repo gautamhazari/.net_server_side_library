@@ -24,29 +24,32 @@ The **MobileConnectInterface** type exposes the following members.
 Constructors
 ------------
 
-                 | Name                        | Description                                                    
----------------- | --------------------------- | -------------------------------------------------------------- 
-![Public method] | [MobileConnectInterface][5] | Initializes a new instance of the MobileConnectInterface class 
+                 | Name                                                                                                                            | Description                                                                                           
+---------------- | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- 
+![Public method] | [MobileConnectInterface(MobileConnectConfig, ICache)][5]                                                                        | Initializes a new instance of the MobileConnectInterface class using default concrete implementations 
+![Public method] | [MobileConnectInterface(IDiscoveryService, IAuthenticationService, MobileConnectConfig)][6]                                     | **Obsolete.**R1 supporting constructor, identity and jwks services will be defaulted                  
+![Public method] | [MobileConnectInterface(MobileConnectConfig, ICache, RestClient)][7]                                                            | Initializes a new instance of the MobileConnectInterface class using default concrete implementations 
+![Public method] | [MobileConnectInterface(MobileConnectConfig, IDiscoveryService, IAuthenticationService, IIdentityService, IJWKeysetService)][8] | Initializes a new instance of the MobileConnectInterface class                                        
 
 
 Methods
 -------
 
-                 | Name                                             | Description                                                                                                                                                                                                                              
----------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
-![Public method] | [AttemptDiscovery][6]                            | Synchronous wrapper for [AttemptDiscoveryAsync(String, String, String, MobileConnectRequestOptions)][7]                                                                                                                                  
-![Public method] | [AttemptDiscoveryAfterOperatorSelection][8]      | Synchronous wrapper for [AttemptDiscoveryAfterOperatorSelectionAsync(Uri)][9]                                                                                                                                                            
-![Public method] | [AttemptDiscoveryAfterOperatorSelectionAsync][9] | Attempt discovery using the values returned from the operator selection redirect                                                                                                                                                         
-![Public method] | [AttemptDiscoveryAsync][7]                       | Attempt discovery using the supplied parameters. If msisdn, mcc and mnc are null the result will be operator selection, otherwise valid parameters will result in a StartAuthorization status                                            
-![Public method] | [HandleUrlRedirect][10]                          | Synchronous wrapper for [HandleUrlRedirectAsync(Uri, DiscoveryResponse, String, String)][11]                                                                                                                                             
-![Public method] | [HandleUrlRedirectAsync][11]                     | Handles continuation of the process following a completed redirect. Only the redirectedUrl is required, however if the redirect being handled is the result of calling the Authorization URL then the remaining parameters are required. 
-![Public method] | [RequestIdentity][12]                            | Syncronous wrapper for [RequestIdentityAsync(DiscoveryResponse, String, MobileConnectRequestOptions)][13]                                                                                                                                
-![Public method] | [RequestIdentityAsync][13]                       | Request user info using the access token returned by [RequestTokenAsync(DiscoveryResponse, Uri, String, String)][14]                                                                                                                     
-![Public method] | [RequestToken][15]                               | Synchronous wrapper for [RequestTokenAsync(DiscoveryResponse, Uri, String, String)][14]                                                                                                                                                  
-![Public method] | [RequestTokenAsync][14]                          | Request token using the values returned from the authorization redirect                                                                                                                                                                  
-![Public method] | [RequestUserInfo][16]                            | Syncronous wrapper for [RequestUserInfoAsync(DiscoveryResponse, String, MobileConnectRequestOptions)][17]                                                                                                                                
-![Public method] | [RequestUserInfoAsync][17]                       | Request user info using the access token returned by [RequestTokenAsync(DiscoveryResponse, Uri, String, String)][14]                                                                                                                     
-![Public method] | [StartAuthentication][18]                        | Creates an authorization url with parameters to begin the authorization process                                                                                                                                                          
+                 | Name                                              | Description                                                                                                                                                                                                                              
+---------------- | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+![Public method] | [AttemptDiscovery][9]                             | Synchronous wrapper for [AttemptDiscoveryAsync(String, String, String, MobileConnectRequestOptions)][10]                                                                                                                                 
+![Public method] | [AttemptDiscoveryAfterOperatorSelection][11]      | Synchronous wrapper for [AttemptDiscoveryAfterOperatorSelectionAsync(Uri)][12]                                                                                                                                                           
+![Public method] | [AttemptDiscoveryAfterOperatorSelectionAsync][12] | Attempt discovery using the values returned from the operator selection redirect                                                                                                                                                         
+![Public method] | [AttemptDiscoveryAsync][10]                       | Attempt discovery using the supplied parameters. If msisdn, mcc and mnc are null the result will be operator selection, otherwise valid parameters will result in a StartAuthorization status                                            
+![Public method] | [HandleUrlRedirect][13]                           | Synchronous wrapper for [HandleUrlRedirectAsync(Uri, DiscoveryResponse, String, String, MobileConnectRequestOptions)][14]                                                                                                                
+![Public method] | [HandleUrlRedirectAsync][14]                      | Handles continuation of the process following a completed redirect. Only the redirectedUrl is required, however if the redirect being handled is the result of calling the Authorization URL then the remaining parameters are required. 
+![Public method] | [RequestIdentity][15]                             | Syncronous wrapper for [RequestIdentityAsync(DiscoveryResponse, String, MobileConnectRequestOptions)][16]                                                                                                                                
+![Public method] | [RequestIdentityAsync][16]                        | Request user info using the access token returned by [RequestTokenAsync(DiscoveryResponse, Uri, String, String, MobileConnectRequestOptions)][17]                                                                                        
+![Public method] | [RequestToken][18]                                | Synchronous wrapper for [RequestTokenAsync(DiscoveryResponse, Uri, String, String, MobileConnectRequestOptions)][17]                                                                                                                     
+![Public method] | [RequestTokenAsync][17]                           | Request token using the values returned from the authorization redirect                                                                                                                                                                  
+![Public method] | [RequestUserInfo][19]                             | Syncronous wrapper for [RequestUserInfoAsync(DiscoveryResponse, String, MobileConnectRequestOptions)][20]                                                                                                                                
+![Public method] | [RequestUserInfoAsync][20]                        | Request user info using the access token returned by [RequestTokenAsync(DiscoveryResponse, Uri, String, String, MobileConnectRequestOptions)][17]                                                                                        
+![Public method] | [StartAuthentication][21]                         | Creates an authorization url with parameters to begin the authorization process                                                                                                                                                          
 
 
 See Also
@@ -54,30 +57,33 @@ See Also
 
 #### Reference
 [GSMA.MobileConnect Namespace][4]  
-[GSMA.MobileConnect.MobileConnectWebInterface][19]  
-[GSMA.MobileConnect.MobileConnectStatus][20]  
-[GSMA.MobileConnect.MobileConnectConfig][21]  
+[GSMA.MobileConnect.MobileConnectWebInterface][22]  
+[GSMA.MobileConnect.MobileConnectStatus][23]  
+[GSMA.MobileConnect.MobileConnectConfig][24]  
 
 [1]: ../../GSMA.MobileConnect.Discovery/IDiscoveryService/README.md
 [2]: ../../GSMA.MobileConnect.Authentication/IAuthenticationService/README.md
 [3]: http://msdn.microsoft.com/en-us/library/e5kfa45b
 [4]: ../README.md
-[5]: _ctor.md
-[6]: AttemptDiscovery.md
-[7]: AttemptDiscoveryAsync.md
-[8]: AttemptDiscoveryAfterOperatorSelection.md
-[9]: AttemptDiscoveryAfterOperatorSelectionAsync.md
-[10]: HandleUrlRedirect.md
-[11]: HandleUrlRedirectAsync.md
-[12]: RequestIdentity.md
-[13]: RequestIdentityAsync.md
-[14]: RequestTokenAsync.md
-[15]: RequestToken.md
-[16]: RequestUserInfo.md
-[17]: RequestUserInfoAsync.md
-[18]: StartAuthentication.md
-[19]: ../MobileConnectWebInterface/README.md
-[20]: ../MobileConnectStatus/README.md
-[21]: ../MobileConnectConfig/README.md
-[22]: ../../_icons/Help.png
+[5]: _ctor_1.md
+[6]: _ctor.md
+[7]: _ctor_2.md
+[8]: _ctor_3.md
+[9]: AttemptDiscovery.md
+[10]: AttemptDiscoveryAsync.md
+[11]: AttemptDiscoveryAfterOperatorSelection.md
+[12]: AttemptDiscoveryAfterOperatorSelectionAsync.md
+[13]: HandleUrlRedirect.md
+[14]: HandleUrlRedirectAsync.md
+[15]: RequestIdentity.md
+[16]: RequestIdentityAsync.md
+[17]: RequestTokenAsync.md
+[18]: RequestToken.md
+[19]: RequestUserInfo.md
+[20]: RequestUserInfoAsync.md
+[21]: StartAuthentication.md
+[22]: ../MobileConnectWebInterface/README.md
+[23]: ../MobileConnectStatus/README.md
+[24]: ../MobileConnectConfig/README.md
+[25]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"

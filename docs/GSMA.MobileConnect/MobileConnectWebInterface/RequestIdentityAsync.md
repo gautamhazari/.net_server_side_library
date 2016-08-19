@@ -1,6 +1,6 @@
 MobileConnectWebInterface.RequestIdentityAsync Method (HttpRequestMessage, DiscoveryResponse, String, MobileConnectRequestOptions)
 ==================================================================================================================================
-Request identity using the access token returned by [RequestTokenAsync(HttpRequestMessage, DiscoveryResponse, Uri, String, String)][1]
+Request identity using the access token returned by [RequestTokenAsync(HttpRequestMessage, DiscoveryResponse, Uri, String, String, MobileConnectRequestOptions)][1]
 
 **Namespace:** [GSMA.MobileConnect][2]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

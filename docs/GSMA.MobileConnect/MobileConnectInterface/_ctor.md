@@ -1,6 +1,8 @@
-MobileConnectInterface Constructor
-==================================
-Initializes a new instance of the MobileConnectInterface class
+MobileConnectInterface Constructor (IDiscoveryService, IAuthenticationService, MobileConnectConfig)
+===================================================================================================
+
+**Note: This API is now obsolete.**
+R1 supporting constructor, identity and jwks services will be defaulted
 
 **Namespace:** [GSMA.MobileConnect][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
@@ -9,10 +11,10 @@ Syntax
 ------
 
 ```csharp
+[ObsoleteAttribute("Constructor will be removed in v3")]
 public MobileConnectInterface(
 	IDiscoveryService discovery,
 	IAuthenticationService authentication,
-	IIdentityService identity,
 	MobileConnectConfig config
 )
 ```
@@ -27,12 +29,8 @@ Instance of IDiscovery concrete implementation
 Type: [GSMA.MobileConnect.Authentication.IAuthenticationService][3]  
 Instance of IAuthentication concrete implementation
 
-##### *identity*
-Type: [GSMA.MobileConnect.Identity.IIdentityService][4]  
-Instance of IIdentityService concrete implementation
-
 ##### *config*
-Type: [GSMA.MobileConnect.MobileConnectConfig][5]  
+Type: [GSMA.MobileConnect.MobileConnectConfig][4]  
 Configuration options
 
 
@@ -40,13 +38,12 @@ See Also
 --------
 
 #### Reference
-[MobileConnectInterface Class][6]  
+[MobileConnectInterface Class][5]  
 [GSMA.MobileConnect Namespace][1]  
 
 [1]: ../README.md
 [2]: ../../GSMA.MobileConnect.Discovery/IDiscoveryService/README.md
 [3]: ../../GSMA.MobileConnect.Authentication/IAuthenticationService/README.md
-[4]: ../../GSMA.MobileConnect.Identity/IIdentityService/README.md
-[5]: ../MobileConnectConfig/README.md
-[6]: README.md
-[7]: ../../_icons/Help.png
+[4]: ../MobileConnectConfig/README.md
+[5]: README.md
+[6]: ../../_icons/Help.png

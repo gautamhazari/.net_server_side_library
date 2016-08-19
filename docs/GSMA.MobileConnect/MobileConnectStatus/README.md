@@ -43,18 +43,19 @@ Properties
 Methods
 -------
 
-                                 | Name                                                         | Description                                                                                                                                                                  
--------------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
-![Public method]![Static member] | [Authorization][18]                                          | Creates a Status with ResponseType Authorization and url for next process step. Indicates that the next step should be navigating to the Authorization URL.                  
-![Public method]![Static member] | [Complete][19]                                               | Creates a Status with ResponseType Complete and the complete [RequestTokenResponse][20]. Indicates that the MobileConnect process is complete and the user is authenticated. 
-![Public method]![Static member] | [Error(String, String, Exception)][21]                       | Creates a Status with ResponseType error and error related properties filled. Indicates that the MobileConnect process has been aborted due to an issue encountered.         
-![Public method]![Static member] | [Error(String, String, Exception, RequestTokenResponse)][22] | Creates a Status with ResponseType error and error related properties filled. Indicates that the MobileConnect process has been aborted due to an issue encountered.         
-![Public method]![Static member] | [Error(String, String, Exception, DiscoveryResponse)][23]    | Creates a Status with ResponseType error and error related properties filled. Indicates that the MobileConnect process has been aborted due to an issue encountered.         
-![Public method]![Static member] | [Identity][24]                                               | Creates a status with ResponseType Identity and the complete [IdentityResponse][9]. Indicates that an identity request has been successful.                                  
-![Public method]![Static member] | [OperatorSelection][25]                                      | Creates a Status with ResponseType OperatorSelection and url for next process step. Indicates that the next step should be navigating to the operator selection URL.         
-![Public method]![Static member] | [StartAuthorization][26]                                     | Creates a Status with ResponseType StartAuthorization and the complete [DiscoveryResponse][5]. Indicates that the next step should be starting authorization.                
-![Public method]![Static member] | [StartDiscovery][27]                                         | Creates a Status with ResponseType StartDiscovery. Indicates that some required data was missing and the discovery process needs to be restarted.                            
-![Public method]![Static member] | [UserInfo][28]                                               | Creates a status with ResponseType UserInfo and the complete [IdentityResponse][9]. Indicates that a user info request has been successful.                                  
+                                 | Name                                                                 | Description                                                                                                                                                                  
+-------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+![Public method]![Static member] | [Authentication][18]                                                 | Creates a Status with ResponseType Authorization and url for next process step. Indicates that the next step should be navigating to the Authorization URL.                  
+![Public method]![Static member] | [Complete][19]                                                       | Creates a Status with ResponseType Complete and the complete [RequestTokenResponse][20]. Indicates that the MobileConnect process is complete and the user is authenticated. 
+![Public method]![Static member] | [Error(ErrorResponse, String)][21]                                   | Creates a status with ResponseType erorr and error related properties filled. Indicates that the MobileConnect process has been aborted due to an issue encountered.         
+![Public method]![Static member] | [Error(String, String, Exception, String)][22]                       | Creates a Status with ResponseType error and error related properties filled. Indicates that the MobileConnect process has been aborted due to an issue encountered.         
+![Public method]![Static member] | [Error(String, String, Exception, RequestTokenResponse, String)][23] | Creates a Status with ResponseType error and error related properties filled. Indicates that the MobileConnect process has been aborted due to an issue encountered.         
+![Public method]![Static member] | [Error(String, String, Exception, DiscoveryResponse, String)][24]    | Creates a Status with ResponseType error and error related properties filled. Indicates that the MobileConnect process has been aborted due to an issue encountered.         
+![Public method]![Static member] | [Identity][25]                                                       | Creates a status with ResponseType Identity and the complete [IdentityResponse][9]. Indicates that an identity request has been successful.                                  
+![Public method]![Static member] | [OperatorSelection][26]                                              | Creates a Status with ResponseType OperatorSelection and url for next process step. Indicates that the next step should be navigating to the operator selection URL.         
+![Public method]![Static member] | [StartAuthentication][27]                                            | Creates a Status with ResponseType StartAuthorization and the complete [DiscoveryResponse][5]. Indicates that the next step should be starting authorization.                
+![Public method]![Static member] | [StartDiscovery][28]                                                 | Creates a Status with ResponseType StartDiscovery. Indicates that some required data was missing and the discovery process needs to be restarted.                            
+![Public method]![Static member] | [UserInfo][29]                                                       | Creates a status with ResponseType UserInfo and the complete [IdentityResponse][9]. Indicates that a user info request has been successful.                                  
 
 
 See Also
@@ -80,18 +81,19 @@ See Also
 [15]: State.md
 [16]: TokenResponse.md
 [17]: Url.md
-[18]: Authorization.md
+[18]: Authentication.md
 [19]: Complete.md
 [20]: ../../GSMA.MobileConnect.Authentication/RequestTokenResponse/README.md
 [21]: Error.md
-[22]: Error_1.md
-[23]: Error_2.md
-[24]: Identity.md
-[25]: OperatorSelection.md
-[26]: StartAuthorization.md
-[27]: StartDiscovery.md
-[28]: UserInfo.md
-[29]: ../../_icons/Help.png
+[22]: Error_3.md
+[23]: Error_1.md
+[24]: Error_2.md
+[25]: Identity.md
+[26]: OperatorSelection.md
+[27]: StartAuthentication.md
+[28]: StartDiscovery.md
+[29]: UserInfo.md
+[30]: ../../_icons/Help.png
 [Public property]: ../../_icons/pubproperty.gif "Public property"
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Static member]: ../../_icons/static.gif "Static member"

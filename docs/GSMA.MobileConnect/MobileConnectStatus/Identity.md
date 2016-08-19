@@ -10,7 +10,8 @@ Syntax
 
 ```csharp
 public static MobileConnectStatus Identity(
-	IdentityResponse response
+	IdentityResponse response,
+	string caller = null
 )
 ```
 
@@ -20,20 +21,25 @@ public static MobileConnectStatus Identity(
 Type: [GSMA.MobileConnect.Identity.IdentityResponse][3]  
 UserInfoResponse returned from [IIdentityService][4]
 
+##### *caller* (Optional)
+Type: [System.String][5]  
+Name of calling method
+
 #### Return Value
-Type: [MobileConnectStatus][5]  
+Type: [MobileConnectStatus][6]  
 MobileConnectStatus with ResponseType Identity
 
 See Also
 --------
 
 #### Reference
-[MobileConnectStatus Class][5]  
+[MobileConnectStatus Class][6]  
 [GSMA.MobileConnect Namespace][2]  
 
 [1]: IdentityResponse.md
 [2]: ../README.md
 [3]: ../../GSMA.MobileConnect.Identity/IdentityResponse/README.md
 [4]: ../../GSMA.MobileConnect.Identity/IIdentityService/README.md
-[5]: README.md
-[6]: ../../_icons/Help.png
+[5]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
+[6]: README.md
+[7]: ../../_icons/Help.png

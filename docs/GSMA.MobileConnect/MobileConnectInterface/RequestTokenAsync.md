@@ -13,7 +13,8 @@ public Task<MobileConnectStatus> RequestTokenAsync(
 	DiscoveryResponse discoveryResponse,
 	Uri redirectedUrl,
 	string expectedState,
-	string expectedNonce
+	string expectedNonce,
+	MobileConnectRequestOptions options
 )
 ```
 
@@ -35,22 +36,27 @@ The state value returned from the StartAuthorization call should be passed here,
 Type: [System.String][4]  
 The nonce value returned from the StartAuthorization call should be passed here, it will be used to ensure the token was not requested using a replay attack
 
+##### *options*
+Type: [GSMA.MobileConnect.MobileConnectRequestOptions][5]  
+Optional parameters
+
 #### Return Value
-Type: [Task][5]&lt;[MobileConnectStatus][6]>  
+Type: [Task][6]&lt;[MobileConnectStatus][7]>  
 MobileConnectStatus object with required information for continuing the mobileconnect process
 
 See Also
 --------
 
 #### Reference
-[MobileConnectInterface Class][7]  
+[MobileConnectInterface Class][8]  
 [GSMA.MobileConnect Namespace][1]  
 
 [1]: ../README.md
 [2]: ../../GSMA.MobileConnect.Discovery/DiscoveryResponse/README.md
 [3]: http://msdn.microsoft.com/en-us/library/txt7706a
 [4]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
-[5]: http://msdn.microsoft.com/en-us/library/dd321424
-[6]: ../MobileConnectStatus/README.md
-[7]: README.md
-[8]: ../../_icons/Help.png
+[5]: ../MobileConnectRequestOptions/README.md
+[6]: http://msdn.microsoft.com/en-us/library/dd321424
+[7]: ../MobileConnectStatus/README.md
+[8]: README.md
+[9]: ../../_icons/Help.png

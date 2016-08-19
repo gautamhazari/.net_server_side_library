@@ -9,7 +9,7 @@ Syntax
 ------
 
 ```csharp
-public Nullable<DateTime> Expiry { get; set; }
+public Nullable<DateTime> Expiry { get; }
 ```
 
 #### Property Value

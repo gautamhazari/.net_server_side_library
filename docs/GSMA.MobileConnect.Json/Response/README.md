@@ -32,15 +32,16 @@ Constructors
 Properties
 ----------
 
-                   | Name                  | Description               
------------------- | --------------------- | ------------------------- 
-![Public property] | [apis][4]             | Parsed from JSON response 
-![Public property] | [client_id][5]        | Parsed from JSON response 
-![Public property] | [client_secret][6]    | Parsed from JSON response 
-![Public property] | [country][7]          | Parsed from JSON response 
-![Public property] | [currency][8]         | Parsed from JSON response 
-![Public property] | [serving_operator][9] | Parsed from JSON response 
-![Public property] | [subscriber_id][10]   | Parsed from JSON response 
+                   | Name                      | Description               
+------------------ | ------------------------- | ------------------------- 
+![Public property] | [apis][4]                 | Parsed from JSON response 
+![Public property] | [applicationShortName][5] | Parsed from JSON response 
+![Public property] | [client_id][6]            | Parsed from JSON response 
+![Public property] | [client_secret][7]        | Parsed from JSON response 
+![Public property] | [country][8]              | Parsed from JSON response 
+![Public property] | [currency][9]             | Parsed from JSON response 
+![Public property] | [serving_operator][10]    | Parsed from JSON response 
+![Public property] | [subscriber_id][11]       | Parsed from JSON response 
 
 
 See Also
@@ -53,12 +54,13 @@ See Also
 [2]: ../README.md
 [3]: _ctor.md
 [4]: apis.md
-[5]: client_id.md
-[6]: client_secret.md
-[7]: country.md
-[8]: currency.md
-[9]: serving_operator.md
-[10]: subscriber_id.md
-[11]: ../../_icons/Help.png
+[5]: applicationShortName.md
+[6]: client_id.md
+[7]: client_secret.md
+[8]: country.md
+[9]: currency.md
+[10]: serving_operator.md
+[11]: subscriber_id.md
+[12]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Public property]: ../../_icons/pubproperty.gif "Public property"

@@ -10,7 +10,8 @@ Syntax
 
 ```csharp
 public static MobileConnectStatus Complete(
-	RequestTokenResponse response
+	RequestTokenResponse response,
+	string caller = null
 )
 ```
 
@@ -20,19 +21,24 @@ public static MobileConnectStatus Complete(
 Type: [GSMA.MobileConnect.Authentication.RequestTokenResponse][1]  
 RequestTokenResponse returned from [IAuthenticationService][3]
 
+##### *caller* (Optional)
+Type: [System.String][4]  
+Name of calling method
+
 #### Return Value
-Type: [MobileConnectStatus][4]  
+Type: [MobileConnectStatus][5]  
 MobileConnectStatus with ResponseType Complete
 
 See Also
 --------
 
 #### Reference
-[MobileConnectStatus Class][4]  
+[MobileConnectStatus Class][5]  
 [GSMA.MobileConnect Namespace][2]  
 
 [1]: ../../GSMA.MobileConnect.Authentication/RequestTokenResponse/README.md
 [2]: ../README.md
 [3]: ../../GSMA.MobileConnect.Authentication/IAuthenticationService/README.md
-[4]: README.md
-[5]: ../../_icons/Help.png
+[4]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
+[5]: README.md
+[6]: ../../_icons/Help.png

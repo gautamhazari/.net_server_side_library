@@ -1,6 +1,6 @@
 MobileConnectInterface.RequestIdentityAsync Method
 ==================================================
-Request user info using the access token returned by [RequestTokenAsync(DiscoveryResponse, Uri, String, String)][1]
+Request user info using the access token returned by [RequestTokenAsync(DiscoveryResponse, Uri, String, String, MobileConnectRequestOptions)][1]
 
 **Namespace:** [GSMA.MobileConnect][2]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

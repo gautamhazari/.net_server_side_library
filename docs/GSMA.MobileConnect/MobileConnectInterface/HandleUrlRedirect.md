@@ -1,6 +1,6 @@
 MobileConnectInterface.HandleUrlRedirect Method
 ===============================================
-Synchronous wrapper for [HandleUrlRedirectAsync(Uri, DiscoveryResponse, String, String)][1]
+Synchronous wrapper for [HandleUrlRedirectAsync(Uri, DiscoveryResponse, String, String, MobileConnectRequestOptions)][1]
 
 **Namespace:** [GSMA.MobileConnect][2]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
@@ -14,7 +14,7 @@ public MobileConnectStatus HandleUrlRedirect(
 	DiscoveryResponse discoveryResponse = null,
 	string expectedState = null,
 	string expectedNonce = null,
-	string requestTokenUrl = null
+	MobileConnectRequestOptions options = null
 )
 ```
 
@@ -36,19 +36,19 @@ The state value returned from the StartAuthorization call should be passed here,
 Type: [System.String][5]  
 The nonce value returned from the StartAuthorization call should be passed here, it will be used to ensure the token was not requested using a replay attack
 
-##### *requestTokenUrl* (Optional)
-Type: [System.String][5]  
-Url for token request, this is returned by the discovery process. An error status will be returned if the redirected url triggers a token request and this parameter has not been provided.
+##### *options* (Optional)
+Type: [GSMA.MobileConnect.MobileConnectRequestOptions][6]  
+Optional parameters
 
 #### Return Value
-Type: [MobileConnectStatus][6]  
+Type: [MobileConnectStatus][7]  
 MobileConnectStatus object with required information for continuing the mobileconnect process
 
 See Also
 --------
 
 #### Reference
-[MobileConnectInterface Class][7]  
+[MobileConnectInterface Class][8]  
 [GSMA.MobileConnect Namespace][2]  
 
 [1]: HandleUrlRedirectAsync.md
@@ -56,6 +56,7 @@ See Also
 [3]: http://msdn.microsoft.com/en-us/library/txt7706a
 [4]: ../../GSMA.MobileConnect.Discovery/DiscoveryResponse/README.md
 [5]: http://msdn.microsoft.com/en-us/library/s1wwdcbf
-[6]: ../MobileConnectStatus/README.md
-[7]: README.md
-[8]: ../../_icons/Help.png
+[6]: ../MobileConnectRequestOptions/README.md
+[7]: ../MobileConnectStatus/README.md
+[8]: README.md
+[9]: ../../_icons/Help.png

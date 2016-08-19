@@ -19,7 +19,7 @@ Members
 Member name   | Value | Description                                                                                
 ------------- | ----- | ------------------------------------------------------------------------------------------ 
 **Header**    | 0     | First part of the JSON Web Token containing information about the Algorithm and token type 
-**Payload**   | 1     | Second part of the JSON Web Token containing data and required claims                      
+**Claims**    | 1     | Second part of the JSON Web Token containing data and required claims                      
 **Signature** | 2     | Third part of the JSON Web Token used to verify the token authenticity                     
 
 

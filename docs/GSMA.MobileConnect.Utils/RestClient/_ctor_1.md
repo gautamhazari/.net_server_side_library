@@ -1,5 +1,5 @@
-RestClient Constructor (Nullable&lt;TimeSpan>)
-==============================================
+RestClient Constructor (Nullable&lt;TimeSpan>, Nullable&lt;TimeSpan>)
+=====================================================================
 Creates a new instance of RestClient with optional timeout specified
 
 **Namespace:** [GSMA.MobileConnect.Utils][1]  
@@ -10,7 +10,8 @@ Syntax
 
 ```csharp
 public RestClient(
-	Nullable<TimeSpan> timeout
+	Nullable<TimeSpan> timeout,
+	Nullable<TimeSpan> headlessTimeout
 )
 ```
 
@@ -19,6 +20,10 @@ public RestClient(
 ##### *timeout*
 Type: [System.Nullable][2]&lt;[TimeSpan][3]>  
 Timeout applied to all requests
+
+##### *headlessTimeout*
+Type: [System.Nullable][2]&lt;[TimeSpan][3]>  
+Timeout applied to headless requests
 
 
 See Also

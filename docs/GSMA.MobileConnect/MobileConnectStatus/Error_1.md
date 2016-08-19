@@ -1,5 +1,5 @@
-MobileConnectStatus.Error Method (String, String, Exception, RequestTokenResponse)
-==================================================================================
+MobileConnectStatus.Error Method (String, String, Exception, RequestTokenResponse, String)
+==========================================================================================
 Creates a Status with ResponseType error and error related properties filled. Indicates that the MobileConnect process has been aborted due to an issue encountered.
 
 **Namespace:** [GSMA.MobileConnect][1]  
@@ -13,7 +13,8 @@ public static MobileConnectStatus Error(
 	string error,
 	string message,
 	Exception ex,
-	RequestTokenResponse response
+	RequestTokenResponse response,
+	string caller = null
 )
 ```
 
@@ -34,6 +35,10 @@ Exception encountered (allows null)
 ##### *response*
 Type: [GSMA.MobileConnect.Authentication.RequestTokenResponse][4]  
 RequestTokenResponse if returned from [IAuthenticationService][5]
+
+##### *caller* (Optional)
+Type: [System.String][2]  
+Name of calling method
 
 #### Return Value
 Type: [MobileConnectStatus][6]  

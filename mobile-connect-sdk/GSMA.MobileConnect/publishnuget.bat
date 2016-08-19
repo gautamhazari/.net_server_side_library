@@ -29,7 +29,7 @@ IF ERRORLEVEL 1 (
 )
 
 ECHO.&ECHO Publishing to Nuget&ECHO.
-rem %nugetCmd% push "%~dp0GSMA.MobileConnect.*.*.*.nupkg" %GSMANUGETAPIKEY% -Source nuget.org
+%nugetCmd% push "%~dp0GSMA.MobileConnect.*.*.*.nupkg" %GSMANUGETAPIKEY% -Source nuget.org
 
 IF ERRORLEVEL 1 (
 	ECHO.&ECHO Nuget push failed

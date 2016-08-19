@@ -10,7 +10,7 @@ Syntax
 
 ```csharp
 public DiscoveryService(
-	IDiscoveryCache cache,
+	ICache cache,
 	RestClient client
 )
 ```
@@ -18,7 +18,7 @@ public DiscoveryService(
 #### Parameters
 
 ##### *cache*
-Type: [GSMA.MobileConnect.Cache.IDiscoveryCache][2]  
+Type: [GSMA.MobileConnect.Cache.ICache][2]  
 Cache implmentation to use for storage of [DiscoveryResponse][3] and [ProviderMetadata][4]
 
 ##### *client*
@@ -34,7 +34,7 @@ See Also
 [GSMA.MobileConnect.Discovery Namespace][1]  
 
 [1]: ../README.md
-[2]: ../../GSMA.MobileConnect.Cache/IDiscoveryCache/README.md
+[2]: ../../GSMA.MobileConnect.Cache/ICache/README.md
 [3]: ../DiscoveryResponse/README.md
 [4]: ../ProviderMetadata/README.md
 [5]: ../../GSMA.MobileConnect.Utils/RestClient/README.md

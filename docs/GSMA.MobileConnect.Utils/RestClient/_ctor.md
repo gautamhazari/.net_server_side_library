@@ -1,6 +1,6 @@
 RestClient Constructor
 ======================
-Creates a new instance of RestClient with default timeout of 30 seconds
+Creates a new instance of RestClient with default timeout of 30 seconds and headless timeout of 2 minutes
 
 **Namespace:** [GSMA.MobileConnect.Utils][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)

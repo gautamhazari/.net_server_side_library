@@ -9,7 +9,7 @@ Syntax
 ------
 
 ```csharp
-public string RefreshToken { get; set; }
+public string RefreshToken { get; }
 ```
 
 #### Property Value

@@ -9,7 +9,7 @@ Syntax
 ------
 
 ```csharp
-public const string MOBILECONNECTIDENTITYSIGNUPPLUS = "openid mc_identity_signupplus"
+public static readonly string MOBILECONNECTIDENTITYSIGNUPPLUS
 ```
 
 #### Field Value
