@@ -33,9 +33,5 @@
         /// Parsed from JSON response
         /// </summary>
         public string client_secret { get; set; }
-        /// <summary>
-        /// Parsed from JSON response
-        /// </summary>
-        public string subscriber_id { get; set; }
     }
 }
