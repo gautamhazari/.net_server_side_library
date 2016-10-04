@@ -10,6 +10,7 @@ namespace GSMA.MobileConnect.Identity
     /// </summary>
     public class IdentityResponse
     {
+
         private object _convertedResponseData;
 
         /// <summary>
@@ -28,6 +29,8 @@ namespace GSMA.MobileConnect.Identity
         /// </summary>
         public string ResponseJson {get;set;}
 
+        public IdentityService.InfoType Type { get; private set; }
+
         /// <summary>
         /// Creates a new instance of the UserInfoResponse class
         /// </summary>
@@ -35,15 +38,16 @@ namespace GSMA.MobileConnect.Identity
         public IdentityResponse(string responseJson)
         {
             ParseResponseData(responseJson);
-            this.ResponseJson = responseJson;
+            ResponseJson = responseJson;
         }
 
         /// <summary>
         /// Creates a new instance of the UserInfoResponse class using a the json content of a RestResponse for construction
         /// </summary>
         /// <param name="rawResponse">Response from UserInfo endpoint</param>
-        public IdentityResponse(RestResponse rawResponse)
+        public IdentityResponse(RestResponse rawResponse, IdentityService.InfoType type)
         {
+            Type = type;
             this.ResponseCode = (int)rawResponse.StatusCode;
             if (this.ResponseCode < 400)
             {
@@ -66,7 +70,7 @@ namespace GSMA.MobileConnect.Identity
             if(responseData.IndexOf('{') > -1)
             {
                 // Already JSON
-                Log.Info("Indentity recieved as JSON");
+                Log.Info("Identity recieved as JSON");
                 return responseData;
             }
 
@@ -76,7 +80,7 @@ namespace GSMA.MobileConnect.Identity
                 return JsonWebToken.DecodePart(responseData, JWTPart.Claims);
             }
 
-            return "{\"error\":\"invalid_format\",\"error_description\":\"Recieved UserInfo response that is not JSON or JWT format\"}";
+            return $"{{\"error\":\"invalid_format\",\"error_description\":\"Received {Type} response that is not JSON or JWT format\"}}";
         }
 
         /// <summary>

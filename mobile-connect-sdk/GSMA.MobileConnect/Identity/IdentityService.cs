@@ -11,6 +11,21 @@ namespace GSMA.MobileConnect.Identity
     /// </summary>
     public class IdentityService : IIdentityService
     {
+        /// <summary>
+        /// The types of info request.
+        /// </summary>
+        public enum InfoType
+        {
+            /// <summary>
+            /// Identity info
+            /// </summary>
+            PremiumInfo,
+            /// <summary>
+            /// Basic user info
+            /// </summary>
+            UserInfo
+
+        }
         private readonly RestClient _client;
 
         /// <summary>
@@ -25,27 +40,33 @@ namespace GSMA.MobileConnect.Identity
         /// <inheritdoc/>
         public async Task<IdentityResponse> RequestIdentity(string premiumInfoUrl, string accessToken)
         {
-            Validate.RejectNullOrEmpty(premiumInfoUrl, "premiumInfoUrl");
-            return await RequestUserInfo(premiumInfoUrl, accessToken);
+            Validate.RejectNullOrEmpty(premiumInfoUrl, nameof(premiumInfoUrl));
+            Validate.RejectNullOrEmpty(accessToken, nameof(accessToken));
+            return await RequestInfoInternal(premiumInfoUrl, accessToken, InfoType.PremiumInfo);
         }
 
         /// <inheritdoc/>
         public async Task<IdentityResponse> RequestUserInfo(string userInfoUrl, string accessToken)
         {
-            Validate.RejectNullOrEmpty(userInfoUrl, "userInfoUrl");
-            Validate.RejectNullOrEmpty(accessToken, "accessToken");
+            Validate.RejectNullOrEmpty(userInfoUrl, nameof(userInfoUrl));
+            Validate.RejectNullOrEmpty(accessToken, nameof(accessToken));
+            return await RequestInfoInternal(userInfoUrl, accessToken, InfoType.UserInfo);
+        }
 
+        /// <inheritdoc/>
+        private async Task<IdentityResponse> RequestInfoInternal(string infoUrl, string accessToken, InfoType infoType)
+        {
             try
             {
                 RestResponse response;
                 var auth = RestAuthentication.Bearer(accessToken);
-                response = await _client.GetAsync(userInfoUrl, auth, null, null, null);
+                response = await _client.GetAsync(infoUrl, auth, null, null, null);
 
-                return new IdentityResponse(response);
+                return new IdentityResponse(response, infoType);
             }
             catch (Exception e) when (e is HttpRequestException || e is System.Net.WebException || e is TaskCanceledException)
             {
-                Log.Error(() => $"Error occurred while requesting identity url={userInfoUrl}", e);
+                Log.Error(() => $"Error occurred while requesting identity url={infoUrl}", e);
                 throw new MobileConnectEndpointHttpException(e.Message, e);
             }
         }
