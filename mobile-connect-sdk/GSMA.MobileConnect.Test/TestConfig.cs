@@ -20,15 +20,15 @@ namespace GSMA.MobileConnect.Test
             "R2"
         };
 
-        public static TestConfigurationData GetConfig(string key)
+        public static TestConfigurationData GetConfig(string environment)
         {
             TestConfigurationData data;
-            if(!_availablesConfigs.TryGetValue(key, out data))
-            {
-                Assert.Inconclusive($"Test cancelled as config was not found for {key}, if you are an SDK developer you need secret-config.json");
+            if(!_availablesConfigs.TryGetValue(environment, out data))
+            { 
+                Assert.Inconclusive($"Test cancelled as config was not found for {environment}, one or more of the following environment variables are missing, GSMADemo{environment}ClientId, GSMADemo{environment}ClientSecret, GSMADemo{environment}DiscoveryUrl, GSMADemoRedirectUrl.");
             }
 
-            return _availablesConfigs[key];
+            return _availablesConfigs[environment];
         }
 
         public static void LoadConfig()
@@ -51,7 +51,7 @@ namespace GSMA.MobileConnect.Test
             string clientIdVar = $"GSMADemo{environment}ClientId";
             string clientSecretVar = $"GSMADemo{environment}ClientSecret";
             string discoveryVar = $"GSMADemo{environment}DiscoveryUrl";
-            string redirectVar = $"GSMADemoRedirectUrl";
+            string redirectVar = "GSMADemoRedirectUrl";
 
             string clientId = System.Environment.GetEnvironmentVariable(clientIdVar);
             string clientSecret = System.Environment.GetEnvironmentVariable(clientSecretVar);

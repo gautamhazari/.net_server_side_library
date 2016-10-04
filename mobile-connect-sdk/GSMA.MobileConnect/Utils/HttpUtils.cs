@@ -125,19 +125,22 @@ namespace GSMA.MobileConnect.Utils
         {
             try
             {
-                var cookieString = request.Headers.GetValues("Cookie").FirstOrDefault();
-                if (string.IsNullOrEmpty(cookieString))
-                {
-                    return null;
-                }
+                IEnumerable<string> values;
+                request.Headers.TryGetValues("Cookie", out values);
+                var cookieString = values?.FirstOrDefault();
 
-                var cookies = cookieString.Split(';');
-
-                return cookies.Select(x =>
-                {
-                    var kv = x.Trim().Split('=');
-                    return kv.Length == 2 ? new BasicKeyValuePair(kv[0], kv[1]) : new BasicKeyValuePair(null, null);
-                });
+                return string.IsNullOrEmpty(cookieString)
+                    ? null
+                    : cookieString
+                        .Split(';')
+                        .Select(x =>
+                            {
+                                var kv = x.Trim().Split('=');
+                                return kv.Length == 2
+                                    ? new BasicKeyValuePair(kv[0], kv[1])
+                                    : new BasicKeyValuePair(null, null);
+                            }
+                        );
             }
             catch (InvalidOperationException)
             {

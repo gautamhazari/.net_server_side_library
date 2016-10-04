@@ -4,6 +4,7 @@ using GSMA.MobileConnect.Utils;
 using GSMA.MobileConnect.Web;
 using NUnit.Framework;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace GSMA.MobileConnect.Test.Web
 {
@@ -108,6 +109,22 @@ namespace GSMA.MobileConnect.Test.Web
             Assert.AreEqual("error", actual.Action);
             Assert.AreEqual(error, actual.Error);
             Assert.AreEqual(description, actual.Description);
+        }
+
+        [TestCase("{}")]
+        [TestCase("{\"mobile_connect_version_supported\":undefined}")]
+        [TestCase("{\"mobile_connect_version_supported\":[]}")]
+        [TestCase("{\"mobile_connect_version_supported\":[{\"test\":\"mc_v1.2\"}]}")]
+        public void CustomSerializationCanSerializeBackAndForth(string objectAsJson)
+        {
+            var asObject = JsonConvert.DeserializeObject<ProviderMetadata>(objectAsJson);
+            var backToJson = JsonConvert.SerializeObject(asObject);
+            var backToObject = JsonConvert.DeserializeObject<ProviderMetadata>(backToJson);
+
+            Assert.AreEqual(
+                asObject.MobileConnectVersionSupported.IsVersionSupported("1.0"),
+                backToObject.MobileConnectVersionSupported.IsVersionSupported("1.0")
+            );
         }
     }
 }

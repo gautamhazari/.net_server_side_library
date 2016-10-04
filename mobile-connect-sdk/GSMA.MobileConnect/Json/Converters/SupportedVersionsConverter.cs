@@ -59,6 +59,7 @@ namespace GSMA.MobileConnect.Json.Converters
 
             if (dict == null || dict.Count == 0)
             {
+                writer.WriteNull();
                 return;
             }
 
