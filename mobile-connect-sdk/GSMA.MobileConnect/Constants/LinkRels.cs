@@ -31,11 +31,6 @@
         public const string JWKS = "jwks";
 
         /// <summary>
-        /// Key for applicationShortName
-        /// </summary>
-        public const string APPLICATION_SHORT_NAME = "applicationShortName";
-
-        /// <summary>
         /// Key for openid-configuration
         /// </summary>
         public const string OPENID_CONFIGURATION = "openid-configuration";

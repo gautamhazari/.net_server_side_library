@@ -5,8 +5,9 @@ namespace GSMA.MobileConnect.Test
 {
     internal static class TestConfig
     {
-        private const string VALID_MSISDN = "+447700900250";
         private const string INVALID_MSISDN = "+447700900987";
+        private const string VALID_MSISDN = "447700200200";
+
         private const string REDIRECT_URL = "http://localhost:8001/mobileconnect.html";
 
         public static string DEFAULT_TEST_CONFIG = "SandboxR2";

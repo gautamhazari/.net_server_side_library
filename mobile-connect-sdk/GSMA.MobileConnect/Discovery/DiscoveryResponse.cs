@@ -141,7 +141,7 @@ namespace GSMA.MobileConnect.Discovery
             }
 
             this.OperatorUrls = OperatorUrls.Parse(responseData);
-            this.ApplicationShortName = responseData.response?.applicationShortName;
+            this.ApplicationShortName = responseData.response?.client_name;
 
             if (responseData.error != null)
             {

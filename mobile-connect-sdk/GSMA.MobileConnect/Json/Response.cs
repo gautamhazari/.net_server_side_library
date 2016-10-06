@@ -8,7 +8,7 @@
         /// <summary>
         /// Parsed from JSON response
         /// </summary>
-        public string applicationShortName { get; set; }
+        public string client_name { get; set; }
         /// <summary>
         /// Parsed from JSON response
         /// </summary>

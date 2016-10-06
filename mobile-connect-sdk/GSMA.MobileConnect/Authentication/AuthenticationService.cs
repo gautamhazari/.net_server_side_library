@@ -72,8 +72,12 @@ namespace GSMA.MobileConnect.Authentication
             string state, string nonce, string encryptedMSISDN, SupportedVersions versions, AuthenticationOptions options, CancellationToken cancellationToken = default(CancellationToken))
         {
             options = options ?? new AuthenticationOptions();
-            // Mikhail says this isn't supported on the endpoint 6/10/2016
-            //options.Prompt = "mobile";
+
+            bool shouldUseAuthorize = ShouldUseAuthorize(options);
+            if (shouldUseAuthorize)
+            {
+                options.Prompt = "mobile";
+            }
 
             string authUrl = StartAuthentication(clientId, authorizeUrl, redirectUrl, state, nonce, encryptedMSISDN, versions, options).Url;
             Uri finalRedirect = null;
