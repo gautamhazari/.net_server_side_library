@@ -2,7 +2,9 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -35,7 +37,6 @@ namespace GSMA.MobileConnect.Utils
 
             _noRedirectHandler = new HttpClientHandler { UseCookies = false, AllowAutoRedirect = false };
             _noRedirectClient = new HttpClient(_noRedirectHandler, true);
-            _noRedirectClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             _noRedirectClient.Timeout = headlessTimeout ?? TimeSpan.FromMinutes(2);
         }
 
@@ -173,47 +174,45 @@ namespace GSMA.MobileConnect.Utils
             return await FollowRedirects(uri, expectedRedirectUrl, cancellationToken: cancellationToken);
         }
 
+
+        private bool RedirectShouldBeFollowed(Uri redirectUrl , string expectedUrl)
+        {
+            return redirectUrl.AbsoluteUri.StartsWith(expectedUrl) == false;
+        }
+
         private async Task<Uri> FollowRedirects(string targetUrl, string expectedUrl, int maxRedirects = 50, CancellationToken cancellationToken = default(CancellationToken))
         {
             HttpResponseMessage response = null;
             var nextUrl = new Uri(targetUrl);
             var numRedirects = 0;
 
-            do
+            while (RedirectShouldBeFollowed(nextUrl,expectedUrl))
             {
-                try
+                if (numRedirects > maxRedirects)
                 {
-                    if (numRedirects > maxRedirects)
-                    {
-                        throw new HttpRequestException("Stuck in redirect loop");
-                    }
-
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        throw new TaskCanceledException();
-                    }
-
-                    if (response != null)
-                    {
-                        nextUrl = RetrieveLocation(response);
-                        numRedirects++;
-                    }
-
-                    response = await _noRedirectClient.GetAsync(nextUrl, cancellationToken);
+                    throw new HttpRequestException("Stuck in redirect loop");
                 }
-                catch (HttpRequestException)
+
+                if (cancellationToken.IsCancellationRequested)
                 {
-                    //If the final redirect is a non-working url then it may cause a request exception, if we verify it is the redirect url then just return it.
-                    //Otherwise it was a request failure at some other point in the redirect chain
-                    if (nextUrl.AbsoluteUri.StartsWith(expectedUrl))
-                    {
-                        return nextUrl;
-                    }
-                    throw;
+                    throw new TaskCanceledException();
                 }
-            } while (((int)response.StatusCode).ToString().StartsWith("3"));
-
-            return response.RequestMessage.RequestUri;
+                response = await _noRedirectClient.GetAsync(nextUrl, cancellationToken);
+                numRedirects++;
+                if (response.Headers.Location == null)
+                {
+                    // This may be due to a defect in the gateway. Sometimes instead of a redirect URL we get
+                    // a 200 response with no Location header. If this happens, just try wait and try again
+                    // with the same url. 
+                    await Task.Delay(1000);
+                }
+                else
+                {
+                    nextUrl = RetrieveLocation(response);
+                }
+            }
+            
+            return nextUrl;
         }
 
         private Uri RetrieveLocation(HttpResponseMessage message)
