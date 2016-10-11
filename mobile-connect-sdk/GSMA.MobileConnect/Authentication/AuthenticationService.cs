@@ -84,7 +84,7 @@ namespace GSMA.MobileConnect.Authentication
 
             try
             {
-                finalRedirect = await _client.GetFinalRedirect(authUrl, redirectUrl, cancellationToken);
+                finalRedirect = await _client.GetFinalRedirect(authUrl, redirectUrl, options.PollFrequencyInMs, options.MaxRedirects, cancellationToken);
             }
             catch (Exception e) when (e is System.Net.WebException || e is TaskCanceledException)
             {

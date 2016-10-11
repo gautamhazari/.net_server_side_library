@@ -29,6 +29,9 @@ namespace GSMA.MobileConnect.Identity
         /// </summary>
         public string ResponseJson {get;set;}
 
+        /// <summary>
+        /// UserInfo or PremiumInfo
+        /// </summary>
         public IdentityService.InfoType Type { get; private set; }
 
         /// <summary>
@@ -45,6 +48,7 @@ namespace GSMA.MobileConnect.Identity
         /// Creates a new instance of the UserInfoResponse class using a the json content of a RestResponse for construction
         /// </summary>
         /// <param name="rawResponse">Response from UserInfo endpoint</param>
+        /// <param name="type">The type of response, user info or premium info</param>
         public IdentityResponse(RestResponse rawResponse, IdentityService.InfoType type)
         {
             Type = type;

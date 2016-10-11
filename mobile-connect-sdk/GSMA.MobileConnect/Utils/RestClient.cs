@@ -18,9 +18,7 @@ namespace GSMA.MobileConnect.Utils
     public class RestClient : IDisposable
     {
         private bool _disposed;
-        private readonly HttpClientHandler _handler;
         private readonly HttpClient _client;
-        private readonly HttpClientHandler _noRedirectHandler;
         private readonly HttpClient _noRedirectClient;
 
         /// <summary>
@@ -30,13 +28,13 @@ namespace GSMA.MobileConnect.Utils
         /// <param name="headlessTimeout">Timeout applied to headless requests</param>
         public RestClient(TimeSpan? timeout, TimeSpan? headlessTimeout)
         {
-            _handler = new HttpClientHandler { UseCookies = false };
-            _client = new HttpClient(_handler, true);
+            var handler = new HttpClientHandler { UseCookies = false };
+            _client = new HttpClient(handler, true);
             _client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             _client.Timeout = timeout ?? TimeSpan.FromSeconds(30);
 
-            _noRedirectHandler = new HttpClientHandler { UseCookies = false, AllowAutoRedirect = false };
-            _noRedirectClient = new HttpClient(_noRedirectHandler, true);
+            var noRedirectHandler = new HttpClientHandler { UseCookies = false, AllowAutoRedirect = false };
+            _noRedirectClient = new HttpClient(noRedirectHandler, true);
             _noRedirectClient.Timeout = headlessTimeout ?? TimeSpan.FromMinutes(2);
         }
 
@@ -165,28 +163,18 @@ namespace GSMA.MobileConnect.Utils
         /// <summary>
         /// Attempts to follow a redirect path until a concrete url is loaded or the expectedRedirectUrl is reached
         /// </summary>
-        /// <param name="uri">Target uri to attempt a HTTP GET</param>
+        /// <param name="targetUrl">Target uri to attempt a HTTP GET</param>
         /// <param name="expectedRedirectUrl">Redirect url expected, if a redirect with this location is hit the absolute uri of the location will be returned</param>
+        /// <param name="pollFrequencyInMs"></param>
+        /// <param name="maxRedirects"></param>
         /// <param name="cancellationToken">Cancellation token to allow cancellation of long running request if required</param>
         /// <returns>Final redirected url</returns>
-        public async Task<Uri> GetFinalRedirect(string uri, string expectedRedirectUrl, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<Uri> GetFinalRedirect(string targetUrl, string expectedRedirectUrl, int pollFrequencyInMs, int maxRedirects, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await FollowRedirects(uri, expectedRedirectUrl, cancellationToken: cancellationToken);
-        }
-
-
-        private bool RedirectShouldBeFollowed(Uri redirectUrl , string expectedUrl)
-        {
-            return redirectUrl.AbsoluteUri.StartsWith(expectedUrl) == false;
-        }
-
-        private async Task<Uri> FollowRedirects(string targetUrl, string expectedUrl, int maxRedirects = 50, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            HttpResponseMessage response = null;
             var nextUrl = new Uri(targetUrl);
             var numRedirects = 0;
 
-            while (RedirectShouldBeFollowed(nextUrl,expectedUrl))
+            while (NotArrivedAtExpectedUrl(nextUrl, expectedRedirectUrl))
             {
                 if (numRedirects > maxRedirects)
                 {
@@ -197,22 +185,27 @@ namespace GSMA.MobileConnect.Utils
                 {
                     throw new TaskCanceledException();
                 }
-                response = await _noRedirectClient.GetAsync(nextUrl, cancellationToken);
+                var response = await _noRedirectClient.GetAsync(nextUrl, cancellationToken);
                 numRedirects++;
                 if (response.Headers.Location == null)
                 {
                     // This may be due to a defect in the gateway. Sometimes instead of a redirect URL we get
-                    // a 200 response with no Location header. If this happens, just try wait and try again
+                    // a 200 response with no Location header. If this happens, just wait and try again
                     // with the same url. 
-                    await Task.Delay(1000);
+                    await Task.Delay(pollFrequencyInMs, cancellationToken).ConfigureAwait(false);
                 }
                 else
                 {
                     nextUrl = RetrieveLocation(response);
                 }
             }
-            
+
             return nextUrl;
+        }
+
+        private bool NotArrivedAtExpectedUrl(Uri redirectUrl , string expectedUrl)
+        {
+            return redirectUrl.AbsoluteUri.StartsWith(expectedUrl) == false;
         }
 
         private Uri RetrieveLocation(HttpResponseMessage message)
@@ -222,7 +215,7 @@ namespace GSMA.MobileConnect.Utils
             if (!uri.IsAbsoluteUri && uri.OriginalString.StartsWith("/"))
             {
                 var requestUri = message.RequestMessage.RequestUri;
-                var absolute = string.Format("{0}://{1}{2}", requestUri.Scheme, requestUri.Authority, uri.OriginalString);
+                var absolute = $"{requestUri.Scheme}://{requestUri.Authority}{uri.OriginalString}";
                 uri = new Uri(absolute);
             }
 
@@ -232,9 +225,24 @@ namespace GSMA.MobileConnect.Utils
         /// <inheritdoc/>
         public void Dispose()
         {
+            Dispose(true);
+
+            // Use SupressFinalize in case a subclass 
+            // of this type implements a finalizer.
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc/>
+        protected virtual void Dispose(bool disposing)
+        {
             if (!_disposed)
             {
-                _client.Dispose();
+                if (disposing)
+                {
+                    _client.Dispose();
+                    _noRedirectClient.Dispose();
+                }
+
                 _disposed = true;
             }
         }

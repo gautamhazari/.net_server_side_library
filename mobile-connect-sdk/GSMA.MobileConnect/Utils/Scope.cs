@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace GSMA.MobileConnect.Utils
@@ -33,17 +34,7 @@ namespace GSMA.MobileConnect.Utils
         /// <returns>List of scope values containing default scope values and no duplicated values</returns>
         public static List<string> CoerceOpenIdScope(IList<string> scopeValues, string defaultScope = Constants.Scope.OPENID)
         {
-            var splitDefault = defaultScope.Split().ToList();
-
-            for (int i = 0; i < splitDefault.Count; i++)
-            {
-                if (scopeValues.FirstOrDefault(x => x.Equals(splitDefault[i], StringComparison.OrdinalIgnoreCase)) == null)
-                {
-                    scopeValues.Insert(i, splitDefault[i]);
-                }
-            }
-
-            return scopeValues.Distinct().ToList();
+            return defaultScope.Split().Union(scopeValues).Distinct(StringComparer.CurrentCultureIgnoreCase).ToList();
         }
 
         internal static string CreateScope(IList<string> scopeValues)

@@ -55,10 +55,6 @@ namespace GSMA.MobileConnect.Authentication
 
             JObject header = JObject.Parse(JsonWebToken.DecodePart(idToken, JWTPart.Header));
             string alg = (string)header["alg"];
-            //if (!string.Equals(alg, "RS256", StringComparison.OrdinalIgnoreCase))
-            //{
-            //    return TokenValidationResult.IncorrectAlgorithm;
-            //}
 
             string keyid = (string)header["kid"];
             var key = keyset.GetMatching(x => x.KeyID == keyid && (string.IsNullOrEmpty(x.Algorithm) || x.Algorithm == alg)).FirstOrDefault();

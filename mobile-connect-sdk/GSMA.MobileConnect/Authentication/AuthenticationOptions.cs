@@ -157,5 +157,15 @@ namespace GSMA.MobileConnect.Authentication
         /// If <see cref="ClaimsJson"/> is specified then this property will be ignored
         /// </summary>
         public ClaimsParameter Claims { get; set; }
+
+        /// <summary>
+        /// Time in ms to wait between each poll for new redirect url when in headless mode.
+        /// </summary>
+        public int PollFrequencyInMs { get; set; } = 100;
+
+        /// <summary>
+        /// The number of redirects to allow during headless mode before aborting.
+        /// </summary>
+        public int MaxRedirects { get; set; } = 50;
     }
 }
