@@ -17,6 +17,9 @@ namespace GSMA.MobileConnect.Authentication
     /// </summary>
     public class AuthenticationService : IAuthenticationService
     {
+        public const string REVOKE_TOKEN_SUCCESS = "Revoke token successful";
+        public const string UNSUPPORTED_TOKEN_TYPE_ERROR = "Unsupported token type";
+
         private readonly static JsonSerializerSettings _jsonSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
         private readonly RestClient _client;
 
@@ -172,7 +175,7 @@ namespace GSMA.MobileConnect.Authentication
                 {
                     new BasicKeyValuePair(Constants.Parameters.AUTHENTICATION_REDIRECT_URI, redirectUrl),
                     new BasicKeyValuePair(Constants.Parameters.CODE, code),
-                    new BasicKeyValuePair(Constants.Parameters.GRANT_TYPE, Constants.DefaultOptions.GRANT_TYPE)
+                    new BasicKeyValuePair(Constants.Parameters.GRANT_TYPE, Constants.DefaultOptions.GRANT_TYPE_AUTH_CODE)
                 };
 
                 RestResponse response = await _client.PostAsync(requestTokenUrl, RestAuthentication.Basic(clientId, clientSecret), formData, null, null);
@@ -191,6 +194,50 @@ namespace GSMA.MobileConnect.Authentication
         public RequestTokenResponse RequestToken(string clientId, string clientSecret, string requestTokenUrl, string redirectUrl, string code)
         {
             return RequestTokenAsync(clientId, clientSecret, requestTokenUrl, redirectUrl, code).Result;
+        }
+
+        /// <inheritdoc/>
+        public RequestTokenResponse RefreshToken(string clientId, string clientSecret, string refreshTokenUrl, string refreshToken)
+        {
+            Validate.RejectNullOrEmpty(clientId, "clientId");
+            Validate.RejectNullOrEmpty(clientSecret, "clientSecret");
+            Validate.RejectNullOrEmpty(refreshTokenUrl, "refreshTokenUrl");
+            Validate.RejectNullOrEmpty(refreshToken, "refreshToken");
+
+            var formData = new List<BasicKeyValuePair>()
+                {
+                    new BasicKeyValuePair(Constants.Parameters.REFRESH_TOKEN, refreshToken ?? "refreshToken"),
+                    new BasicKeyValuePair(Constants.Parameters.GRANT_TYPE, Constants.DefaultOptions.GRANT_TYPE_AUTH_CODE)
+                };
+            var authentication = RestAuthentication.Basic(clientId, clientSecret);
+            var restResponse = _client.PostAsync(refreshTokenUrl, authentication, formData, null, null);
+
+            return new RequestTokenResponse(restResponse.Result);
+        }
+
+        /// <inheritdoc/>
+        public RequestTokenResponse RevokeToken(string clientId, string clientSecret, string revokeTokenUrl, string token, string tokenTypeHint)
+        {
+            Validate.RejectNullOrEmpty(clientId, "clientId");
+            Validate.RejectNullOrEmpty(clientSecret, "clientSecret");
+            Validate.RejectNullOrEmpty(revokeTokenUrl, "revokeTokenUrl");
+            Validate.RejectNullOrEmpty(token, "token");
+
+            var formData = new List<BasicKeyValuePair>()
+                {
+                    new BasicKeyValuePair(Constants.Parameters.TOKEN, token ?? "token")
+                };
+
+            if (tokenTypeHint != null)
+            {
+                formData.Add(new BasicKeyValuePair(Constants.Parameters.TOKEN_TYPE_HINT, tokenTypeHint));
+            }
+
+            var authentication = RestAuthentication.Basic(clientId, clientSecret);
+            var restResponse = _client.PostAsync(revokeTokenUrl, authentication, formData, null, null);
+            return new RequestTokenResponse(restResponse.Result);
+
+//            return restResponse.Result.StatusCode.Equals(200) ? REVOKE_TOKEN_SUCCESS : UNSUPPORTED_TOKEN_TYPE_ERROR;
         }
 
         /// <inheritdoc/>

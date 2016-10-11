@@ -361,5 +361,61 @@ namespace GSMA.MobileConnect
 
             return usable;
         }
+
+        internal static MobileConnectStatus RefreshToken(IAuthenticationService authentication, string refreshToken, DiscoveryResponse discoveryResponse, MobileConnectConfig config)
+        {
+            Validate.RejectNull(discoveryResponse, "discoveryResponse");
+            Validate.RejectNullOrEmpty(refreshToken, "refreshToken");
+
+            if (!IsUsableDiscoveryResponse(discoveryResponse))
+            {
+                return MobileConnectStatus.StartDiscovery();
+            }
+
+            string refreshTokenUrl = discoveryResponse.OperatorUrls.RequestTokenUrl ?? discoveryResponse.OperatorUrls.RequestTokenUrl;
+            string clientId = discoveryResponse.ResponseData.response.client_id ?? config.ClientId;
+            string clientSecret = discoveryResponse.ResponseData.response.client_secret ?? config.ClientSecret;
+
+            try
+            {
+                RequestTokenResponse requestTokenResponse = authentication.RefreshToken(clientId, clientSecret, refreshTokenUrl, refreshToken);
+                ErrorResponse errorResponse = requestTokenResponse.ErrorResponse;
+                if (errorResponse != null)
+                {
+                    Log.Error(() => $"Responding with responseType={MobileConnectResponseType.Error} for refreshToken for authentication service responded with error={errorResponse}");
+                    return MobileConnectStatus.Error(errorResponse);
+                }
+                else
+                {
+                    Log.Info(() => $"Refresh token success");
+                    return MobileConnectStatus.Complete(requestTokenResponse);
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(() => $"RefreshToken failed");
+                return MobileConnectStatus.Error(ErrorCodes.Unknown, "Refresh token error", e);
+            }
+        }
+
+        internal static MobileConnectStatus RevokeToken(IAuthenticationService authentication, string token, string tokenTypeHint, DiscoveryResponse discoveryResponse, MobileConnectConfig config)
+        {
+            Validate.RejectNull(discoveryResponse, "discoveryResponse");
+            Validate.RejectNullOrEmpty(token, "token");
+
+            string revokeTokenUrl = discoveryResponse.OperatorUrls.RevokeTokenUrl;
+            string clientId = discoveryResponse.ResponseData.response.client_id;
+            string clientSecret = discoveryResponse.ResponseData.response.client_secret;
+
+            try
+            {
+                return MobileConnectStatus.Complete(authentication.RevokeToken(clientId, clientSecret, revokeTokenUrl, token, tokenTypeHint));
+            }
+            catch (Exception e)
+            {
+                Log.Error(() => $"RevokeToken failed");
+                return MobileConnectStatus.Error(ErrorCodes.Unknown, "Revoke token error", e);
+            }
+        }
     }
 }

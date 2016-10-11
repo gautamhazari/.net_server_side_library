@@ -52,5 +52,11 @@
 
         //Params for Token
         internal const string GRANT_TYPE = "grant_type";
+        internal const string REFRESH_TOKEN = "refresh_token";
+        internal const string TOKEN = "token";
+        internal const string TOKEN_TYPE_HINT = "token_type_hint";
+
+        internal const string ACCESS_TOKEN_HINT = "access_token";
+        internal const string REFRESH_TOKEN_HINT = "refresh_token";
     }
 }

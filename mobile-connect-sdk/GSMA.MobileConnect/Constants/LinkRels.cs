@@ -31,6 +31,16 @@
         public const string JWKS = "jwks";
 
         /// <summary>
+        /// Key for token refresh url
+        /// </summary>
+        public const string TOKENREFRESH = "tokenrefresh";
+
+        /// <summary>
+        /// Key for token revoke url
+        /// </summary>
+        public const string TOKENREVOKE = "tokenrevoke";
+
+        /// <summary>
         /// Key for openid-configuration
         /// </summary>
         public const string OPENID_CONFIGURATION = "openid-configuration";

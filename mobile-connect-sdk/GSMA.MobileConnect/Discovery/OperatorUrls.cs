@@ -36,6 +36,16 @@ namespace GSMA.MobileConnect.Discovery
         public string JWKSUrl { get; set; }
 
         /// <summary>
+        /// Url for token refresh call
+        /// </summary>
+        public string RefreshTokenUrl { get; set; }
+
+        /// <summary>
+        /// Url for token revoke call
+        /// </summary>
+        public string RevokeTokenUrl { get; set; }
+
+        /// <summary>
         /// Url for Provider Metadata
         /// </summary>
         public string ProviderMetadataUrl { get; set; }
@@ -60,6 +70,8 @@ namespace GSMA.MobileConnect.Discovery
                 UserInfoUrl = GetUrl(links, LinkRels.USERINFO),
                 PremiumInfoUrl = GetUrl(links, LinkRels.PREMIUMINFO),
                 JWKSUrl = GetUrl(links, LinkRels.JWKS),
+                RefreshTokenUrl = GetUrl(links, LinkRels.TOKENREFRESH),
+                RevokeTokenUrl = GetUrl(links, LinkRels.TOKENREVOKE),
                 ProviderMetadataUrl = GetUrl(links, LinkRels.OPENID_CONFIGURATION),
             };
         }
@@ -81,6 +93,8 @@ namespace GSMA.MobileConnect.Discovery
             UserInfoUrl = metadata.UserInfoEndpoint ?? UserInfoUrl;
             PremiumInfoUrl = metadata.PremiumInfoEndpoint ?? PremiumInfoUrl;
             JWKSUrl = metadata.JwksUri ?? JWKSUrl;
+            RefreshTokenUrl = metadata.RefreshEndpoint ?? RefreshTokenUrl;
+            RevokeTokenUrl = metadata.RevokeEndpoint ?? RevokeTokenUrl;
         }
 
         private static string GetUrl(IEnumerable<Link> links, string rel)
