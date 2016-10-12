@@ -41,7 +41,7 @@ namespace GSMA.MobileConnect.Test
             var request = new HttpRequestMessage();
             var status = await mobileConnect.AttemptDiscoveryAsync(request, testConfig.ValidMSISDN, null, null, true, blankOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType, $"{status.ErrorCode} - {status.ErrorMessage}");
 
             var discoveryResponse = status.DiscoveryResponse;
             var encryptedMsisdn = status.DiscoveryResponse.ResponseData.subscriber_id;
@@ -52,7 +52,7 @@ namespace GSMA.MobileConnect.Test
             request = new HttpRequestMessage();
             status = await mobileConnect.RequestHeadlessAuthenticationAsync(request, discoveryResponse, encryptedMsisdn, state, nonce, blankOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.Complete, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.Complete, status.ResponseType, $"{status.ErrorCode} - {status.ErrorMessage}");
             Assert.IsNotEmpty(status.TokenResponse.ResponseData.AccessToken);
             Assert.IsNotEmpty(status.TokenResponse.ResponseData.IdToken);
         }
@@ -83,7 +83,7 @@ namespace GSMA.MobileConnect.Test
             var request = new HttpRequestMessage();
             var status = await mobileConnect.AttemptDiscoveryAsync(request, testConfig.ValidMSISDN, null, null, true, blankOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType, $"{status.ErrorCode} - {status.ErrorMessage}");
 
             var discoveryResponse = status.DiscoveryResponse;
             var encryptedMsisdn = status.DiscoveryResponse.ResponseData.subscriber_id;
@@ -95,7 +95,7 @@ namespace GSMA.MobileConnect.Test
             request = new HttpRequestMessage();
             status = await mobileConnect.RequestHeadlessAuthenticationAsync(request, discoveryResponse, encryptedMsisdn, state, nonce, authOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.Complete, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.Complete, status.ResponseType, $"{status.ErrorCode} - {status.ErrorMessage}");
             Assert.IsNotEmpty(status.TokenResponse.ResponseData.AccessToken);
             Assert.IsNotEmpty(status.TokenResponse.ResponseData.IdToken);
         }
@@ -126,7 +126,7 @@ namespace GSMA.MobileConnect.Test
             var request = new HttpRequestMessage();
             var status = await mobileConnect.AttemptDiscoveryAsync(request, testConfig.ValidMSISDN, null, null, true, blankOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType, $"{status.ErrorCode} - {status.ErrorMessage}");
 
             var sdksession = status.SDKSession;
             var encryptedMsisdn = status.DiscoveryResponse.ResponseData.subscriber_id;
@@ -137,7 +137,7 @@ namespace GSMA.MobileConnect.Test
             request = new HttpRequestMessage();
             status = await mobileConnect.RequestHeadlessAuthenticationAsync(request, sdksession, encryptedMsisdn, state, nonce, blankOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.Complete, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.Complete, status.ResponseType, $"{status.ErrorCode} - {status.ErrorMessage}");
             Assert.IsNotEmpty(status.TokenResponse.ResponseData.AccessToken);
             Assert.IsNotEmpty(status.TokenResponse.ResponseData.IdToken);
         }
@@ -168,7 +168,7 @@ namespace GSMA.MobileConnect.Test
             var request = new HttpRequestMessage();
             var status = await mobileConnect.AttemptDiscoveryAsync(request, testConfig.ValidMSISDN, null, null, true, blankOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType, $"{status.ErrorCode} - {status.ErrorMessage}");
 
             var discoveryResponse = status.DiscoveryResponse;
             var encryptedMsisdn = status.DiscoveryResponse.ResponseData.subscriber_id;
@@ -180,7 +180,7 @@ namespace GSMA.MobileConnect.Test
             request = new HttpRequestMessage();
             status = await mobileConnect.RequestHeadlessAuthenticationAsync(request, discoveryResponse, encryptedMsisdn, state, nonce, authOptions);
 
-            Assert.AreEqual(MobileConnectResponseType.Complete, status.ResponseType);
+            Assert.AreEqual(MobileConnectResponseType.Complete, status.ResponseType, $"{status.ErrorCode} - {status.ErrorMessage}");
             Assert.IsNotEmpty(status.TokenResponse.ResponseData.AccessToken);
             Assert.IsNotNull(status.IdentityResponse);
             Assert.IsNotEmpty(status.IdentityResponse.ResponseJson);

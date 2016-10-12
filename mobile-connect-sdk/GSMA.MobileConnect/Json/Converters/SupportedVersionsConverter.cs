@@ -44,7 +44,10 @@ namespace GSMA.MobileConnect.Json.Converters
 
                 foreach (var kvp in obj)
                 {
-                    dict.Add(kvp.Key, (string)kvp.Value);
+                    if (!dict.ContainsKey(kvp.Key))
+                    {
+                        dict.Add(kvp.Key, (string)kvp.Value);
+                    }
                 }
             }
 
