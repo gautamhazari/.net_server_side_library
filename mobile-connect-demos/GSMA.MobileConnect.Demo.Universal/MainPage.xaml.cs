@@ -60,6 +60,11 @@ namespace GSMA.MobileConnect.Demo.Universal
                 case MobileConnectResponseType.Complete:
                     Complete(response);
                     break;
+                case MobileConnectResponseType.TokenRevoked:
+                    validationResult.Text = "Token Revoked";
+                    identityButton.IsEnabled = false;
+                    userInfoButton.IsEnabled = false;
+                    break;
                 case MobileConnectResponseType.UserInfo:
                 case MobileConnectResponseType.Identity:
                     ShowIdentity(response);
@@ -170,6 +175,23 @@ namespace GSMA.MobileConnect.Demo.Universal
         private async void IdentityButton_Click(object sender, RoutedEventArgs e)
         {
             var response = await _mobileConnect.RequestIdentityAsync(_discoveryResponse, _token.AccessToken, new MobileConnectRequestOptions());
+            await HandleResponse(response);
+        }
+
+        private async void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(string.IsNullOrEmpty(_token.RefreshToken))
+            {
+                return;
+            }
+
+            var response = await _mobileConnect.RefreshTokenAsync(_token.RefreshToken, _discoveryResponse);
+            await HandleResponse(response);
+        }
+
+        private async void RevokeButton_Click(object sender, RoutedEventArgs e)
+        {
+            var response = await _mobileConnect.RevokeTokenAsync(_token.AccessToken, "access_token", _discoveryResponse);
             await HandleResponse(response);
         }
 

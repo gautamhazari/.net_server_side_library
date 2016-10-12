@@ -80,7 +80,13 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
                 <Button x:Name="userInfoButton" Grid.Column="0"
                         Content="Request UserInfo" 
@@ -89,6 +95,14 @@
                 <Button x:Name="identityButton" Grid.Column="1"
                         Content="Request Identity"
                         Click="IdentityButton_Click"
+                        Margin="10"/>
+                <Button x:Name="refreshButton" Grid.Column="2"
+                        Content="Refresh Token" 
+                        Click="RefreshButton_Click"
+                        Margin="10"/>
+                <Button x:Name="revokeButton" Grid.Column="3"
+                        Content="Revoke Token" 
+                        Click="RevokeButton_Click"
                         Margin="10"/>
             </Grid>
             <Button x:Name="resetButton"
