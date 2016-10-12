@@ -46,7 +46,7 @@ namespace GSMA.MobileConnect.Authentication
             options.Scope = options.Scope ?? "";
             bool shouldUseAuthorize = ShouldUseAuthorize(options);
 
-            if(shouldUseAuthorize)
+            if (shouldUseAuthorize)
             {
                 Validate.RejectNullOrEmpty(options.Context, "options.Context");
                 Validate.RejectNullOrEmpty(options.ClientName, "options.ClientName");
@@ -71,7 +71,7 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        public async Task<RequestTokenResponse> RequestHeadlessAuthentication(string clientId, string clientSecret, string authorizeUrl, string tokenUrl, string redirectUrl, 
+        public async Task<RequestTokenResponse> RequestHeadlessAuthentication(string clientId, string clientSecret, string authorizeUrl, string tokenUrl, string redirectUrl,
             string state, string nonce, string encryptedMSISDN, SupportedVersions versions, AuthenticationOptions options, CancellationToken cancellationToken = default(CancellationToken))
         {
             options = options ?? new AuthenticationOptions();
@@ -102,7 +102,7 @@ namespace GSMA.MobileConnect.Authentication
 
             var error = ErrorResponse.CreateFromUrl(finalRedirect.AbsoluteUri);
 
-            if(error != null)
+            if (error != null)
             {
                 return new RequestTokenResponse(error);
             }
@@ -117,13 +117,13 @@ namespace GSMA.MobileConnect.Authentication
             bool authnRequested = authnIndex > -1;
             bool mcProductRequested = options.Scope.LastIndexOf(Constants.Scope.MCPREFIX, StringComparison.OrdinalIgnoreCase) != authnIndex;
 
-            if(mcProductRequested)
+            if (mcProductRequested)
             {
                 return true;
             }
 
             // If context is passed and authn not specifically requested then use authorize
-            if(!authnRequested && !string.IsNullOrEmpty(options.Context))
+            if (!authnRequested && !string.IsNullOrEmpty(options.Context))
             {
                 return true;
             }
@@ -152,7 +152,7 @@ namespace GSMA.MobileConnect.Authentication
 
             splitScope.RemoveAll(x => x.Equals(disallowedScope, StringComparison.OrdinalIgnoreCase));
 
-            if(!shouldUseAuthorize && version == Constants.DefaultOptions.VERSION_MOBILECONNECTAUTHN)
+            if (!shouldUseAuthorize && version == Constants.DefaultOptions.VERSION_MOBILECONNECTAUTHN)
             {
                 splitScope.RemoveAll(x => x.Equals(Constants.Scope.AUTHN, StringComparison.OrdinalIgnoreCase));
             }
@@ -210,7 +210,17 @@ namespace GSMA.MobileConnect.Authentication
                 new BasicKeyValuePair(Constants.Parameters.GRANT_TYPE, Constants.GrantTypes.REFRESH_TOKEN),
             };
             var authentication = RestAuthentication.Basic(clientId, clientSecret);
-            var restResponse = await _client.PostAsync(refreshTokenUrl, authentication, formData, null, null);
+
+            RestResponse restResponse;
+            try
+            {
+                restResponse = await _client.PostAsync(refreshTokenUrl, authentication, formData, null, null);
+            }
+            catch (Exception e) when (e is HttpRequestException || e is System.Net.WebException || e is TaskCanceledException)
+            {
+                Log.Error(() => $"Error occurred while refreshing token url={refreshTokenUrl}", e);
+                throw new MobileConnectEndpointHttpException(e.Message, e);
+            }
 
             return new RequestTokenResponse(restResponse);
         }
@@ -260,14 +270,14 @@ namespace GSMA.MobileConnect.Authentication
             }
 
             TokenValidationResult result = TokenValidation.ValidateAccessToken(tokenResponse.ResponseData);
-            if(result != TokenValidationResult.Valid)
+            if (result != TokenValidationResult.Valid)
             {
                 Log.Warning(() => $"Access token was invalid from issuer={issuer}");
                 return result;
             }
 
             result = TokenValidation.ValidateIdToken(tokenResponse.ResponseData.IdToken, clientId, issuer, nonce, maxAge, keyset);
-            if(result != TokenValidationResult.Valid)
+            if (result != TokenValidationResult.Valid)
             {
                 Log.Warning(() => $"IDToken was invalid from issuer={issuer} for reason={result}");
             }
@@ -299,7 +309,7 @@ namespace GSMA.MobileConnect.Authentication
                 new BasicKeyValuePair(Constants.Parameters.VERSION, version),
             };
 
-            if(useAuthorize)
+            if (useAuthorize)
             {
                 authParameters.Add(new BasicKeyValuePair(Constants.Parameters.CLIENT_NAME, options.ClientName));
                 authParameters.Add(new BasicKeyValuePair(Constants.Parameters.CONTEXT, options.Context));

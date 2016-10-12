@@ -21,6 +21,7 @@ namespace GSMA.MobileConnect.Test.Authentication
         {
             { "token", new RestResponse(System.Net.HttpStatusCode.OK, "{\"access_token\":\"966ad150-16c5-11e6-944f-43079d13e2f3\",\"token_type\":\"Bearer\",\"expires_in\":3600,\"id_token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJub25jZSI6Ijc3YzE2M2VmZDkzYzQ4ZDFhNWY2NzdmNGNmNTUzOGE4Iiwic3ViIjoiY2M3OGEwMmNjM2ViNjBjOWVjNTJiYjljZDNhMTg5MTAiLCJhbXIiOlsiU0lNX1BJTiJdLCJhdXRoX3RpbWUiOjE0NjI4OTQ4NTcsImFjciI6IjIiLCJhenAiOiI2Njc0MmE4NS0yMjgyLTQ3NDctODgxZC1lZDViN2JkNzRkMmQiLCJpYXQiOjE0NjI4OTQ4NTYsImV4cCI6MTQ2Mjg5ODQ1NiwiYXVkIjpbIjY2NzQyYTg1LTIyODItNDc0Ny04ODFkLWVkNWI3YmQ3NGQyZCJdLCJpc3MiOiJodHRwOi8vb3BlcmF0b3JfYS5zYW5kYm94Mi5tb2JpbGVjb25uZWN0LmlvL29pZGMvYWNjZXNzdG9rZW4ifQ.lwXhpEp2WUTi0brKBosM8Uygnrdq6FnLqkZ0Bm53gXA\"}") },
             { "invalid-code", new RestResponse(System.Net.HttpStatusCode.BadRequest, "{\"error\":\"invalid_grant\",\"error_description\":\"Authorization code doesn't exist or is invalid for the client\"}") },
+            { "token-revoked", new RestResponse(System.Net.HttpStatusCode.OK, "") }
         };
 
         private MobileConnect.Discovery.SupportedVersions _defaultVersions = new MobileConnect.Discovery.SupportedVersions(new Dictionary<string, string> { ["openid"] = "mc_v1.2" });
@@ -224,6 +225,65 @@ namespace GSMA.MobileConnect.Test.Authentication
         }
 
         [Test]
+        public void RefreshTokenShouldHandleTokenResponse()
+        {
+            var response = _responses["token"];
+            _restClient.NextExpectedResponse = response;
+
+            var result = _authentication.RefreshToken(_config.ClientId, _config.ClientSecret, TOKEN_URL, "token");
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(200, result.ResponseCode);
+            Assert.IsNotNull(result.ResponseData);
+            Assert.IsNotEmpty(result.ResponseData.AccessToken);
+        }
+
+        [Test]
+        public void RefreshTokenShouldHandleHttpRequestException()
+        {
+            var response = _responses["token"];
+            _restClient.NextException = new System.Net.Http.HttpRequestException("this is the message");
+
+            Assert.ThrowsAsync<MobileConnectEndpointHttpException>(() => _authentication.RefreshTokenAsync(_config.ClientId, _config.ClientSecret, TOKEN_URL, "token"));
+        }
+
+        [Test]
+        public void RefreshTokenShouldHandleWebException()
+        {
+            var response = _responses["token"];
+            _restClient.NextException = new System.Net.WebException("this is the message");
+
+            Assert.ThrowsAsync<MobileConnectEndpointHttpException>(() => _authentication.RefreshTokenAsync(_config.ClientId, _config.ClientSecret, TOKEN_URL, "token"));
+        }
+
+        [Test]
+        public void RevokeTokenShouldMarkSuccessIfNoError()
+        {
+            var response = _responses["token-revoked"];
+            _restClient.NextExpectedResponse = response;
+
+            var result = _authentication.RevokeToken(_config.ClientId, _config.ClientSecret, "http://revoke", "token", "refresh_token");
+
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Success);
+            Assert.IsNull(result.ErrorResponse);
+        }
+
+        [Test]
+        public void RevokeTokenShouldReturnErrorIfError()
+        {
+            var response = _responses["invalid-code"];
+            _restClient.NextExpectedResponse = response;
+
+            var result = _authentication.RevokeToken(_config.ClientId, _config.ClientSecret, "http://revoke", "token", "refresh_token");
+
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.Success);
+            Assert.IsNotNull(result.ErrorResponse);
+            Assert.AreEqual("invalid_grant", result.ErrorResponse.Error);
+        }
+
+        [Test]
         public void ValidateTokenResponseShouldValidateIfAccessAndIdTokenAreValid()
         {
             var jwksJson = "{\"keys\":[{\"alg\":\"RS256\",\"e\":\"AQAB\",\"n\":\"hzr2li5ABVbbQ4BvdDskl6hejaVw0tIDYO-C0GBr5lRA-AXtmCO7bh0CEC9-R6mqctkzUhVnU22Vrj-B1J0JtJoaya9VTC3DdhzI_-7kxtIc5vrHq-ss5wo8-tK7UqtKLSRf9DcyZA0H9FEABbO5Qfvh-cfK4EI_ytA5UBZgO322RVYgQ9Do0D_-jf90dcuUgoxz_JTAOpVNc0u_m9LxGnGL3GhMbxLaX3eUublD40aK0nS2k37dOYOpQHxuAS8BZxLvS6900qqaZ6z0kwZ2WFq-hhk3Imd6fweS724fzqVslY7rHpM5n7z5m7s1ArurU1dBC1Dxw1Hzn6ZeJkEaZQ\",\"kty\":\"RSA\",\"use\":\"sig\"}]}";
@@ -388,6 +448,30 @@ namespace GSMA.MobileConnect.Test.Authentication
         public void RefreshTokenShouldThrowWhenRefreshTokenIsNull()
         {
             Assert.ThrowsAsync<MobileConnectInvalidArgumentException>(() => _authentication.RefreshTokenAsync(_config.ClientId, _config.ClientSecret, TOKEN_URL, null));
+        }
+
+        [Test]
+        public void RevokeTokenShouldThrowWhenClientIdIsNull()
+        {
+            Assert.ThrowsAsync<MobileConnectInvalidArgumentException>(() => _authentication.RevokeTokenAsync(null, _config.ClientSecret, "revoke url", "token", "token hint"));
+        }
+
+        [Test]
+        public void RevokeTokenShouldThrowWhenClientSecretIsNull()
+        {
+            Assert.ThrowsAsync<MobileConnectInvalidArgumentException>(() => _authentication.RevokeTokenAsync(_config.ClientId, null, "revoke url", "token", "token hint"));
+        }
+
+        [Test]
+        public void RevokeTokenShouldThrowWhenRevokeUrlIsNull()
+        {
+            Assert.ThrowsAsync<MobileConnectInvalidArgumentException>(() => _authentication.RevokeTokenAsync(_config.ClientId, _config.ClientSecret, null, "token", "token hint"));
+        }
+
+        [Test]
+        public void RevokeTokenShouldThrowWhenTokenIsNull()
+        {
+            Assert.ThrowsAsync<MobileConnectInvalidArgumentException>(() => _authentication.RevokeTokenAsync(_config.ClientId, _config.ClientSecret, "revoke url", null, "token hint"));
         }
 
         #endregion

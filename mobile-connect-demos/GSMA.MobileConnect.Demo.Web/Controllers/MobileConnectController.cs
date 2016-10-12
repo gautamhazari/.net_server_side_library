@@ -74,17 +74,17 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
 
         [HttpGet]
         [Route("refresh_token")]
-        public IHttpActionResult RefreshToken(string sdksession = null, string refreshToken = null)
+        public async Task<IHttpActionResult> RefreshToken(string sdksession = null, string refreshToken = null)
         {
-            var response = _mobileConnect.RefreshToken(Request, refreshToken, sdksession);
+            var response = await _mobileConnect.RefreshTokenAsync(Request, refreshToken, sdksession);
             return CreateResponse(response);
         }
 
         [HttpGet]
         [Route("revoke_token")]
-        public IHttpActionResult RevokeToken(string sdksession = null, string accessToken = null)
+        public async Task<IHttpActionResult> RevokeToken(string sdksession = null, string accessToken = null)
         {
-            var response = _mobileConnect.RevokeToken(Request, accessToken, "access_token", sdksession);
+            var response = await _mobileConnect.RevokeTokenAsync(Request, accessToken, "access_token", sdksession);
             return CreateResponse(response);
         }
 

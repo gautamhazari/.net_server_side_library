@@ -26,10 +26,6 @@ namespace GSMA.MobileConnect.Test
         private TestConfigurationData _testConfig;
         private RestClient _restClient;
         private ICache _cache;
-        private IDiscoveryService _discovery;
-        private IAuthenticationService _authentication;
-        private IIdentityService _identity;
-        private IJWKeysetService _jwks;
         private MobileConnectConfig _config;
         private MobileConnectInterface _mobileConnect;
 
@@ -44,10 +40,6 @@ namespace GSMA.MobileConnect.Test
         {
             _restClient = client;
             _cache = new ConcurrentCache();
-            _discovery = new GSMA.MobileConnect.Discovery.DiscoveryService(_cache, _restClient);
-            _authentication = new GSMA.MobileConnect.Authentication.AuthenticationService(_restClient);
-            _identity = new GSMA.MobileConnect.Identity.IdentityService(_restClient);
-            _jwks = new GSMA.MobileConnect.Authentication.JWKeysetService(_restClient, _cache);
 
             _config = new MobileConnectConfig()
             {
@@ -57,7 +49,7 @@ namespace GSMA.MobileConnect.Test
                 RedirectUrl = _testConfig.RedirectUrl,
             };
 
-            _mobileConnect = new MobileConnectInterface(_config, _discovery, _authentication, _identity, _jwks);
+            _mobileConnect = new MobileConnectInterface(_config, _cache, _restClient);
         }
 
         public MockRestClient SetupForMockRest()

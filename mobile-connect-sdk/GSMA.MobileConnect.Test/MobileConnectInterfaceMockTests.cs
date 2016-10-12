@@ -133,7 +133,6 @@ namespace GSMA.MobileConnect.Test
         [Test]
         public async Task RefreshTokenShouldUseRefreshTokenUrl()
         {
-            var options = new MobileConnectRequestOptions();
             _discoveryResponse.OperatorUrls.RefreshTokenUrl = "http://refresh";
             _discoveryResponse.OperatorUrls.RequestTokenUrl= "http://request";
             _restClient.QueueParallelResponses(Tuple.Create<string, object>(_discoveryResponse.OperatorUrls.RefreshTokenUrl, _responses["token"]), 
