@@ -345,13 +345,16 @@ namespace GSMA.MobileConnect.Discovery
                     metadata = cached;
                 }
             }
-            catch (Exception e) when (e is HttpRequestException || e is System.Net.WebException || e is TaskCanceledException)
+            catch (Exception e)
             {
+                // If an error occurred while fetching the metadata we don't want to cause the discovery to fail completely as the 
+                // info in the discovery response should be enough to make successful calls in the event that a provider supplies
+                // malformed metadata
                 if (cached != null)
                 {
                     metadata = cached;
                 }
-                Log.Warning(() => cached != null ? $"Falling back to expired cached provider metadata, url={url}" : $"Falling back to default provider metadata, url={url}");
+                Log.Warning(() => cached != null ? $"Falling back to expired cached provider metadata, url={url}, reason={e.Message}" : $"Falling back to default provider metadata, url={url}, reason={e.Message}");
             }
 
             return metadata ?? ProviderMetadata.Default;
