@@ -20,8 +20,7 @@
         internal const string AUTHENTICATION_RESPONSE_TYPE = "code";
         internal const string AUTHENTICATION_DEFAULT_VERSION = "mc_v1.1";
 
-        internal const string GRANT_TYPE_AUTH_CODE = "authorization_code";
-        internal const string GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
+        internal const string GRANT_TYPE = GrantTypes.AUTH_CODE;
 
         internal const int PROVIDER_METADATA_TTL_SECONDS = 900;
 

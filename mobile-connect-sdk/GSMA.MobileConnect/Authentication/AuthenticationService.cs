@@ -175,7 +175,7 @@ namespace GSMA.MobileConnect.Authentication
                 {
                     new BasicKeyValuePair(Constants.Parameters.AUTHENTICATION_REDIRECT_URI, redirectUrl),
                     new BasicKeyValuePair(Constants.Parameters.CODE, code),
-                    new BasicKeyValuePair(Constants.Parameters.GRANT_TYPE, Constants.DefaultOptions.GRANT_TYPE_AUTH_CODE)
+                    new BasicKeyValuePair(Constants.Parameters.GRANT_TYPE, Constants.DefaultOptions.GRANT_TYPE)
                 };
 
                 RestResponse response = await _client.PostAsync(requestTokenUrl, RestAuthentication.Basic(clientId, clientSecret), formData, null, null);
@@ -197,7 +197,7 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        public RequestTokenResponse RefreshToken(string clientId, string clientSecret, string refreshTokenUrl, string refreshToken)
+        public async Task<RequestTokenResponse> RefreshTokenAsync(string clientId, string clientSecret, string refreshTokenUrl, string refreshToken)
         {
             Validate.RejectNullOrEmpty(clientId, "clientId");
             Validate.RejectNullOrEmpty(clientSecret, "clientSecret");
@@ -205,18 +205,24 @@ namespace GSMA.MobileConnect.Authentication
             Validate.RejectNullOrEmpty(refreshToken, "refreshToken");
 
             var formData = new List<BasicKeyValuePair>()
-                {
-                    new BasicKeyValuePair(Constants.Parameters.REFRESH_TOKEN, refreshToken ?? "refreshToken"),
-                    new BasicKeyValuePair(Constants.Parameters.GRANT_TYPE, Constants.DefaultOptions.GRANT_TYPE_AUTH_CODE)
-                };
+            {
+                new BasicKeyValuePair(Constants.Parameters.REFRESH_TOKEN, refreshToken),
+                new BasicKeyValuePair(Constants.Parameters.GRANT_TYPE, Constants.GrantTypes.REFRESH_TOKEN),
+            };
             var authentication = RestAuthentication.Basic(clientId, clientSecret);
-            var restResponse = _client.PostAsync(refreshTokenUrl, authentication, formData, null, null);
+            var restResponse = await _client.PostAsync(refreshTokenUrl, authentication, formData, null, null);
 
-            return new RequestTokenResponse(restResponse.Result);
+            return new RequestTokenResponse(restResponse);
         }
 
         /// <inheritdoc/>
-        public RequestTokenResponse RevokeToken(string clientId, string clientSecret, string revokeTokenUrl, string token, string tokenTypeHint)
+        public RequestTokenResponse RefreshToken(string clientId, string clientSecret, string refreshTokenUrl, string refreshToken)
+        {
+            return RefreshTokenAsync(clientId, clientSecret, refreshTokenUrl, refreshToken).Result;
+        }
+
+        /// <inheritdoc/>
+        public async Task<RevokeTokenResponse> RevokeTokenAsync(string clientId, string clientSecret, string revokeTokenUrl, string token, string tokenTypeHint)
         {
             Validate.RejectNullOrEmpty(clientId, "clientId");
             Validate.RejectNullOrEmpty(clientSecret, "clientSecret");
@@ -224,9 +230,9 @@ namespace GSMA.MobileConnect.Authentication
             Validate.RejectNullOrEmpty(token, "token");
 
             var formData = new List<BasicKeyValuePair>()
-                {
-                    new BasicKeyValuePair(Constants.Parameters.TOKEN, token ?? "token")
-                };
+            {
+                new BasicKeyValuePair(Constants.Parameters.TOKEN, token)
+            };
 
             if (tokenTypeHint != null)
             {
@@ -234,10 +240,14 @@ namespace GSMA.MobileConnect.Authentication
             }
 
             var authentication = RestAuthentication.Basic(clientId, clientSecret);
-            var restResponse = _client.PostAsync(revokeTokenUrl, authentication, formData, null, null);
-            return new RequestTokenResponse(restResponse.Result);
+            var restResponse = await _client.PostAsync(revokeTokenUrl, authentication, formData, null, null);
+            return new RevokeTokenResponse(restResponse);
+        }
 
-//            return restResponse.Result.StatusCode.Equals(200) ? REVOKE_TOKEN_SUCCESS : UNSUPPORTED_TOKEN_TYPE_ERROR;
+        /// <inheritdoc/>
+        public RevokeTokenResponse RevokeToken(string clientId, string clientSecret, string revokeTokenUrl, string token, string tokenTypeHint)
+        {
+            return RevokeTokenAsync(clientId, clientSecret, revokeTokenUrl, token, tokenTypeHint).Result;
         }
 
         /// <inheritdoc/>

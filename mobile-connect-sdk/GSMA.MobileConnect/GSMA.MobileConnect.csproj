@@ -41,6 +41,7 @@
     <Compile Include="Authentication\JWKeyset.cs" />
     <Compile Include="Authentication\JWKeysetService.cs" />
     <Compile Include="Authentication\LoginHint.cs" />
+    <Compile Include="Authentication\RevokeTokenResponse.cs" />
     <Compile Include="Authentication\TokenValidation.cs" />
     <Compile Include="Authentication\TokenValidationOptions.cs" />
     <Compile Include="Authentication\TokenValidationResult.cs" />
@@ -50,6 +51,7 @@
     <Compile Include="Claims\ClaimsParameter.cs" />
     <Compile Include="Claims\ClaimsValue.cs" />
     <Compile Include="Constants\ErrorCodes.cs" />
+    <Compile Include="Constants\GrantTypes.cs" />
     <Compile Include="Constants\LinkRels.cs" />
     <Compile Include="Constants\LoginHintPrefixes.cs" />
     <Compile Include="Constants\Scope.cs" />

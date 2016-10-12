@@ -245,9 +245,9 @@ namespace GSMA.MobileConnect
         /// <param name="refreshToken">Refresh token returned from RefreshToken request</param>
         /// <param name="discoveryResponse">The response returned by the discovery process</param>
         /// <returns>Object with required information for continuing the mobile connect process</returns>
-        public MobileConnectStatus RefreshToken(HttpRequestMessage request, string refreshToken, DiscoveryResponse discoveryResponse)
+        public async Task<MobileConnectStatus> RefreshTokenAsync(HttpRequestMessage request, string refreshToken, DiscoveryResponse discoveryResponse)
         {
-            return MobileConnectInterfaceHelper.RefreshToken(_authentication, refreshToken, discoveryResponse, _config);
+            return await MobileConnectInterfaceHelper.RefreshToken(_authentication, refreshToken, discoveryResponse, _config);
         }
 
         /// <summary>
@@ -255,18 +255,18 @@ namespace GSMA.MobileConnect
         /// </summary>
         /// <param name="request">Originating web request</param>
         /// <param name="refreshToken">Refresh token returned from RefreshToken request</param>
-        /// <param name="sdkSession">SDKSession id used to fetch the discovery response with additional parameters that are required to request a token</param>
+        /// <param name="sdkSession">SDKSession id used to fetch the discovery response with additional parameters that are required to refresh a token</param>
         /// <returns>Object with required information for continuing the mobile connect process</returns>
-        public MobileConnectStatus RefreshToken(HttpRequestMessage request, string refreshToken, string sdkSession)
+        public async Task<MobileConnectStatus> RefreshTokenAsync(HttpRequestMessage request, string refreshToken, string sdkSession)
         {
-            var discoveryResponse = GetSessionFromCache(sdkSession);
+            var discoveryResponse = await GetSessionFromCache(sdkSession);
 
             if (discoveryResponse == null)
             {
                 return GetCacheError();
             }
 
-            return RefreshToken(request, refreshToken, discoveryResponse.Result);
+            return await RefreshTokenAsync(request, refreshToken, discoveryResponse);
         }
 
         /// <summary>
@@ -277,9 +277,9 @@ namespace GSMA.MobileConnect
         /// <param name="tokenTypeHint">Hint to indicate the type of token being passed in</param>
         /// <param name="discoveryResponse">The response returned by the discovery process</param>
         /// <returns>Object with required information for continuing the mobile connect process</returns>
-        public MobileConnectStatus RevokeToken(HttpRequestMessage request, string token, string tokenTypeHint, DiscoveryResponse discoveryResponse)
+        public async Task<MobileConnectStatus> RevokeTokenAsync(HttpRequestMessage request, string token, string tokenTypeHint, DiscoveryResponse discoveryResponse)
         {
-            return MobileConnectInterfaceHelper.RevokeToken(_authentication, token, tokenTypeHint, discoveryResponse, _config);
+            return await MobileConnectInterfaceHelper.RevokeToken(_authentication, token, tokenTypeHint, discoveryResponse, _config);
         }
 
         /// <summary>
@@ -288,18 +288,18 @@ namespace GSMA.MobileConnect
         /// <param name="request">Originating web request</param>
         /// <param name="token">Access/Refresh token returned from RequestToken request</param>
         /// <param name="tokenTypeHint">Hint to indicate the type of token being passed in</param>
-        /// <param name="sdkSession">SDKSession id used to fetch the discovery response with additional parameters that are required to request a token</param>
+        /// <param name="sdkSession">SDKSession id used to fetch the discovery response with additional parameters that are required to revoke a token</param>
         /// <returns>Object with required information for continuing the mobile connect process</returns>
-        public MobileConnectStatus RevokeToken(HttpRequestMessage request, string token, string tokenTypeHint, string sdkSession)
+        public async Task<MobileConnectStatus> RevokeTokenAsync(HttpRequestMessage request, string token, string tokenTypeHint, string sdkSession)
         {
-            var discoveryResponse = GetSessionFromCache(sdkSession);
+            var discoveryResponse = await GetSessionFromCache(sdkSession);
 
             if (discoveryResponse == null)
             {
                 return GetCacheError();
             }
 
-            return RevokeToken(request, token, tokenTypeHint, discoveryResponse.Result);
+            return await RevokeTokenAsync(request, token, tokenTypeHint, discoveryResponse);
         }
 
         /// <summary>

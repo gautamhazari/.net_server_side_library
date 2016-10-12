@@ -235,6 +235,26 @@ namespace GSMA.MobileConnect
         }
 
         /// <summary>
+        /// Creates a Status with ResponseType TokenRevoked.
+        /// </summary>
+        /// <param name="response">RevokeTokenResponse returned from <see cref="IAuthenticationService"/></param>
+        /// <param name="caller">Name of calling method</param>
+        /// <returns>MobileConnectStatus with ResponseType TokenRevoked</returns>
+        public static MobileConnectStatus TokenRevoked(RevokeTokenResponse response, [CallerMemberName]string caller = null)
+        {
+            if (response.ErrorResponse != null)
+            {
+                return Error(response.ErrorResponse);
+            }
+
+            Log.Info(() => $"MobileConnectStatus TokenRevoked returned caller={caller}");
+            return new MobileConnectStatus
+            {
+                ResponseType = MobileConnectResponseType.TokenRevoked
+            };
+        }
+
+        /// <summary>
         /// Creates a status with ResponseType UserInfo and the complete <see cref="IdentityResponse"/>.
         /// Indicates that a user info request has been successful.
         /// </summary>
@@ -321,6 +341,10 @@ namespace GSMA.MobileConnect
         /// <summary>
         /// ResponseType indicating identity has been received
         /// </summary>
-        Identity
+        Identity,
+        /// <summary>
+        /// ResponseType indicating token has been successfully revoked
+        /// </summary>
+        TokenRevoked,
     }
 }

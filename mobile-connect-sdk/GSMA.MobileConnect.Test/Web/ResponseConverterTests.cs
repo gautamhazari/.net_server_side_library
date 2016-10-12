@@ -20,6 +20,7 @@ namespace GSMA.MobileConnect.Test.Web
             { "error", new RestResponse(System.Net.HttpStatusCode.OK, "{\"error\":\"Not_Found_Entity\",\"description\":\"Operator Not Found\"}") },
             { "token", new RestResponse(System.Net.HttpStatusCode.OK, "{\"access_token\":\"966ad150-16c5-11e6-944f-43079d13e2f3\",\"token_type\":\"Bearer\",\"expires_in\":3600,\"id_token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJub25jZSI6Ijc3YzE2M2VmZDkzYzQ4ZDFhNWY2NzdmNGNmNTUzOGE4Iiwic3ViIjoiY2M3OGEwMmNjM2ViNjBjOWVjNTJiYjljZDNhMTg5MTAiLCJhbXIiOlsiU0lNX1BJTiJdLCJhdXRoX3RpbWUiOjE0NjI4OTQ4NTcsImFjciI6IjIiLCJhenAiOiI2Njc0MmE4NS0yMjgyLTQ3NDctODgxZC1lZDViN2JkNzRkMmQiLCJpYXQiOjE0NjI4OTQ4NTYsImV4cCI6MTQ2Mjg5ODQ1NiwiYXVkIjpbIjY2NzQyYTg1LTIyODItNDc0Ny04ODFkLWVkNWI3YmQ3NGQyZCJdLCJpc3MiOiJodHRwOi8vb3BlcmF0b3JfYS5zYW5kYm94Mi5tb2JpbGVjb25uZWN0LmlvL29pZGMvYWNjZXNzdG9rZW4ifQ.lwXhpEp2WUTi0brKBosM8Uygnrdq6FnLqkZ0Bm53gXA\"}") },
             { "invalid-code", new RestResponse(System.Net.HttpStatusCode.BadRequest, "{\"error\":\"invalid_grant\",\"error_description\":\"Authorization code doesn't exist or is invalid for the client\"}") },
+            { "token-revoked", new RestResponse(System.Net.HttpStatusCode.OK, "") },
         };
 
         [Test]
@@ -93,6 +94,19 @@ namespace GSMA.MobileConnect.Test.Web
             Assert.IsNotNull(actual);
             Assert.AreEqual("success", actual.Status);
             Assert.AreEqual("discovery", actual.Action);
+        }
+
+        [Test]
+        public void ResponseConverterShouldHandleTokenRevokedStatus()
+        {
+            var response = new RevokeTokenResponse(_responses["token-revoked"]);
+            var status = MobileConnectStatus.TokenRevoked(response);
+
+            var actual = ResponseConverter.Convert(status);
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual("success", actual.Status);
+            Assert.AreEqual("token_revoked", actual.Action);
         }
 
         [Test]

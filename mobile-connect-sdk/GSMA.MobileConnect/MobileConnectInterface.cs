@@ -163,6 +163,52 @@ namespace GSMA.MobileConnect
         }
 
         /// <summary>
+        /// Refresh token using using the refresh token provided in the RequestToken response
+        /// </summary>
+        /// <param name="refreshToken">Refresh token returned from RefreshToken request</param>
+        /// <param name="discoveryResponse">The response returned by the discovery process</param>
+        /// <returns>Object with required information for continuing the mobile connect process</returns>
+        public async Task<MobileConnectStatus> RefreshTokenAsync(string refreshToken, DiscoveryResponse discoveryResponse)
+        {
+            return await MobileConnectInterfaceHelper.RefreshToken(_authentication, refreshToken, discoveryResponse, _config);
+        }
+
+        /// <summary>
+        /// Synchronous wrapper for <see cref="RefreshTokenAsync(string, DiscoveryResponse)"/>
+        /// </summary>
+        /// <param name="refreshToken">Refresh token returned from RefreshToken request</param>
+        /// <param name="discoveryResponse">The response returned by the discovery process</param>
+        /// <returns>Object with required information for continuing the mobile connect process</returns>
+        public MobileConnectStatus RefreshToken(string refreshToken, DiscoveryResponse discoveryResponse)
+        {
+            return MobileConnectInterfaceHelper.RefreshToken(_authentication, refreshToken, discoveryResponse, _config).Result;
+        }
+
+        /// <summary>
+        /// Revoke token using using the access / refresh token provided in the RequestToken response
+        /// </summary>
+        /// <param name="token">Access/Refresh token returned from RequestToken request</param>
+        /// <param name="tokenTypeHint">Hint to indicate the type of token being passed in</param>
+        /// <param name="discoveryResponse">The response returned by the discovery process</param>
+        /// <returns>Object with required information for continuing the mobile connect process</returns>
+        public async Task<MobileConnectStatus> RevokeTokenAsync(string token, string tokenTypeHint, DiscoveryResponse discoveryResponse)
+        {
+            return await MobileConnectInterfaceHelper.RevokeToken(_authentication, token, tokenTypeHint, discoveryResponse, _config);
+        }
+
+        /// <summary>
+        /// Synchronous wrapper for <see cref="RevokeTokenAsync(string, string, DiscoveryResponse)"/>
+        /// </summary>
+        /// <param name="token">Access/Refresh token returned from RequestToken request</param>
+        /// <param name="tokenTypeHint">Hint to indicate the type of token being passed in</param>
+        /// <param name="discoveryResponse">The response returned by the discovery process</param>
+        /// <returns>Object with required information for continuing the mobile connect process</returns>
+        public MobileConnectStatus RevokeToken(string token, string tokenTypeHint, DiscoveryResponse discoveryResponse)
+        {
+            return MobileConnectInterfaceHelper.RevokeToken(_authentication, token, tokenTypeHint, discoveryResponse, _config).Result;
+        }
+
+        /// <summary>
         /// Handles continuation of the process following a completed redirect. 
         /// Only the redirectedUrl is required, however if the redirect being handled is the result of calling the Authorization URL then the remaining parameters are required.
         /// </summary>

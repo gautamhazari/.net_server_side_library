@@ -12,18 +12,6 @@ namespace GSMA.MobileConnect.Web
         private const string STATUS_SUCCESS = "success";
         private const string STATUS_FAILURE = "failure";
 
-        private static Dictionary<MobileConnectResponseType, string> _statusDict = new Dictionary<MobileConnectResponseType, string>()
-        {
-            { MobileConnectResponseType.Authentication, STATUS_SUCCESS },
-            { MobileConnectResponseType.Complete, STATUS_SUCCESS },
-            { MobileConnectResponseType.Error, STATUS_FAILURE },
-            { MobileConnectResponseType.OperatorSelection, STATUS_SUCCESS },
-            { MobileConnectResponseType.StartAuthentication, STATUS_SUCCESS },
-            { MobileConnectResponseType.StartDiscovery, STATUS_SUCCESS },
-            { MobileConnectResponseType.UserInfo, STATUS_SUCCESS },
-            { MobileConnectResponseType.Identity, STATUS_SUCCESS },
-        };
-
         private static Dictionary<MobileConnectResponseType, string> _actionDict = new Dictionary<MobileConnectResponseType, string>()
         {
             { MobileConnectResponseType.Authentication, "authentication" },
@@ -34,6 +22,7 @@ namespace GSMA.MobileConnect.Web
             { MobileConnectResponseType.StartDiscovery, "discovery" },
             { MobileConnectResponseType.UserInfo, "user_info" },
             { MobileConnectResponseType.Identity, "identity" },
+            { MobileConnectResponseType.TokenRevoked, "token_revoked" },
         };
 
         /// <summary>
@@ -58,7 +47,7 @@ namespace GSMA.MobileConnect.Web
         {
             var response = new MobileConnectWebResponse
             {
-                Status = _statusDict[status.ResponseType],
+                Status = status.ResponseType == MobileConnectResponseType.Error ? STATUS_FAILURE : STATUS_SUCCESS,
                 Action = _actionDict[status.ResponseType],
                 ApplicationShortName = status.DiscoveryResponse?.ApplicationShortName,
                 Nonce = status.Nonce,

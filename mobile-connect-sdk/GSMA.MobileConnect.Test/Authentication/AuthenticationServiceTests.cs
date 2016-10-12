@@ -366,6 +366,30 @@ namespace GSMA.MobileConnect.Test.Authentication
             Assert.ThrowsAsync<MobileConnectInvalidArgumentException>(() => _authentication.RequestTokenAsync(_config.ClientId, _config.ClientSecret, TOKEN_URL, REDIRECT_URL, null));
         }
 
+        [Test]
+        public void RefreshTokenShouldThrowWhenClientIdIsNull()
+        {
+            Assert.ThrowsAsync<MobileConnectInvalidArgumentException>(() => _authentication.RefreshTokenAsync(null, _config.ClientSecret, TOKEN_URL, "token"));
+        }
+
+        [Test]
+        public void RefreshTokenShouldThrowWhenClientSecretIsNull()
+        {
+            Assert.ThrowsAsync<MobileConnectInvalidArgumentException>(() => _authentication.RefreshTokenAsync(_config.ClientId, null, TOKEN_URL, "token"));
+        }
+
+        [Test]
+        public void RefreshTokenShouldThrowWhenRefreshUrlIsNull()
+        {
+            Assert.ThrowsAsync<MobileConnectInvalidArgumentException>(() => _authentication.RefreshTokenAsync(_config.ClientId, _config.ClientSecret, null, "token"));
+        }
+
+        [Test]
+        public void RefreshTokenShouldThrowWhenRefreshTokenIsNull()
+        {
+            Assert.ThrowsAsync<MobileConnectInvalidArgumentException>(() => _authentication.RefreshTokenAsync(_config.ClientId, _config.ClientSecret, TOKEN_URL, null));
+        }
+
         #endregion
     }
 }

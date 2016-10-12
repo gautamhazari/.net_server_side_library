@@ -29,6 +29,7 @@ namespace GSMA.MobileConnect.Test
             ["user-info"] = new RestResponse(System.Net.HttpStatusCode.OK, "{\"sub\":\"411421B0-38D6-6568-A53A-DF99691B7EB6\",\"email\":\"test2@example.com\",\"email_verified\":true}"),
             ["jwks"] = new RestResponse(System.Net.HttpStatusCode.OK, "{\"keys\":[{\"alg\":\"RS256\",\"e\":\"AQAB\",\"n\":\"hzr2li5ABVbbQ4BvdDskl6hejaVw0tIDYO-C0GBr5lRA-AXtmCO7bh0CEC9-R6mqctkzUhVnU22Vrj-B1J0JtJoaya9VTC3DdhzI_-7kxtIc5vrHq-ss5wo8-tK7UqtKLSRf9DcyZA0H9FEABbO5Qfvh-cfK4EI_ytA5UBZgO322RVYgQ9Do0D_-jf90dcuUgoxz_JTAOpVNc0u_m9LxGnGL3GhMbxLaX3eUublD40aK0nS2k37dOYOpQHxuAS8BZxLvS6900qqaZ6z0kwZ2WFq-hhk3Imd6fweS724fzqVslY7rHpM5n7z5m7s1ArurU1dBC1Dxw1Hzn6ZeJkEaZQ\",\"kty\":\"RSA\",\"use\":\"sig\"}]}"),
             ["token"] = new RestResponse(System.Net.HttpStatusCode.Accepted, "{\"access_token\":\"966ad150-16c5-11e6-944f-43079d13e2f3\",\"token_type\":\"Bearer\",\"expires_in\":3600,\"id_token\":\"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjEyMzQ1Njc4OTAiLCJhdWQiOiJ4LVpXUmhOalUzT1dJM01HSXdZVFJoIiwiYXpwIjoieC1aV1JoTmpVM09XSTNNR0l3WVRSaCIsImlzcyI6Imh0dHBzOi8vcmVmZXJlbmNlLm1vYmlsZWNvbm5lY3QuaW8vbW9iaWxlY29ubmVjdCIsImV4cCI6MjE0NzQ4MzY0NywiYXV0aF90aW1lIjoyMTQ3NDgzNjQ3LCJpYXQiOjE0NzEzMzk3MTB9.f0DkOkD6uQPvKZXf2uUHBmIpDaW84mlRmI3dexfMBFP9vk5HEXu-rxsLTtUCDX3QDp56nZTyQVdvGXrm6QG2ew20VSDdn3_-_Bx1oMO36WYpSve37l3eJXNNPiUSsWex72o4CpCeRd6F6u8GToF-F4rq1NwEf6WTGxtggE0O1NR0X-agPomdMvfGDwk0FXEIqd0lEmxBJI5PU3FQIILEDDjW2CCz62MqZEvPzvSnCAWtSqiDiuKNvfNDPD5oPqGMhZv4D2AuWmh9fztbsFIoM671Ug89N-8Pte7zE6hgSl98hZP9ak3YbLdYvqjbn9QY2hJbf0ceVkKnqNY7cTnb-A\"}"),
+            ["token-revoked"] = new RestResponse(System.Net.HttpStatusCode.OK, ""),
             ["unauthorized"] = _unauthorizedResponse,
         };
 
@@ -127,6 +128,69 @@ namespace GSMA.MobileConnect.Test
 
             Assert.AreEqual(MobileConnectResponseType.Complete, result.ResponseType);
             Assert.AreEqual(TokenValidationResult.InvalidNonce, result.TokenResponse.ValidationResult);
+        }
+
+        [Test]
+        public async Task RefreshTokenShouldUseRefreshTokenUrl()
+        {
+            var options = new MobileConnectRequestOptions();
+            _discoveryResponse.OperatorUrls.RefreshTokenUrl = "http://refresh";
+            _discoveryResponse.OperatorUrls.RequestTokenUrl= "http://request";
+            _restClient.QueueParallelResponses(Tuple.Create<string, object>(_discoveryResponse.OperatorUrls.RefreshTokenUrl, _responses["token"]), 
+                Tuple.Create<string, object>(_discoveryResponse.OperatorUrls.RequestTokenUrl, _responses["error"]));
+
+            var result = await _mobileConnect.RefreshTokenAsync("token", _discoveryResponse);
+
+            Assert.AreEqual(MobileConnectResponseType.Complete, result.ResponseType);
+        }
+
+        [Test]
+        public async Task RefreshTokenShouldUseRequestTokenUrlWhenNoRefreshUrl()
+        {
+            _discoveryResponse.OperatorUrls.RefreshTokenUrl = null;
+            _discoveryResponse.OperatorUrls.RequestTokenUrl = "http://request";
+            _restClient.QueueParallelResponses(Tuple.Create<string, object>(_discoveryResponse.OperatorUrls.RefreshTokenUrl, _responses["error"]),
+                Tuple.Create<string, object>(_discoveryResponse.OperatorUrls.RequestTokenUrl, _responses["token"]));
+
+            var result = await _mobileConnect.RefreshTokenAsync("token", _discoveryResponse);
+
+            Assert.AreEqual(MobileConnectResponseType.Complete, result.ResponseType);
+        }
+
+        [Test]
+        public async Task RefreshTokenShouldReturnErrorWhenNoRefreshOrRequestUrl()
+        {
+            _discoveryResponse.OperatorUrls.RefreshTokenUrl = null;
+            _discoveryResponse.OperatorUrls.RequestTokenUrl = null;
+
+            var result = await _mobileConnect.RefreshTokenAsync("token", _discoveryResponse);
+
+            Assert.AreEqual(MobileConnectResponseType.Error, result.ResponseType);
+            Assert.AreEqual(result.ErrorCode, Constants.ErrorCodes.NotSupported);
+        }
+
+        [Test]
+        public async Task RevokeTokenShouldReturnOk()
+        {
+            _discoveryResponse.OperatorUrls.RevokeTokenUrl = "http://revoke";
+            _restClient.QueueResponse(_responses["token-revoked"]);
+
+            var result = await _mobileConnect.RevokeTokenAsync("token", null, _discoveryResponse);
+
+            Assert.AreEqual(MobileConnectResponseType.TokenRevoked, result.ResponseType);
+            Assert.IsNull(result.ErrorCode);
+            Assert.IsNull(result.ErrorMessage);
+        }
+
+        [Test]
+        public void RevokeTokenShouldReturnErrorIfNoUrlAvailable()
+        {
+            _discoveryResponse.OperatorUrls.RevokeTokenUrl = null;
+
+            var result = _mobileConnect.RevokeToken("token", null, _discoveryResponse);
+
+            Assert.AreEqual(MobileConnectResponseType.Error, result.ResponseType);
+            Assert.AreEqual(result.ErrorCode, Constants.ErrorCodes.NotSupported);
         }
     }
 }

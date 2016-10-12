@@ -68,7 +68,17 @@ namespace GSMA.MobileConnect.Authentication
 
         /// <summary>
         /// Allows an application to use the refresh token obtained from request token response and request for a token refresh. 
-        /// <p> This function requires either a valid refresh token to be provided
+        /// This function requires a valid refresh token to be provided
+        /// </summary>
+        /// <param name="clientId">The application ClientId returned by the discovery process</param>
+        /// <param name="clientSecret">The ClientSecret returned by the discovery response</param>
+        /// <param name="refreshTokenUrl">The url for token refresh received from the discovery process</param>
+        /// <param name="refreshToken">Refresh token returned from RequestToken request</param>
+        /// <returns></returns>
+        Task<RequestTokenResponse> RefreshTokenAsync(string clientId, string clientSecret, string refreshTokenUrl, string refreshToken);
+
+        /// <summary>
+        /// Synchronous wrapper for <see cref="RefreshTokenAsync(string, string, string, string)"/>
         /// </summary>
         /// <param name="clientId">The application ClientId returned by the discovery process</param>
         /// <param name="clientSecret">The ClientSecret returned by the discovery response</param>
@@ -80,7 +90,7 @@ namespace GSMA.MobileConnect.Authentication
 
         /// <summary>
         /// Allows an application to use the access token or the refresh token obtained from request token response and request for a token revocation
-        /// <p>This function requires either a valid access token or a refresh token to be provided
+        /// This function requires either a valid access token or a refresh token to be provided
         /// </summary>
         /// <param name="clientId">The application ClientId returned by the discovery process</param>
         /// <param name="clientSecret">The ClientSecret returned by the discovery response</param>
@@ -88,7 +98,18 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="token">Access/Refresh token returned from RequestToken request</param>
         /// <param name="tokenTypeHint">Hint to indicate the type of token being passed in</param>
         /// <returns></returns>
-        RequestTokenResponse RevokeToken(string clientId, string clientSecret, string revokeTokenUrl, string token, string tokenTypeHint);
+        Task<RevokeTokenResponse> RevokeTokenAsync(string clientId, string clientSecret, string revokeTokenUrl, string token, string tokenTypeHint);
+
+        /// <summary>
+        /// Synchronous wrapper for <see cref="RevokeToken(string, string, string, string, string)"/>
+        /// </summary>
+        /// <param name="clientId">The application ClientId returned by the discovery process</param>
+        /// <param name="clientSecret">The ClientSecret returned by the discovery response</param>
+        /// <param name="revokeTokenUrl">The url for token refresh received from the discovery process</param>
+        /// <param name="token">Access/Refresh token returned from RequestToken request</param>
+        /// <param name="tokenTypeHint">Hint to indicate the type of token being passed in</param>
+        /// <returns></returns>
+        RevokeTokenResponse RevokeToken(string clientId, string clientSecret, string revokeTokenUrl, string token, string tokenTypeHint);
 
         /// <summary>
         /// Executes a series of validation methods on the token response, if the access token or id token are invalid the result will indicate what 
