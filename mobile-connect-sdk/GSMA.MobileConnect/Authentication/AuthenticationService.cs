@@ -17,9 +17,6 @@ namespace GSMA.MobileConnect.Authentication
     /// </summary>
     public class AuthenticationService : IAuthenticationService
     {
-        public const string REVOKE_TOKEN_SUCCESS = "Revoke token successful";
-        public const string UNSUPPORTED_TOKEN_TYPE_ERROR = "Unsupported token type";
-
         private readonly static JsonSerializerSettings _jsonSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
         private readonly RestClient _client;
 
