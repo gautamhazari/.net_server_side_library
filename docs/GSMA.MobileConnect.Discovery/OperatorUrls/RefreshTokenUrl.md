@@ -1,15 +1,15 @@
-Response.subscriber_id Property
-===============================
-Parsed from JSON response
+OperatorUrls.RefreshTokenUrl Property
+=====================================
+Url for token refresh call
 
-**Namespace:** [GSMA.MobileConnect.Json][1]  
+**Namespace:** [GSMA.MobileConnect.Discovery][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
 
 Syntax
 ------
 
 ```csharp
-public string subscriber_id { get; set; }
+public string RefreshTokenUrl { get; set; }
 ```
 
 #### Property Value
@@ -19,8 +19,8 @@ See Also
 --------
 
 #### Reference
-[Response Class][3]  
-[GSMA.MobileConnect.Json Namespace][1]  
+[OperatorUrls Class][3]  
+[GSMA.MobileConnect.Discovery Namespace][1]  
 
 [1]: ../README.md
 [2]: http://msdn.microsoft.com/en-us/library/s1wwdcbf

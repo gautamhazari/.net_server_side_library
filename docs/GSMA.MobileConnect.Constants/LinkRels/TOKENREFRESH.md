@@ -1,6 +1,6 @@
-LinkRels.APPLICATION_SHORT_NAME Field
-=====================================
-Key for applicationShortName
+LinkRels.TOKENREFRESH Field
+===========================
+Key for token refresh url
 
 **Namespace:** [GSMA.MobileConnect.Constants][1]  
 **Assembly:** GSMA.MobileConnect (in GSMA.MobileConnect.dll)
@@ -9,7 +9,7 @@ Syntax
 ------
 
 ```csharp
-public const string APPLICATION_SHORT_NAME = "applicationShortName"
+public const string TOKENREFRESH = "tokenrefresh"
 ```
 
 #### Field Value

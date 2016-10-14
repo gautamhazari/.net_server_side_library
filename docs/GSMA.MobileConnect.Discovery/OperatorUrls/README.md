@@ -38,8 +38,10 @@ Properties
 ![Public property] | [JWKSUrl][5]             | Url for JWKS info              
 ![Public property] | [PremiumInfoUrl][6]      | Url for identity services call 
 ![Public property] | [ProviderMetadataUrl][7] | Url for Provider Metadata      
-![Public property] | [RequestTokenUrl][8]     | Url for token request call     
-![Public property] | [UserInfoUrl][9]         | Url for user info call         
+![Public property] | [RefreshTokenUrl][8]     | Url for token refresh call     
+![Public property] | [RequestTokenUrl][9]     | Url for token request call     
+![Public property] | [RevokeTokenUrl][10]     | Url for token revoke call      
+![Public property] | [UserInfoUrl][11]        | Url for user info call         
 
 
 Methods
@@ -47,7 +49,7 @@ Methods
 
                                  | Name        | Description                                                    
 -------------------------------- | ----------- | -------------------------------------------------------------- 
-![Public method]![Static member] | [Parse][10] | Parses the operator urls from the parsed DiscoveryResponseData 
+![Public method]![Static member] | [Parse][12] | Parses the operator urls from the parsed DiscoveryResponseData 
 
 
 See Also
@@ -63,10 +65,12 @@ See Also
 [5]: JWKSUrl.md
 [6]: PremiumInfoUrl.md
 [7]: ProviderMetadataUrl.md
-[8]: RequestTokenUrl.md
-[9]: UserInfoUrl.md
-[10]: Parse.md
-[11]: ../../_icons/Help.png
+[8]: RefreshTokenUrl.md
+[9]: RequestTokenUrl.md
+[10]: RevokeTokenUrl.md
+[11]: UserInfoUrl.md
+[12]: Parse.md
+[13]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Public property]: ../../_icons/pubproperty.gif "Public property"
 [Static member]: ../../_icons/static.gif "Static member"

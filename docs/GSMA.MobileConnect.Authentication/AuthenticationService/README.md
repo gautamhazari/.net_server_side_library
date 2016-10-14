@@ -32,13 +32,17 @@ Constructors
 Methods
 -------
 
-                 | Name                               | Description                                                                                                                                                                                             
----------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
-![Public method] | [RequestHeadlessAuthentication][5] | Initiates headless authentication, if authentication is successful a token will be returned. This may be a long running operation as response from the user on their authentication device is required. 
-![Public method] | [RequestToken][6]                  | Synchronous wrapper for [RequestTokenAsync(String, String, String, String, String)][7]                                                                                                                  
-![Public method] | [RequestTokenAsync][8]             | Allows an application to use the authorization code obtained from authentication/authorization to obtain an access token and related information from the authorization server.                         
-![Public method] | [StartAuthentication][9]           | Generates an authorisation url based on the supplied options and previous discovery response                                                                                                            
-![Public method] | [ValidateTokenResponse][10]        | Executes a series of validation methods on the token response, if the access token or id token are invalid the result will indicate what validation criteria was not met                                
+                 | Name                               | Description                                                                                                                                                                                                                     
+---------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+![Public method] | [RefreshToken][5]                  | Synchronous wrapper for [RefreshTokenAsync(String, String, String, String)][6]                                                                                                                                                  
+![Public method] | [RefreshTokenAsync][7]             | Allows an application to use the refresh token obtained from request token response and request for a token refresh. This function requires a valid refresh token to be provided                                                
+![Public method] | [RequestHeadlessAuthentication][8] | Initiates headless authentication, if authentication is successful a token will be returned. This may be a long running operation as response from the user on their authentication device is required.                         
+![Public method] | [RequestToken][9]                  | Synchronous wrapper for [RequestTokenAsync(String, String, String, String, String)][10]                                                                                                                                         
+![Public method] | [RequestTokenAsync][11]            | Allows an application to use the authorization code obtained from authentication/authorization to obtain an access token and related information from the authorization server.                                                 
+![Public method] | [RevokeToken][12]                  | Synchronous wrapper for [RevokeToken(String, String, String, String, String)][13]                                                                                                                                               
+![Public method] | [RevokeTokenAsync][14]             | Allows an application to use the access token or the refresh token obtained from request token response and request for a token revocation This function requires either a valid access token or a refresh token to be provided 
+![Public method] | [StartAuthentication][15]          | Generates an authorisation url based on the supplied options and previous discovery response                                                                                                                                    
+![Public method] | [ValidateTokenResponse][16]        | Executes a series of validation methods on the token response, if the access token or id token are invalid the result will indicate what validation criteria was not met                                                        
 
 
 See Also
@@ -51,11 +55,17 @@ See Also
 [2]: http://msdn.microsoft.com/en-us/library/e5kfa45b
 [3]: ../README.md
 [4]: _ctor.md
-[5]: RequestHeadlessAuthentication.md
-[6]: RequestToken.md
-[7]: ../IAuthenticationService/RequestTokenAsync.md
-[8]: RequestTokenAsync.md
-[9]: StartAuthentication.md
-[10]: ValidateTokenResponse.md
-[11]: ../../_icons/Help.png
+[5]: RefreshToken.md
+[6]: ../IAuthenticationService/RefreshTokenAsync.md
+[7]: RefreshTokenAsync.md
+[8]: RequestHeadlessAuthentication.md
+[9]: RequestToken.md
+[10]: ../IAuthenticationService/RequestTokenAsync.md
+[11]: RequestTokenAsync.md
+[12]: RevokeToken.md
+[13]: ../IAuthenticationService/RevokeToken.md
+[14]: RevokeTokenAsync.md
+[15]: StartAuthentication.md
+[16]: ValidateTokenResponse.md
+[17]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"

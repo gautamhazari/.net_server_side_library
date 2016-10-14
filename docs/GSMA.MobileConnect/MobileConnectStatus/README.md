@@ -55,7 +55,8 @@ Methods
 ![Public method]![Static member] | [OperatorSelection][26]                                              | Creates a Status with ResponseType OperatorSelection and url for next process step. Indicates that the next step should be navigating to the operator selection URL.         
 ![Public method]![Static member] | [StartAuthentication][27]                                            | Creates a Status with ResponseType StartAuthorization and the complete [DiscoveryResponse][5]. Indicates that the next step should be starting authorization.                
 ![Public method]![Static member] | [StartDiscovery][28]                                                 | Creates a Status with ResponseType StartDiscovery. Indicates that some required data was missing and the discovery process needs to be restarted.                            
-![Public method]![Static member] | [UserInfo][29]                                                       | Creates a status with ResponseType UserInfo and the complete [IdentityResponse][9]. Indicates that a user info request has been successful.                                  
+![Public method]![Static member] | [TokenRevoked][29]                                                   | Creates a Status with ResponseType TokenRevoked.                                                                                                                             
+![Public method]![Static member] | [UserInfo][30]                                                       | Creates a status with ResponseType UserInfo and the complete [IdentityResponse][9]. Indicates that a user info request has been successful.                                  
 
 
 See Also
@@ -92,8 +93,9 @@ See Also
 [26]: OperatorSelection.md
 [27]: StartAuthentication.md
 [28]: StartDiscovery.md
-[29]: UserInfo.md
-[30]: ../../_icons/Help.png
+[29]: TokenRevoked.md
+[30]: UserInfo.md
+[31]: ../../_icons/Help.png
 [Public property]: ../../_icons/pubproperty.gif "Public property"
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Static member]: ../../_icons/static.gif "Static member"

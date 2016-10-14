@@ -26,6 +26,7 @@ Member name             | Value | Description
 **Complete**            | 5     | ResponseType indicating completion of the MobileConnectProcess       
 **UserInfo**            | 6     | ResponseType indicating userInfo has been received                   
 **Identity**            | 7     | ResponseType indicating identity has been received                   
+**TokenRevoked**        | 8     | ResponseType indicating token has been successfully revoked          
 
 
 See Also

@@ -58,29 +58,30 @@ Properties
 ![Public property]                 | [OperatorPolicyUri][25]                          | URL that the OpenID Provider provides to the person registering the Client to read about the issuer requirements on how the Relying Party can use the data provided by the issuer. The registration process SHOULD display this URL to the person registering the Client if it is given 
 ![Public property]                 | [OperatorTermsOfServiceUri][26]                  | URL that the issuer provides to the person registering the Client to read about the issuers terms of service. The registration process SHOULD display this URL to the person registering the client if it is given                                                                      
 ![Public property]                 | [PremiumInfoEndpoint][27]                        | PremiumInfo endpoint to use if different from url returned by discovery                                                                                                                                                                                                                 
-![Public property]                 | [RegistrationEndpoint][28]                       | Registration endpoint to use if different from url returned by discovery                                                                                                                                                                                                                
-![Public property]                 | [RequestObjectEncryptionAlgValuesSupported][29]  | Array containing the JWE encryption algorithms (alg values) [JWA] supported by the issuer for Request Objects which are described in Section 6.1 of OpenID Connect Core 1.0                                                                                                             
-![Public property]                 | [RequestObjectEncryptionEncValuesSupported][30]  | Array containing the JWE encryption algorithms (enc values) [JWE] supported by the issuer for Request Objects which are described in Section 6.1 of OpenID Connect Core 1.0                                                                                                             
-![Public property]                 | [RequestObjectSigningAlgValuesSupported][31]     | Array containing the JWS signing algorithms [JWA] supported by the issuer for Request Objects which are described in Section 6.1 of OpenID Connect Core 1.0                                                                                                                             
-![Public property]                 | [RequestParameterSupported][32]                  | Boolean value specifying whether the issuer supports use of the request parameter, with true indicating support                                                                                                                                                                         
-![Public property]                 | [RequestUriParameterSupported][33]               | Boolean value specifying whether the issuer supports use of the request uri parameter, with true indicating support                                                                                                                                                                     
-![Public property]                 | [RequireRequestUriRegistration][34]              | Boolean value specifying whether the issuer requires any request_uri values used to be pre-registered using the request_uris registration parameter. Pre-registration is required when the value is true                                                                                
-![Public property]                 | [ResponseModesSupported][35]                     | Array containing OAuth 2.0 response_mode values that the issuer supports, as specified in OAuth 2.0 Multiple Response Type Encoding Practices                                                                                                                                           
-![Public property]                 | [ResponseTypesSupported][36]                     | Array containing OAuth 2.0 response_type values that the issuer supports                                                                                                                                                                                                                
-![Public property]                 | [RevokeEndpoint][37]                             | Revoke Token endpoint to use if different from url returned by discovery                                                                                                                                                                                                                
-![Public property]                 | [ScopesSupported][38]                            | A list of OAuth 2.0 scope values that the issuer supports, these can be easily queried using [IsMobileConnectServiceSupported(String)][39]                                                                                                                                              
-![Public property]                 | [ServiceDocumentation][40]                       | URL of a page containing human readable information that developers might want or need to know when using the issuing service                                                                                                                                                           
-![Public property]                 | [SubjectTypesSupported][41]                      | Array containing a list of the Subject Identifier Types that the issuer supports                                                                                                                                                                                                        
-![Public property]                 | [TimeCachedUtc][42]                              | Time when the object was initially cached                                                                                                                                                                                                                                               
-![Public property]                 | [TokenEndpoint][43]                              | Token endpoint to use if different from url returned by discovery                                                                                                                                                                                                                       
-![Public property]                 | [TokenEndpointAuthMethodsSupported][44]          | Array containing the Client Authentication methods suppoorted by the Token Endpoint                                                                                                                                                                                                     
-![Public property]                 | [TokenEndpointAuthSigningAlgValuesSupported][45] | Array containing the JWS signing algorithms (alg values) supported by the Token Endpoint for the signature on the JWT used to authenticate the client at the Token Endpoint for the private_key_jwt and client_secret_jwt authentication methods                                        
-![Public property]                 | [UiLocalesSupported][46]                         | Array containing the languages and scripts supported for the user interface, represented as an array of BCP47 [RFC5646] language tag values                                                                                                                                             
-![Public property]                 | [UserInfoEncryptionAlgValuesSupported][47]       | Array containing a list of the JWE encryption algorithms (alg values) [JWA] supported by the issuer for the UserInfo Endpoint to encode the claims in a JWT                                                                                                                             
-![Public property]                 | [UserInfoEncryptionEncValuesSupported][48]       | Array containing a list of the JWE encryption algorithms (enc values) [JWE] supported by the issuer for the UserInfo Endpoint to encode the claims in a JWT                                                                                                                             
-![Public property]                 | [UserInfoEndpoint][49]                           | UserInfo endpoint to use if different from url returned by discovery                                                                                                                                                                                                                    
-![Public property]                 | [UserInfoSigningAlgValuesSupported][50]          | Array containing the JWS signing algorithms [JWA] supported by the issuer for the UserInfo Endpoint to encode the claims in a JWT                                                                                                                                                       
-![Public property]                 | [Version][51]                                    | The version of provider metadata                                                                                                                                                                                                                                                        
+![Public property]                 | [RefreshEndpoint][28]                            | Refresh Token endpoint to use if different from url returned by discovery                                                                                                                                                                                                               
+![Public property]                 | [RegistrationEndpoint][29]                       | Registration endpoint to use if different from url returned by discovery                                                                                                                                                                                                                
+![Public property]                 | [RequestObjectEncryptionAlgValuesSupported][30]  | Array containing the JWE encryption algorithms (alg values) [JWA] supported by the issuer for Request Objects which are described in Section 6.1 of OpenID Connect Core 1.0                                                                                                             
+![Public property]                 | [RequestObjectEncryptionEncValuesSupported][31]  | Array containing the JWE encryption algorithms (enc values) [JWE] supported by the issuer for Request Objects which are described in Section 6.1 of OpenID Connect Core 1.0                                                                                                             
+![Public property]                 | [RequestObjectSigningAlgValuesSupported][32]     | Array containing the JWS signing algorithms [JWA] supported by the issuer for Request Objects which are described in Section 6.1 of OpenID Connect Core 1.0                                                                                                                             
+![Public property]                 | [RequestParameterSupported][33]                  | Boolean value specifying whether the issuer supports use of the request parameter, with true indicating support                                                                                                                                                                         
+![Public property]                 | [RequestUriParameterSupported][34]               | Boolean value specifying whether the issuer supports use of the request uri parameter, with true indicating support                                                                                                                                                                     
+![Public property]                 | [RequireRequestUriRegistration][35]              | Boolean value specifying whether the issuer requires any request_uri values used to be pre-registered using the request_uris registration parameter. Pre-registration is required when the value is true                                                                                
+![Public property]                 | [ResponseModesSupported][36]                     | Array containing OAuth 2.0 response_mode values that the issuer supports, as specified in OAuth 2.0 Multiple Response Type Encoding Practices                                                                                                                                           
+![Public property]                 | [ResponseTypesSupported][37]                     | Array containing OAuth 2.0 response_type values that the issuer supports                                                                                                                                                                                                                
+![Public property]                 | [RevokeEndpoint][38]                             | Revoke Token endpoint to use if different from url returned by discovery                                                                                                                                                                                                                
+![Public property]                 | [ScopesSupported][39]                            | A list of OAuth 2.0 scope values that the issuer supports, these can be easily queried using [IsMobileConnectServiceSupported(String)][40]                                                                                                                                              
+![Public property]                 | [ServiceDocumentation][41]                       | URL of a page containing human readable information that developers might want or need to know when using the issuing service                                                                                                                                                           
+![Public property]                 | [SubjectTypesSupported][42]                      | Array containing a list of the Subject Identifier Types that the issuer supports                                                                                                                                                                                                        
+![Public property]                 | [TimeCachedUtc][43]                              | Time when the object was initially cached                                                                                                                                                                                                                                               
+![Public property]                 | [TokenEndpoint][44]                              | Token endpoint to use if different from url returned by discovery                                                                                                                                                                                                                       
+![Public property]                 | [TokenEndpointAuthMethodsSupported][45]          | Array containing the Client Authentication methods suppoorted by the Token Endpoint                                                                                                                                                                                                     
+![Public property]                 | [TokenEndpointAuthSigningAlgValuesSupported][46] | Array containing the JWS signing algorithms (alg values) supported by the Token Endpoint for the signature on the JWT used to authenticate the client at the Token Endpoint for the private_key_jwt and client_secret_jwt authentication methods                                        
+![Public property]                 | [UiLocalesSupported][47]                         | Array containing the languages and scripts supported for the user interface, represented as an array of BCP47 [RFC5646] language tag values                                                                                                                                             
+![Public property]                 | [UserInfoEncryptionAlgValuesSupported][48]       | Array containing a list of the JWE encryption algorithms (alg values) [JWA] supported by the issuer for the UserInfo Endpoint to encode the claims in a JWT                                                                                                                             
+![Public property]                 | [UserInfoEncryptionEncValuesSupported][49]       | Array containing a list of the JWE encryption algorithms (enc values) [JWE] supported by the issuer for the UserInfo Endpoint to encode the claims in a JWT                                                                                                                             
+![Public property]                 | [UserInfoEndpoint][50]                           | UserInfo endpoint to use if different from url returned by discovery                                                                                                                                                                                                                    
+![Public property]                 | [UserInfoSigningAlgValuesSupported][51]          | Array containing the JWS signing algorithms [JWA] supported by the issuer for the UserInfo Endpoint to encode the claims in a JWT                                                                                                                                                       
+![Public property]                 | [Version][52]                                    | The version of provider metadata                                                                                                                                                                                                                                                        
 
 
 Methods
@@ -88,7 +89,7 @@ Methods
 
                  | Name              | Description                                                                                                        
 ---------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------ 
-![Public method] | [MarkExpired][52] | Mark the object as expired, this method should only cause HasExpired to move from false to true, not true to false 
+![Public method] | [MarkExpired][53] | Mark the object as expired, this method should only cause HasExpired to move from false to true, not true to false 
 
 
 See Also
@@ -124,32 +125,33 @@ See Also
 [25]: OperatorPolicyUri.md
 [26]: OperatorTermsOfServiceUri.md
 [27]: PremiumInfoEndpoint.md
-[28]: RegistrationEndpoint.md
-[29]: RequestObjectEncryptionAlgValuesSupported.md
-[30]: RequestObjectEncryptionEncValuesSupported.md
-[31]: RequestObjectSigningAlgValuesSupported.md
-[32]: RequestParameterSupported.md
-[33]: RequestUriParameterSupported.md
-[34]: RequireRequestUriRegistration.md
-[35]: ResponseModesSupported.md
-[36]: ResponseTypesSupported.md
-[37]: RevokeEndpoint.md
-[38]: ScopesSupported.md
-[39]: ../DiscoveryResponse/IsMobileConnectServiceSupported.md
-[40]: ServiceDocumentation.md
-[41]: SubjectTypesSupported.md
-[42]: TimeCachedUtc.md
-[43]: TokenEndpoint.md
-[44]: TokenEndpointAuthMethodsSupported.md
-[45]: TokenEndpointAuthSigningAlgValuesSupported.md
-[46]: UiLocalesSupported.md
-[47]: UserInfoEncryptionAlgValuesSupported.md
-[48]: UserInfoEncryptionEncValuesSupported.md
-[49]: UserInfoEndpoint.md
-[50]: UserInfoSigningAlgValuesSupported.md
-[51]: Version.md
-[52]: MarkExpired.md
-[53]: ../../_icons/Help.png
+[28]: RefreshEndpoint.md
+[29]: RegistrationEndpoint.md
+[30]: RequestObjectEncryptionAlgValuesSupported.md
+[31]: RequestObjectEncryptionEncValuesSupported.md
+[32]: RequestObjectSigningAlgValuesSupported.md
+[33]: RequestParameterSupported.md
+[34]: RequestUriParameterSupported.md
+[35]: RequireRequestUriRegistration.md
+[36]: ResponseModesSupported.md
+[37]: ResponseTypesSupported.md
+[38]: RevokeEndpoint.md
+[39]: ScopesSupported.md
+[40]: ../DiscoveryResponse/IsMobileConnectServiceSupported.md
+[41]: ServiceDocumentation.md
+[42]: SubjectTypesSupported.md
+[43]: TimeCachedUtc.md
+[44]: TokenEndpoint.md
+[45]: TokenEndpointAuthMethodsSupported.md
+[46]: TokenEndpointAuthSigningAlgValuesSupported.md
+[47]: UiLocalesSupported.md
+[48]: UserInfoEncryptionAlgValuesSupported.md
+[49]: UserInfoEncryptionEncValuesSupported.md
+[50]: UserInfoEndpoint.md
+[51]: UserInfoSigningAlgValuesSupported.md
+[52]: Version.md
+[53]: MarkExpired.md
+[54]: ../../_icons/Help.png
 [Public method]: ../../_icons/pubmethod.gif "Public method"
 [Public property]: ../../_icons/pubproperty.gif "Public property"
 [Static member]: ../../_icons/static.gif "Static member"

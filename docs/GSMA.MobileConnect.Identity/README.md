@@ -24,6 +24,14 @@ Interfaces
 ------------------- | --------------------- | ------------------------------------------------------------------- 
 ![Public interface] | [IIdentityService][7] | Interface for Mobile Connect UserInfo and Identity related requests 
 
+
+Enumerations
+------------
+
+                      | Enumeration                   | Description                
+--------------------- | ----------------------------- | -------------------------- 
+![Public enumeration] | [IdentityService.InfoType][9] | The types of info request. 
+
 [1]: AddressData/README.md
 [2]: IdentityData/README.md
 [3]: IdentityResponse/ResponseJson.md
@@ -32,6 +40,8 @@ Interfaces
 [6]: IdentityService/README.md
 [7]: IIdentityService/README.md
 [8]: UserInfoData/README.md
-[9]: ../_icons/Help.png
+[9]: IdentityService_InfoType/README.md
+[10]: ../_icons/Help.png
 [Public class]: ../_icons/pubclass.gif "Public class"
 [Public interface]: ../_icons/pubinterface.gif "Public interface"
+[Public enumeration]: ../_icons/pubenumeration.gif "Public enumeration"

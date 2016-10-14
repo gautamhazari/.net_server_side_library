@@ -1,5 +1,5 @@
-Response.applicationShortName Property
-======================================
+Response.client_name Property
+=============================
 Parsed from JSON response
 
 **Namespace:** [GSMA.MobileConnect.Json][1]  
@@ -9,7 +9,7 @@ Syntax
 ------
 
 ```csharp
-public string applicationShortName { get; set; }
+public string client_name { get; set; }
 ```
 
 #### Property Value
