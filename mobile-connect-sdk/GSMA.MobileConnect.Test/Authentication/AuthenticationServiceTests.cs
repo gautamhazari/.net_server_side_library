@@ -55,7 +55,7 @@ namespace GSMA.MobileConnect.Test.Authentication
 
             Assert.IsNotNull(result);
             Assert.IsNotEmpty(result.Url);
-            Assert.AreEqual(maxage.ToString(), HttpUtils.ExtractQueryValue(result.Url, "max-age"));
+            Assert.AreEqual(maxage.ToString(), HttpUtils.ExtractQueryValue(result.Url, "max_age"));
         }
 
         [Test]

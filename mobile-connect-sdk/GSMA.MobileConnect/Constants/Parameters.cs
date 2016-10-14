@@ -31,8 +31,8 @@
         //Optional params for authentication
         internal const string DISPLAY = "display";
         internal const string PROMPT = "prompt";
-        internal const string MAX_AGE = "max-age";
-        internal const string UI_LOCALES = "ui-locales";
+        internal const string MAX_AGE = "max_age";
+        internal const string UI_LOCALES = "ui_locales";
         internal const string CLAIMS_LOCALES = "claims_locales";
         internal const string ID_TOKEN_HINT = "id_token_hint";
         internal const string LOGIN_HINT = "login_hint";
