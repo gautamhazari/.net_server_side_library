@@ -123,7 +123,8 @@ namespace GSMA.MobileConnect.Demo.Universal
             loggedPanel.Visibility = Visibility.Collapsed;
             identityPanel.Visibility = Visibility.Visible;
 
-            identity.Text = status.IdentityResponse.ResponseJson;
+            var json = new Newtonsoft.Json.Linq.JRaw(status.IdentityResponse.ResponseJson);
+            identity.Text = json.ToString(Newtonsoft.Json.Formatting.Indented);
         }
 
         #endregion
