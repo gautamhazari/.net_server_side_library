@@ -15,7 +15,8 @@ public static TokenValidationResult ValidateIdToken(
 	string issuer,
 	string nonce,
 	Nullable<int> maxAge,
-	JWKeyset keyset
+	JWKeyset keyset,
+	string version
 )
 ```
 
@@ -44,6 +45,10 @@ MaxAge that is used to validate the auth_time claim (if supplied)
 ##### *keyset*
 Type: [GSMA.MobileConnect.Authentication.JWKeyset][5]  
 Keyset retrieved from the jwks url, used to validate the token signature
+
+##### *version*
+Type: [System.String][2]  
+Version of MobileConnect services supported by current provider
 
 #### Return Value
 Type: [TokenValidationResult][6]  

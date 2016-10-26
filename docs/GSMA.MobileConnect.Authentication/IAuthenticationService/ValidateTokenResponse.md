@@ -15,7 +15,8 @@ TokenValidationResult ValidateTokenResponse(
 	string issuer,
 	string nonce,
 	Nullable<int> maxAge,
-	JWKeyset keyset
+	JWKeyset keyset,
+	string version
 )
 ```
 
@@ -44,6 +45,10 @@ MaxAge value required for validating Id token claims
 ##### *keyset*
 Type: [GSMA.MobileConnect.Authentication.JWKeyset][6]  
 Keyset required for validating Id token signature
+
+##### *version*
+Type: [System.String][3]  
+Max version of mobile connect services supported by current provider, used to skip some unsupported validation steps
 
 #### Return Value
 Type: [TokenValidationResult][7]  
