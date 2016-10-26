@@ -25,10 +25,18 @@ namespace GSMA.MobileConnect.Discovery
 
         private readonly Dictionary<string, string> _initialValuesDict;
         private readonly Version _maxSupportedVersion;
+        private readonly string _maxSupportedVersionString;
+
+        internal static string R1Version = "mc_v1.1";
 
         internal Dictionary<string, string> InitialValues
         {
             get { return _initialValuesDict; }
+        }
+
+        internal string MaxSupportedVersionString
+        {
+            get { return _maxSupportedVersionString; }
         }
 
         /// <summary>
@@ -38,23 +46,26 @@ namespace GSMA.MobileConnect.Discovery
         public SupportedVersions(Dictionary<string, string> versionSupport)
         {
             _initialValuesDict = versionSupport ?? new Dictionary<string, string>();
-            _maxSupportedVersion = IdentifyMaxSupportedVersion(_initialValuesDict);
+            _maxSupportedVersionString = CalculateMaxSupportedVersion(_initialValuesDict);
+            _maxSupportedVersion = GetAsVersion(_maxSupportedVersionString);
         }
 
-        private static Version IdentifyMaxSupportedVersion(Dictionary<string, string> versionSupport)
+        private static string CalculateMaxSupportedVersion(Dictionary<string, string> versionSupport)
         {
             // Use default scope as default max version
-            Version max = GetAsVersion(Utils.MobileConnectVersions.CoerceVersion(null, MobileConnectConstants.MOBILECONNECT));
+            string maxString = Utils.MobileConnectVersions.CoerceVersion(null, MobileConnectConstants.MOBILECONNECT);
+            Version max = GetAsVersion(maxString);
             foreach (var kvp in versionSupport)
             {
                 var version = GetAsVersion(kvp.Value);
                 if(version > max)
                 {
                     max = version;
+                    maxString = kvp.Value;
                 }
             }
 
-            return max;
+            return maxString;
         }
 
         private static Version GetAsVersion(string version)

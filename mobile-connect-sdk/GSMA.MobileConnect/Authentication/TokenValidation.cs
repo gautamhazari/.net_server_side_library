@@ -20,21 +20,28 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="nonce">Nonce that is validated against the nonce claim</param>
         /// <param name="maxAge">MaxAge that is used to validate the auth_time claim (if supplied)</param>
         /// <param name="keyset">Keyset retrieved from the jwks url, used to validate the token signature</param>
+        /// <param name="version">Version of MobileConnect services supported by current provider</param>
         /// <returns>TokenValidationResult that sepcfies if the token is valid, or if not why it is not valid</returns>
-        public static TokenValidationResult ValidateIdToken(string idToken, string clientId, string issuer, string nonce, int? maxAge, JWKeyset keyset)
+        public static TokenValidationResult ValidateIdToken(string idToken, string clientId, string issuer, string nonce, int? maxAge, JWKeyset keyset, string version)
         {
             if (string.IsNullOrEmpty(idToken))
             {
                 return TokenValidationResult.IdTokenMissing;
             }
 
+            bool isR1Source = version == Discovery.SupportedVersions.R1Version;
             TokenValidationResult result = ValidateIdTokenClaims(idToken, clientId, issuer, nonce, maxAge);
-            if (result != TokenValidationResult.Valid)
+            if (result != TokenValidationResult.Valid && !isR1Source)
             {
                 return result;
             }
+            else if(isR1Source)
+            {
+                return TokenValidationResult.IdTokenValidationSkipped;
+            }
 
-            return ValidateIdTokenSignature(idToken, keyset);
+            result = ValidateIdTokenSignature(idToken, keyset);
+            return result != TokenValidationResult.Valid && isR1Source ? TokenValidationResult.IdTokenValidationSkipped : result;
         }
 
         /// <summary>
@@ -111,11 +118,6 @@ namespace GSMA.MobileConnect.Authentication
                 return TokenValidationResult.InvalidAudAndAzp;
             }
 
-            if ((string)claims["iss"] != issuer)
-            {
-                return TokenValidationResult.InvalidIssuer;
-            }
-
             var now = DateTime.UtcNow;
             var exp = (int?)claims["exp"];
             if (!exp.HasValue || UnixTimestamp.ToUTCDateTime(exp.Value) < now)
@@ -128,6 +130,11 @@ namespace GSMA.MobileConnect.Authentication
                 || UnixTimestamp.ToUTCDateTime(authTime.Value).AddSeconds(maxAge.Value) < now))
             {
                 return TokenValidationResult.MaxAgePassed;
+            }
+
+            if ((string)claims["iss"] != issuer)
+            {
+                return TokenValidationResult.InvalidIssuer;
             }
 
             return TokenValidationResult.Valid;

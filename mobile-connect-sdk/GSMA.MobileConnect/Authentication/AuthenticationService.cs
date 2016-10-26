@@ -258,7 +258,7 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        public TokenValidationResult ValidateTokenResponse(RequestTokenResponse tokenResponse, string clientId, string issuer, string nonce, int? maxAge, JWKeyset keyset)
+        public TokenValidationResult ValidateTokenResponse(RequestTokenResponse tokenResponse, string clientId, string issuer, string nonce, int? maxAge, JWKeyset keyset, string version)
         {
             if (tokenResponse?.ResponseData == null)
             {
@@ -273,7 +273,7 @@ namespace GSMA.MobileConnect.Authentication
                 return result;
             }
 
-            result = TokenValidation.ValidateIdToken(tokenResponse.ResponseData.IdToken, clientId, issuer, nonce, maxAge, keyset);
+            result = TokenValidation.ValidateIdToken(tokenResponse.ResponseData.IdToken, clientId, issuer, nonce, maxAge, keyset, version);
             if (result != TokenValidationResult.Valid)
             {
                 Log.Warning(() => $"IDToken was invalid from issuer={issuer} for reason={result}");

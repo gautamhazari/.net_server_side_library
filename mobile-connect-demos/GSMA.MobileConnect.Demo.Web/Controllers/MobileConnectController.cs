@@ -10,7 +10,7 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
     [RoutePrefix("api/mobileconnect")]
     public class MobileConnectController : ApiController
     {
-        private MobileConnectWebInterface _mobileConnect;
+        private readonly MobileConnectWebInterface _mobileConnect;
 
         public MobileConnectController(MobileConnectWebInterface mobileConnect)
         {
@@ -92,7 +92,9 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
         [Route("")]
         public async Task<IHttpActionResult> HandleRedirect(string sdksession=null, string mcc_mnc=null, string code=null, string expectedState=null, string expectedNonce=null)
         {
-            var response = await _mobileConnect.HandleUrlRedirectAsync(Request, Request.RequestUri, sdksession, expectedState, expectedNonce, new MobileConnectRequestOptions());
+            // Accept valid results and results indicating validation was skipped due to missing support on the provider
+            var requestOptions = new MobileConnectRequestOptions { AcceptedValidationResults = Authentication.TokenValidationResult.Valid | Authentication.TokenValidationResult.IdTokenValidationSkipped };
+            var response = await _mobileConnect.HandleUrlRedirectAsync(Request, Request.RequestUri, sdksession, expectedState, expectedNonce, requestOptions);
             
             return CreateResponse(response);
         }
