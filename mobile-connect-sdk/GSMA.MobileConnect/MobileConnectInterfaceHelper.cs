@@ -145,7 +145,8 @@ namespace GSMA.MobileConnect
 
                 RequestTokenResponse response = tokenTask.Result;
 
-                status = HandleTokenResponse(authentication, response, clientId, issuer, nonce, jwksTask.Result, options);
+                status = HandleTokenResponse(authentication, response, clientId, issuer, nonce,
+                    discoveryResponse.ProviderMetadata.MobileConnectVersionSupported.MaxSupportedVersionString, jwksTask.Result, options);
             }
             catch (MobileConnectInvalidArgumentException e)
             {
@@ -217,7 +218,8 @@ namespace GSMA.MobileConnect
 
                 response = tokenTask.Result;
 
-                return HandleTokenResponse(authentication, response, clientId, issuer, expectedNonce, jwksTask.Result, options);
+                return HandleTokenResponse(authentication, response, clientId, issuer, expectedNonce, 
+                    discoveryResponse.ProviderMetadata.MobileConnectVersionSupported.MaxSupportedVersionString, jwksTask.Result, options);
             }
             catch (MobileConnectInvalidArgumentException e)
             {
@@ -236,25 +238,31 @@ namespace GSMA.MobileConnect
             }
         }
 
-        private static MobileConnectStatus HandleTokenResponse(IAuthenticationService authentication, RequestTokenResponse response, string clientId, string issuer, string expectedNonce, JWKeyset jwks, MobileConnectRequestOptions options)
+        private static MobileConnectStatus HandleTokenResponse(IAuthenticationService authentication, RequestTokenResponse response, string clientId, string issuer, string expectedNonce, 
+            string version, JWKeyset jwks, MobileConnectRequestOptions options)
         {
             if (response.ErrorResponse != null)
             {
                 return MobileConnectStatus.Error(response.ErrorResponse.Error, response.ErrorResponse.ErrorDescription, null, response);
             }
 
-            response.ValidationResult = authentication.ValidateTokenResponse(response, clientId, issuer, expectedNonce, options?.MaxAge, jwks);
+            response.ValidationResult = authentication.ValidateTokenResponse(response, clientId, issuer, expectedNonce, options?.MaxAge, jwks, version);
             var validationOptions = options?.TokenValidationOptions ?? new TokenValidationOptions();
             if (!validationOptions.AcceptedValidationResults.HasFlag(response.ValidationResult))
             {
-                Log.Error(() => $"A generated tokenResponse was invalid issuer={issuer} result={response.ValidationResult}");
+                Log.Error(() => $"A generated tokenResponse was invalid issuer={issuer} version={version} result={response.ValidationResult}");
                 return MobileConnectStatus.Error(ErrorCodes.InvalidToken, $"The token was found to be invalid with the validation result {response.ValidationResult}", null, response);
+            }
+            else if(response.ValidationResult != TokenValidationResult.Valid)
+            {
+                Log.Warning(() => $"A generated tokenResponse was invalid but accepted issuer={issuer} version={version} result={response.ValidationResult}");
             }
 
             return MobileConnectStatus.Complete(response);
         }
 
-        internal static async Task<MobileConnectStatus> HandleUrlRedirect(IDiscoveryService discovery, IAuthenticationService authentication, IJWKeysetService jwks, Uri redirectedUrl, DiscoveryResponse discoveryResponse, string expectedState, string expectedNonce, MobileConnectConfig config, MobileConnectRequestOptions options)
+        internal static async Task<MobileConnectStatus> HandleUrlRedirect(IDiscoveryService discovery, IAuthenticationService authentication, IJWKeysetService jwks, Uri redirectedUrl, DiscoveryResponse discoveryResponse, 
+            string expectedState, string expectedNonce, MobileConnectConfig config, MobileConnectRequestOptions options)
         {
             if (HttpUtils.ExtractQueryValue(redirectedUrl.Query, "code") != null)
             {

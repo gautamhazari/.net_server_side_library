@@ -15,8 +15,8 @@ namespace GSMA.MobileConnect.Demo.Universal
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private MobileConnectInterface _mobileConnect;
-        private MobileConnectConfig _config;
+        private readonly MobileConnectInterface _mobileConnect;
+        private readonly MobileConnectConfig _config;
         private string _state;
         private string _nonce;
         private Discovery.DiscoveryResponse _discoveryResponse;
@@ -88,6 +88,8 @@ namespace GSMA.MobileConnect.Demo.Universal
                 Scope = GetScope(),
                 Context = "demo",
                 BindingMessage = "demo auth",
+                // Accept valid results and results indicating validation was skipped due to missing support on the provider
+                AcceptedValidationResults = TokenValidationResult.Valid | TokenValidationResult.IdTokenValidationSkipped,
             };
 
             var newResponse = _mobileConnect.StartAuthentication(_discoveryResponse,
@@ -111,7 +113,7 @@ namespace GSMA.MobileConnect.Demo.Universal
             accessToken.Text = _token.AccessToken;
             idToken.Text = _token.IdToken;
             timeReceived.Text = _token.TimeReceived.ToString("u");
-            applicationName.Text = _discoveryResponse.ApplicationShortName;
+            applicationName.Text = _discoveryResponse.ApplicationShortName ?? "";
             validationResult.Text = response.TokenResponse.ValidationResult.ToString();
 
             loginPanel.Visibility = Visibility.Collapsed;

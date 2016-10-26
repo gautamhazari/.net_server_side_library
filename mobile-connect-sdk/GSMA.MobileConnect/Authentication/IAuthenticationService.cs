@@ -121,7 +121,8 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="nonce">Nonce value required for validating Id token claims</param>
         /// <param name="maxAge">MaxAge value required for validating Id token claims</param>
         /// <param name="keyset">Keyset required for validating Id token signature</param>
+        /// <param name="version">Max version of mobile connect services supported by current provider, used to skip some unsupported validation steps</param>
         /// <returns>TokenValidationResult indicating the token response is valid or why the token response is invalid</returns>
-        TokenValidationResult ValidateTokenResponse(RequestTokenResponse tokenResponse, string clientId, string issuer, string nonce, int? maxAge, JWKeyset keyset);
+        TokenValidationResult ValidateTokenResponse(RequestTokenResponse tokenResponse, string clientId, string issuer, string nonce, int? maxAge, JWKeyset keyset, string version);
     }
 }

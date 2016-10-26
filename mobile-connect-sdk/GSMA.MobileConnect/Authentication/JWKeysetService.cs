@@ -34,6 +34,11 @@ namespace GSMA.MobileConnect.Authentication
         /// <inheritdoc/>
         public async Task<JWKeyset> RetrieveJWKSAsync(string url)
         {
+            if(string.IsNullOrEmpty(url))
+            {
+                return null;
+            }
+
             var cached = await RetrieveFromCache(url);
 
             if (cached != null && !cached.HasExpired)
