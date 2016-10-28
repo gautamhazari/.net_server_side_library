@@ -84,5 +84,10 @@ namespace GSMA.MobileConnect.Authentication
         /// The token response is null or missing required data
         /// </summary>
         IncompleteTokenResponse = 65536,
+        /// <summary>
+        /// The token validation was skipped because the provider does not 
+        /// support full validation of the token. Allow this result if you will be making requests to providers that only support mc_v1.1
+        /// </summary>
+        IdTokenValidationSkipped = 131072,
     }
 }

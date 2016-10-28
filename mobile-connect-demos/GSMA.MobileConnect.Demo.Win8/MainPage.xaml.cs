@@ -19,12 +19,13 @@ namespace GSMA.MobileConnect.Demo.Win8
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private MobileConnectInterface _mobileConnect;
-        private MobileConnectConfig _config;
+        private readonly MobileConnectInterface _mobileConnect;
+        private readonly MobileConnectConfig _config;
         private string _state;
         private string _nonce;
         private Discovery.DiscoveryResponse _discoveryResponse;
         private RequestTokenResponseData _token;
+        private MobileConnectRequestOptions _authOptions;
 
         public MainPage()
         {
@@ -38,7 +39,7 @@ namespace GSMA.MobileConnect.Demo.Win8
 
         private async Task HandleRedirect(Uri url)
         {
-            var response = await _mobileConnect.HandleUrlRedirectAsync(url, _discoveryResponse, _state, _nonce);
+            var response = await _mobileConnect.HandleUrlRedirectAsync(url, _discoveryResponse, _state, _nonce, _authOptions);
             await HandleResponse(response);
         }
 
@@ -86,16 +87,17 @@ namespace GSMA.MobileConnect.Demo.Win8
             _state = Utils.Security.GenerateSecureNonce();
             _nonce = Utils.Security.GenerateSecureNonce();
             _discoveryResponse = response.DiscoveryResponse;
-
-            var options = new MobileConnectRequestOptions
+            _authOptions = new MobileConnectRequestOptions
             {
                 Scope = GetScope(),
                 Context = "demo",
                 BindingMessage = "demo auth",
+                // Accept valid results and results indicating validation was skipped due to missing support on the provider
+                AcceptedValidationResults = TokenValidationResult.Valid | TokenValidationResult.IdTokenValidationSkipped,
             };
 
             var newResponse = _mobileConnect.StartAuthentication(_discoveryResponse,
-                response.DiscoveryResponse.ResponseData.subscriber_id, _state, _nonce, options);
+                response.DiscoveryResponse.ResponseData.subscriber_id, _state, _nonce, _authOptions);
 
             await HandleResponse(newResponse);
         }
@@ -115,7 +117,7 @@ namespace GSMA.MobileConnect.Demo.Win8
             accessToken.Text = _token.AccessToken;
             idToken.Text = _token.IdToken;
             timeReceived.Text = _token.TimeReceived.ToString("u");
-            applicationName.Text = _discoveryResponse.ApplicationShortName;
+            applicationName.Text = _discoveryResponse.ApplicationShortName ?? "";
             validationResult.Text = response.TokenResponse.ValidationResult.ToString();
 
             loginPanel.Visibility = Visibility.Collapsed;

@@ -295,7 +295,7 @@ namespace GSMA.MobileConnect.Test.Authentication
             string issuer = "http://mobileconnect.io";
             int? maxAge = 36000;
 
-            var actual = _authentication.ValidateTokenResponse(tokenResponse, clientId, issuer, nonce, maxAge, jwks);
+            var actual = _authentication.ValidateTokenResponse(tokenResponse, clientId, issuer, nonce, maxAge, jwks, "mc_v1.2");
 
             Assert.AreEqual(TokenValidationResult.Valid, actual);
         }
@@ -312,7 +312,7 @@ namespace GSMA.MobileConnect.Test.Authentication
             string issuer = "http://mobileconnect.io";
             int? maxAge = 36000;
 
-            var actual = _authentication.ValidateTokenResponse(tokenResponse, clientId, issuer, nonce, maxAge, jwks);
+            var actual = _authentication.ValidateTokenResponse(tokenResponse, clientId, issuer, nonce, maxAge, jwks, "mc_v1.2");
 
             Assert.AreEqual(TokenValidationResult.IncompleteTokenResponse, actual);
         }
@@ -329,7 +329,7 @@ namespace GSMA.MobileConnect.Test.Authentication
             string issuer = "http://mobileconnect.io";
             int? maxAge = 36000;
 
-            var actual = _authentication.ValidateTokenResponse(tokenResponse, clientId, issuer, nonce, maxAge, jwks);
+            var actual = _authentication.ValidateTokenResponse(tokenResponse, clientId, issuer, nonce, maxAge, jwks, "mc_v1.2");
 
             Assert.AreEqual(TokenValidationResult.AccessTokenMissing, actual);
         }
@@ -345,7 +345,7 @@ namespace GSMA.MobileConnect.Test.Authentication
             string clientId = "x-clientid-x";
             int? maxAge = 36000;
 
-            var actual = _authentication.ValidateTokenResponse(tokenResponse, clientId, "notissuer", nonce, maxAge, jwks);
+            var actual = _authentication.ValidateTokenResponse(tokenResponse, clientId, "notissuer", nonce, maxAge, jwks, "mc_v1.2");
 
             Assert.AreEqual(TokenValidationResult.InvalidIssuer, actual);
         }

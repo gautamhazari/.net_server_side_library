@@ -31,7 +31,7 @@ namespace GSMA.MobileConnect
         /// <param name="message">Message to log</param>
         public static void Info(string message)
         {
-            if (_log == null || _level < LogLevel.Info) return;
+            if (_log == null || _level > LogLevel.Info) return;
             _log.Info(message);
         }
 
@@ -41,7 +41,7 @@ namespace GSMA.MobileConnect
         /// <param name="messageFunc">Message generating function</param>
         public static void Info(Func<string> messageFunc)
         {
-            if (_log == null || messageFunc == null || _level < LogLevel.Info) return;
+            if (_log == null || messageFunc == null || _level > LogLevel.Info) return;
             _log.Info(messageFunc());
         }
 
@@ -51,7 +51,7 @@ namespace GSMA.MobileConnect
         /// <param name="message">Message to log</param>
         public static void Debug(string message)
         {
-            if (_log == null || _level < LogLevel.Debug) return;
+            if (_log == null || _level > LogLevel.Debug) return;
             _log.Debug(message);
         }
 
@@ -61,7 +61,7 @@ namespace GSMA.MobileConnect
         /// <param name="messageFunc">Message generating function</param>
         public static void Debug(Func<string> messageFunc)
         {
-            if (_log == null || messageFunc == null || _level < LogLevel.Debug) return;
+            if (_log == null || messageFunc == null || _level > LogLevel.Debug) return;
             _log.Debug(messageFunc());
         }
 
@@ -71,7 +71,7 @@ namespace GSMA.MobileConnect
         /// <param name="message">Message to log</param>
         public static void Warning(string message)
         {
-            if (_log == null || _level < LogLevel.Warning) return;
+            if (_log == null || _level > LogLevel.Warning) return;
             _log.Warning(message);
         }
 
@@ -81,7 +81,7 @@ namespace GSMA.MobileConnect
         /// <param name="messageFunc">Message generating function</param>
         public static void Warning(Func<string> messageFunc)
         {
-            if (_log == null || messageFunc == null || _level < LogLevel.Warning) return;
+            if (_log == null || messageFunc == null || _level > LogLevel.Warning) return;
             _log.Warning(messageFunc());
         }
 
@@ -92,7 +92,7 @@ namespace GSMA.MobileConnect
         /// <param name="ex">Exception to log</param>
         public static void Error(string message, Exception ex = null)
         {
-            if (_log == null || _level < LogLevel.Error) return;
+            if (_log == null || _level > LogLevel.Error) return;
             _log.Error(message, ex);
         }
 
@@ -103,7 +103,7 @@ namespace GSMA.MobileConnect
         /// <param name="ex">Exception to log</param>
         public static void Error(Func<string> messageFunc, Exception ex = null)
         {
-            if (_log == null || messageFunc == null || _level < LogLevel.Error) return;
+            if (_log == null || messageFunc == null || _level > LogLevel.Error) return;
             _log.Warning(messageFunc());
         }
 
@@ -114,7 +114,7 @@ namespace GSMA.MobileConnect
         /// <param name="ex">Exception to log</param>
         public static void Fatal(string message, Exception ex)
         {
-            if (_log == null || _level < LogLevel.Fatal) return;
+            if (_log == null || _level > LogLevel.Fatal) return;
             _log.Fatal(message, ex);
         }
 
@@ -125,7 +125,7 @@ namespace GSMA.MobileConnect
         /// <param name="ex">Exception to log</param>
         public static void Fatal(Func<string> messageFunc, Exception ex)
         {
-            if (_log == null || messageFunc == null || _level < LogLevel.Fatal) return;
+            if (_log == null || messageFunc == null || _level > LogLevel.Fatal) return;
             _log.Fatal(messageFunc(), ex);
         }
     }
@@ -135,10 +135,6 @@ namespace GSMA.MobileConnect
     /// </summary>
     public enum LogLevel
     {
-        /// <summary>
-        /// No log messages will be logged
-        /// </summary>
-        None = 0,
         /// <summary>
         /// Messages Info level and above will be logged
         /// </summary>
@@ -159,5 +155,9 @@ namespace GSMA.MobileConnect
         /// Messages fatal level and above will be logged
         /// </summary>
         Fatal = 5,
+        /// <summary>
+        /// No log messages will be logged
+        /// </summary>
+        None = 99,
     }
 }
