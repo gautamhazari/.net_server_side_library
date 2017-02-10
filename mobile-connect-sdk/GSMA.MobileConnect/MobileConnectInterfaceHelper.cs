@@ -217,9 +217,11 @@ namespace GSMA.MobileConnect
                 await Task.WhenAll(tokenTask, jwksTask).ConfigureAwait(false);
 
                 response = tokenTask.Result;
+  
+                var maxSupportedVersion = discoveryResponse.ProviderMetadata?.MobileConnectVersionSupported == null ? "mc_v1.1" : discoveryResponse.ProviderMetadata.MobileConnectVersionSupported.MaxSupportedVersionString;
 
-                return HandleTokenResponse(authentication, response, clientId, issuer, expectedNonce, 
-                    discoveryResponse.ProviderMetadata.MobileConnectVersionSupported.MaxSupportedVersionString, jwksTask.Result, options);
+                return HandleTokenResponse(authentication, response, clientId, issuer, expectedNonce,
+                    maxSupportedVersion, jwksTask.Result, options);
             }
             catch (MobileConnectInvalidArgumentException e)
             {
@@ -412,7 +414,7 @@ namespace GSMA.MobileConnect
             }
         }
 
-        private static MobileConnectStatus GenerateStatusFromDiscoveryResponse(IDiscoveryService discovery, DiscoveryResponse response)
+        public static MobileConnectStatus GenerateStatusFromDiscoveryResponse(IDiscoveryService discovery, DiscoveryResponse response)
         {
             if (!response.Cached && response.ErrorResponse != null)
             {

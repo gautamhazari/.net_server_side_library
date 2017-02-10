@@ -1,6 +1,4 @@
-﻿using GSMA.MobileConnect.Json.Converters;
-using Newtonsoft.Json;
-using System;
+﻿using Newtonsoft.Json;
 
 namespace GSMA.MobileConnect.Identity
 {
