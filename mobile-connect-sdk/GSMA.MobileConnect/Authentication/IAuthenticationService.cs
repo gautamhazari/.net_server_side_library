@@ -24,6 +24,18 @@ namespace GSMA.MobileConnect.Authentication
         StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce, string encryptedMSISDN, SupportedVersions versions, AuthenticationOptions options);
 
         /// <summary>
+        /// Allows an application to create discovery object manually without call to discovery service
+        /// </summary>
+        /// <param name="clientId">clientId The registered application clientKey (consumer key) (Required)</param>
+        /// <param name="clientSecret">clientSecret The registered application secretKey (Required)</param>
+        /// <param name="subscriberId">subscriberId subscriber id (Required)</param>
+        /// <param name="appName">application name (Required)</param>
+        /// <param name="operatorsUrl">operator specific urls returned from a successful discovery process call</param>
+        /// <returns></returns>
+        Task<DiscoveryResponse> MakeDiscoveryForAuthorization(string clientId, string clientSecret, string subscriberId,
+            string appName, OperatorUrls operatorsUrl);
+
+        /// <summary>
         /// Initiates headless authentication, if authentication is successful a token will be returned. 
         /// This may be a long running operation as response from the user on their authentication device is required.
         /// </summary>

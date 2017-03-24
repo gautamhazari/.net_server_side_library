@@ -44,5 +44,7 @@
         /// Key for openid-configuration
         /// </summary>
         public const string OPENID_CONFIGURATION = "openid-configuration";
+
+        public const string SCOPE = "scope";
     }
 }

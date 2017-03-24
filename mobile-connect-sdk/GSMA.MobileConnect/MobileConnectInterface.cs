@@ -88,6 +88,33 @@ namespace GSMA.MobileConnect
         }
 
         /// <summary>
+        /// Allows an application to create discovery object manually without call to discovery service
+        /// </summary>
+        /// <param name="clientId">Client id</param>
+        /// <param name="clientSecret">Client secret</param>
+        /// <param name="subscriberId">Subscriber id</param>
+        /// <param name="appName">Application name</param>
+        /// <param name="operatorsUrls">Operators url</param>
+        /// <returns>Manually generated discovery response</returns>
+        public async Task<DiscoveryResponse> GenerateDiscoveryManuallyAsync(string clientId, string clientSecret, string subscriberId,
+            string appName, OperatorUrls operatorsUrls)
+        {
+            return await _authentication.MakeDiscoveryForAuthorization(clientId, clientSecret, subscriberId, appName,
+                operatorsUrls);
+        }
+
+        /// <summary>
+        /// Attempt manually discovery using the supplied parameters.
+        /// </summary>
+        /// <param name="response">Discovery response</param>
+        /// <returns></returns>
+        public MobileConnectStatus AttemptManuallyDiscovery(DiscoveryResponse response)
+        {
+
+            return MobileConnectInterfaceHelper.GenerateStatusFromDiscoveryResponse(_discovery, response);
+        }
+
+        /// <summary>
         /// Synchronous wrapper for <see cref="MobileConnectInterface.AttemptDiscoveryAsync(string, string, string, MobileConnectRequestOptions)"/>
         /// </summary>
         /// <param name="msisdn">MSISDN from user</param>
@@ -99,6 +126,7 @@ namespace GSMA.MobileConnect
         {
             return AttemptDiscoveryAsync(msisdn, mcc, mnc, options).Result;
         }
+
 
         /// <summary>
         /// Attempt discovery using the values returned from the operator selection redirect

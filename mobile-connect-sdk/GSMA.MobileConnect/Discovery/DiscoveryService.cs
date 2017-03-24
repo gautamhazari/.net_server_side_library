@@ -309,8 +309,13 @@ namespace GSMA.MobileConnect.Discovery
 
             return metadata;
         }
-
-        private async Task<ProviderMetadata> RetrieveProviderMetada(string url, bool forceCacheBypass = false)
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="url">url</param>
+        /// <param name="forceCacheBypass"></param>
+        /// <returns></returns>
+        public async Task<ProviderMetadata> RetrieveProviderMetada(string url, bool forceCacheBypass = false)
         {
             if (url == null)
             {

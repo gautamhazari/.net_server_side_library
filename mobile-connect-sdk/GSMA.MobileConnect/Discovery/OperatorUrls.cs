@@ -51,6 +51,11 @@ namespace GSMA.MobileConnect.Discovery
         public string ProviderMetadataUrl { get; set; }
 
         /// <summary>
+        /// Url for Scope
+        /// </summary>
+        public string ScopeUrl { get; set; }
+
+        /// <summary>
         /// Parses the operator urls from the parsed DiscoveryResponseData
         /// </summary>
         /// <param name="data">Data from the successful discovery response</param>
@@ -73,6 +78,7 @@ namespace GSMA.MobileConnect.Discovery
                 RefreshTokenUrl = GetUrl(links, LinkRels.TOKENREFRESH),
                 RevokeTokenUrl = GetUrl(links, LinkRels.TOKENREVOKE),
                 ProviderMetadataUrl = GetUrl(links, LinkRels.OPENID_CONFIGURATION),
+                ScopeUrl = GetUrl(links, LinkRels.SCOPE)
             };
         }
 
@@ -100,6 +106,44 @@ namespace GSMA.MobileConnect.Discovery
         private static string GetUrl(IEnumerable<Link> links, string rel)
         {
             return links.FirstOrDefault(x => x.rel == rel)?.href;
+        }
+
+        /// <summary>
+        /// Get list of operators urls
+        /// </summary>
+        /// <returns>List of operators urls</returns>
+        public List<string> GetListOfUrls()
+        {
+            var list = new List<string>();
+            list.Add(AuthorizationUrl);
+            list.Add(RequestTokenUrl);
+            list.Add(UserInfoUrl);
+            list.Add(PremiumInfoUrl);
+            list.Add(JWKSUrl);
+            list.Add(RefreshTokenUrl);
+            list.Add(RevokeTokenUrl);
+            list.Add(ProviderMetadataUrl);
+            list.Add(ScopeUrl);
+            return list;
+        }
+
+        /// <summary>
+        /// Get list of operators rels
+        /// </summary>
+        /// <returns>List of operators rels</returns>
+        public List<string> GetListOfRels()
+        {
+            var list = new List<string>();
+            list.Add(LinkRels.AUTHORIZATION);
+            list.Add(LinkRels.TOKEN);
+            list.Add(LinkRels.USERINFO);
+            list.Add(LinkRels.PREMIUMINFO);
+            list.Add(LinkRels.JWKS);
+            list.Add(LinkRels.TOKENREFRESH);
+            list.Add(LinkRels.TOKENREVOKE);
+            list.Add(LinkRels.OPENID_CONFIGURATION);
+            list.Add(LinkRels.SCOPE);
+            return list;
         }
     }
 }

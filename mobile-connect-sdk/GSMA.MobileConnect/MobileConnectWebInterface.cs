@@ -105,6 +105,22 @@ namespace GSMA.MobileConnect
         }
 
         /// <summary>
+        /// Allows an application to create discovery object manually without call to discovery service
+        /// </summary>
+        /// <param name="clientId">Client id</param>
+        /// <param name="clientSecret">Client secret</param>
+        /// <param name="subscriberId">Subscriber id</param>
+        /// <param name="appName">Application name</param>
+        /// <param name="operatorsUrls">Operators url</param>
+        /// <returns>Manually generated discovery response</returns>
+        public async Task<DiscoveryResponse> GenerateDiscoveryManually(string clientId, string clientSecret, string subscriberId,
+            string appName, OperatorUrls operatorsUrls)
+        {
+            return await _authentication.MakeDiscoveryForAuthorization(clientId, clientSecret, subscriberId, appName,
+                operatorsUrls);
+        }
+
+        /// <summary>
         /// Attempt discovery using the values returned from the operator selection redirect
         /// </summary>
         /// <param name="request">Originating web request</param>

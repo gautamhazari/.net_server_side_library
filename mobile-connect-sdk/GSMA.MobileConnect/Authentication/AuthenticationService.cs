@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Utils;
 using GSMA.MobileConnect.Exceptions;
 using System.Net.Http;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Threading;
+using GSMA.MobileConnect.Cache;
 
 namespace GSMA.MobileConnect.Authentication
 {
@@ -65,6 +66,68 @@ namespace GSMA.MobileConnect.Authentication
 
             Log.Info(() => $"Authentication URI={build.Uri.AbsoluteUri}");
             return new StartAuthenticationResponse() { Url = build.Uri.AbsoluteUri };
+        }
+
+        /// <summary>
+        /// Make fake discovery for authorization
+        /// </summary>
+        /// <param name="clientId">Client id</param>
+        /// <param name="clientSecret">Client secret</param>
+        /// <param name="subscriberId">Subscriber ID</param>
+        /// <param name="appName">Client application name</param>
+        /// <param name="operatorsUrl">Operators urls</param>
+        /// <returns>Generated fake discovery response</returns>
+        public async Task<DiscoveryResponse> MakeDiscoveryForAuthorization(string clientId, string clientSecret, string subscriberId,
+            string appName, OperatorUrls operatorsUrl)
+        {
+            Validate.RejectNullOrEmpty(clientId, "clientId");
+            Validate.RejectNullOrEmpty(clientSecret, "clientSecret");
+            Validate.RejectNullOrEmpty(subscriberId, "subscriberId");
+            Validate.RejectNullOrEmpty(appName, "appName");
+            Validate.RejectNull(operatorsUrl, "operatorsUrl");
+
+            var discoveryService = new DiscoveryService(new ConcurrentCache(), _client);
+
+            var providerMetadata = new ProviderMetadata();
+
+            var discoveryGenerateResponseOptions = new DiscoveryResponseGenerateOptions(clientSecret, clientId, subscriberId, appName, operatorsUrl.GetListOfUrls(), operatorsUrl.GetListOfRels());
+
+            var restResponse = new RestResponse()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = discoveryGenerateResponseOptions.GetJsonResponse()
+            };
+
+            try
+            {
+                var index = 0;
+                var length = discoveryGenerateResponseOptions.Response.response.apis.operatorid.link.Count;
+                for (var i = 0; i < length; i++)
+                {
+                    if (discoveryGenerateResponseOptions.Response.response.apis.operatorid.link[i].rel != "openid-configuration") continue;
+                    index = i;
+                    break;
+                }
+
+                var providerMetadataLink = discoveryGenerateResponseOptions.Response.response.apis.operatorid.link[index].href;
+
+                if (providerMetadataLink != null)
+                {
+                    providerMetadata = await discoveryService.RetrieveProviderMetada(providerMetadataLink);
+                }
+            }
+            catch (Exception exception)
+            {
+
+                throw exception;
+            }
+
+            var discoveryResponse = new DiscoveryResponse(restResponse);
+            discoveryResponse.ProviderMetadata = providerMetadata;
+
+            return discoveryResponse;
+
+
         }
 
         /// <inheritdoc/>

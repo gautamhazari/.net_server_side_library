@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GSMA.MobileConnect.Demo.Universal", "GSMA.MobileConnect.Demo.Universal\GSMA.MobileConnect.Demo.Universal.csproj", "{D8D3787A-8FEB-4FEE-A6E8-38D17DA13EB5}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GSMA.MobileConnect.Demo.Config", "GSMA.MobileConnect.Demo.Config\GSMA.MobileConnect.Demo.Config.csproj", "{269F3C4F-F6D9-40B9-81AA-9EF287C6BD49}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GSMA.MobileConnect", "..\mobile-connect-sdk\GSMA.MobileConnect\GSMA.MobileConnect.csproj", "{AF180441-D240-48C6-B2DB-EF7B9B01EE9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GSMA.MobileConnect.Demo.Web.WithoutDiscovery", "GSMA.MobileConnect.Demo.Web.WithoutDiscovery\GSMA.MobileConnect.Demo.Web.WithoutDiscovery.csproj", "{5BAA9D80-1BD5-49D9-8D63-714F93C78E10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,6 +121,22 @@ Global
 		{AF180441-D240-48C6-B2DB-EF7B9B01EE9C}.Release|x64.Build.0 = Release|Any CPU
 		{AF180441-D240-48C6-B2DB-EF7B9B01EE9C}.Release|x86.ActiveCfg = Release|Any CPU
 		{AF180441-D240-48C6-B2DB-EF7B9B01EE9C}.Release|x86.Build.0 = Release|Any CPU
+		{5BAA9D80-1BD5-49D9-8D63-714F93C78E10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BAA9D80-1BD5-49D9-8D63-714F93C78E10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BAA9D80-1BD5-49D9-8D63-714F93C78E10}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{5BAA9D80-1BD5-49D9-8D63-714F93C78E10}.Debug|ARM.Build.0 = Debug|Any CPU
+		{5BAA9D80-1BD5-49D9-8D63-714F93C78E10}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5BAA9D80-1BD5-49D9-8D63-714F93C78E10}.Debug|x64.Build.0 = Debug|Any CPU
+		{5BAA9D80-1BD5-49D9-8D63-714F93C78E10}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5BAA9D80-1BD5-49D9-8D63-714F93C78E10}.Debug|x86.Build.0 = Debug|Any CPU
+		{5BAA9D80-1BD5-49D9-8D63-714F93C78E10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BAA9D80-1BD5-49D9-8D63-714F93C78E10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BAA9D80-1BD5-49D9-8D63-714F93C78E10}.Release|ARM.ActiveCfg = Release|Any CPU
+		{5BAA9D80-1BD5-49D9-8D63-714F93C78E10}.Release|ARM.Build.0 = Release|Any CPU
+		{5BAA9D80-1BD5-49D9-8D63-714F93C78E10}.Release|x64.ActiveCfg = Release|Any CPU
+		{5BAA9D80-1BD5-49D9-8D63-714F93C78E10}.Release|x64.Build.0 = Release|Any CPU
+		{5BAA9D80-1BD5-49D9-8D63-714F93C78E10}.Release|x86.ActiveCfg = Release|Any CPU
+		{5BAA9D80-1BD5-49D9-8D63-714F93C78E10}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
