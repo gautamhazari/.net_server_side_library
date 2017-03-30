@@ -66,7 +66,7 @@ namespace GSMA.MobileConnect.Discovery
                 }
                 else
                 {
-                    response = await _client.PostAsync(discoveryUrl, authentication, options.XRedirect, GetDiscoveryQueryParams(options), options.ClientIP, cookies);
+                    response = await _client.PostAsync(discoveryUrl, authentication, GetDiscoveryQueryParams(options), options.ClientIP, options.XRedirect, cookies);
                 }
 
                 var discoveryResponse = new DiscoveryResponse(response);
