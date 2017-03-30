@@ -23,6 +23,7 @@ namespace GSMA.MobileConnect
                 discoveryOptions.IdentifiedMCC = mcc;
                 discoveryOptions.IdentifiedMNC = mnc;
                 discoveryOptions.RedirectUrl = config.RedirectUrl;
+                discoveryOptions.XRedirect = config.XRedirect;
 
                 response = await discovery.StartAutomatedOperatorDiscoveryAsync(config, config.RedirectUrl, discoveryOptions, cookies);
             }

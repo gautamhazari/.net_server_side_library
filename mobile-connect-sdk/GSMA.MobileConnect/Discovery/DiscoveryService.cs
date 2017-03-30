@@ -62,11 +62,11 @@ namespace GSMA.MobileConnect.Discovery
                 RestResponse response;
                 if (string.IsNullOrEmpty(options.MSISDN))
                 {
-                    response = await _client.GetAsync(discoveryUrl, authentication, options.ClientIP, queryParams, cookies);
+                    response = await _client.GetAsync(discoveryUrl, authentication, options.XRedirect, options.ClientIP, queryParams, cookies);
                 }
                 else
                 {
-                    response = await _client.PostAsync(discoveryUrl, authentication, GetDiscoveryQueryParams(options), options.ClientIP, cookies);
+                    response = await _client.PostAsync(discoveryUrl, authentication, GetDiscoveryQueryParams(options), options.ClientIP, options.XRedirect, cookies);
                 }
 
                 var discoveryResponse = new DiscoveryResponse(response);
