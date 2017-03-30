@@ -82,6 +82,10 @@ namespace GSMA.MobileConnect.Discovery
         public string ClientIP { get; set; }
 
         /// <inheritdoc/>
+        [JsonIgnore]
+        public string XRedirect { get; set; }
+
+        /// <inheritdoc/>
         public DiscoveryOptions()
         {
             this.IsManuallySelect = DefaultOptions.MANUAL_SELECT;

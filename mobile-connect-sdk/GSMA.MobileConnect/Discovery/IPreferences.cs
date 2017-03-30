@@ -17,6 +17,11 @@
         string ClientSecret { get; }
 
         /// <summary>
+        /// The application X-Redirect header
+        /// </summary>
+        string XRedirect { get; }
+
+        /// <summary>
         /// The URL of the discovery service endpoint
         /// </summary>
         string DiscoveryUrl { get; }

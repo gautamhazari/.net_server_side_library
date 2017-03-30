@@ -50,12 +50,12 @@ namespace GSMA.MobileConnect.Test
             ParallelResponses = new List<Tuple<string, object>>();
         }
 
-        public override Task<RestResponse> GetAsync(string uri, RestAuthentication authentication, string sourceIp, IEnumerable<BasicKeyValuePair> queryParams = null, IEnumerable<BasicKeyValuePair> cookies = null)
+        public override Task<RestResponse> GetAsync(string uri, RestAuthentication authentication, string xRedirect, string sourceIp, IEnumerable<BasicKeyValuePair> queryParams = null, IEnumerable<BasicKeyValuePair> cookies = null)
         {
             return Task.Run(() => HandleResponse(uri));
         }
 
-        protected override Task<RestResponse> PostAsync(string uri, RestAuthentication authentication, HttpContent content, string sourceIp, IEnumerable<BasicKeyValuePair> cookies = null)
+        protected override Task<RestResponse> PostAsync(string uri, RestAuthentication authentication, string xRedirect, HttpContent content, string sourceIp, IEnumerable<BasicKeyValuePair> cookies = null)
         {
             return Task.Run(() => HandleResponse(uri));
         }

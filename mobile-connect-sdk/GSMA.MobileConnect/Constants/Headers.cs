@@ -19,5 +19,10 @@
         /// Key for Forwarded For Header
         /// </summary>
         public const string X_FORWARDED_FOR = "X-Forwarded-For";
+
+        /// <summary>
+        /// Key for X-Redirect Header
+        /// </summary>
+        public const string X_REDIRECT = "X-Redirect";        
     }
 }

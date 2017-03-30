@@ -41,7 +41,7 @@ namespace GSMA.MobileConnect.Utils
         /// </summary>
         public RestClient() : this(null, null) { }
 
-        private HttpRequestMessage CreateRequest(HttpMethod method, Uri uri, RestAuthentication authentication, string sourceIp, IEnumerable<BasicKeyValuePair> cookies)
+        private HttpRequestMessage CreateRequest(HttpMethod method, Uri uri, string xRedirect, RestAuthentication authentication, string sourceIp, IEnumerable<BasicKeyValuePair> cookies)
         {
             var message = new HttpRequestMessage(method, uri);
 
@@ -62,6 +62,15 @@ namespace GSMA.MobileConnect.Utils
                 message.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(authentication.Scheme, authentication.Parameter);
             }
 
+            if (xRedirect != null)
+            {
+                message.Headers.Add(Headers.X_REDIRECT, xRedirect);
+            }
+            else
+            {
+                message.Headers.Add(Headers.X_REDIRECT, Constants.Parameters.X_REDIRECT_DEFAULT_VALUE);
+            }
+
             return message;
         }
 
@@ -70,16 +79,17 @@ namespace GSMA.MobileConnect.Utils
         /// </summary>
         /// <param name="uri">Base uri of GET request</param>
         /// <param name="authentication">Authentication value to be used (if auth required)</param>
-        /// <param name="sourceIp">Source request IP (if identified)</param>
+        /// <param name="xRedirect">x-Redirect header(if identified)</param>
+        /// <param name="sourceIp">Source request IP (if identified)</param>       
         /// <param name="queryParams">Query params to be added to the base url (if required)</param>
         /// <param name="cookies">Cookies to be added to the request (if required)</param>
         /// <returns>RestResponse containing status code, headers and content</returns>
-        public virtual async Task<RestResponse> GetAsync(string uri, RestAuthentication authentication, string sourceIp = null, IEnumerable<BasicKeyValuePair> queryParams = null, IEnumerable<BasicKeyValuePair> cookies = null)
+        public virtual async Task<RestResponse> GetAsync(string uri, RestAuthentication authentication, string xRedirect = null, string sourceIp = null, IEnumerable<BasicKeyValuePair> queryParams = null, IEnumerable<BasicKeyValuePair> cookies = null)
         {
             UriBuilder builder = new UriBuilder(uri);
             builder.AddQueryParams(queryParams);
 
-            var request = CreateRequest(HttpMethod.Get, builder.Uri, authentication, sourceIp, cookies);
+            var request = CreateRequest(HttpMethod.Get, builder.Uri, xRedirect, authentication, sourceIp, cookies);
             var response = await _client.SendAsync(request);
 
             return await CreateRestResponse(response);
@@ -91,13 +101,14 @@ namespace GSMA.MobileConnect.Utils
         /// <param name="uri">Base uri of the POST</param>
         /// <param name="authentication">Authentication value to be used (if auth required)</param>
         /// <param name="formData">Form data to be added as POST content</param>
+        /// <param name="xRedirect">x-Redirect header(if identified)</param>
         /// <param name="sourceIp">Source request IP (if identified)</param>
         /// <param name="cookies">Cookies to be added to the request (if required)</param>
         /// <returns>RestResponse containing status code, headers and content</returns>
-        public virtual async Task<RestResponse> PostAsync(string uri, RestAuthentication authentication, IEnumerable<BasicKeyValuePair> formData, string sourceIp, IEnumerable<BasicKeyValuePair> cookies = null)
+        public virtual async Task<RestResponse> PostAsync(string uri, RestAuthentication authentication, string xRedirect, IEnumerable<BasicKeyValuePair> formData, string sourceIp, IEnumerable<BasicKeyValuePair> cookies = null)
         {
             var content = new FormUrlEncodedContent(formData.Where(x => !string.IsNullOrEmpty(x.Value)).Select(x => new KeyValuePair<string, string>(x.Key, x.Value)));
-            return await PostAsync(uri, authentication, content, sourceIp, cookies);
+            return await PostAsync(uri, authentication, xRedirect, content, sourceIp, cookies);
         }
 
         /// <summary>
@@ -139,9 +150,9 @@ namespace GSMA.MobileConnect.Utils
         /// <param name="sourceIp">Source request IP (if identified)</param>
         /// <param name="cookies">Cookies to be added to the request (if required)</param>
         /// <returns></returns>
-        protected virtual async Task<RestResponse> PostAsync(string uri, RestAuthentication authentication, HttpContent content, string sourceIp, IEnumerable<BasicKeyValuePair> cookies = null)
+        protected virtual async Task<RestResponse> PostAsync(string uri, RestAuthentication authentication, string xRedirect, HttpContent content, string sourceIp, IEnumerable<BasicKeyValuePair> cookies = null)
         {
-            var request = CreateRequest(HttpMethod.Post, new Uri(uri), authentication, sourceIp, cookies);
+            var request = CreateRequest(HttpMethod.Post, new Uri(uri), xRedirect, authentication, sourceIp, cookies);
             request.Content = content;
             var response = await _client.SendAsync(request);
 

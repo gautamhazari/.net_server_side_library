@@ -14,7 +14,8 @@
         internal const string USING_MOBILE_DATA = "Using-Mobile-Data";
         internal const string LOCAL_CLIENT_IP = "Local-Client-IP";
         internal const string MSISDN = "MSISDN";
-
+        internal const string X_REDIRECT = "X-Redirect";
+        internal const string X_REDIRECT_DEFAULT_VALUE = "App";
         internal const string MCC_MNC = "mcc_mnc";
         internal const string SUBSCRIBER_ID = "subscriber_id";
 
