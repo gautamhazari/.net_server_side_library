@@ -122,6 +122,17 @@ namespace GSMA.MobileConnect.Authentication
         public string LoginHint { get; set; }
 
         /// <summary>
+        /// The "login_hint_token" produced by the Discovery service is an encrypted 
+        /// JSON Web Token JWT [RFC7519] that contains a user hint for an individual OP.
+        /// </summary>
+        /// <remarks>
+        /// This token is typically created by an MODRNA discovery service if a user 
+        /// has entered an MSISDN during the discovery process.  The "login_hint_token" 
+        /// SHALL be used by the client as login hint with the particular OP. (future scope)
+        /// </remarks>
+        public string LoginHintToken { get; set; }
+
+        /// <summary>
         /// The Data to be signed by the private key owned by the end user.
         /// The signed data in the ID Claim as private JWT claims for this profile.
         /// </summary>

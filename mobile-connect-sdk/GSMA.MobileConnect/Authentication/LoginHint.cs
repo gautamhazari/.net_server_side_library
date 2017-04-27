@@ -11,15 +11,15 @@ namespace GSMA.MobileConnect.Authentication
     /// </summary>
     public static class LoginHint
     {
-        private static readonly SupportedVersions _defaultVersions = new SupportedVersions(null);
-        private static readonly List<string> _recognisedHints = new List<string> { LoginHintPrefixes.EncryptedMSISDN, LoginHintPrefixes.MSISDN, LoginHintPrefixes.PCR };
+        private static readonly SupportedVersions DefaultVersions = new SupportedVersions(null);
+        private static readonly List<string> RecognisedHints = new List<string> { LoginHintPrefixes.EncryptedMSISDN, LoginHintPrefixes.MSISDN, LoginHintPrefixes.PCR };
 
         /// <summary>
         /// Is login hint with MSISDN supported by the target provider
         /// </summary>
         /// <param name="metadata">Provider Metadata received during the discovery phase</param>
         /// <returns>True if format MSISDN:xxxxxxxxxx is supported</returns>
-        public static bool IsSupportedForMSISDN(ProviderMetadata metadata)
+        public static bool IsSupportedForMsisdn(ProviderMetadata metadata)
         {
             return IsSupportedFor(metadata, LoginHintPrefixes.MSISDN);
         }
@@ -29,7 +29,7 @@ namespace GSMA.MobileConnect.Authentication
         /// </summary>
         /// <param name="metadata">Provider Metadata received during the discovery phase</param>
         /// <returns>True if format ENCR_MSISDN:xxxxxxxxxx is supported</returns>
-        public static bool IsSupportedForEncryptedMSISDN(ProviderMetadata metadata)
+        public static bool IsSupportedForEncryptedMsisdn(ProviderMetadata metadata)
         {
             return IsSupportedFor(metadata, LoginHintPrefixes.EncryptedMSISDN);
         }
@@ -39,7 +39,7 @@ namespace GSMA.MobileConnect.Authentication
         /// </summary>
         /// <param name="metadata">Provider Metadata received during the discovery phase</param>
         /// <returns>True if format PCR:xxxxxxxxxx is supported</returns>
-        public static bool IsSupportedForPCR(ProviderMetadata metadata)
+        public static bool IsSupportedForPcr(ProviderMetadata metadata)
         {
             return IsSupportedFor(metadata, LoginHintPrefixes.PCR);
         }
@@ -53,24 +53,24 @@ namespace GSMA.MobileConnect.Authentication
         /// <returns>True if format ${prefix}:xxxxxxxxxx is supported</returns>
         public static bool IsSupportedFor(ProviderMetadata metadata, string prefix)
         {
-            if(metadata == null || metadata.LoginHintMethodsSupported == null || metadata.LoginHintMethodsSupported.Count == 0)
+            if (metadata == null || metadata.LoginHintMethodsSupported == null || metadata.LoginHintMethodsSupported.Count == 0)
             {
-                var supportedVersions = metadata?.MobileConnectVersionSupported ?? _defaultVersions;
+                var supportedVersions = metadata?.MobileConnectVersionSupported ?? DefaultVersions;
 
                 // If not a recognised prefix then it is not supported if no data to state it is supported
-                if(_recognisedHints.FirstOrDefault(x => string.Equals(x, prefix, StringComparison.OrdinalIgnoreCase)) == null)
+                if (RecognisedHints.FirstOrDefault(x => string.Equals(x, prefix, StringComparison.OrdinalIgnoreCase)) == null)
                 {
                     return false;
                 }
 
                 // If we are on 1.2 or greater then currently all recognised prefixes are assumed supported
-                if(supportedVersions.IsVersionSupported("1.2"))
+                if (supportedVersions.IsVersionSupported("1.2"))
                 {
                     return true;
                 }
 
                 // If we aren't at 1.2 or greater then we must be on 1.1 and therefore only MSISDN and encrypted are supported
-                if(prefix != LoginHintPrefixes.EncryptedMSISDN && prefix != LoginHintPrefixes.MSISDN)
+                if (prefix != LoginHintPrefixes.EncryptedMSISDN && prefix != LoginHintPrefixes.MSISDN)
                 {
                     return false;
                 }
@@ -87,7 +87,7 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="msisdn">MSISDN value</param>
         /// <exception cref="Exceptions.MobileConnectInvalidArgumentException">msisdn is null or empty</exception>
         /// <returns>Correctly formatted login hint parameter for MSISDN</returns>
-        public static string GenerateForMSISDN(string msisdn)
+        public static string GenerateForMsisdn(string msisdn)
         {
             return GenerateFor(LoginHintPrefixes.MSISDN, msisdn.TrimStart('+'));
         }
@@ -95,12 +95,12 @@ namespace GSMA.MobileConnect.Authentication
         /// <summary>
         /// Generates login hint for Encrypted MSISDN (SubscriberId) value
         /// </summary>
-        /// <param name="encryptedMSISDN">Encrypted MSISDN (SubscriberId) value</param>
+        /// <param name="encryptedMsisdn">Encrypted MSISDN (SubscriberId) value</param>
         /// <exception cref="Exceptions.MobileConnectInvalidArgumentException">encryptedMSISDN is null or empty</exception>
         /// <returns>Correctly formatted login hint parameter for Encrypted MSISDN (SubscriberId)</returns>
-        public static string GenerateForEncryptedMSISDN(string encryptedMSISDN)
+        public static string GenerateForEncryptedMsisdn(string encryptedMsisdn)
         {
-            return GenerateFor(LoginHintPrefixes.EncryptedMSISDN, encryptedMSISDN);
+            return GenerateFor(LoginHintPrefixes.EncryptedMSISDN, encryptedMsisdn);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="pcr">PCR (Pseudonymous Customer Reference) value</param>
         /// <exception cref="Exceptions.MobileConnectInvalidArgumentException">pcr is null or empty</exception>
         /// <returns>Correctly formatted login hint parameter for PCR (Pseudonymous Customer Reference)</returns>
-        public static string GenerateForPCR(string pcr)
+        public static string GenerateForPcr(string pcr)
         {
             return GenerateFor(LoginHintPrefixes.PCR, pcr);
         }
@@ -125,7 +125,7 @@ namespace GSMA.MobileConnect.Authentication
         /// <returns>Correctly formatted login hint for prefix and value</returns>
         public static string GenerateFor(string prefix, string value)
         {
-            if(string.IsNullOrEmpty(value) || string.IsNullOrEmpty(prefix))
+            if (string.IsNullOrEmpty(value) || string.IsNullOrEmpty(prefix))
             {
                 return null;
             }

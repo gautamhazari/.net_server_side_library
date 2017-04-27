@@ -10,7 +10,7 @@ namespace GSMA.MobileConnect.Test
 {
     public class MockRestClient : RestClient
     {
-        private object _locker = new object();
+        private readonly object _locker = new object();
         private bool _expectParallelRequests = false;
         public Queue<object> ResponseQueue { get; private set; }
 
@@ -55,7 +55,7 @@ namespace GSMA.MobileConnect.Test
             return Task.Run(() => HandleResponse(uri));
         }
 
-        protected override Task<RestResponse> PostAsync(string uri, RestAuthentication authentication, string xRedirect, HttpContent content, string sourceIp, IEnumerable<BasicKeyValuePair> cookies = null)
+        protected override Task<RestResponse> PostAsync(string uri, RestAuthentication authentication, HttpContent content, string xRedirect, string sourceIp, IEnumerable<BasicKeyValuePair> cookies = null)
         {
             return Task.Run(() => HandleResponse(uri));
         }
@@ -119,7 +119,7 @@ namespace GSMA.MobileConnect.Test
             }
         }
 
-        private RestResponse CreateResponse(object nextResponse)
+        private static RestResponse CreateResponse(object nextResponse)
         {
             var nextException = nextResponse as Exception;
 

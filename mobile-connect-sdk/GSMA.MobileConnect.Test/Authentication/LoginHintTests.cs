@@ -2,11 +2,7 @@
 using GSMA.MobileConnect.Constants;
 using GSMA.MobileConnect.Discovery;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GSMA.MobileConnect.Test.Authentication
 {
@@ -18,7 +14,7 @@ namespace GSMA.MobileConnect.Test.Authentication
         {
             var metadata = GetMetadataWithSupportedLoginHint(LoginHintPrefixes.MSISDN);
 
-            var actual = LoginHint.IsSupportedForMSISDN(metadata);
+            var actual = LoginHint.IsSupportedForEncryptedMsisdn(metadata);
 
             Assert.IsTrue(actual);
         }
@@ -28,7 +24,7 @@ namespace GSMA.MobileConnect.Test.Authentication
         {
             var metadata = GetMetadataWithSupportedLoginHint(LoginHintPrefixes.PCR);
 
-            var actual = LoginHint.IsSupportedForMSISDN(metadata);
+            var actual = LoginHint.IsSupportedForMsisdn(metadata);
 
             Assert.IsFalse(actual);
         }
@@ -38,7 +34,7 @@ namespace GSMA.MobileConnect.Test.Authentication
         {
             var metadata = GetMetadataWithSupportedLoginHint(LoginHintPrefixes.EncryptedMSISDN);
 
-            var actual = LoginHint.IsSupportedForEncryptedMSISDN(metadata);
+            var actual = LoginHint.IsSupportedForEncryptedMsisdn(metadata);
 
             Assert.IsTrue(actual);
         }
@@ -48,7 +44,7 @@ namespace GSMA.MobileConnect.Test.Authentication
         {
             var metadata = GetMetadataWithSupportedLoginHint(LoginHintPrefixes.PCR);
 
-            var actual = LoginHint.IsSupportedForEncryptedMSISDN(metadata);
+            var actual = LoginHint.IsSupportedForEncryptedMsisdn(metadata);
 
             Assert.IsFalse(actual);
         }
@@ -58,7 +54,7 @@ namespace GSMA.MobileConnect.Test.Authentication
         {
             var metadata = GetMetadataWithSupportedLoginHint(LoginHintPrefixes.PCR);
 
-            var actual = LoginHint.IsSupportedForPCR(metadata);
+            var actual = LoginHint.IsSupportedForPcr(metadata);
 
             Assert.IsTrue(actual);
         }
@@ -68,7 +64,7 @@ namespace GSMA.MobileConnect.Test.Authentication
         {
             var metadata = GetMetadataWithSupportedLoginHint(LoginHintPrefixes.MSISDN);
 
-            var actual = LoginHint.IsSupportedForPCR(metadata);
+            var actual = LoginHint.IsSupportedForPcr(metadata);
 
             Assert.IsFalse(actual);
         }
@@ -76,7 +72,7 @@ namespace GSMA.MobileConnect.Test.Authentication
         [Test]
         public void IsSupportedMSISDNShouldReturnTrueIfMissingMetadata()
         {
-            var actual = LoginHint.IsSupportedForMSISDN(null);
+            var actual = LoginHint.IsSupportedForMsisdn(null);
 
             Assert.IsTrue(actual);
         }
@@ -84,7 +80,7 @@ namespace GSMA.MobileConnect.Test.Authentication
         [Test]
         public void IsSupportedEncryptedMSISDNShouldReturnTrueIfMissingMetadata()
         {
-            var actual = LoginHint.IsSupportedForEncryptedMSISDN(null);
+            var actual = LoginHint.IsSupportedForEncryptedMsisdn(null);
 
             Assert.IsTrue(actual);
         }
@@ -92,7 +88,7 @@ namespace GSMA.MobileConnect.Test.Authentication
         [Test]
         public void IsSupportedPCRShouldReturnFalseIfMissingMetadata()
         {
-            var actual = LoginHint.IsSupportedForPCR(null);
+            var actual = LoginHint.IsSupportedForPcr(null);
 
             Assert.IsFalse(actual);
         }
@@ -106,7 +102,7 @@ namespace GSMA.MobileConnect.Test.Authentication
                 LoginHintMethodsSupported = null,
             };
 
-            var actual = LoginHint.IsSupportedForMSISDN(metadata);
+            var actual = LoginHint.IsSupportedForMsisdn(metadata);
 
             Assert.IsTrue(actual);
         }
@@ -132,7 +128,7 @@ namespace GSMA.MobileConnect.Test.Authentication
         [Test]
         public void GenerateForMSISDNShouldGenerateCorrectFormat()
         {
-            var actual = LoginHint.GenerateForMSISDN("+447700900250");
+            var actual = LoginHint.GenerateForMsisdn("+447700900250");
 
             Assert.AreEqual("MSISDN:447700900250", actual);
         }
@@ -140,7 +136,7 @@ namespace GSMA.MobileConnect.Test.Authentication
         [Test]
         public void GenerateForEncryptedMSISDNShouldGenerateCorrectFormat()
         {
-            var actual = LoginHint.GenerateForEncryptedMSISDN("zmalqpwoeirutyfhdjskaslxzmxncbv");
+            var actual = LoginHint.GenerateForEncryptedMsisdn("zmalqpwoeirutyfhdjskaslxzmxncbv");
 
             Assert.AreEqual("ENCR_MSISDN:zmalqpwoeirutyfhdjskaslxzmxncbv", actual);
         }
@@ -148,7 +144,7 @@ namespace GSMA.MobileConnect.Test.Authentication
         [Test]
         public void GenerateForPCRShouldGenerateCorrectFormat()
         {
-            var actual = LoginHint.GenerateForPCR("zmalqpwoeirutyfhdjskaslxzmxncbv");
+            var actual = LoginHint.GenerateForPcr("zmalqpwoeirutyfhdjskaslxzmxncbv");
 
             Assert.AreEqual("PCR:zmalqpwoeirutyfhdjskaslxzmxncbv", actual);
         }
