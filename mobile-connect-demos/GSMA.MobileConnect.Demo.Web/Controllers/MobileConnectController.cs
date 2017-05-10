@@ -1,4 +1,6 @@
-﻿using GSMA.MobileConnect.Web;
+﻿using GSMA.MobileConnect.Cache;
+using GSMA.MobileConnect.Demo.Config;
+using GSMA.MobileConnect.Web;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
