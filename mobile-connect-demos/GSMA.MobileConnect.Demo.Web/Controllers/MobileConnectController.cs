@@ -16,7 +16,13 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
         {
             this._mobileConnect = mobileConnect;
         }
-
+        
+        public MobileConnectController()
+        {
+            var cache = new ConcurrentCache();
+            _mobileConnect = new MobileConnectWebInterface(DemoConfiguration.Config, cache);
+        }
+        
         [HttpGet]
         [Route("start_discovery")]
         public async Task<IHttpActionResult> StartDiscovery(string msisdn="", string mcc="", string mnc="")
