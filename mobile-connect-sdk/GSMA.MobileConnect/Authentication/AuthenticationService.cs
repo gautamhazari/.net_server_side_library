@@ -10,6 +10,8 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.Threading;
 using GSMA.MobileConnect.Cache;
+using GSMA.MobileConnect.Constants;
+using Scope = GSMA.MobileConnect.Utils.Scope;
 
 namespace GSMA.MobileConnect.Authentication
 {
@@ -18,7 +20,7 @@ namespace GSMA.MobileConnect.Authentication
     /// </summary>
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly static JsonSerializerSettings _jsonSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+        private static readonly JsonSerializerSettings JsonSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
         private readonly RestClient _client;
 
         /// <summary>
@@ -32,7 +34,7 @@ namespace GSMA.MobileConnect.Authentication
 
         /// <inheritdoc/>
         public StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce,
-            string encryptedMSISDN, SupportedVersions versions, AuthenticationOptions options)
+            string encryptedMsisdn, SupportedVersions versions, AuthenticationOptions options)
         {
             Validate.RejectNullOrEmpty(clientId, "clientId");
             Validate.RejectNullOrEmpty(authorizeUrl, "authorizeUrl");
@@ -52,7 +54,9 @@ namespace GSMA.MobileConnect.Authentication
 
             options.State = state;
             options.Nonce = nonce;
-            options.LoginHint = options.LoginHint ?? LoginHint.GenerateForEncryptedMSISDN(encryptedMSISDN);
+            options.LoginHintToken = options.LoginHintToken;
+            if (options.LoginHintToken == null)
+                options.LoginHint = options.LoginHint ?? LoginHint.GenerateForEncryptedMsisdn(encryptedMsisdn);
             options.RedirectUrl = redirectUrl;
             options.ClientId = clientId;
 
@@ -83,7 +87,6 @@ namespace GSMA.MobileConnect.Authentication
             Validate.RejectNullOrEmpty(clientId, "clientId");
             Validate.RejectNullOrEmpty(clientSecret, "clientSecret");
             Validate.RejectNullOrEmpty(subscriberId, "subscriberId");
-            Validate.RejectNullOrEmpty(appName, "appName");
             Validate.RejectNull(operatorsUrl, "operatorsUrl");
 
             var discoveryService = new DiscoveryService(new ConcurrentCache(), _client);
@@ -104,7 +107,7 @@ namespace GSMA.MobileConnect.Authentication
                 var length = discoveryGenerateResponseOptions.Response.response.apis.operatorid.link.Count;
                 for (var i = 0; i < length; i++)
                 {
-                    if (discoveryGenerateResponseOptions.Response.response.apis.operatorid.link[i].rel != "openid-configuration") continue;
+                    if (discoveryGenerateResponseOptions.Response.response.apis.operatorid.link[i].rel != LinkRels.OPENID_CONFIGURATION) continue;
                     index = i;
                     break;
                 }
@@ -132,7 +135,7 @@ namespace GSMA.MobileConnect.Authentication
 
         /// <inheritdoc/>
         public async Task<RequestTokenResponse> RequestHeadlessAuthentication(string clientId, string clientSecret, string authorizeUrl, string tokenUrl, string redirectUrl,
-            string state, string nonce, string encryptedMSISDN, SupportedVersions versions, AuthenticationOptions options, CancellationToken cancellationToken = default(CancellationToken))
+            string state, string nonce, string encryptedMsisdn, SupportedVersions versions, AuthenticationOptions options, CancellationToken cancellationToken = default(CancellationToken))
         {
             options = options ?? new AuthenticationOptions();
 
@@ -142,7 +145,7 @@ namespace GSMA.MobileConnect.Authentication
                 options.Prompt = "mobile";
             }
 
-            string authUrl = StartAuthentication(clientId, authorizeUrl, redirectUrl, state, nonce, encryptedMSISDN, versions, options).Url;
+            string authUrl = StartAuthentication(clientId, authorizeUrl, redirectUrl, state, nonce, encryptedMsisdn, versions, options).Url;
             Uri finalRedirect = null;
 
             try
@@ -364,6 +367,7 @@ namespace GSMA.MobileConnect.Authentication
                 new BasicKeyValuePair(Constants.Parameters.CLAIMS_LOCALES, options.ClaimsLocales),
                 new BasicKeyValuePair(Constants.Parameters.ID_TOKEN_HINT, options.IdTokenHint),
                 new BasicKeyValuePair(Constants.Parameters.LOGIN_HINT, options.LoginHint),
+                new BasicKeyValuePair(Constants.Parameters.LOGIN_HINT_TOKEN, options.LoginHintToken),
                 new BasicKeyValuePair(Constants.Parameters.DTBS, options.Dtbs),
                 new BasicKeyValuePair(Constants.Parameters.CLAIMS, GetClaimsString(options)),
                 new BasicKeyValuePair(Constants.Parameters.VERSION, version),
@@ -386,7 +390,7 @@ namespace GSMA.MobileConnect.Authentication
                 return options.ClaimsJson;
             }
 
-            return options.Claims != null && !options.Claims.IsEmpty ? JsonConvert.SerializeObject(options.Claims, _jsonSettings) : null;
+            return options.Claims != null && !options.Claims.IsEmpty ? JsonConvert.SerializeObject(options.Claims, JsonSettings) : null;
         }
     }
 }

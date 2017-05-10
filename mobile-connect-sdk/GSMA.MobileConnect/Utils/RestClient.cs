@@ -118,9 +118,10 @@ namespace GSMA.MobileConnect.Utils
         /// <param name="authentication">Authentication value to be used (if auth required)</param>
         /// <param name="content">Object to be serialized as JSON for POST content</param>
         /// <param name="sourceIp">Source request IP (if identified)</param>
+        /// <param name="xRedirect">X-Redirect header value</param>
         /// <param name="cookies">Cookies to be added to the request (if required)</param>
         /// <returns>RestResponse containing status code, headers and content</returns>
-        public virtual async Task<RestResponse> PostAsync(string uri, RestAuthentication authentication, object content, string sourceIp, string xRedirect = "APP", IEnumerable<BasicKeyValuePair> cookies = null)
+        public virtual async Task<RestResponse> PostAsync(string uri, RestAuthentication authentication, object content, string sourceIp, string xRedirect = Parameters.X_REDIRECT_DEFAULT_VALUE, IEnumerable<BasicKeyValuePair> cookies = null)
         {
             var json = JsonConvert.SerializeObject(content);
             return await PostAsync(uri, authentication, json, "application/json", sourceIp, xRedirect, cookies);

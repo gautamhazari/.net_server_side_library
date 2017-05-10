@@ -37,6 +37,7 @@
         internal const string CLAIMS_LOCALES = "claims_locales";
         internal const string ID_TOKEN_HINT = "id_token_hint";
         internal const string LOGIN_HINT = "login_hint";
+        internal const string LOGIN_HINT_TOKEN = "login_hint_token";
         internal const string DTBS = "dtbs";
         internal const string CLAIMS = "claims";
 
