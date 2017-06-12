@@ -25,9 +25,9 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="rawResponse">RestResponse returned from RestClient</param>
         public RevokeTokenResponse(RestResponse rawResponse)
         {
-            if (HttpUtils.IsHttpErrorCode((int)rawResponse.StatusCode))
+            if (HttpUtils.IsHttpErrorCode((int)rawResponse.StatusCode) || !rawResponse.Content.Contains("Token revoked"))
             {
-                this.ErrorResponse = JsonConvert.DeserializeObject<ErrorResponse>(rawResponse.Content);
+                this.ErrorResponse.ErrorDescription = rawResponse.Content;
             }
             else
             {

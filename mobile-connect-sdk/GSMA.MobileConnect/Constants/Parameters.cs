@@ -18,6 +18,7 @@
         internal const string X_REDIRECT_DEFAULT_VALUE = "App";
         internal const string MCC_MNC = "mcc_mnc";
         internal const string SUBSCRIBER_ID = "subscriber_id";
+        internal const string CORRELATION_ID = "correlation_id";
 
         //Required params for authentication
         internal const string CLIENT_ID = "client_id";

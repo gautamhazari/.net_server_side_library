@@ -31,5 +31,9 @@ namespace GSMA.MobileConnect.Json
         /// Parsed from JSON response
         /// </summary>
         public Response response { get; set; }
+        /// <summary>
+        /// Parsed from JSON response
+        /// </summary>
+        public string correlation_id { get; set; }
     }
 }

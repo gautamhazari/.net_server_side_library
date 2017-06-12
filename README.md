@@ -9,10 +9,10 @@ GSMA MobileConnect SDK including example integration in .Net applications
 
 ## Install
 
-Install the SDK to your .Net application using [Nuget](https://www.nuget.org/packages/GSMA.MobileConnect)
+Install the SDK to your .Net application using [Nuget](https://www.nuget.org/packages/GSMAMobileConnect)
 
 ```posh
-Install-Package GSMA.MobileConnect
+Install-Package GSMAMobileConnect
 ```
 
 ## Support

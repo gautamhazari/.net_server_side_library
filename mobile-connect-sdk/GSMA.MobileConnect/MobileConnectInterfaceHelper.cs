@@ -30,7 +30,7 @@ namespace GSMA.MobileConnect
             catch (MobileConnectInvalidArgumentException e)
             {
                 Log.Error(() => $"An invalid argument was passed to AttemptDiscovery arg={e.Argument}");
-                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, $"An argument was found to be invalid during the process. The argument was {e.Argument}.", e);
             }
             catch (MobileConnectEndpointHttpException e)
             {
@@ -68,7 +68,7 @@ namespace GSMA.MobileConnect
             catch (MobileConnectInvalidArgumentException e)
             {
                 Log.Error(() => $"An invalid argument was passed to AttemptDiscoveryAfterOperatorSelection arg={e.Argument}");
-                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, $"An argument was found to be invalid during the process. The argument was {e.Argument}.", e);
             }
             catch (MobileConnectEndpointHttpException e)
             {
@@ -96,17 +96,18 @@ namespace GSMA.MobileConnect
             try
             {
                 string clientId = discoveryResponse.ResponseData.response.client_id ?? config.ClientId;
+                string correlationId = discoveryResponse.ResponseData.correlation_id;
                 string authorizationUrl = discoveryResponse.OperatorUrls.AuthorizationUrl;
                 SupportedVersions supportedVersions = discoveryResponse.ProviderMetadata?.MobileConnectVersionSupported;
                 AuthenticationOptions authOptions = options?.AuthenticationOptions ?? new AuthenticationOptions();
                 authOptions.ClientName = discoveryResponse.ApplicationShortName;
 
-                response = authentication.StartAuthentication(clientId, authorizationUrl, config.RedirectUrl, state, nonce, encryptedMSISDN, supportedVersions, authOptions);
+                response = authentication.StartAuthentication(clientId, correlationId, authorizationUrl, config.RedirectUrl, state, nonce, encryptedMSISDN, supportedVersions, authOptions);
             }
             catch (MobileConnectInvalidArgumentException e)
             {
                 Log.Error(() => $"An invalid argument was passed to StartAuthentication arg={e.Argument}");
-                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, $"An argument was found to be invalid during the process. The argument was {e.Argument}.", e);
             }
             catch (Exception e)
             {
@@ -117,7 +118,7 @@ namespace GSMA.MobileConnect
             return MobileConnectStatus.Authentication(response.Url, state, nonce);
         }
 
-        internal static async Task<MobileConnectStatus> RequestHeadlessAuthentication(IAuthenticationService authentication, IJWKeysetService jwks, IIdentityService identity, DiscoveryResponse discoveryResponse, string encryptedMSISDN,
+        internal static async Task<MobileConnectStatus> RequestHeadlessAuthentication(IAuthenticationService authentication, IJWKeysetService jwks, IIdentityService identity, DiscoveryResponse discoveryResponse, string encryptedMsisdn,
             string state, string nonce, MobileConnectConfig config, MobileConnectRequestOptions options, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (!IsUsableDiscoveryResponse(discoveryResponse))
@@ -130,6 +131,7 @@ namespace GSMA.MobileConnect
             {
                 string clientId = discoveryResponse.ResponseData.response.client_id ?? config.ClientId;
                 string clientSecret = discoveryResponse.ResponseData.response.client_secret;
+                string correlationId = discoveryResponse.ResponseData.correlation_id;
                 string authorizationUrl = discoveryResponse.OperatorUrls.AuthorizationUrl;
                 string tokenUrl = discoveryResponse.OperatorUrls.RequestTokenUrl;
                 string issuer = discoveryResponse.ProviderMetadata.Issuer;
@@ -138,21 +140,27 @@ namespace GSMA.MobileConnect
                 authOptions.ClientName = discoveryResponse.ApplicationShortName;
 
                 var jwksTask = jwks.RetrieveJWKSAsync(discoveryResponse.OperatorUrls.JWKSUrl);
-                var tokenTask = authentication.RequestHeadlessAuthentication(clientId, clientSecret, authorizationUrl, tokenUrl, config.RedirectUrl, state, nonce, 
-                    encryptedMSISDN, supportedVersions, authOptions, cancellationToken);
+                var tokenTask = authentication.RequestHeadlessAuthentication(clientId, clientSecret, correlationId, authorizationUrl, tokenUrl, config.RedirectUrl, state, nonce, 
+                    encryptedMsisdn, supportedVersions, authOptions, cancellationToken);
 
                 // execute both tasks in parallel
                 await Task.WhenAll(tokenTask, jwksTask).ConfigureAwait(false);
 
                 RequestTokenResponse response = tokenTask.Result;
 
-                status = HandleTokenResponse(authentication, response, clientId, issuer, nonce,
+                status = HandleTokenResponse(authentication, response, discoveryResponse, clientId, issuer, nonce,
                     discoveryResponse.ProviderMetadata.MobileConnectVersionSupported.MaxSupportedVersionString, jwksTask.Result, options);
+
+                if (status.DiscoveryResponse.ResponseData.correlation_id != null &&
+                    !status.DiscoveryResponse.ResponseData.correlation_id.Equals(correlationId))
+                {
+                    throw new Exception("Invalid correlation id in headless authentication response");
+                }
             }
             catch (MobileConnectInvalidArgumentException e)
             {
                 Log.Error(() => $"An invalid argument was passed to RequestHeadlessAuthentication arg={e.Argument}");
-                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, $"An argument was found to be invalid during the process. The argument was {e.Argument}.", e);
             }
             catch (MobileConnectEndpointHttpException e)
             {
@@ -165,7 +173,7 @@ namespace GSMA.MobileConnect
                 return MobileConnectStatus.Error(ErrorCodes.Unknown, "An unknown error occured while generating an authorization url", e);
             }
 
-            if(status.ResponseType == MobileConnectResponseType.Error
+            if (status.ResponseType == MobileConnectResponseType.Error
                 || !options.AutoRetrieveIdentityHeadless || string.IsNullOrEmpty(discoveryResponse.OperatorUrls.PremiumInfoUrl))
             {
                 return status;
@@ -180,8 +188,6 @@ namespace GSMA.MobileConnect
         internal static async Task<MobileConnectStatus> RequestToken(IAuthenticationService authentication, IJWKeysetService jwks, DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState,
             string expectedNonce, MobileConnectConfig config, MobileConnectRequestOptions options)
         {
-            RequestTokenResponse response;
-
             if (!IsUsableDiscoveryResponse(discoveryResponse))
             {
                 return MobileConnectStatus.StartDiscovery();
@@ -208,26 +214,27 @@ namespace GSMA.MobileConnect
                 var code = HttpUtils.ExtractQueryValue(redirectedUrl.Query, "code");
                 var clientId = discoveryResponse.ResponseData.response.client_id ?? config.ClientId;
                 var clientSecret = discoveryResponse.ResponseData.response.client_secret ?? config.ClientSecret;
+                var correlationId = discoveryResponse.ResponseData.correlation_id;
                 var requestTokenUrl = discoveryResponse.OperatorUrls.RequestTokenUrl;
                 var issuer = discoveryResponse.ProviderMetadata.Issuer;
 
-                var tokenTask = authentication.RequestTokenAsync(clientId, clientSecret, requestTokenUrl, config.RedirectUrl, code);
+                var tokenTask = authentication.RequestTokenAsync(clientId, clientSecret, requestTokenUrl, config.RedirectUrl, code, correlationId);
                 var jwksTask = jwks.RetrieveJWKSAsync(discoveryResponse.OperatorUrls.JWKSUrl);
 
                 // execute both tasks in parallel
                 await Task.WhenAll(tokenTask, jwksTask).ConfigureAwait(false);
 
-                response = tokenTask.Result;
+                var response = tokenTask.Result;
   
                 var maxSupportedVersion = discoveryResponse.ProviderMetadata?.MobileConnectVersionSupported == null ? "mc_v1.1" : discoveryResponse.ProviderMetadata.MobileConnectVersionSupported.MaxSupportedVersionString;
 
-                return HandleTokenResponse(authentication, response, clientId, issuer, expectedNonce,
+                return HandleTokenResponse(authentication, response, discoveryResponse, clientId, issuer, expectedNonce,
                     maxSupportedVersion, jwksTask.Result, options);
             }
             catch (MobileConnectInvalidArgumentException e)
             {
                 Log.Error(() => $"An invalid argument was passed to RequestToken arg={e.Argument}");
-                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, $"An argument was found to be invalid during the process. The argument was {e.Argument}.", e);
             }
             catch (MobileConnectEndpointHttpException e)
             {
@@ -241,11 +248,16 @@ namespace GSMA.MobileConnect
             }
         }
 
-        private static MobileConnectStatus HandleTokenResponse(IAuthenticationService authentication, RequestTokenResponse response, string clientId, string issuer, string expectedNonce, 
+        private static MobileConnectStatus HandleTokenResponse(IAuthenticationService authentication, RequestTokenResponse response, DiscoveryResponse discoveryResponse,string clientId, string issuer, string expectedNonce, 
             string version, JWKeyset jwks, MobileConnectRequestOptions options)
         {
-            if (response.ErrorResponse != null)
+            var errorResponse = response.ErrorResponse;
+            if (errorResponse != null)
             {
+                if (!errorResponse.CorrelationId.Equals(discoveryResponse.ResponseData.correlation_id) && errorResponse.CorrelationId != null)
+                {
+                    throw new Exception("Invalid correlation id in error response");
+                }
                 return MobileConnectStatus.Error(response.ErrorResponse.Error, response.ErrorResponse.ErrorDescription, null, response);
             }
 
@@ -298,7 +310,7 @@ namespace GSMA.MobileConnect
             catch (MobileConnectInvalidArgumentException e)
             {
                 Log.Error(() => $"An invalid argument was passed to RequestUserInfo arg={e.Argument}");
-                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, $"An argument was found to be invalid during the process. The argument was {e.Argument}.", e);
             }
             catch (MobileConnectEndpointHttpException e)
             {
@@ -330,7 +342,7 @@ namespace GSMA.MobileConnect
             catch (MobileConnectInvalidArgumentException e)
             {
                 Log.Error(() => $"An invalid argument was passed to RequestIdentity arg={e.Argument}");
-                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, $"An argument was found to be invalid during the process. The argument was {e.Argument}.", e);
             }
             catch (MobileConnectEndpointHttpException e)
             {

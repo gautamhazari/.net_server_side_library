@@ -98,6 +98,16 @@ namespace GSMA.MobileConnect.Authentication
         public string ClaimsLocales { get; set; }
 
         /// <summary>
+        /// Correlation id
+        /// </summary>
+        public string CorrelationId { get; set; }
+
+        /// <summary>
+        /// is Using Correlation id
+        /// </summary>
+        public bool IsUsingCorrelationId { get; set; }
+        
+        /// <summary>
         /// Generally used in conjunction with prompt=none to pass the previously issued ID Token as a hint for the current
         /// or past authentication session.
         /// See remarks for more information.
@@ -178,5 +188,13 @@ namespace GSMA.MobileConnect.Authentication
         /// The number of redirects to allow during headless mode before aborting.
         /// </summary>
         public int MaxRedirects { get; set; } = 50;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public AuthenticationOptions()
+        {
+            IsUsingCorrelationId = false;
+        }
     }
 }

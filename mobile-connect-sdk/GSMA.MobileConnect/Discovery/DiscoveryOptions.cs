@@ -85,10 +85,21 @@ namespace GSMA.MobileConnect.Discovery
         [JsonIgnore]
         public string XRedirect { get; set; }
 
+        /// <summary>
+        /// Correlation id
+        /// </summary>
+        public string CorrelationId { get; set; }
+        
+        /// <summary>
+        /// is Using Correlation id
+        /// </summary>
+        public bool IsUsingCorrelationId { get; set; }
+
         /// <inheritdoc/>
         public DiscoveryOptions()
         {
             this.IsManuallySelect = DefaultOptions.MANUAL_SELECT;
+            this.IsUsingCorrelationId = false;
         }
     }
 }
