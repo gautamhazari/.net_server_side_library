@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System.Collections.Generic;
+using GSMA.MobileConnect.Authentication;
 
 namespace GSMA.MobileConnect.Test.Discovery
 {
@@ -13,8 +14,8 @@ namespace GSMA.MobileConnect.Test.Discovery
         {
             var versions = new SupportedVersions(new Dictionary<string, string> { ["openid"] = "1.2", ["openid mc_authn"] = "2.0" });
             var expected = "2.0";
-
-            var actual = versions.GetSupportedVersion("openid mc_authn");
+            var authenticationOptions = new AuthenticationOptions {Scope = "openid mc_authn"};
+            var actual = versions.GetSupportedVersion(authenticationOptions);
 
             Assert.AreEqual(expected, actual);
         }
@@ -24,8 +25,8 @@ namespace GSMA.MobileConnect.Test.Discovery
         {
             var versions = new SupportedVersions(new Dictionary<string, string> { ["openid"] = "1.2", ["openid mc_authn"] = "2.0" });
             var expected = "1.2";
-
-            var actual = versions.GetSupportedVersion("openid mc_authz");
+            var authenticationOptions = new AuthenticationOptions { Scope = "openid mc_authz" };
+            var actual = versions.GetSupportedVersion(authenticationOptions);
 
             Assert.AreEqual(expected, actual);
         }
@@ -35,8 +36,8 @@ namespace GSMA.MobileConnect.Test.Discovery
         {
             var versions = new SupportedVersions(null);
             var expected = "mc_v1.2";
-
-            var actual = versions.GetSupportedVersion("openid mc_authz");
+            var authenticationOptions = new AuthenticationOptions { Scope = "openid mc_authz" };
+            var actual = versions.GetSupportedVersion(authenticationOptions);
 
             Assert.AreEqual(expected, actual);
         }
@@ -45,8 +46,8 @@ namespace GSMA.MobileConnect.Test.Discovery
         public void GetSupportedVersionShouldReturnNullIfScopeNotRecognised()
         {
             var versions = new SupportedVersions(null);
-
-            var actual = versions.GetSupportedVersion("testest");
+            var authenticationOptions = new AuthenticationOptions { Scope = "testest" };
+            var actual = versions.GetSupportedVersion(authenticationOptions);
 
             Assert.IsNull(actual);
         }

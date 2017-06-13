@@ -68,7 +68,7 @@ namespace GSMA.MobileConnect.Utils
             }
             else
             {
-                message.Headers.Add(Headers.X_REDIRECT, Constants.Parameters.X_REDIRECT_DEFAULT_VALUE);
+                message.Headers.Add(Headers.X_REDIRECT, Parameters.X_REDIRECT_DEFAULT_VALUE);
             }
 
             return message;
@@ -163,9 +163,13 @@ namespace GSMA.MobileConnect.Utils
         private async Task<RestResponse> CreateRestResponse(HttpResponseMessage response)
         {
             var headers = response.Headers.Select(x => new BasicKeyValuePair(x.Key, string.Join(",", x.Value))).ToList();
-            var restResponse = new RestResponse { StatusCode = response.StatusCode, Headers = headers };
+            var restResponse = new RestResponse
+            {
+                StatusCode = response.StatusCode,
+                Headers = headers,
+                Content = await response.Content.ReadAsStringAsync()
+            };
 
-            restResponse.Content = await response.Content.ReadAsStringAsync();
 
             return restResponse;
         }

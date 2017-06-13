@@ -43,7 +43,7 @@ namespace GSMA.MobileConnect.Discovery
             Validate.RejectNullOrEmpty(clientSecret, "clientSecret");
             Validate.RejectNullOrEmpty(discoveryUrl, "discoveryUrl");
             Validate.RejectNullOrEmpty(options.RedirectUrl, "redirectUrl");
-
+            
             if (cacheDiscoveryResponse)
             {
                 var cachedValue = await GetCachedValueAsync(options);
@@ -52,6 +52,8 @@ namespace GSMA.MobileConnect.Discovery
                     return cachedValue;
                 }
             }
+
+            options.CorrelationId = options.IsUsingCorrelationId ? Guid.NewGuid().ToString() : string.Empty;
 
             try
             {
@@ -77,7 +79,40 @@ namespace GSMA.MobileConnect.Discovery
                     await AddCachedValueAsync(options, discoveryResponse).ConfigureAwait(false);
                 }
 
-                return discoveryResponse;
+                if (discoveryResponse.ErrorResponse != null)
+                {
+                    if (discoveryResponse.ResponseData.correlation_id == null)
+                    {
+                        Log.Warning("Error discovery response not contains correlation id");
+                        return discoveryResponse;
+                    }
+                    else if (discoveryResponse.ErrorResponse.CorrelationId.Equals(options.CorrelationId))
+                    {
+                        Log.Info("Error discovery response match correlation id");
+                        return discoveryResponse;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Invalid correlation id in the error discovery response");
+                    }
+                }
+                else
+                {
+                    if (discoveryResponse.ResponseData.correlation_id == null)
+                    {
+                        Log.Warning("Discovery response not contains correlation id");
+                        return discoveryResponse;
+                    }
+                    else if (discoveryResponse.ResponseData.correlation_id.Equals(options.CorrelationId))
+                    {
+                        Log.Info("Discovery response match correlation id");
+                        return discoveryResponse;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Invalid correlation id in the discovery response");
+                    }
+                }
             }
             catch (Exception e) when (e is HttpRequestException || e is System.Net.WebException || e is TaskCanceledException)
             {
@@ -163,14 +198,11 @@ namespace GSMA.MobileConnect.Discovery
 
             string mcc = null;
             string mnc = null;
-            if (mcc_mnc != null)
+            var parts = mcc_mnc?.Split('_');
+            if (parts?.Length == 2)
             {
-                var parts = mcc_mnc.Split('_');
-                if (parts.Length == 2)
-                {
-                    mcc = parts[0];
-                    mnc = parts[1];
-                }
+                mcc = parts[0];
+                mnc = parts[1];
             }
 
             return new ParsedDiscoveryRedirect(mcc, mnc, encryptedMSISDN);
@@ -241,8 +273,8 @@ namespace GSMA.MobileConnect.Discovery
         {
             if (_cache != null)
             {
-                var mcc = options.IdentifiedMCC != null ? options.IdentifiedMCC : options.SelectedMCC;
-                var mnc = options.IdentifiedMNC != null ? options.IdentifiedMNC : options.SelectedMNC;
+                var mcc = options.IdentifiedMCC ?? options.SelectedMCC;
+                var mnc = options.IdentifiedMNC ?? options.SelectedMNC;
 
                 if (response.ErrorResponse != null || mcc == null || mnc == null)
                 {
@@ -263,8 +295,8 @@ namespace GSMA.MobileConnect.Discovery
 
         private async Task<DiscoveryResponse> GetCachedValueAsync(DiscoveryOptions options)
         {
-            var mcc = options.IdentifiedMCC != null ? options.IdentifiedMCC : options.SelectedMCC;
-            var mnc = options.IdentifiedMNC != null ? options.IdentifiedMNC : options.SelectedMNC;
+            var mcc = options.IdentifiedMCC ?? options.SelectedMCC;
+            var mnc = options.IdentifiedMNC ?? options.SelectedMNC;
             return _cache != null ? await _cache.Get(mcc, mnc) : null;
         }
 
@@ -278,12 +310,13 @@ namespace GSMA.MobileConnect.Discovery
             return await _cache.Get<T>(key, removeIfExpired);
         }
 
-        private List<BasicKeyValuePair> GetDiscoveryQueryParams(DiscoveryOptions options)
+        private static List<BasicKeyValuePair> GetDiscoveryQueryParams(DiscoveryOptions options)
         {
             return new List<BasicKeyValuePair>
             {
                 new BasicKeyValuePair(Parameters.MSISDN, options.MSISDN?.TrimStart('+')),
                 new BasicKeyValuePair(Parameters.REDIRECT_URL, options.RedirectUrl),
+                new BasicKeyValuePair(Parameters.CORRELATION_ID, options.CorrelationId),
                 new BasicKeyValuePair(Parameters.IDENTIFIED_MCC, options.IdentifiedMCC),
                 new BasicKeyValuePair(Parameters.IDENTIFIED_MNC, options.IdentifiedMNC),
                 new BasicKeyValuePair(Parameters.SELECTED_MCC, options.SelectedMCC),
@@ -293,7 +326,7 @@ namespace GSMA.MobileConnect.Discovery
             };
         }
 
-        private IEnumerable<BasicKeyValuePair> GetCookiesToProxy(IEnumerable<BasicKeyValuePair> cookiesToProxy)
+        private static IEnumerable<BasicKeyValuePair> GetCookiesToProxy(IEnumerable<BasicKeyValuePair> cookiesToProxy)
         {
             return HttpUtils.ProxyRequiredCookies(RequiredCookies.Discovery, cookiesToProxy);
         }
