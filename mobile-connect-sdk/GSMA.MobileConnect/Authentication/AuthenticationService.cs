@@ -33,7 +33,7 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        public StartAuthenticationResponse StartAuthentication(string clientId, string correlationId, string authorizeUrl, string redirectUrl, string state, string nonce,
+        public StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce,
             string encryptedMsisdn, SupportedVersions versions, AuthenticationOptions options)
         {
             Validate.RejectNullOrEmpty(clientId, "clientId");
@@ -43,13 +43,12 @@ namespace GSMA.MobileConnect.Authentication
             Validate.RejectNullOrEmpty(nonce, "nonce");
 
             options = options ?? new AuthenticationOptions();
-            options.Scope = options.Scope ?? MobileConnectConstants.MOBILECONNECT;
+            options.Scope = options.Scope ?? "";
             bool shouldUseAuthorize = ShouldUseAuthorize(options);
 
             if (shouldUseAuthorize)
             {
                 Validate.RejectNullOrEmpty(options.Context, "options.Context");
-                //Validate.RejectNullOrEmpty(options.BindingMessage, "options.BindingMessage");
                 Validate.RejectNullOrEmpty(options.ClientName, "options.ClientName");
             }
 
@@ -60,10 +59,9 @@ namespace GSMA.MobileConnect.Authentication
                 options.LoginHint = options.LoginHint ?? LoginHint.GenerateForEncryptedMsisdn(encryptedMsisdn);
             options.RedirectUrl = redirectUrl;
             options.ClientId = clientId;
-            options.CorrelationId = options.IsUsingCorrelationId ? string.Empty : correlationId;
 
             string version;
-            string coercedScope = CoerceAuthenticationScope(options, versions, shouldUseAuthorize, out version);
+            string coercedScope = CoerceAuthenticationScope(options.Scope, versions, shouldUseAuthorize, out version);
             Log.Info(() => $"scope={options.Scope} => coercedScope={coercedScope}");
             options.Scope = coercedScope;
 
@@ -136,7 +134,7 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        public async Task<RequestTokenResponse> RequestHeadlessAuthentication(string clientId, string clientSecret, string correlationId, string authorizeUrl, string tokenUrl, string redirectUrl,
+        public async Task<RequestTokenResponse> RequestHeadlessAuthentication(string clientId, string clientSecret, string authorizeUrl, string tokenUrl, string redirectUrl,
             string state, string nonce, string encryptedMsisdn, SupportedVersions versions, AuthenticationOptions options, CancellationToken cancellationToken = default(CancellationToken))
         {
             options = options ?? new AuthenticationOptions();
@@ -147,7 +145,7 @@ namespace GSMA.MobileConnect.Authentication
                 options.Prompt = "mobile";
             }
 
-            string authUrl = StartAuthentication(clientId, correlationId, authorizeUrl, redirectUrl, state, nonce, encryptedMsisdn, versions, options).Url;
+            string authUrl = StartAuthentication(clientId, authorizeUrl, redirectUrl, state, nonce, encryptedMsisdn, versions, options).Url;
             Uri finalRedirect = null;
 
             try
@@ -157,7 +155,7 @@ namespace GSMA.MobileConnect.Authentication
             catch (Exception e) when (e is System.Net.WebException || e is TaskCanceledException)
             {
                 Log.Error("Headless authentication was cancelled", e);
-                return new RequestTokenResponse(new ErrorResponse { Error = ErrorCodes.AuthCancelled, ErrorDescription = "Headless authentication was cancelled or a timeout occurred" });
+                return new RequestTokenResponse(new ErrorResponse { Error = Constants.ErrorCodes.AuthCancelled, ErrorDescription = "Headless authentication was cancelled or a timeout occurred" });
             }
             catch (HttpRequestException e)
             {
@@ -173,14 +171,20 @@ namespace GSMA.MobileConnect.Authentication
             }
 
             var code = HttpUtils.ExtractQueryValue(finalRedirect.AbsoluteUri, "code");
-            return await RequestTokenAsync(clientId, clientSecret, correlationId, tokenUrl, redirectUrl, code);
+            return await RequestTokenAsync(clientId, clientSecret, tokenUrl, redirectUrl, code);
         }
 
         private bool ShouldUseAuthorize(AuthenticationOptions options)
         {
             int authnIndex = options.Scope.IndexOf(Constants.Scope.AUTHN, StringComparison.OrdinalIgnoreCase);
             bool authnRequested = authnIndex > -1;
-            
+            bool mcProductRequested = options.Scope.LastIndexOf(Constants.Scope.MCPREFIX, StringComparison.OrdinalIgnoreCase) != authnIndex;
+
+            if (mcProductRequested)
+            {
+                return true;
+            }
+
             // If context is passed and authn not specifically requested then use authorize
             if (!authnRequested && !string.IsNullOrEmpty(options.Context))
             {
@@ -193,22 +197,21 @@ namespace GSMA.MobileConnect.Authentication
         /// <summary>
         /// Returns a modified scope value based on the version required. Depending on the version the value mc_authn may be added or removed
         /// </summary>
-        /// <param name="options">Authentication options</param>
+        /// <param name="scopeRequested">Request scope value</param>
         /// <param name="versions">SupportedVersions from ProviderMetadata, used for finding the supported version for the requested auth type</param>
         /// <param name="shouldUseAuthorize">If mc_authz should be used over mc_authn</param>
         /// <param name="version">Supported version of the scope selected to use</param>
         /// <returns>Returns a modified scope value with mc_authn removed or added</returns>
-        private string CoerceAuthenticationScope(AuthenticationOptions options, SupportedVersions versions, bool shouldUseAuthorize, out string version)
+        private string CoerceAuthenticationScope(string scopeRequested, SupportedVersions versions, bool shouldUseAuthorize, out string version)
         {
-            options.Scope += " " + (shouldUseAuthorize ? MobileConnectConstants.MOBILECONNECTAUTHORIZATION : MobileConnectConstants.MOBILECONNECTAUTHENTICATION);
-
+            var requiredScope = shouldUseAuthorize ? MobileConnectConstants.MOBILECONNECTAUTHORIZATION : MobileConnectConstants.MOBILECONNECTAUTHENTICATION;
             var disallowedScope = shouldUseAuthorize ? Constants.Scope.AUTHN : Constants.Scope.AUTHZ;
 
             versions = versions ?? new SupportedVersions(null);
-            version = versions.GetSupportedVersion(options);
+            version = versions.GetSupportedVersion(requiredScope);
 
-            var splitScope = options.Scope.Split().ToList().Distinct().ToList();
-            splitScope = Scope.CoerceOpenIdScope(splitScope, options.Scope);
+            var splitScope = scopeRequested.Split().ToList();
+            splitScope = Scope.CoerceOpenIdScope(splitScope, requiredScope);
 
             splitScope.RemoveAll(x => x.Equals(disallowedScope, StringComparison.OrdinalIgnoreCase));
 
@@ -221,7 +224,7 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        public async Task<RequestTokenResponse> RequestTokenAsync(string clientId, string clientSecret, string requestTokenUrl, string redirectUrl, string code, string correlationId = null)
+        public async Task<RequestTokenResponse> RequestTokenAsync(string clientId, string clientSecret, string requestTokenUrl, string redirectUrl, string code)
         {
             Validate.RejectNullOrEmpty(clientId, "clientId");
             Validate.RejectNullOrEmpty(clientSecret, "clientSecret");
@@ -233,19 +236,17 @@ namespace GSMA.MobileConnect.Authentication
             {
                 var formData = new List<BasicKeyValuePair>()
                 {
-                    new BasicKeyValuePair(Parameters.AUTHENTICATION_REDIRECT_URI, redirectUrl),
-                    new BasicKeyValuePair(Parameters.CODE, code),
-                    new BasicKeyValuePair(Parameters.GRANT_TYPE, DefaultOptions.GRANT_TYPE)                    
+                    new BasicKeyValuePair(Constants.Parameters.AUTHENTICATION_REDIRECT_URI, redirectUrl),
+                    new BasicKeyValuePair(Constants.Parameters.CODE, code),
+                    new BasicKeyValuePair(Constants.Parameters.GRANT_TYPE, Constants.DefaultOptions.GRANT_TYPE)
                 };
-                if (correlationId != null)
-                    formData.Add(new BasicKeyValuePair(Parameters.CORRELATION_ID, correlationId));
 
                 RestResponse response = await _client.PostAsync(requestTokenUrl, RestAuthentication.Basic(clientId, clientSecret), formData, null, null);
                 var tokenResponse = new RequestTokenResponse(response);
 
                 return tokenResponse;
             }
-            catch (Exception e) when (e is HttpRequestException || e is WebException || e is TaskCanceledException)
+            catch (Exception e) when (e is HttpRequestException || e is System.Net.WebException || e is TaskCanceledException)
             {
                 Log.Error(() => $"Error occurred while requesting token url={requestTokenUrl}", e);
                 throw new MobileConnectEndpointHttpException(e.Message, e);
@@ -253,9 +254,9 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        public RequestTokenResponse RequestToken(string clientId, string clientSecret, string correlationId, string requestTokenUrl, string redirectUrl, string code)
+        public RequestTokenResponse RequestToken(string clientId, string clientSecret, string requestTokenUrl, string redirectUrl, string code)
         {
-            return RequestTokenAsync(clientId, clientSecret, correlationId, requestTokenUrl, redirectUrl, code).Result;
+            return RequestTokenAsync(clientId, clientSecret, requestTokenUrl, redirectUrl, code).Result;
         }
 
         /// <inheritdoc/>
@@ -268,8 +269,8 @@ namespace GSMA.MobileConnect.Authentication
 
             var formData = new List<BasicKeyValuePair>()
             {
-                new BasicKeyValuePair(Parameters.REFRESH_TOKEN, refreshToken),
-                new BasicKeyValuePair(Parameters.GRANT_TYPE, GrantTypes.REFRESH_TOKEN),
+                new BasicKeyValuePair(Constants.Parameters.REFRESH_TOKEN, refreshToken),
+                new BasicKeyValuePair(Constants.Parameters.GRANT_TYPE, Constants.GrantTypes.REFRESH_TOKEN),
             };
             var authentication = RestAuthentication.Basic(clientId, clientSecret);
 
@@ -278,7 +279,7 @@ namespace GSMA.MobileConnect.Authentication
             {
                 restResponse = await _client.PostAsync(refreshTokenUrl, authentication, formData, null, null);
             }
-            catch (Exception e) when (e is HttpRequestException || e is WebException || e is TaskCanceledException)
+            catch (Exception e) when (e is HttpRequestException || e is System.Net.WebException || e is TaskCanceledException)
             {
                 Log.Error(() => $"Error occurred while refreshing token url={refreshTokenUrl}", e);
                 throw new MobileConnectEndpointHttpException(e.Message, e);
@@ -308,7 +309,7 @@ namespace GSMA.MobileConnect.Authentication
 
             if (tokenTypeHint != null)
             {
-                formData.Add(new BasicKeyValuePair(Parameters.TOKEN_TYPE_HINT, tokenTypeHint));
+                formData.Add(new BasicKeyValuePair(Constants.Parameters.TOKEN_TYPE_HINT, tokenTypeHint));
             }
 
             var authentication = RestAuthentication.Basic(clientId, clientSecret);
@@ -352,32 +353,31 @@ namespace GSMA.MobileConnect.Authentication
         {
             var authParameters = new List<BasicKeyValuePair>
             {
-                new BasicKeyValuePair(Parameters.AUTHENTICATION_REDIRECT_URI, options.RedirectUrl),
-                new BasicKeyValuePair(Parameters.CLIENT_ID, options.ClientId),
-                new BasicKeyValuePair(Parameters.CORRELATION_ID, options.CorrelationId),
-                new BasicKeyValuePair(Parameters.RESPONSE_TYPE, DefaultOptions.AUTHENTICATION_RESPONSE_TYPE),
-                new BasicKeyValuePair(Parameters.SCOPE, options.Scope),
-                new BasicKeyValuePair(Parameters.ACR_VALUES, options.AcrValues),
-                new BasicKeyValuePair(Parameters.STATE, options.State),
-                new BasicKeyValuePair(Parameters.NONCE, options.Nonce),
-                new BasicKeyValuePair(Parameters.DISPLAY, options.Display),
-                new BasicKeyValuePair(Parameters.PROMPT, options.Prompt),
-                new BasicKeyValuePair(Parameters.MAX_AGE, options.MaxAge.ToString()),
-                new BasicKeyValuePair(Parameters.UI_LOCALES, options.UiLocales),
-                new BasicKeyValuePair(Parameters.CLAIMS_LOCALES, options.ClaimsLocales),
-                new BasicKeyValuePair(Parameters.ID_TOKEN_HINT, options.IdTokenHint),
-                new BasicKeyValuePair(Parameters.LOGIN_HINT, options.LoginHint),
-                new BasicKeyValuePair(Parameters.LOGIN_HINT_TOKEN, options.LoginHintToken),
-                new BasicKeyValuePair(Parameters.DTBS, options.Dtbs),
-                new BasicKeyValuePair(Parameters.CLAIMS, GetClaimsString(options)),
-                new BasicKeyValuePair(Parameters.VERSION, version),
+                new BasicKeyValuePair(Constants.Parameters.AUTHENTICATION_REDIRECT_URI, options.RedirectUrl),
+                new BasicKeyValuePair(Constants.Parameters.CLIENT_ID, options.ClientId),
+                new BasicKeyValuePair(Constants.Parameters.RESPONSE_TYPE, Constants.DefaultOptions.AUTHENTICATION_RESPONSE_TYPE),
+                new BasicKeyValuePair(Constants.Parameters.SCOPE, options.Scope),
+                new BasicKeyValuePair(Constants.Parameters.ACR_VALUES, options.AcrValues),
+                new BasicKeyValuePair(Constants.Parameters.STATE, options.State),
+                new BasicKeyValuePair(Constants.Parameters.NONCE, options.Nonce),
+                new BasicKeyValuePair(Constants.Parameters.DISPLAY, options.Display),
+                new BasicKeyValuePair(Constants.Parameters.PROMPT, options.Prompt),
+                new BasicKeyValuePair(Constants.Parameters.MAX_AGE, options.MaxAge.ToString()),
+                new BasicKeyValuePair(Constants.Parameters.UI_LOCALES, options.UiLocales),
+                new BasicKeyValuePair(Constants.Parameters.CLAIMS_LOCALES, options.ClaimsLocales),
+                new BasicKeyValuePair(Constants.Parameters.ID_TOKEN_HINT, options.IdTokenHint),
+                new BasicKeyValuePair(Constants.Parameters.LOGIN_HINT, options.LoginHint),
+                new BasicKeyValuePair(Constants.Parameters.LOGIN_HINT_TOKEN, options.LoginHintToken),
+                new BasicKeyValuePair(Constants.Parameters.DTBS, options.Dtbs),
+                new BasicKeyValuePair(Constants.Parameters.CLAIMS, GetClaimsString(options)),
+                new BasicKeyValuePair(Constants.Parameters.VERSION, version),
             };
 
             if (useAuthorize)
             {
-                authParameters.Add(new BasicKeyValuePair(Parameters.CLIENT_NAME, options.ClientName));
-                authParameters.Add(new BasicKeyValuePair(Parameters.CONTEXT, options.Context));
-                authParameters.Add(new BasicKeyValuePair(Parameters.BINDING_MESSAGE, options.BindingMessage));
+                authParameters.Add(new BasicKeyValuePair(Constants.Parameters.CLIENT_NAME, options.ClientName));
+                authParameters.Add(new BasicKeyValuePair(Constants.Parameters.CONTEXT, options.Context));
+                authParameters.Add(new BasicKeyValuePair(Constants.Parameters.BINDING_MESSAGE, options.BindingMessage));
             }
 
             return authParameters;

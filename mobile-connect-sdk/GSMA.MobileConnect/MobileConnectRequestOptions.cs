@@ -13,7 +13,7 @@ namespace GSMA.MobileConnect
         private readonly DiscoveryOptions _discoveryOptions = new DiscoveryOptions();
         private readonly AuthenticationOptions _authOptions = new AuthenticationOptions();
         private readonly TokenValidationOptions _validationOptions = new TokenValidationOptions();
-        
+
         /// <inheritdoc cref="DiscoveryOptions.IsUsingMobileData"/>
         public bool IsUsingMobileData
         {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using GSMA.MobileConnect.Authentication;
 
 namespace GSMA.MobileConnect.Discovery
 {
@@ -83,18 +82,22 @@ namespace GSMA.MobileConnect.Discovery
         /// Gets the available mobile connect version for the specified scope value.
         /// If versions aren't available then configured default versions will be used.
         /// </summary>
-        /// <param name="options">Authentication options</param>
-        public string GetSupportedVersion(AuthenticationOptions options)
+        /// <param name="scope">Scope value to retrieve supported version for</param>
+        public string GetSupportedVersion(string scope)
         {
-            string version;
-            if (options.ClientName != null || options.BindingMessage != null || options.Context != null)
+            if (_recognisedScopes.FirstOrDefault(x => string.Equals(x, scope, StringComparison.OrdinalIgnoreCase)) == null)
             {
-                version = Constants.DefaultOptions.VERSION_MOBILECONNECTAUTHZ;
-            } else {
-                version = Constants.DefaultOptions.VERSION_MOBILECONNECTAUTHN;
+                return null;
             }
-            return version;
+
+            string version;
+            if (!InitialValues.TryGetValue(scope, out version))
+            {
+                InitialValues.TryGetValue(MobileConnectConstants.MOBILECONNECT, out version);
             }
+
+            return Utils.MobileConnectVersions.CoerceVersion(version, scope);
+        }
 
         /// <summary>
         /// Test for support of the specified version or a greater version

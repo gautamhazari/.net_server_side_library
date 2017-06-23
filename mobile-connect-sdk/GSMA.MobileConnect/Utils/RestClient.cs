@@ -68,7 +68,7 @@ namespace GSMA.MobileConnect.Utils
             }
             else
             {
-                message.Headers.Add(Headers.X_REDIRECT, Parameters.X_REDIRECT_DEFAULT_VALUE);
+                message.Headers.Add(Headers.X_REDIRECT, Constants.Parameters.X_REDIRECT_DEFAULT_VALUE);
             }
 
             return message;
@@ -87,6 +87,7 @@ namespace GSMA.MobileConnect.Utils
         public virtual async Task<RestResponse> GetAsync(string uri, RestAuthentication authentication, string xRedirect = "APP", string sourceIp = null, IEnumerable<BasicKeyValuePair> queryParams = null, IEnumerable<BasicKeyValuePair> cookies = null)
         {
             UriBuilder builder = new UriBuilder(uri);
+            
             builder.AddQueryParams(queryParams);
 
             var request = CreateRequest(HttpMethod.Get, builder.Uri, xRedirect, authentication, sourceIp, cookies);
@@ -163,13 +164,9 @@ namespace GSMA.MobileConnect.Utils
         private async Task<RestResponse> CreateRestResponse(HttpResponseMessage response)
         {
             var headers = response.Headers.Select(x => new BasicKeyValuePair(x.Key, string.Join(",", x.Value))).ToList();
-            var restResponse = new RestResponse
-            {
-                StatusCode = response.StatusCode,
-                Headers = headers,
-                Content = await response.Content.ReadAsStringAsync()
-            };
+            var restResponse = new RestResponse { StatusCode = response.StatusCode, Headers = headers };
 
+            restResponse.Content = await response.Content.ReadAsStringAsync();
 
             return restResponse;
         }

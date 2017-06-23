@@ -1,4 +1,6 @@
 ﻿using GSMA.MobileConnect.Authentication;
+using GSMA.MobileConnect.Discovery;
+using Newtonsoft.Json.Linq;
 
 namespace GSMA.MobileConnect.Web
 {
@@ -43,6 +45,7 @@ namespace GSMA.MobileConnect.Web
         /// Token data returned from a successful RequestToken call
         /// </summary>
         public RequestTokenResponseData Token { get; set; }
+
         /// <summary>
         /// Identity data returned from successful RequestUserInfo or RequestIdentityInfo call
         /// </summary>

@@ -10,7 +10,7 @@ namespace GSMA.MobileConnect.Demo.Web.App_Start
 
     using Ninject;
     using Ninject.Web.Common;
-    using Config;
+
     public static class NinjectWebCommon 
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
@@ -61,13 +61,6 @@ namespace GSMA.MobileConnect.Demo.Web.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            //var client = new Utils.RestClient();
-            //var cache = new Cache.ConcurrentCache();
-            //var mobileConnect = new MobileConnectWebInterface()
-
-            kernel.Bind<Cache.ICache>().To<Cache.ConcurrentCache>();
-            kernel.Bind<MobileConnectConfig>().ToConstant(DemoConfiguration.Config);
-            kernel.Bind<MobileConnectWebInterface>().ToSelf().InSingletonScope();
         }        
     }
 }

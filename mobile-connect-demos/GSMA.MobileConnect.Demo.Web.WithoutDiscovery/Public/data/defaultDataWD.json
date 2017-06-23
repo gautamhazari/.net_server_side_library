@@ -1,0 +1,12 @@
+{
+	"clientID": "NzNjMmI4ZmMtOGUxOC00MTlmLTk5NWEtMDE5YjhjMzVkN2M5Om9wZXJhdG9yLWE=",
+	"clientSecret": "ZDlmYzkwOGYtYjYzYS00NjhiLWE2NWUtMjgwZTE0NTRhNzNiOm9wZXJhdG9yLWE=",
+	"subscriberID": "613c39e9cd43100d44e257e3cbbe3677810bcfa19c51946509bea2616b22871334f6c0368818494862509fc2628dee7111414ca7572387a2ec8f577fd467e612b992ab5af81a27bfecf01082d3b10f01d16a7e03aa55015116bcc4ecb898c2f1a2bc3857f07b040c634f15c34a3b3f41b375bf85b68fe6028d9d69f81e8092f1826f02d0931f04583d1cc5a62bf95c73a06754198918d85043b6dfd0f6e75d7691bd658c90c430fdf275d1dafc7811f82b2079d0a065ec2f7a531c9151117aae86fb6fcd8038ec686719f079a3718622347d04c40eb50805e46cb7751110efd25bb3f7f11fb999b8d57d188df05551fbda581e051ba3d69962b2fbea95204800",
+	"clientName": "clientName",
+	"authorizationURL": "https://operator-a.integration.sandbox.mobileconnect.io/oidc/authorize",
+	"tokenURL": "https://operator-a.integration.sandbox.mobileconnect.io/oidc/accesstoken",
+	"userInfoURL": "https://operator-a.integration.sandbox.mobileconnect.io/oidc/userinf",
+	"metadataURL": "https://operator-g.integration.sandbox.mobileconnect.io/.well-known/openid-configuration",
+	"discoveryURL": "https://discovery.integration.sandbox.mobileconnect.io/v2/discovery",
+	"redirectURL": "http://localhost:8001/mobileconnect.html"
+}
