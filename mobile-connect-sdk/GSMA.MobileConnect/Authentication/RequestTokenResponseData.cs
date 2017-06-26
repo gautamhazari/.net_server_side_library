@@ -4,7 +4,7 @@ using System;
 namespace GSMA.MobileConnect.Authentication
 {
     /// <summary>
-    /// A class that holds a valid response from <see cref="IAuthenticationService.RequestTokenAsync(string, string, string, string, string, string)"/>
+    /// A class that holds a valid response from <see cref="IAuthenticationService.RequestTokenAsync(string, string, string, string, string)"/>
     /// </summary>
     /// <seealso cref="RequestTokenResponse"/>
     public class RequestTokenResponseData
@@ -59,12 +59,6 @@ namespace GSMA.MobileConnect.Authentication
                 Expiry = CalculateExpiry(TimeReceived, value);
             }
         }
-
-        /// <summary>
-        /// correlation_id
-        /// </summary>
-        [JsonProperty("correlation_id")]
-        public string CorrelationId { get; private set; }
 
         /// <inheritdoc />
         public RequestTokenResponseData()

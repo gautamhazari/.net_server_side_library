@@ -27,12 +27,6 @@ namespace GSMA.MobileConnect
         public string ErrorUri { get; set; }
 
         /// <summary>
-        /// The correlation id
-        /// </summary>
-        [JsonProperty("correlation_id")]
-        public string CorrelationId { get; set; }
-
-        /// <summary>
         /// Creates an instance of the class ErrorResponse using a redirect url as the source for the error arguments
         /// </summary>
         /// <param name="url">Url with potential error arguments</param>
@@ -51,7 +45,7 @@ namespace GSMA.MobileConnect
                 return null;
             }
 
-            return new ErrorResponse { Error = error, ErrorDescription = HttpUtils.ExtractQueryValue(url, "error_description"), CorrelationId = HttpUtils.ExtractQueryValue(url, "correlation_id") };
+            return new ErrorResponse { Error = error, ErrorDescription = HttpUtils.ExtractQueryValue(url, "error_description") };
         }
     }
 }

@@ -97,7 +97,7 @@ namespace GSMA.MobileConnect
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
         public async Task<MobileConnectStatus> AttemptDiscoveryAsync(HttpRequestMessage request, string msisdn, string mcc, string mnc, bool shouldProxyCookies, MobileConnectRequestOptions options)
         {
-            options.ClientIP = string.IsNullOrEmpty(options.ClientIP) ? request.GetClientIp() : options.ClientIP;
+            options.ClientIP = options?.ClientIP;
 
             var cookies = shouldProxyCookies ? request.GetCookies() : null;
 
@@ -118,6 +118,16 @@ namespace GSMA.MobileConnect
         {
             return await _authentication.MakeDiscoveryForAuthorization(clientId, clientSecret, subscriberId, appName,
                 operatorsUrls);
+        }
+
+        /// <summary>
+        /// Generate Status From Discovery Response
+        /// </summary>
+        /// <param name="discoveryResponse"></param>
+        /// <returns></returns>
+        public async Task<MobileConnectStatus> GenerateStatusFromDiscoveryResponse(DiscoveryResponse discoveryResponse)
+        {
+            return await CacheIfRequired(MobileConnectInterfaceHelper.GenerateStatusFromDiscoveryResponse(_discovery, discoveryResponse));
         }
 
         /// <summary>

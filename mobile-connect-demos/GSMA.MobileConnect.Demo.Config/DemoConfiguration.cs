@@ -1,4 +1,8 @@
-﻿namespace GSMA.MobileConnect.Demo.Config
+﻿using System.Collections.Generic;
+using System.IO;
+using Newtonsoft.Json;
+
+namespace GSMA.MobileConnect.Demo.Config
 {
     public static class DemoConfiguration
     {

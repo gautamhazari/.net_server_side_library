@@ -144,7 +144,7 @@ namespace GSMA.MobileConnect.Discovery
 
             if (responseData.error != null)
             {
-                this.ErrorResponse = new ErrorResponse() { Error = responseData.error, ErrorDescription = responseData.description, CorrelationId = responseData.correlation_id};
+                this.ErrorResponse = new ErrorResponse() { Error = responseData.error, ErrorDescription = responseData.description };
             }
         }
 

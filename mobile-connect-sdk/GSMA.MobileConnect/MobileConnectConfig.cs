@@ -17,12 +17,6 @@ namespace GSMA.MobileConnect
         public string ClientSecret { get; set; }
 
         /// <inheritdoc/>
-        public string CorrelationId { get; set; }
-        
-        /// <inheritdoc/>
-        public bool IsUsingCorrelationId { get; set; }
-
-        /// <inheritdoc/>
         public string XRedirect { get; set; }
 
         /// <inheritdoc/>
