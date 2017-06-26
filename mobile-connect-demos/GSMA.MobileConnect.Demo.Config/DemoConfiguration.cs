@@ -18,8 +18,6 @@ namespace GSMA.MobileConnect.Demo.Config
         private static readonly string _redirectUrl = "";
         [BuildTimeEnvironmentVariable("GSMADemoDiscoveryUrl")]
         private static readonly string _discoveryUrl = "";
-        [BuildTimeEnvironmentVariable("GSMADemoVersion")]
-        private static readonly string version = "mc_v1.2";
 
         private static MobileConnectConfig _config = new MobileConnectConfig
         {
@@ -32,14 +30,6 @@ namespace GSMA.MobileConnect.Demo.Config
         public static MobileConnectConfig Config
         {
             get { return _config; }
-        }
-
-        public static string Version
-        {
-            get
-            {
-                return version;
-            }
         }
     }
 }

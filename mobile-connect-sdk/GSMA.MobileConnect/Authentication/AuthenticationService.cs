@@ -86,7 +86,6 @@ namespace GSMA.MobileConnect.Authentication
         {
             Validate.RejectNullOrEmpty(clientId, "clientId");
             Validate.RejectNullOrEmpty(clientSecret, "clientSecret");
-            Validate.RejectNullOrEmpty(subscriberId, "subscriberId");
             Validate.RejectNull(operatorsUrl, "operatorsUrl");
 
             var discoveryService = new DiscoveryService(new ConcurrentCache(), _client);

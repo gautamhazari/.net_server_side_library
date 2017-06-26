@@ -13,9 +13,9 @@
     border-radius: 4px;
 }
 .logged-in {
-            text-align: left;
-            position: relative;
-        }
+    text-align: left;
+    position: relative;
+}
 
 .display-value {
     word-wrap: break-word;
@@ -170,8 +170,8 @@ th {
 }
 
 .pre-whitespace {
-            white-space: pre-wrap;
-        }
+    white-space: pre-wrap;
+}
 
 .parent {
     display: flex;
@@ -191,7 +191,6 @@ th {
     font-size: 22px;
 }
 html {
-    background-image: url("/img/background.png");
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -202,7 +201,7 @@ html {
     margin-bottom: 10px;
 }
 #user-info-button {
-  text-align: center;
+    text-align: center;
 }
 .additionally-buttons {
     text-align: center;
@@ -224,3 +223,28 @@ a.information {
 a.information:hover { background: linear-gradient(#5a5277, #5a5277) #5a5277; }
 a.information:active { background: linear-gradient(#5a5277, #000) #5a5277; }
 
+.extra-options{
+    overflow:hidden;
+}
+.box{
+    align-content: space-between;
+}
+.box div{
+    overflow: visible;
+    display: inline-block;
+    justify-content: space-between;
+    border: 5px solid #eeeeee;
+}
+
+#api{
+    width:70px;
+}
+
+#error {
+    width: 100%;
+    max-width: 400px;
+    padding: 16px;
+    text-align: center;
+    margin: 0 auto;
+    color: red;
+}

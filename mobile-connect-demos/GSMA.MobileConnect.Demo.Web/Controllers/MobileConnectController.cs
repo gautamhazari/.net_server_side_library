@@ -6,10 +6,7 @@ using GSMA.MobileConnect.Utils;
 using GSMA.MobileConnect.Web;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
 
@@ -19,11 +16,11 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
     public class MobileConnectController : ApiController
     {
         private static MobileConnectWebInterface _mobileConnect;
-        private static string scope;
+        private static string _apiVersion;
         private static RestClient _restClient;
         private static ICache _cache;
-        private static MobileConnectConfig mobileConnectConfig;
-        private static OperatorUrls operatorURLs;
+        private static MobileConnectConfig _mobileConnectConfig;
+        private static OperatorUrls _operatorUrLs;
 
         public MobileConnectController(MobileConnectWebInterface mobileConnect)
         {
@@ -40,11 +37,12 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
         [HttpGet]
         [Route("get_parameters")]
         public void GetParameters(string clientID = "", string clientSecret = "", string discoveryURL = "", string redirectURL = "",
-            string xRedirect = "", string scope = "")
+            string xRedirect = "", string scope = "", string apiVersion = "")
         {
+            _apiVersion = apiVersion;
             _cache = new ConcurrentCache();
             _restClient = new RestClient();
-            mobileConnectConfig = new MobileConnectConfig()
+            _mobileConnectConfig = new MobileConnectConfig()
             {
                 ClientId = clientID,
                 ClientSecret = clientSecret,
@@ -52,14 +50,14 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
                 RedirectUrl = redirectURL,
                 XRedirect = xRedirect
             };
-            _mobileConnect = new MobileConnectWebInterface(mobileConnectConfig, _cache, _restClient);
+            _mobileConnect = new MobileConnectWebInterface(_mobileConnectConfig, _cache, _restClient);
         }
 
         [HttpGet]
         [Route("endpoints")]
         public void Endpoints(string authURL = "", string tokenURL = "", string userInfoURl = "", string metadata = "", string discoveryURL = "", string redirectURL = "")
         {
-            operatorURLs = new OperatorUrls()
+            _operatorUrLs = new OperatorUrls()
             {
                 AuthorizationUrl = authURL,
                 UserInfoUrl = userInfoURl,
@@ -91,7 +89,7 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
         [Route("start_manual_discovery")]
         public async Task<IHttpActionResult> StartManualDiscoveryWithMetadata(string subId = "", string clientId = "", string clientName = "", string clientSecret = "")
         {
-            var discoveryResponse = await _mobileConnect.GenerateDiscoveryManually(clientId, clientSecret, subId, clientName, operatorURLs);
+            var discoveryResponse = await _mobileConnect.GenerateDiscoveryManually(clientId, clientSecret, subId, clientName, _operatorUrLs);
             var discoverystatus = await _mobileConnect.GenerateStatusFromDiscoveryResponse(discoveryResponse);
             return CreateResponse(discoverystatus);
         }
@@ -102,9 +100,9 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
         {
             var operatorUrlsWd = new OperatorUrls
             {
-                AuthorizationUrl = operatorURLs.AuthorizationUrl,
-                RequestTokenUrl = operatorURLs.RequestTokenUrl,
-                UserInfoUrl = operatorURLs.UserInfoUrl
+                AuthorizationUrl = _operatorUrLs.AuthorizationUrl,
+                RequestTokenUrl = _operatorUrLs.RequestTokenUrl,
+                UserInfoUrl = _operatorUrLs.UserInfoUrl
             };
             
             var discoveryResponse = await _mobileConnect.GenerateDiscoveryManually(clientId, clientSecret, subId, "demoapp", operatorUrlsWd);
@@ -116,11 +114,16 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
         [Route("start_authentication"), Route("start_authorization")]
         public async Task<IHttpActionResult> StartAuthentication(string sdksession = null, string subscriberId = null, string scope = null)
         {
+            if (scope == null && _operatorUrLs.ProviderMetadataUrl == null)
+                _apiVersion = Config.Constants.Version1;
+            else if (scope==null)
+                _apiVersion = Config.Constants.Version2;
+
             var options = new MobileConnectRequestOptions
             {
                 Scope = scope,
-                Context = DemoConfiguration.Version.Equals("mc_v1.2") ? "demo" : null,
-                BindingMessage = DemoConfiguration.Version.Equals("mc_v1.2") ? "demo" : null
+                Context = _apiVersion.Equals(Config.Constants.Version2) ? Config.Constants.ContextBindingMsg : null,
+                BindingMessage = _apiVersion.Equals(Config.Constants.Version2) ? Config.Constants.ContextBindingMsg : null
             };
 
             var response = await _mobileConnect.StartAuthentication(Request, sdksession, subscriberId, null, null, options);

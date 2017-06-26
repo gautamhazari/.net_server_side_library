@@ -6,8 +6,7 @@ var discoveryURL;
 var redirectURL;
 var xRedirect;
 var xSourceIp = '';
-
-var mobileConnectUrl = '/api/mobileconnect';
+var apiVersion = '';
 var parametersURL = '/api/mobileconnect/get_parameters';
 var discoveryUrl = '/api/mobileconnect/start_discovery';
 var endpointsURL = '/api/mobileconnect/endpoints';
@@ -47,7 +46,7 @@ var getRequestParameters = function getRequestParameters() {
         '&discoveryURL=' + encodeURIComponent(discoveryURL) +
         '&redirectURL=' + encodeURIComponent(redirectURL) +
         '&xRedirect=' + encodeURIComponent(xRedirect) + '&scope=' + 'openid mc_' + $('input[name=authType]:checked').val() +
-        encodeURIComponent(getPermissionsRequested());
+        encodeURIComponent(getPermissionsRequested()) + '&apiVersion=' + apiVersion;
 
     $.get(parametersURL + queryString, function (data) {
         var input = $('#msisdn');
@@ -107,6 +106,7 @@ function setIpAddress() {
 }
 
 function start() {
+    getApiVersion();
     hide('.error')
     show('#redirect-url');
     hide('#logged-in');
@@ -257,6 +257,9 @@ var api = {
     currentAttempt: {},
     httpCallback: function handleResponse(data) {
         console.log(data);
+        if (data["status"] === 'failure') {
+            api.error(data);
+        }
         api[data.action](data);
     },
     httpCallbackTest: function handleResponse(data) {
@@ -407,6 +410,7 @@ var api = {
         clearAttempt();
 
         $('.error').html(response.description);
+        show('.error');
     },
     operation_outcome: function operation_outcome(response) {
         clearAttempt();
@@ -502,3 +506,7 @@ $(document).ready(function ($) {
         }
     }
 });
+
+function getApiVersion() {
+    apiVersion = $('#api').find('option:selected').val();
+};
