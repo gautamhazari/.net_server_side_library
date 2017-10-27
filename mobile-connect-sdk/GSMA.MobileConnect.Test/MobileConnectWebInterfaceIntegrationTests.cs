@@ -52,7 +52,7 @@ namespace GSMA.MobileConnect.Test
         {
             var requestOptions = new MobileConnectRequestOptions();
             var request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
-            var response = await _mobileConnect.AttemptDiscoveryAsync(request, _testConfig.ValidMSISDN, null, null, true, requestOptions);
+            var response = await _mobileConnect.AttemptDiscoveryAsync(request, _testConfig.ValidMSISDN, null, null, true, false, requestOptions);
 
             Assert.AreEqual(MobileConnectResponseType.StartAuthentication, response.ResponseType);
             Assert.IsNotNull(response.DiscoveryResponse);
@@ -63,7 +63,7 @@ namespace GSMA.MobileConnect.Test
         {
             var requestOptions = new MobileConnectRequestOptions();
             var request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
-            var response = await _mobileConnect.AttemptDiscoveryAsync(request, _testConfig.InvalidMSISDN, null, null, true, requestOptions);
+            var response = await _mobileConnect.AttemptDiscoveryAsync(request, _testConfig.InvalidMSISDN, null, null, true, false, requestOptions);
 
             Assert.AreEqual(MobileConnectResponseType.Error, response.ResponseType);
             Assert.IsNotNull(response.DiscoveryResponse);
@@ -74,7 +74,7 @@ namespace GSMA.MobileConnect.Test
         {
             var requestOptions = new MobileConnectRequestOptions();
             var request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
-            var response = await _mobileConnect.AttemptDiscoveryAsync(request, null, _testConfig.ValidMCC, _testConfig.ValidMNC, true, requestOptions);
+            var response = await _mobileConnect.AttemptDiscoveryAsync(request, null, _testConfig.ValidMCC, _testConfig.ValidMNC, true, false, requestOptions);
 
             Assert.AreEqual(MobileConnectResponseType.StartAuthentication, response.ResponseType);
             Assert.IsNotNull(response.DiscoveryResponse);
@@ -85,7 +85,7 @@ namespace GSMA.MobileConnect.Test
         {
             var requestOptions = new MobileConnectRequestOptions();
             var request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
-            var response = await _mobileConnect.AttemptDiscoveryAsync(request, null, _testConfig.InvalidMCC, _testConfig.InvalidMNC, true, requestOptions);
+            var response = await _mobileConnect.AttemptDiscoveryAsync(request, null, _testConfig.InvalidMCC, _testConfig.InvalidMNC, true, false, requestOptions);
 
             Assert.AreEqual(MobileConnectResponseType.Error, response.ResponseType);
             Assert.IsNotNull(response.DiscoveryResponse);
@@ -96,7 +96,7 @@ namespace GSMA.MobileConnect.Test
         {
             var requestOptions = new MobileConnectRequestOptions();
             var request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
-            var response = await _mobileConnect.AttemptDiscoveryAsync(request, null, "99999", "99", true, requestOptions);
+            var response = await _mobileConnect.AttemptDiscoveryAsync(request, null, "99999", "99", true, false, requestOptions);
 
             Assert.AreEqual(MobileConnectResponseType.Error, response.ResponseType);
             Assert.IsNotNull(response.DiscoveryResponse);
@@ -107,7 +107,7 @@ namespace GSMA.MobileConnect.Test
         {
             var requestOptions = new MobileConnectRequestOptions();
             var request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
-            var response = await _mobileConnect.AttemptDiscoveryAsync(request, null, null, null, true, requestOptions);
+            var response = await _mobileConnect.AttemptDiscoveryAsync(request, null, null, null, true, false, requestOptions);
 
             Assert.AreEqual(MobileConnectResponseType.OperatorSelection, response.ResponseType);
             Assert.IsNotEmpty(response.Url);

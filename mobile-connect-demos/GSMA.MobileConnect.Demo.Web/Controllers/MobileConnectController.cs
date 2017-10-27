@@ -17,6 +17,7 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
     {
         private static MobileConnectWebInterface _mobileConnect;
         private static string _apiVersion;
+        private static bool _includeRequestIP;
         private static RestClient _restClient;
         private static ICache _cache;
         private static MobileConnectConfig _mobileConnectConfig;
@@ -37,9 +38,10 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
         [HttpGet]
         [Route("get_parameters")]
         public void GetParameters(string clientID = "", string clientSecret = "", string discoveryURL = "", string redirectURL = "",
-            string xRedirect = "", string scope = "", string apiVersion = "")
+            string xRedirect = "", string includeRequestIP = "", string scope = "", string apiVersion = "")
         {
             _apiVersion = apiVersion;
+            _includeRequestIP = includeRequestIP.Equals("True");
             _cache = new ConcurrentCache();
             _restClient = new RestClient();
             _mobileConnectConfig = new MobileConnectConfig()
@@ -48,7 +50,7 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
                 ClientSecret = clientSecret,
                 DiscoveryUrl = discoveryURL,
                 RedirectUrl = redirectURL,
-                XRedirect = xRedirect
+                XRedirect = xRedirect.Equals("True") ? "APP" : "False"
             };
             _mobileConnect = new MobileConnectWebInterface(_mobileConnectConfig, _cache, _restClient);
         }
@@ -78,10 +80,10 @@ namespace GSMA.MobileConnect.Demo.Web.Controllers
 
         [HttpGet]
         [Route("start_discovery")]
-        public async Task<IHttpActionResult> StartDiscovery(string msisdn = "", string sourceIp = "")
+        public async Task<IHttpActionResult> StartDiscovery(string msisdn = "", string mcc = "", string mnc = "", string sourceIp = "")
         {
             var requestOptions = new MobileConnectRequestOptions { ClientIP = sourceIp };
-            var status = await _mobileConnect.AttemptDiscoveryAsync(Request, msisdn, null, null, true, requestOptions);
+            var status = await _mobileConnect.AttemptDiscoveryAsync(Request, msisdn, mcc, mnc, true, _includeRequestIP, requestOptions);
             return CreateResponse(status);
         }
 

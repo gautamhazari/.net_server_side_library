@@ -177,7 +177,7 @@ namespace GSMA.MobileConnect.Authentication
         {
             int authnIndex = options.Scope.IndexOf(Constants.Scope.AUTHN, StringComparison.OrdinalIgnoreCase);
             bool authnRequested = authnIndex > -1;
-            bool mcProductRequested = options.Scope.LastIndexOf(Constants.Scope.MCPREFIX, StringComparison.OrdinalIgnoreCase) != authnIndex;
+            bool mcProductRequested = options.Scope.ToLower().Equals(Constants.Scope.AUTHZ.ToLower());
 
             if (mcProductRequested)
             {
