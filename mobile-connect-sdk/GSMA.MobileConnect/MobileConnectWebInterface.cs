@@ -93,11 +93,12 @@ namespace GSMA.MobileConnect
         /// <param name="mcc">Mobile Country Code</param>
         /// <param name="mnc">Mobile Network Code</param>
         /// <param name="shouldProxyCookies">If cookies from the original request should be sent onto the discovery service</param>
+        /// <param name="includeRequestIp">Including of remote ip address</param>
         /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public async Task<MobileConnectStatus> AttemptDiscoveryAsync(HttpRequestMessage request, string msisdn, string mcc, string mnc, bool shouldProxyCookies, MobileConnectRequestOptions options)
+        public async Task<MobileConnectStatus> AttemptDiscoveryAsync(HttpRequestMessage request, string msisdn, string mcc, string mnc, bool shouldProxyCookies, bool includeRequestIp, MobileConnectRequestOptions options)
         {
-            options.ClientIP = options?.ClientIP;
+            options.ClientIP = includeRequestIp ? HttpUtils.GetClientIp(request) : null;
 
             var cookies = shouldProxyCookies ? request.GetCookies() : null;
 

@@ -23,6 +23,12 @@
         /// <summary>
         /// Key for X-Redirect Header
         /// </summary>
-        public const string X_REDIRECT = "X-Redirect";        
+        public const string X_REDIRECT = "X-Redirect";
+
+        /// <summary>
+        /// Key for X-Redirect Header
+        /// </summary>
+        public const string SDK_VERSION = "SDK-Version";
     }
+
 }

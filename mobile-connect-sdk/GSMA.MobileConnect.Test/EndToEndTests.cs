@@ -39,7 +39,7 @@ namespace GSMA.MobileConnect.Test
 
             //Attempt discovery
             var request = new HttpRequestMessage();
-            var status = await mobileConnect.AttemptDiscoveryAsync(request, testConfig.ValidMSISDN, null, null, true, blankOptions);
+            var status = await mobileConnect.AttemptDiscoveryAsync(request, testConfig.ValidMSISDN, null, null, true, false, blankOptions);
 
             Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType, $"{status.ErrorCode} - {status.ErrorMessage}");
 
@@ -81,7 +81,7 @@ namespace GSMA.MobileConnect.Test
 
             //Attempt discovery
             var request = new HttpRequestMessage();
-            var status = await mobileConnect.AttemptDiscoveryAsync(request, testConfig.ValidMSISDN, null, null, true, blankOptions);
+            var status = await mobileConnect.AttemptDiscoveryAsync(request, testConfig.ValidMSISDN, null, null, true, false, blankOptions);
 
             Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType, $"{status.ErrorCode} - {status.ErrorMessage}");
 
@@ -124,7 +124,7 @@ namespace GSMA.MobileConnect.Test
 
             //Attempt discovery
             var request = new HttpRequestMessage();
-            var status = await mobileConnect.AttemptDiscoveryAsync(request, testConfig.ValidMSISDN, null, null, true, blankOptions);
+            var status = await mobileConnect.AttemptDiscoveryAsync(request, testConfig.ValidMSISDN, null, null, true, false, blankOptions);
 
             Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType, $"{status.ErrorCode} - {status.ErrorMessage}");
 
@@ -166,7 +166,7 @@ namespace GSMA.MobileConnect.Test
 
             //Attempt discovery
             var request = new HttpRequestMessage();
-            var status = await mobileConnect.AttemptDiscoveryAsync(request, testConfig.ValidMSISDN, null, null, true, blankOptions);
+            var status = await mobileConnect.AttemptDiscoveryAsync(request, testConfig.ValidMSISDN, null, null, true, false, blankOptions);
 
             Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType, $"{status.ErrorCode} - {status.ErrorMessage}");
 
@@ -210,7 +210,7 @@ namespace GSMA.MobileConnect.Test
 
             //Attempt discovery
             var request = new HttpRequestMessage();
-            var status = await mobileConnect.AttemptDiscoveryAsync(request, testConfig.ValidMSISDN, null, null, true, blankOptions);
+            var status = await mobileConnect.AttemptDiscoveryAsync(request, testConfig.ValidMSISDN, null, null, true, false, blankOptions);
 
             Assert.AreEqual(MobileConnectResponseType.StartAuthentication, status.ResponseType, $"{status.ErrorCode} - {status.ErrorMessage}");
 

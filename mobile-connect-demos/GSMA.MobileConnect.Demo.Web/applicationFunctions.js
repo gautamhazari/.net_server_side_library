@@ -22,17 +22,17 @@ var authorizationR1 = '/api/mobileconnect/start_authentication_r1';
 var inputval = ''
 function openRequestOptionsMenu() {
     if ($('#requestOptionsMore').css('visibility') === 'hidden') {
-        $("#requestOptionsMore").css({ "visibility": "visible" })
+        $("#requestOptionsMore").css({"visibility": "visible"})
     } else {
-        $("#requestOptionsMore").css({ "visibility": "hidden" })
+        $("#requestOptionsMore").css({"visibility": "hidden"})
     }
 }
 
 function openRequestParametersMenu() {
     if ($('#requestParameters').css('visibility') === 'hidden') {
-        $('#requestParameters').css({ "visibility": "visible" })
+        $('#requestParameters').css({"visibility": "visible"})
     } else {
-        $('#requestParameters').css({ "visibility": "hidden" })
+        $('#requestParameters').css({"visibility": "hidden"})
     }
 }
 
@@ -49,7 +49,7 @@ var getRequestParameters = function getRequestParameters() {
         '&discoveryURL=' + encodeURIComponent(discoveryURL) +
         '&redirectURL=' + encodeURIComponent(redirectURL) +
         '&xRedirect=' + encodeURIComponent($('input[name=xRedirect]:checked').val() ? 'True' : 'False') +
-        '&includeRequestIP=' + encodeURIComponent($('input[name=includeRequestIP]:checked').val() ? 'True' : 'False') +
+        '&includeRequestIP=' + encodeURIComponent($('input[name=includeRequestIP]:checked').val() ? 'True' : 'False')  +
         '&scope=' + 'openid mc_' + $('input[name=authType]:checked').val() +
         encodeURIComponent(getPermissionsRequested()) + '&apiVersion=' + apiVersion;
 
@@ -65,8 +65,8 @@ var getRequestParameters = function getRequestParameters() {
 };
 
 var getIndianRequestParameters = function getIndianRequestParameters() {
-    var clientIDIndian = $('#clientIDIndian').val();
-    var clientSecretIndian = $('#clientSecretIndian').val();
+    var clientIDIndian =$('#clientIDIndian').val();
+    var clientSecretIndian =$('#clientSecretIndian').val();
     var discoveryURLIndian = $('#discoveryURLIndian').val();
     var redirectURLIndian = $('#redirectURLIndian').val();
     var xRedirectIndian = $("#xRedirectIndian").val();
@@ -212,7 +212,7 @@ var getPermissionsRequested = function getPermissionsRequested() {
 
 var getAuthScope = function getAuthScope() {
     var scope = 'mc_';
-    if ($('input[name=indianScopeType]:checked').val() !== undefined) {
+    if($('input[name=indianScopeType]:checked').val() !== undefined) {
         scope = $('input[name=indianScopeType]:checked').val();
         return scope;
     } else if ($('input[name=authType]:checked').val() === undefined) {
@@ -356,8 +356,8 @@ var api = {
     discoveryIndia: function discoveryIndia() {
         var queryString = '';
         if (inputval == 'authIndianMsisdn-toggle') {
-            queryString = '?msisdn=' + encodeURIComponent('+91' + $('#msisdnIndian').val());
-        } else if (inputval == 'authIndianMccMnc-toggle') {
+            queryString = '?msisdn=' + encodeURIComponent('+91'+$('#msisdnIndian').val());
+        } else if (inputval == 'authIndianMccMnc-toggle'){
             queryString = '?mcc=' + encodeURIComponent($('#mccIndian').val())
                 + '&mnc=' + encodeURIComponent($('#mncIndian').val());
         }
@@ -380,10 +380,10 @@ var api = {
 
     start_authentication: function start_authentication(response) {
         var queryString = '?' + generateParams({
-            subscriberId: response.subscriberId,
-            sdkSession: response.sdkSession,
-            scope: getAuthScope()
-        });
+                subscriberId: response.subscriberId,
+                sdkSession: response.sdkSession,
+                scope: getAuthScope()
+            });
 
         api.currentAttempt.session = response.sdkSession;
         newSDKSession = response.sdkSession;
@@ -421,10 +421,10 @@ var api = {
     },
     handle_redirect: function handle_redirect(url) {
         var queryString = '&' + generateParams({
-            expectedState: api.currentAttempt.expectedState,
-            expectedNonce: api.currentAttempt.expectedNonce,
-            sdkSession: newSDKSession
-        });
+                expectedState: api.currentAttempt.expectedState,
+                expectedNonce: api.currentAttempt.expectedNonce,
+                sdkSession: newSDKSession
+            });
 
         $.get(url + queryString, api.httpCallback);
     },
@@ -435,16 +435,16 @@ var api = {
             hideLogin();
             printInfo(response);
         } else if (response.outcome) {
-            api.operation_outcome({ description: response.outcome });
+            api.operation_outcome({description: response.outcome});
         } else {
-            api.error({ description: 'Authentication not returned, user not logged in' });
+            api.error({description: 'Authentication not returned, user not logged in'});
         }
     },
     request_user_info: function request_user_info() {
         var queryString = '?' + generateParams({
-            sdkSession: newSDKSession,
-            accessToken: api.currentAttempt.token.access_token,
-        });
+                sdkSession: newSDKSession,
+                accessToken: api.currentAttempt.token.access_token,
+            });
 
         $.get(userInfoUrl + queryString, api.httpCallback);
     },
@@ -455,9 +455,9 @@ var api = {
     },
     request_identity: function request_identity() {
         var queryString = '?' + generateParams({
-            sdkSession: newSDKSession,
-            accessToken: api.currentAttempt.token.access_token,
-        });
+                sdkSession: newSDKSession,
+                accessToken: api.currentAttempt.token.access_token,
+            });
 
         $.get(identityUrl + queryString, api.httpCallback);
     },
@@ -466,10 +466,10 @@ var api = {
         show('#identity');
     },
     error: function error(response) {
-        clearAttempt();
+            clearAttempt();
 
-        $('.error').html(response.description);
-        show('.error');
+            $('.error').html(response.description);
+            show('.error');
     },
     operation_outcome: function operation_outcome(response) {
         clearAttempt();
@@ -493,12 +493,12 @@ $(document).ready(function ($) {
             $('#xRedirect').prop("checked", false);
         }
         if (data["includeRequestIP"] === "True") {
-            $('#includeRequestIP').val(data["includeRequestIP"]);
-            $('#includeRequestIP').prop("checked", true);
-        } else if (data["includeRequestIP"] === "False") {
-            $('#includeRequestIP').val(false);
-            $('#includeRequestIP').prop("checked", false);
-        }
+                    $('#includeRequestIP').val(data["includeRequestIP"]);
+                    $('#includeRequestIP').prop("checked", true);
+                } else if (data["includeRequestIP"] === "False"){
+                    $('#includeRequestIP').val(false);
+                    $('#includeRequestIP').prop("checked", false);
+                }
 
     });
 
@@ -549,15 +549,15 @@ $(document).ready(function ($) {
         }
     });
 
-    //    $('input[name=includeRequestIP]:checkbox').change(function) {
-    //        value = $("input[name=includeRequestIP]:checkbox").val(();
-    //        if ($('#includeRequestIP').prop("checked") === true ) {
-    //            $('#includeRequestIP').prop("checked", false);
-    //        } else if ($('#includeRequestIP').prop("checked") === false ) {
-    //                              $('#includeRequestIP').prop("checked", true);
-    //    }
+//    $('input[name=includeRequestIP]:checkbox').change(function) {
+//        value = $("input[name=includeRequestIP]:checkbox").val(();
+//        if ($('#includeRequestIP').prop("checked") === true ) {
+//            $('#includeRequestIP').prop("checked", false);
+//        } else if ($('#includeRequestIP').prop("checked") === false ) {
+//                              $('#includeRequestIP').prop("checked", true);
+//    }
 
-    $('input[name=indianScopeType]:radio').change(function () {
+    $('input[name=indianScopeType]:radio').change(function() {
         value = $("input[name=indianScopeType]:checked").val();
         if (value == 'openid+mc_identity_phonenumber_hashed') {
             $("#mc_india_tc").removeAttr('checked');
@@ -583,7 +583,7 @@ $(document).ready(function ($) {
     });
 
     // Show/Hide login-mode on the basis of selected mode
-    $('input[name=discoveryType]:radio').change(function () {
+    $('input[name=discoveryType]:radio').change(function (){
         inputval = $("input[name=discoveryType]:checked").val();
         if (inputval == 'authIndianMsisdn-toggle') {
             $("#msisdnIndian").show('slow');
@@ -595,7 +595,7 @@ $(document).ready(function ($) {
             $("#mc_mnv_validate").attr('disabled', false);
             $("#mc_mnv_validate_plus").attr('disabled', false);
 
-        } else if (inputval == 'authIndianMccMnc-toggle') {
+        } else if (inputval == 'authIndianMccMnc-toggle'){
             $("#msisdnIndian").hide('slow');
             $("#msisdnIndianContainer").hide('slow');
             $("#mccIndian").show('slow');
