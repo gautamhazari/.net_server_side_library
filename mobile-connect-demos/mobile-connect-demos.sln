@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GSMA.MobileConnect.Demo.Con
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GSMA.MobileConnect", "..\mobile-connect-sdk\GSMA.MobileConnect\GSMA.MobileConnect.csproj", "{AF180441-D240-48C6-B2DB-EF7B9B01EE9C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GSMA.MobileConnect.ServerSide.Web", "GSMA.MobileConnect.Demo.ServerSide\GSMA.MobileConnect.ServerSide.Web.csproj", "{10390ED7-B6D6-4A07-BD51-2CC7FE16E2AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,22 @@ Global
 		{AF180441-D240-48C6-B2DB-EF7B9B01EE9C}.Release|x64.Build.0 = Release|Any CPU
 		{AF180441-D240-48C6-B2DB-EF7B9B01EE9C}.Release|x86.ActiveCfg = Release|Any CPU
 		{AF180441-D240-48C6-B2DB-EF7B9B01EE9C}.Release|x86.Build.0 = Release|Any CPU
+		{10390ED7-B6D6-4A07-BD51-2CC7FE16E2AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10390ED7-B6D6-4A07-BD51-2CC7FE16E2AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10390ED7-B6D6-4A07-BD51-2CC7FE16E2AB}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{10390ED7-B6D6-4A07-BD51-2CC7FE16E2AB}.Debug|ARM.Build.0 = Debug|Any CPU
+		{10390ED7-B6D6-4A07-BD51-2CC7FE16E2AB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{10390ED7-B6D6-4A07-BD51-2CC7FE16E2AB}.Debug|x64.Build.0 = Debug|Any CPU
+		{10390ED7-B6D6-4A07-BD51-2CC7FE16E2AB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{10390ED7-B6D6-4A07-BD51-2CC7FE16E2AB}.Debug|x86.Build.0 = Debug|Any CPU
+		{10390ED7-B6D6-4A07-BD51-2CC7FE16E2AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10390ED7-B6D6-4A07-BD51-2CC7FE16E2AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10390ED7-B6D6-4A07-BD51-2CC7FE16E2AB}.Release|ARM.ActiveCfg = Release|Any CPU
+		{10390ED7-B6D6-4A07-BD51-2CC7FE16E2AB}.Release|ARM.Build.0 = Release|Any CPU
+		{10390ED7-B6D6-4A07-BD51-2CC7FE16E2AB}.Release|x64.ActiveCfg = Release|Any CPU
+		{10390ED7-B6D6-4A07-BD51-2CC7FE16E2AB}.Release|x64.Build.0 = Release|Any CPU
+		{10390ED7-B6D6-4A07-BD51-2CC7FE16E2AB}.Release|x86.ActiveCfg = Release|Any CPU
+		{10390ED7-B6D6-4A07-BD51-2CC7FE16E2AB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
