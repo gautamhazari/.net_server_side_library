@@ -43,29 +43,10 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         }
 
         [HttpGet]
-        [Route("get_parameters")]
-        public void GetParameters()
-        {
-            _operatorParams = readAndParseFiles.ReadFile(Utils.Constants.ConfigFilePath);
-            _apiVersion = _operatorParams.apiVersion;
-            _includeRequestIP = _operatorParams.includeRequestIP.Equals("True");
-            _cache = new ConcurrentCache();
-            _restClient = new RestClient();
-            _mobileConnectConfig = new MobileConnectConfig()
-            {
-                ClientId = _operatorParams.clientID,
-                ClientSecret = _operatorParams.clientSecret,
-                DiscoveryUrl = _operatorParams.discoveryURL,
-                RedirectUrl = _operatorParams.redirectURL,
-                XRedirect = _operatorParams.xRedirect.Equals("True") ? "APP" : "False"
-            };
-            _mobileConnect = new MobileConnectWebInterface(_mobileConnectConfig, _cache, _restClient);
-        }
-
-        [HttpGet]
         [Route("start_discovery")]
         public async Task<IHttpActionResult> StartDiscovery(string msisdn = "", string mcc = "", string mnc = "", string sourceIp = "")
         {
+            GetParameters();
             var requestOptions = new MobileConnectRequestOptions { ClientIP = sourceIp };
             var status = await _mobileConnect.AttemptDiscoveryAsync(Request, msisdn, mcc, mnc, true, _includeRequestIP, requestOptions);
 
@@ -231,6 +212,24 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             }
 
             return new ResponseMessageResult(response);
+        }
+
+        private void GetParameters()
+        {
+            _operatorParams = readAndParseFiles.ReadFile(Utils.Constants.ConfigFilePath);
+            _apiVersion = _operatorParams.apiVersion;
+            _includeRequestIP = _operatorParams.includeRequestIP.Equals("True");
+            _cache = new ConcurrentCache();
+            _restClient = new RestClient();
+            _mobileConnectConfig = new MobileConnectConfig()
+            {
+                ClientId = _operatorParams.clientID,
+                ClientSecret = _operatorParams.clientSecret,
+                DiscoveryUrl = _operatorParams.discoveryURL,
+                RedirectUrl = _operatorParams.redirectURL,
+                XRedirect = _operatorParams.xRedirect.Equals("True") ? "APP" : "False"
+            };
+            _mobileConnect = new MobileConnectWebInterface(_mobileConnectConfig, _cache, _restClient);
         }
     }
 }
