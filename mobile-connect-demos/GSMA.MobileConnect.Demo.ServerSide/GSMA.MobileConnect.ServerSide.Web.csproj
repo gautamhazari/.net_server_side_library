@@ -158,6 +158,7 @@
     </Compile>
     <Compile Include="Logger.cs" />
     <Compile Include="Objects\CachedParameters.cs" />
+    <Compile Include="Objects\IdTokenResponse.cs" />
     <Compile Include="Objects\OperatorParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Constants.cs" />

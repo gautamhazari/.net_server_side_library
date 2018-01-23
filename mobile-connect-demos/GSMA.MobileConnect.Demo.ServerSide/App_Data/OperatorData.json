@@ -6,5 +6,7 @@
   "xRedirect": "True",
   "includeRequestIP": "False",
   "apiVersion": "mc_v1.2",
-  "scope": "openid mc_authn"
+  "scope": "openid mc_authn",
+  "UseInfo": "True",
+  "Identity": "True"  
 }
