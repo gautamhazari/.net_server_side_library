@@ -12,5 +12,8 @@
         public string includeRequestIP { get; set; }
         public string apiVersion { get; set; }
         public string scope { get; set; }
+        public string acrValues { get; set; }
+        public string userInfo { get; set; }
+        public string identity { get; set; }
     }
 }

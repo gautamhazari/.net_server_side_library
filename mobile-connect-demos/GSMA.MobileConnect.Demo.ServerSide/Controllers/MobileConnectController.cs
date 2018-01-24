@@ -112,7 +112,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             return CreateResponse(response);
         }
 
-        public async Task<MobileConnectStatus> RequestUserInfo(string state = null, string accessToken = null)
+        private async Task<MobileConnectStatus> RequestUserInfo(string state = null, string accessToken = null)
         {
             var cachedInfo = responseChecker.getData(state);
             MobileConnectStatus response = null;
@@ -129,11 +129,11 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                 }
                 response = MobileConnectStatus.Error(ErrorCodes.InvalidArgument, "state value is incorrect", e);
             }
-           
+
             return response;
         }
 
-        public async Task<string> StartAuthentication(string sdksession = null, string subscriberId = null)
+        private async Task<string> StartAuthentication(string sdksession = null, string subscriberId = null)
         {
             string scope = _operatorParams.scope;
             if (scope == null && _operatorUrLs.ProviderMetadataUrl == null)
@@ -143,6 +143,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 
             var options = new MobileConnectRequestOptions
             {
+                AcrValues = _operatorParams.acrValues,
                 Scope = scope,
                 Context = _apiVersion.Equals(Utils.Constants.Version2) ? Utils.Constants.ContextBindingMsg : null,
                 BindingMessage = _apiVersion.Equals(Utils.Constants.Version2) ? Utils.Constants.ContextBindingMsg : null
@@ -159,7 +160,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             return response.Url;
         }
 
-        public async Task<MobileConnectStatus> RequestIdentity(string state = null, string accessToken = null)
+        private async Task<MobileConnectStatus> RequestIdentity(string state = null, string accessToken = null)
         {
             var cachedInfo = responseChecker.getData(state);
             MobileConnectStatus response = null;
@@ -198,7 +199,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         {
             var response = Request.CreateResponse(HttpStatusCode.OK, ResponseConverter.Convert(status));
             var authnResponse = Request.CreateResponse(HttpStatusCode.OK, ResponseConverter.Convert(authnStatus));
-            authnResponse.Content = new StringContent(createNewHttpResponseMessage(response, authnResponse));
+            authnResponse.Content = new StringContent(СreateNewHttpResponseMessage(response, authnResponse));
             if (status.SetCookie != null)
             {
                 foreach (var cookie in status.SetCookie)
@@ -209,7 +210,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             return new ResponseMessageResult(authnResponse);
         }
 
-        private string createNewHttpResponseMessage(HttpResponseMessage response, HttpResponseMessage authnResponse)
+        private string СreateNewHttpResponseMessage(HttpResponseMessage response, HttpResponseMessage authnResponse)
         {
             dynamic convertResponseToJson = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
             dynamic convertAuthnResponseToJson = JsonConvert.DeserializeObject(authnResponse.Content.ReadAsStringAsync().Result);
