@@ -9,7 +9,6 @@ namespace GSMA.MobileConnect.ServerSide.Web.Objects
         public string sdkSession { get; set; }
         public string accessToken { get; set; }
         public bool Cached { get; set; }
-
         public bool HasExpired { get; private set; }
 
         public DateTime? TimeCachedUtc { get; set; }

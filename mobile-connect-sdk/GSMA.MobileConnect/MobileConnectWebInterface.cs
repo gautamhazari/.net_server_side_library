@@ -96,7 +96,7 @@ namespace GSMA.MobileConnect
         /// <param name="includeRequestIp">Including of remote ip address</param>
         /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public async Task<MobileConnectStatus> AttemptDiscoveryAsync(HttpRequestMessage request, string msisdn, string mcc, string mnc, bool shouldProxyCookies, bool includeRequestIp, MobileConnectRequestOptions options)
+        public async Task<MobileConnectStatus> AttemptDiscoveryAsync(System.Net.Http.HttpRequestMessage request, string msisdn, string mcc, string mnc, bool shouldProxyCookies, bool includeRequestIp, MobileConnectRequestOptions options)
         {
             options.ClientIP = includeRequestIp ? HttpUtils.GetClientIp(request) : null;
 

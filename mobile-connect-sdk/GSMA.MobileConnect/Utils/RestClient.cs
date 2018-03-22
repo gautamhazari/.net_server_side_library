@@ -103,6 +103,54 @@ namespace GSMA.MobileConnect.Utils
 
             return await CreateRestResponse(response);
         }
+        
+        /// <summary>
+        /// Executes a HTTP GET to the supplied uri with optional basic auth, cookies and query params
+        /// </summary>
+        /// <param name="uri">Base uri of GET request</param>
+        /// <param name="authentication">Authentication value to be used (if auth required)</param>
+        /// <param name="xRedirect">x-Redirect header(if identified)</param>
+        /// <param name="sourceIp">Source request IP (if identified)</param>       
+        /// <param name="queryParams">Query params to be added to the base url (if required)</param>
+        /// <param name="cookies">Cookies to be added to the request (if required)</param>
+        /// <returns>RestResponse containing status code, headers and content</returns>
+        public virtual async Task<String> GetAsyncWithRedirect(string uri, RestAuthentication authentication, MobileConnectRequestOptions requestOptions, string xRedirect = "APP", string sourceIp = null, IEnumerable<BasicKeyValuePair> queryParams = null, IEnumerable<BasicKeyValuePair> cookies = null)
+        {
+            UriBuilder builder = new UriBuilder(uri);
+
+            builder.AddQueryParams(queryParams);
+
+            var request = CreateRequest(HttpMethod.Get, builder.Uri, xRedirect, authentication, sourceIp, cookies);
+            var response = await _client.SendAsync(request);
+            
+            //Uri finalRedirect = null;
+
+            //try
+            //{
+            //    finalRedirect = await GetFinalRedirect(response.RequestMessage.RequestUri.ToString(), requestOptions.DiscoveryOptions.RedirectUrl, 5000, 20);
+            //}
+            //catch (Exception e) when (e is System.Net.WebException || e is TaskCanceledException)
+            //{
+            //    Log.Error("Headless authentication was cancelled", e);
+            //    return await CreateRestResponse(response);
+            //}
+            //catch (HttpRequestException e)
+            //{
+            //    Log.Error("Headless authentication failed", e);
+            //    return await CreateRestResponse(response);
+            //}
+
+            //var error = ErrorResponse.CreateFromUrl(finalRedirect.AbsoluteUri);
+
+            //if (error != null)
+            //{
+            //    return await CreateRestResponse(response);
+            //}
+
+            //var code = HttpUtils.ExtractQueryValue(finalRedirect.AbsoluteUri, "code");
+
+            return response.RequestMessage.RequestUri.ToString();
+        }
 
         /// <summary>
         /// Executes a HTTP GET to the supplied uri with optional basic auth, cookies and query params

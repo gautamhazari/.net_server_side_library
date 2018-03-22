@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -121,7 +120,7 @@ namespace GSMA.MobileConnect.Utils
         /// </summary>
         /// <param name="request">Request with cookies</param>
         /// <returns>List of cookies or null if Cookie header does not exist</returns>
-        public static IEnumerable<BasicKeyValuePair> GetCookies(this HttpRequestMessage request)
+        public static IEnumerable<BasicKeyValuePair> GetCookies(this System.Net.Http.HttpRequestMessage request)
         {
             try
             {
@@ -164,7 +163,7 @@ namespace GSMA.MobileConnect.Utils
         /// </summary>
         /// <param name="request">Request to extract ip address from</param>
         /// <returns>Ip address if found</returns>
-        internal static string GetClientIp(this HttpRequestMessage request)
+        internal static string GetClientIp(this System.Net.Http.HttpRequestMessage request)
         {
             IEnumerable<string> ipHeaderValues;
 

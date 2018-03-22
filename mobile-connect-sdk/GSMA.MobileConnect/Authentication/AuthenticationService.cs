@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Utils;
 using GSMA.MobileConnect.Exceptions;
-using System.Net.Http;
 using Newtonsoft.Json;
 using System.Threading;
 using GSMA.MobileConnect.Cache;
 using GSMA.MobileConnect.Constants;
 using Scope = GSMA.MobileConnect.Utils.Scope;
+using System.Net.Http;
 
 namespace GSMA.MobileConnect.Authentication
 {

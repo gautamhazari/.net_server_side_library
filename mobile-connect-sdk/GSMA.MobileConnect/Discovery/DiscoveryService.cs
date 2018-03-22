@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GSMA.MobileConnect.Utils;
-using System.Net.Http;
 using GSMA.MobileConnect.Cache;
 using GSMA.MobileConnect.Constants;
 using GSMA.MobileConnect.Exceptions;
 using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace GSMA.MobileConnect.Discovery
 {

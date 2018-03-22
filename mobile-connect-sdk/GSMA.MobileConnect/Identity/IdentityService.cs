@@ -1,6 +1,7 @@
 ﻿using GSMA.MobileConnect.Exceptions;
 using GSMA.MobileConnect.Utils;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -64,7 +65,7 @@ namespace GSMA.MobileConnect.Identity
 
                 return new IdentityResponse(response, infoType);
             }
-            catch (Exception e) when (e is HttpRequestException || e is System.Net.WebException || e is TaskCanceledException)
+            catch (Exception e) when (e is HttpRequestException || e is WebException || e is TaskCanceledException)
             {
                 Log.Error(() => $"Error occurred while requesting identity url={infoUrl}", e);
                 throw new MobileConnectEndpointHttpException(e.Message, e);
