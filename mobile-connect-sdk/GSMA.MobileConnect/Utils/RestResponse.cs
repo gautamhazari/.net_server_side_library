@@ -24,6 +24,11 @@ namespace GSMA.MobileConnect.Utils
         public string Content { get; set; }
 
         /// <summary>
+        /// Content returned by the http response
+        /// </summary>
+        public string ReasonPhrase { get; set; }
+
+        /// <summary>
         /// Creates a new instance of the RestResponse class
         /// </summary>
         public RestResponse()
@@ -36,10 +41,23 @@ namespace GSMA.MobileConnect.Utils
         /// </summary>
         /// <param name="code">Response HttpStatusCode</param>
         /// <param name="content">Response content</param>
+        public RestResponse(HttpStatusCode code, string reasonPhrase, string content)
+        {
+            this.StatusCode = code;
+            this.Content = content;
+            this.ReasonPhrase = reasonPhrase;
+        }
+
+        /// <summary>
+        /// Creates a new instance of the RestResponse class with the specified status code and content
+        /// </summary>
+        /// <param name="code">Response HttpStatusCode</param>
+        /// <param name="content">Response content</param>
         public RestResponse(HttpStatusCode code, string content)
         {
             this.StatusCode = code;
             this.Content = content;
+            this.ReasonPhrase = "";
         }
     }
 }

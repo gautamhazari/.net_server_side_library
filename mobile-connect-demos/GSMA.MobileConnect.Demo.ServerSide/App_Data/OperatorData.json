@@ -7,7 +7,7 @@
   "includeRequestIP": "False",
   "apiVersion": "mc_v1.2",
   "scope": "openid mc_authn",
-  "acrValues":  "2",
+  "acrValues": "2",
   "UseInfo": "True",
   "Identity": "True"
 }

@@ -125,7 +125,6 @@ namespace GSMA.MobileConnect.Discovery
             this.Cached = false;
             this.ResponseCode = (int)rawResponse.StatusCode;
             this.Headers = rawResponse.Headers;
-
             this.ResponseData = rawResponse.Content == null ? null : JsonConvert.DeserializeObject<Json.DiscoveryResponseData>(rawResponse.Content);
             ParseResponseData(ResponseData);
         }

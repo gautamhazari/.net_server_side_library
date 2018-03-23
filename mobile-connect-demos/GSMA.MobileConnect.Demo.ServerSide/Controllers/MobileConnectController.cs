@@ -51,24 +51,21 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         {
             GetParameters();
             var requestOptions = new MobileConnectRequestOptions { ClientIP = sourceIp };
-            var status = await _mobileConnect.AttemptDiscoveryAsync(Request, msisdn, mcc, mnc, true, _includeRequestIP, requestOptions);
+            var status = await _mobileConnect.AttemptDiscoveryAsync(Request, msisdn, mcc, mnc, false, _includeRequestIP, requestOptions);
             _requestMessage = Request;
-            if (HandleErrorMsg(status))
+            if (HandleErrorMsg(status) == true)
             {
-                status = await _mobileConnect.AttemptDiscoveryAsync(Request, null, null, null, true, false, requestOptions);
-                return GetHttpMsgWithRedirect(status);
+                status = await _mobileConnect.AttemptDiscoveryAsync(Request, null, null, null, false, false, requestOptions);
+            }
+            if (status.DiscoveryResponse != null && status.DiscoveryResponse.ResponseCode == Utils.Constants.Response_OK)
+            {
+                CachedParameters.sdkSession = status.SDKSession;
+                var authResponse = await StartAuthentication(Request, status.SDKSession, status.DiscoveryResponse.ResponseData.subscriber_id);
+                return authResponse;
             }
             else
-            {
-                if (status.DiscoveryResponse != null)
-                {
-                    CachedParameters.sdkSession = status.SDKSession;
-                    var authResponse = await StartAuthentication(Request,status.SDKSession, status.DiscoveryResponse.ResponseData.subscriber_id);
-                    return authResponse;
-                }
-                else
-                    return GetHttpMsgWithRedirect(status);
-            }
+
+                return GetHttpMsgWithRedirect(status, status.ErrorCode);
         }
 
         [HttpGet]
@@ -141,7 +138,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         [Route("discovery_callback")]
         public async Task<IHttpActionResult> MCC_MNC_DiscoveryCallback(string mcc_mnc, string subscriber_id = "")
         {
-            var requestOptions = new MobileConnectRequestOptions { ClientIP = ""};
+            var requestOptions = new MobileConnectRequestOptions { ClientIP = "" };
             var mcc_mncArray = mcc_mnc.Split(new char[] { '_' });
             var mcc = mcc_mncArray[0];
             var mnc = mcc_mncArray[1];
@@ -154,15 +151,15 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             }
             else
             {
-                return GetHttpMsgWithRedirect(status);
+                return GetHttpMsgWithRedirect(status, status.ErrorMessage);
             }
         }
 
-        private IHttpActionResult GetHttpMsgWithRedirect(MobileConnectStatus status)
+        private IHttpActionResult GetHttpMsgWithRedirect(MobileConnectStatus status, string errMsg)
         {
             string url = status.Url;
             if (url == null)
-                return CreateResponse(MobileConnectStatus.Error(ErrorCodes.InvalidArgument, status.ErrorMessage, new Exception()));
+                return CreateResponse(MobileConnectStatus.Error(ErrorCodes.InvalidArgument, errMsg, new Exception()));
             var authResponse = Request.CreateResponse(HttpStatusCode.Redirect);
             authResponse.Headers.Location = new Uri(url);
             return new ResponseMessageResult(authResponse);
@@ -256,7 +253,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             }
             return new ResponseMessageResult(response);
         }
-        
+
         private IHttpActionResult CreateIdentityResponse(MobileConnectStatus status, MobileConnectStatus authnStatus)
         {
             var response = Request.CreateResponse(HttpStatusCode.OK, ResponseConverter.Convert(status));
@@ -276,9 +273,9 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         {
             dynamic convertResponseToJson = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
             dynamic convertAuthnResponseToJson = JsonConvert.DeserializeObject(authnResponse.Content.ReadAsStringAsync().Result);
-            return "{" + "\"access_token\":" + "\"" + convertAuthnResponseToJson.token.access_token + "\"" + 
-                ", \"token_type\":" + "\"" + convertAuthnResponseToJson.token.token_type + "\"" + 
-                ", \"id_token\":" + "\"" + convertAuthnResponseToJson.token.id_token + "\"" + 
+            return "{" + "\"access_token\":" + "\"" + convertAuthnResponseToJson.token.access_token + "\"" +
+                ", \"token_type\":" + "\"" + convertAuthnResponseToJson.token.token_type + "\"" +
+                ", \"id_token\":" + "\"" + convertAuthnResponseToJson.token.id_token + "\"" +
                 ", \"identity\":" + convertResponseToJson.identity + "}";
         }
 

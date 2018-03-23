@@ -307,7 +307,7 @@ namespace GSMA.MobileConnect.Utils
         private async Task<RestResponse> CreateRestResponse(HttpResponseMessage response)
         {
             var headers = response.Headers.Select(x => new BasicKeyValuePair(x.Key, string.Join(",", x.Value))).ToList();
-            var restResponse = new RestResponse { StatusCode = response.StatusCode, Headers = headers };
+            var restResponse = new RestResponse { StatusCode = response.StatusCode, ReasonPhrase = response.ReasonPhrase, Headers = headers };
 
             restResponse.Content = await response.Content.ReadAsStringAsync();
 
