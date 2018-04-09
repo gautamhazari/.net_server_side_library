@@ -235,9 +235,9 @@ namespace GSMA.MobileConnect.Authentication
             {
                 var formData = new List<BasicKeyValuePair>()
                 {
-                    new BasicKeyValuePair(Constants.Parameters.AUTHENTICATION_REDIRECT_URI, redirectUrl),
-                    new BasicKeyValuePair(Constants.Parameters.CODE, code),
-                    new BasicKeyValuePair(Constants.Parameters.GRANT_TYPE, Constants.DefaultOptions.GRANT_TYPE)
+                    new BasicKeyValuePair(Parameters.AUTHENTICATION_REDIRECT_URI, redirectUrl),
+                    new BasicKeyValuePair(Parameters.CODE, code),
+                    new BasicKeyValuePair(Parameters.GRANT_TYPE, DefaultOptions.GRANT_TYPE)
                 };
 
                 RestResponse response = await _client.PostAsync(requestTokenUrl, RestAuthentication.Basic(clientId, clientSecret), formData, null, null);

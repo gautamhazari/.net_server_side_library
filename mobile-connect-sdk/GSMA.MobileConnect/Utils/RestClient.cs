@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,7 +26,7 @@ namespace GSMA.MobileConnect.Utils
         /// <param name="headlessTimeout">Timeout applied to headless requests</param>
         public RestClient(TimeSpan? timeout, TimeSpan? headlessTimeout)
         {
-            var handler = new HttpClientHandler { UseCookies = false };
+            var handler = new MessageLogHandler(new HttpClientHandler { UseCookies = false });
             _client = new HttpClient(handler, true);
             _client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             _client.Timeout = timeout ?? TimeSpan.FromSeconds(30);

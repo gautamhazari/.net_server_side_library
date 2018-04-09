@@ -110,9 +110,11 @@
     <Compile Include="Authentication\StartAuthenticationResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Extensions.cs" />
+    <Compile Include="Utils\HttpExtensions.cs" />
     <Compile Include="Utils\HttpUtils.cs" />
     <Compile Include="Utils\JsonWebToken.cs" />
     <Compile Include="Utils\BasicKeyValuePair.cs" />
+    <Compile Include="Utils\MessageLogHandler.cs" />
     <Compile Include="Utils\MobileConnectVersions.cs" />
     <Compile Include="Utils\RequiredCookies.cs" />
     <Compile Include="Utils\RestAuthentication.cs" />

@@ -13,7 +13,14 @@ namespace GSMA.MobileConnect
 {
     internal static class MobileConnectInterfaceHelper
     {
-        internal static async Task<MobileConnectStatus> AttemptDiscovery(IDiscoveryService discovery, string msisdn, string mcc, string mnc, IEnumerable<BasicKeyValuePair> cookies, MobileConnectConfig config, MobileConnectRequestOptions options)
+        internal static async Task<MobileConnectStatus> AttemptDiscovery(
+            IDiscoveryService discovery,
+            string msisdn,
+            string mcc,
+            string mnc,
+            IEnumerable<BasicKeyValuePair> cookies,
+            MobileConnectConfig config,
+            MobileConnectRequestOptions options)
         {
             DiscoveryResponse response = null;
             try
@@ -30,17 +37,23 @@ namespace GSMA.MobileConnect
             catch (MobileConnectInvalidArgumentException e)
             {
                 Log.Error(() => $"An invalid argument was passed to AttemptDiscovery arg={e.Argument}");
-                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
+                return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, 
+                    string.Format("An argument was found to be invalid during the process. The argument was {0}.", 
+                    e.Argument), e);
             }
             catch (MobileConnectEndpointHttpException e)
             {
                 Log.Error(() => $"A general http error occurred in AttemptDiscovery msisdn={!string.IsNullOrEmpty(msisdn)} mcc={mcc} mnc={mnc} discoveryUrl={config.DiscoveryUrl}");
-                return MobileConnectStatus.Error(ErrorCodes.HttpFailure, "An HTTP failure occured while calling the discovery endpoint, the endpoint may be inaccessible", e);
+                return MobileConnectStatus.Error(ErrorCodes.HttpFailure, 
+                    "An HTTP failure occured while calling the discovery endpoint, the endpoint may be inaccessible",
+                    e);
             }
             catch (Exception e)
             {
                 Log.Error(() => $"A general error occurred in AttemptDiscovery msisdn={!string.IsNullOrEmpty(msisdn)} mcc={mcc} mnc={mnc} discoveryUrl={config.DiscoveryUrl}");
-                return MobileConnectStatus.Error(ErrorCodes.Unknown, "An unknown error occured while calling the Discovery service to obtain operator details", e);
+                return MobileConnectStatus.Error(ErrorCodes.Unknown, 
+                    "An unknown error occured while calling the Discovery service to obtain operator details", 
+                    e);
             }
 
             return GenerateStatusFromDiscoveryResponse(discovery, response);

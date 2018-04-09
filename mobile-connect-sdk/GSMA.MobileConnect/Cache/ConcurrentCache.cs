@@ -9,8 +9,11 @@ namespace GSMA.MobileConnect.Cache
     /// </summary>
     public class ConcurrentCache : BaseCache
     {
-        private readonly ConcurrentDictionary<string, string> _internalCache = new ConcurrentDictionary<string, string>();
-        private static JsonSerializerSettings _serializerSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+        private static readonly ConcurrentDictionary<string, string> _internalCache =
+            new ConcurrentDictionary<string, string>();
+
+        private static JsonSerializerSettings _serializerSettings =
+            new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
 
         /// <inheritdoc/>
         public override bool IsEmpty
@@ -68,7 +71,7 @@ namespace GSMA.MobileConnect.Cache
         /// <inheritdoc/>
         public override Task Remove(string key)
         {
-            if(string.IsNullOrEmpty(key))
+            if (string.IsNullOrEmpty(key))
             {
                 return _completedTask;
             }

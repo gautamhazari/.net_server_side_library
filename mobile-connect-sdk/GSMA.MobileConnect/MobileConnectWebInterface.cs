@@ -12,7 +12,8 @@ using System.Threading.Tasks;
 namespace GSMA.MobileConnect
 {
     /// <summary>
-    /// Convenience wrapper for <see cref="IDiscoveryService"/> and <see cref="IAuthenticationService"/> methods for use with ASP.NET
+    /// Convenience wrapper for <see cref="IDiscoveryService"/>
+    /// and <see cref="IAuthenticationService"/> methods for use with ASP.NET
     /// </summary>
     /// <seealso cref="MobileConnectInterface"/>
     /// <seealso cref="MobileConnectStatus"/>
@@ -35,7 +36,12 @@ namespace GSMA.MobileConnect
         /// <param name="identity">Instance of IIdentityService concrete implementation</param>
         /// <param name="jwks">Instance of IJWKeysetService concrete implementation</param>
         /// <param name="config">Configuration options</param>
-        public MobileConnectWebInterface(IDiscoveryService discovery, IAuthenticationService authentication, IIdentityService identity, IJWKeysetService jwks, MobileConnectConfig config)
+        public MobileConnectWebInterface(
+            IDiscoveryService discovery, 
+            IAuthenticationService authentication, 
+            IIdentityService identity, 
+            IJWKeysetService jwks, 
+            MobileConnectConfig config)
         {
             this._discovery = discovery;
             this._authentication = authentication;
@@ -44,7 +50,10 @@ namespace GSMA.MobileConnect
             this._config = config;
             this._cacheWithSessionId = config.CacheResponsesWithSessionId && discovery.Cache != null;
 
-            Log.Debug(() => _cacheWithSessionId ? $"MobileConnectWebInterface caching enabled with type={discovery.Cache.GetType().AssemblyQualifiedName}" : "MobileConnectWebInterface caching disabled");
+            Log.Debug(() => _cacheWithSessionId ?
+                $"MobileConnectWebInterface caching enabled with " +
+                $"type={discovery.Cache.GetType().AssemblyQualifiedName}" :
+                "MobileConnectWebInterface caching disabled");
         }
 
         /// <summary>
@@ -62,7 +71,10 @@ namespace GSMA.MobileConnect
         /// <param name="cache">Concrete implementation of ICache</param>
         /// <param name="client">Restclient for all http requests. Will default if null.</param>
         public MobileConnectWebInterface(MobileConnectConfig config, ICache cache, RestClient client)
-            : this(new DiscoveryService(cache, client), new AuthenticationService(client), new IdentityService(client), new JWKeysetService(client, cache), config) { }
+            : this(new DiscoveryService(cache, client), 
+                  new AuthenticationService(client),
+                  new IdentityService(client),
+                  new JWKeysetService(client, cache), config) { }
 
         /// <summary>
         /// R1 supporting constructor, identity and jwks services will be defaulted
@@ -71,7 +83,10 @@ namespace GSMA.MobileConnect
         /// <param name="authentication">Instance of IAuthentication concrete implementation</param>
         /// <param name="config">Configuration options</param>
         [Obsolete("Constructor will be removed in v3")]
-        public MobileConnectWebInterface(IDiscoveryService discovery, IAuthenticationService authentication, MobileConnectConfig config)
+        public MobileConnectWebInterface(
+            IDiscoveryService discovery, 
+            IAuthenticationService authentication, 
+            MobileConnectConfig config)
         {
             var cache = discovery.Cache;
             var client = new Utils.RestClient();
@@ -82,11 +97,15 @@ namespace GSMA.MobileConnect
             this._config = config;
             this._cacheWithSessionId = config.CacheResponsesWithSessionId && _discovery.Cache != null;
 
-            Log.Debug(() => _cacheWithSessionId ? $"MobileConnectWebInterface caching enabled with type={cache.GetType().AssemblyQualifiedName}" : "MobileConnectWebInterface caching disabled");
+            Log.Debug(() => _cacheWithSessionId ?
+                $"MobileConnectWebInterface caching enabled with " +
+                $"type={cache.GetType().AssemblyQualifiedName}" :
+                "MobileConnectWebInterface caching disabled");
         }
 
         /// <summary>
-        /// Attempt discovery using the supplied parameters. If msisdn, mcc and mnc are null the result will be operator selection, otherwise valid parameters will result in a StartAuthorization status
+        /// Attempt discovery using the supplied parameters. If msisdn, mcc and mnc are null the result
+        /// will be operator selection, otherwise valid parameters will result in a StartAuthorization status
         /// </summary>
         /// <param name="request">Originating web request</param>
         /// <param name="msisdn">MSISDN from user</param>
@@ -96,13 +115,20 @@ namespace GSMA.MobileConnect
         /// <param name="includeRequestIp">Including of remote ip address</param>
         /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public async Task<MobileConnectStatus> AttemptDiscoveryAsync(HttpRequestMessage request, string msisdn, string mcc, string mnc, bool shouldProxyCookies, bool includeRequestIp, MobileConnectRequestOptions options)
+        public async Task<MobileConnectStatus> AttemptDiscoveryAsync(
+            HttpRequestMessage request,
+            string msisdn,
+            string mcc,
+            string mnc,
+            bool shouldProxyCookies,
+            bool includeRequestIp,
+            MobileConnectRequestOptions options)
         {
-            options.ClientIP = includeRequestIp ? HttpUtils.GetClientIp(request) : null;
-
             var cookies = shouldProxyCookies ? request.GetCookies() : null;
 
-            return await CacheIfRequired(await MobileConnectInterfaceHelper.AttemptDiscovery(_discovery, msisdn, mcc, mnc, cookies, _config, options));
+            return await CacheIfRequired(
+                await MobileConnectInterfaceHelper.AttemptDiscovery(
+                    _discovery, msisdn, mcc, mnc, cookies, _config, options));
         }
 
         /// <summary>
@@ -114,11 +140,15 @@ namespace GSMA.MobileConnect
         /// <param name="appName">Application name</param>
         /// <param name="operatorsUrls">Operators url</param>
         /// <returns>Manually generated discovery response</returns>
-        public async Task<DiscoveryResponse> GenerateDiscoveryManually(string clientId, string clientSecret, string subscriberId,
-            string appName, OperatorUrls operatorsUrls)
+        public async Task<DiscoveryResponse> GenerateDiscoveryManually(
+            string clientId, 
+            string clientSecret, 
+            string subscriberId,
+            string appName, 
+            OperatorUrls operatorsUrls)
         {
-            return await _authentication.MakeDiscoveryForAuthorization(clientId, clientSecret, subscriberId, appName,
-                operatorsUrls);
+            return await _authentication.MakeDiscoveryForAuthorization(
+                clientId, clientSecret, subscriberId, appName, operatorsUrls);
         }
 
         /// <summary>
@@ -128,7 +158,8 @@ namespace GSMA.MobileConnect
         /// <returns></returns>
         public async Task<MobileConnectStatus> GenerateStatusFromDiscoveryResponse(DiscoveryResponse discoveryResponse)
         {
-            return await CacheIfRequired(MobileConnectInterfaceHelper.GenerateStatusFromDiscoveryResponse(_discovery, discoveryResponse));
+            return await CacheIfRequired(
+                MobileConnectInterfaceHelper.GenerateStatusFromDiscoveryResponse(_discovery, discoveryResponse));
         }
 
         /// <summary>
@@ -137,9 +168,13 @@ namespace GSMA.MobileConnect
         /// <param name="request">Originating web request</param>
         /// <param name="redirectedUrl">Uri redirected to by the completion of the operator selection UI</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public async Task<MobileConnectStatus> AttemptDiscoveryAfterOperatorSelectionAsync(HttpRequestMessage request, Uri redirectedUrl)
+        public async Task<MobileConnectStatus> AttemptDiscoveryAfterOperatorSelectionAsync(
+            HttpRequestMessage request, 
+            Uri redirectedUrl)
         {
-            return await CacheIfRequired(await MobileConnectInterfaceHelper.AttemptDiscoveryAfterOperatorSelection(_discovery, redirectedUrl, _config));
+            return await CacheIfRequired(
+                await MobileConnectInterfaceHelper.AttemptDiscoveryAfterOperatorSelection(
+                    _discovery, redirectedUrl, _config));
         }
 
         /// <summary>
@@ -152,12 +187,19 @@ namespace GSMA.MobileConnect
         /// <param name="nonce">Unique string to be used to prevent replay attacks during request token process (defaults to guid if not supplied, value will be returned in MobileConnectStatus object)</param>
         /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public MobileConnectStatus StartAuthentication(HttpRequestMessage request, DiscoveryResponse discoveryResponse, string encryptedMSISDN, string state, string nonce, MobileConnectRequestOptions options)
+        public MobileConnectStatus StartAuthentication(
+            HttpRequestMessage request, 
+            DiscoveryResponse discoveryResponse, 
+            string encryptedMSISDN,
+            string state,
+            string nonce,
+            MobileConnectRequestOptions options)
         {
             state = string.IsNullOrEmpty(state) ? Security.GenerateSecureNonce() : state;
             nonce = string.IsNullOrEmpty(nonce) ? Security.GenerateSecureNonce() : nonce;
 
-            return MobileConnectInterfaceHelper.StartAuthentication(_authentication, discoveryResponse, encryptedMSISDN, state, nonce, _config, options);
+            return MobileConnectInterfaceHelper.StartAuthentication(
+                _authentication, discoveryResponse, encryptedMSISDN, state, nonce, _config, options);
         }
 
         /// <summary>
@@ -170,7 +212,13 @@ namespace GSMA.MobileConnect
         /// <param name="nonce">Unique string to be used to prevent replay attacks during request token process (defaults to guid if not supplied, value will be returned in MobileConnectStatus object)</param>
         /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public async Task<MobileConnectStatus> StartAuthentication(HttpRequestMessage request, string sdkSession, string encryptedMSISDN, string state, string nonce, MobileConnectRequestOptions options)
+        public async Task<MobileConnectStatus> StartAuthentication(
+            HttpRequestMessage request, 
+            string sdkSession,
+            string encryptedMSISDN,
+            string state,
+            string nonce,
+            MobileConnectRequestOptions options)
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -194,13 +242,29 @@ namespace GSMA.MobileConnect
         /// <param name="options">Optional parameters</param>
         /// <param name="cancellationToken">Cancellation token that can be used to cancel long running requests</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public async Task<MobileConnectStatus> RequestHeadlessAuthenticationAsync(HttpRequestMessage request, DiscoveryResponse discoveryResponse, string encryptedMSISDN, string state, string nonce, 
-            MobileConnectRequestOptions options, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<MobileConnectStatus> RequestHeadlessAuthenticationAsync(
+            HttpRequestMessage request,
+            DiscoveryResponse discoveryResponse,
+            string encryptedMSISDN,
+            string state,
+            string nonce, 
+            MobileConnectRequestOptions options,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             state = string.IsNullOrEmpty(state) ? Security.GenerateSecureNonce() : state;
             nonce = string.IsNullOrEmpty(nonce) ? Security.GenerateSecureNonce() : nonce;
 
-            return await MobileConnectInterfaceHelper.RequestHeadlessAuthentication(_authentication, _jwks, _identity, discoveryResponse, encryptedMSISDN, state, nonce, _config, options, cancellationToken);
+            return await MobileConnectInterfaceHelper.RequestHeadlessAuthentication(
+                _authentication, 
+                _jwks, 
+                _identity, 
+                discoveryResponse, 
+                encryptedMSISDN, 
+                state, 
+                nonce, 
+                _config, 
+                options, 
+                cancellationToken);
         }
 
         /// <summary>
@@ -215,8 +279,14 @@ namespace GSMA.MobileConnect
         /// <param name="options">Optional parameters</param>
         /// <param name="cancellationToken">Cancellation token that can be used to cancel long running requests</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public async Task<MobileConnectStatus> RequestHeadlessAuthenticationAsync(HttpRequestMessage request, string sdkSession, string encryptedMSISDN, string state, string nonce, 
-            MobileConnectRequestOptions options, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<MobileConnectStatus> RequestHeadlessAuthenticationAsync(
+            HttpRequestMessage request,
+            string sdkSession,
+            string encryptedMSISDN,
+            string state,
+            string nonce, 
+            MobileConnectRequestOptions options,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -225,7 +295,8 @@ namespace GSMA.MobileConnect
                 return GetCacheError();
             }
 
-            return await RequestHeadlessAuthenticationAsync(request, discoveryResponse, encryptedMSISDN, state, nonce, options, cancellationToken);
+            return await RequestHeadlessAuthenticationAsync(
+                request, discoveryResponse, encryptedMSISDN, state, nonce, options, cancellationToken);
         }
 
         /// <summary>
@@ -238,9 +309,23 @@ namespace GSMA.MobileConnect
         /// <param name="expectedNonce">The nonce value returned from the StartAuthorization call should be passed here, it will be used to ensure the token was not requested using a replay attack</param>
         /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public async Task<MobileConnectStatus> RequestTokenAsync(HttpRequestMessage request, DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState, string expectedNonce, MobileConnectRequestOptions options)
+        public async Task<MobileConnectStatus> RequestTokenAsync(
+            HttpRequestMessage request,
+            DiscoveryResponse discoveryResponse,
+            Uri redirectedUrl,
+            string expectedState,
+            string expectedNonce,
+            MobileConnectRequestOptions options)
         {
-            return await MobileConnectInterfaceHelper.RequestToken(_authentication, _jwks, discoveryResponse, redirectedUrl, expectedState, expectedNonce, _config, options);
+            return await MobileConnectInterfaceHelper.RequestToken(
+                _authentication,
+                _jwks,
+                discoveryResponse,
+                redirectedUrl,
+                expectedState,
+                expectedNonce,
+                _config,
+                options);
         }
 
         /// <summary>
@@ -253,7 +338,13 @@ namespace GSMA.MobileConnect
         /// <param name="expectedNonce">The nonce value returned from the StartAuthorization call should be passed here, it will be used to ensure the token was not requested using a replay attack</param>
         /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public async Task<MobileConnectStatus> RequestTokenAsync(HttpRequestMessage request, string sdkSession, Uri redirectedUrl, string expectedState, string expectedNonce, MobileConnectRequestOptions options)
+        public async Task<MobileConnectStatus> RequestTokenAsync(
+            HttpRequestMessage request,
+            string sdkSession,
+            Uri redirectedUrl,
+            string expectedState,
+            string expectedNonce,
+            MobileConnectRequestOptions options)
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -262,7 +353,8 @@ namespace GSMA.MobileConnect
                 return GetCacheError();
             }
 
-            return await RequestTokenAsync(request, discoveryResponse, redirectedUrl, expectedState, expectedNonce, options);
+            return await RequestTokenAsync(
+                request, discoveryResponse, redirectedUrl, expectedState, expectedNonce, options);
         }
 
         /// <summary>
@@ -272,9 +364,13 @@ namespace GSMA.MobileConnect
         /// <param name="refreshToken">Refresh token returned from RefreshToken request</param>
         /// <param name="discoveryResponse">The response returned by the discovery process</param>
         /// <returns>Object with required information for continuing the mobile connect process</returns>
-        public async Task<MobileConnectStatus> RefreshTokenAsync(HttpRequestMessage request, string refreshToken, DiscoveryResponse discoveryResponse)
+        public async Task<MobileConnectStatus> RefreshTokenAsync(
+            HttpRequestMessage request,
+            string refreshToken,
+            DiscoveryResponse discoveryResponse)
         {
-            return await MobileConnectInterfaceHelper.RefreshToken(_authentication, refreshToken, discoveryResponse, _config);
+            return await MobileConnectInterfaceHelper.RefreshToken(
+                _authentication, refreshToken, discoveryResponse, _config);
         }
 
         /// <summary>
@@ -284,7 +380,8 @@ namespace GSMA.MobileConnect
         /// <param name="refreshToken">Refresh token returned from RefreshToken request</param>
         /// <param name="sdkSession">SDKSession id used to fetch the discovery response with additional parameters that are required to refresh a token</param>
         /// <returns>Object with required information for continuing the mobile connect process</returns>
-        public async Task<MobileConnectStatus> RefreshTokenAsync(HttpRequestMessage request, string refreshToken, string sdkSession)
+        public async Task<MobileConnectStatus> RefreshTokenAsync(
+            HttpRequestMessage request, string refreshToken, string sdkSession)
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -304,9 +401,11 @@ namespace GSMA.MobileConnect
         /// <param name="tokenTypeHint">Hint to indicate the type of token being passed in</param>
         /// <param name="discoveryResponse">The response returned by the discovery process</param>
         /// <returns>Object with required information for continuing the mobile connect process</returns>
-        public async Task<MobileConnectStatus> RevokeTokenAsync(HttpRequestMessage request, string token, string tokenTypeHint, DiscoveryResponse discoveryResponse)
+        public async Task<MobileConnectStatus> RevokeTokenAsync(
+            HttpRequestMessage request, string token, string tokenTypeHint, DiscoveryResponse discoveryResponse)
         {
-            return await MobileConnectInterfaceHelper.RevokeToken(_authentication, token, tokenTypeHint, discoveryResponse, _config);
+            return await MobileConnectInterfaceHelper.RevokeToken(
+                _authentication, token, tokenTypeHint, discoveryResponse, _config);
         }
 
         /// <summary>
@@ -317,7 +416,8 @@ namespace GSMA.MobileConnect
         /// <param name="tokenTypeHint">Hint to indicate the type of token being passed in</param>
         /// <param name="sdkSession">SDKSession id used to fetch the discovery response with additional parameters that are required to revoke a token</param>
         /// <returns>Object with required information for continuing the mobile connect process</returns>
-        public async Task<MobileConnectStatus> RevokeTokenAsync(HttpRequestMessage request, string token, string tokenTypeHint, string sdkSession)
+        public async Task<MobileConnectStatus> RevokeTokenAsync(
+            HttpRequestMessage request, string token, string tokenTypeHint, string sdkSession)
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -340,9 +440,26 @@ namespace GSMA.MobileConnect
         /// <param name="expectedNonce">The nonce value returned from the StartAuthorization call should be passed here, it will be used to ensure the token was not requested using a replay attack</param>
         /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public async Task<MobileConnectStatus> HandleUrlRedirectAsync(HttpRequestMessage request, Uri redirectedUrl, DiscoveryResponse discoveryResponse = null, string expectedState = null, string expectedNonce = null, MobileConnectRequestOptions options = null)
+        public async Task<MobileConnectStatus> HandleUrlRedirectAsync(
+            HttpRequestMessage request,
+            Uri redirectedUrl,
+            DiscoveryResponse
+            discoveryResponse = null,
+            string expectedState = null,
+            string expectedNonce = null,
+            MobileConnectRequestOptions options = null)
         {
-            return await CacheIfRequired(await MobileConnectInterfaceHelper.HandleUrlRedirect(_discovery, _authentication, _jwks, redirectedUrl, discoveryResponse, expectedState, expectedNonce, _config, options));
+            return await CacheIfRequired(
+                await MobileConnectInterfaceHelper.HandleUrlRedirect(
+                    _discovery,
+                    _authentication,
+                    _jwks,
+                    redirectedUrl,
+                    discoveryResponse,
+                    expectedState,
+                    expectedNonce,
+                    _config,
+                    options));
         }
 
         /// <summary>
@@ -356,7 +473,13 @@ namespace GSMA.MobileConnect
         /// <param name="expectedNonce">The nonce value returned from the StartAuthorization call should be passed here, it will be used to ensure the token was not requested using a replay attack</param>
         /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with required information for continuing the mobileconnect process</returns>
-        public async Task<MobileConnectStatus> HandleUrlRedirectAsync(HttpRequestMessage request, Uri redirectedUrl, string sdkSession = null, string expectedState = null, string expectedNonce = null, MobileConnectRequestOptions options = null)
+        public async Task<MobileConnectStatus> HandleUrlRedirectAsync(
+            HttpRequestMessage request,
+            Uri redirectedUrl,
+            string sdkSession = null,
+            string expectedState = null,
+            string expectedNonce = null,
+            MobileConnectRequestOptions options = null)
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -365,7 +488,17 @@ namespace GSMA.MobileConnect
                 return GetCacheError();
             }
 
-            return await CacheIfRequired(await MobileConnectInterfaceHelper.HandleUrlRedirect(_discovery, _authentication, _jwks, redirectedUrl, discoveryResponse, expectedState, expectedNonce, _config, options));
+            return await CacheIfRequired(
+                await MobileConnectInterfaceHelper.HandleUrlRedirect(
+                    _discovery,
+                    _authentication,
+                    _jwks,
+                    redirectedUrl,
+                    discoveryResponse,
+                    expectedState,
+                    expectedNonce,
+                    _config,
+                    options));
         }
 
         /// <summary>
@@ -376,9 +509,14 @@ namespace GSMA.MobileConnect
         /// <param name="accessToken">Access token returned from RequestToken required to authenticate the request</param>
         /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with requested UserInfo information</returns>
-        public async Task<MobileConnectStatus> RequestUserInfoAsync(HttpRequestMessage request, DiscoveryResponse discoveryResponse, string accessToken, MobileConnectRequestOptions options)
+        public async Task<MobileConnectStatus> RequestUserInfoAsync(
+            HttpRequestMessage request,
+            DiscoveryResponse discoveryResponse,
+            string accessToken,
+            MobileConnectRequestOptions options)
         {
-            return await MobileConnectInterfaceHelper.RequestUserInfo(_identity, discoveryResponse, accessToken, _config, options);
+            return await MobileConnectInterfaceHelper.RequestUserInfo(
+                _identity, discoveryResponse, accessToken, _config, options);
         }
 
         /// <summary>
@@ -389,7 +527,8 @@ namespace GSMA.MobileConnect
         /// <param name="accessToken">Access token returned from RequestToken required to authenticate the request</param>
         /// <param name="options">Additional optional parameters</param>
         /// <returns>MobileConnectStatus object with requested UserInfo information</returns>
-        public async Task<MobileConnectStatus> RequestUserInfoAsync(HttpRequestMessage request, string sdkSession, string accessToken, MobileConnectRequestOptions options)
+        public async Task<MobileConnectStatus> RequestUserInfoAsync(
+            HttpRequestMessage request, string sdkSession, string accessToken, MobileConnectRequestOptions options)
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -409,9 +548,14 @@ namespace GSMA.MobileConnect
         /// <param name="accessToken">Access token returned from RequestToken required to authenticate the request</param>
         /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with requested Identity information</returns>
-        public async Task<MobileConnectStatus> RequestIdentityAsync(HttpRequestMessage request, DiscoveryResponse discoveryResponse, string accessToken, MobileConnectRequestOptions options)
+        public async Task<MobileConnectStatus> RequestIdentityAsync(
+            HttpRequestMessage request,
+            DiscoveryResponse discoveryResponse,
+            string accessToken,
+            MobileConnectRequestOptions options)
         {
-            return await MobileConnectInterfaceHelper.RequestIdentity(_identity, discoveryResponse, accessToken, _config, options);
+            return await MobileConnectInterfaceHelper.RequestIdentity(
+                _identity, discoveryResponse, accessToken, _config, options);
         }
 
         /// <summary>
@@ -422,7 +566,8 @@ namespace GSMA.MobileConnect
         /// <param name="accessToken">Access token returned from RequestToken required to authenticate the request</param>
         /// <param name="options">Additional optional parameters</param>
         /// <returns>MobileConnectStatus object with requested Identity information</returns>
-        public async Task<MobileConnectStatus> RequestIdentityAsync(HttpRequestMessage request, string sdkSession, string accessToken, MobileConnectRequestOptions options)
+        public async Task<MobileConnectStatus> RequestIdentityAsync(
+            HttpRequestMessage request, string sdkSession, string accessToken, MobileConnectRequestOptions options)
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -436,7 +581,9 @@ namespace GSMA.MobileConnect
 
         private async Task<MobileConnectStatus> CacheIfRequired(MobileConnectStatus status)
         {
-            if (!_cacheWithSessionId || status.ResponseType != MobileConnectResponseType.StartAuthentication || status.DiscoveryResponse == null)
+            if (!_cacheWithSessionId ||
+                status.ResponseType != MobileConnectResponseType.StartAuthentication ||
+                status.DiscoveryResponse == null)
             {
                 return status;
             }
@@ -462,10 +609,16 @@ namespace GSMA.MobileConnect
         {
             if (!_cacheWithSessionId)
             {
-                return MobileConnectStatus.Error(ErrorCodes.CacheDisabled, "cache is not enabled for session id caching of discovery responses", null);
+                return MobileConnectStatus.Error(
+                    ErrorCodes.CacheDisabled, 
+                    "cache is not enabled for session id caching of discovery responses", 
+                    null);
             }
 
-            return MobileConnectStatus.Error(ErrorCodes.InvalidSdkSession, "session not found or expired, please try again", null);
+            return MobileConnectStatus.Error(
+                ErrorCodes.InvalidSdkSession,
+                "session not found or expired, please try again",
+                null);
         }
     }
 }

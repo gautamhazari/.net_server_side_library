@@ -102,7 +102,7 @@ namespace GSMA.MobileConnect.Cache
 
             var response = await InternalGet<T>(key);
 
-            if(response == null)
+            if (response == null)
             {
                 return response;
             }

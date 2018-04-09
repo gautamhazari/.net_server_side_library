@@ -4,7 +4,7 @@
   "discoveryURL": "https://discovery.sandbox.mobileconnect.io/v2/discovery",
   "redirectURL": "http://localhost:8080/server_side_api/discovery_callback",
   "xRedirect": "True",
-  "includeRequestIP": "False",
+  "includeRequestIP": "True",
   "apiVersion": "mc_v1.2",
   "scope": "openid mc_authn",
   "acrValues": "2",

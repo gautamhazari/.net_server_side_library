@@ -172,12 +172,12 @@ namespace GSMA.MobileConnect.Utils
                 return ipHeaderValues.FirstOrDefault();
             }
 
-            if(request.Properties.ContainsKey("MS_HttpContext"))
+            if (request.Properties.ContainsKey("MS_HttpContext"))
             {
                 return ((dynamic)request.Properties["MS_HttpContext"])?.Request.UserHostAddress;
             }
 
-            if(request.Properties.ContainsKey("System.ServiceModel.Channels.RemoteEndpointMessageProperty"))
+            if (request.Properties.ContainsKey("System.ServiceModel.Channels.RemoteEndpointMessageProperty"))
             {
                 return ((dynamic)request.Properties["System.ServiceModel.Channels.RemoteEndpointMessageProperty"])?.Address;
             }

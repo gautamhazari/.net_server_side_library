@@ -37,7 +37,13 @@ namespace GSMA.MobileConnect.Discovery
             Log.Debug(() => cache != null ? $"DiscoveryService caching enabled with type={cache.GetType().AssemblyQualifiedName}" : "DiscoveryService caching disabled");
         }
 
-        private async Task<DiscoveryResponse> CallDiscoveryEndpoint(string clientId, string clientSecret, string discoveryUrl, DiscoveryOptions options, IEnumerable<BasicKeyValuePair> currentCookies, bool cacheDiscoveryResponse)
+        private async Task<DiscoveryResponse> CallDiscoveryEndpoint(
+            string clientId, 
+            string clientSecret, 
+            string discoveryUrl, 
+            DiscoveryOptions options, 
+            IEnumerable<BasicKeyValuePair> currentCookies, 
+            bool cacheDiscoveryResponse)
         {
             Validate.RejectNullOrEmpty(clientId, "clientId");
             Validate.RejectNullOrEmpty(clientSecret, "clientSecret");
@@ -66,7 +72,7 @@ namespace GSMA.MobileConnect.Discovery
                 }
                 else
                 {
-                    response = await _client.PostDiscoveryAsync(discoveryUrl, authentication, GetDiscoveryQueryParams(options), options.ClientIP, options.XRedirect, cookies);
+                    response = await _client.PostDiscoveryAsync(discoveryUrl, authentication, queryParams, options.ClientIP, options.XRedirect, cookies);
                 }
 
                 var discoveryResponse = new DiscoveryResponse(response);
@@ -289,7 +295,7 @@ namespace GSMA.MobileConnect.Discovery
                 new BasicKeyValuePair(Parameters.SELECTED_MCC, options.SelectedMCC),
                 new BasicKeyValuePair(Parameters.SELECTED_MNC, options.SelectedMNC),
                 new BasicKeyValuePair(Parameters.LOCAL_CLIENT_IP, options.LocalClientIP),
-                new BasicKeyValuePair(Parameters.USING_MOBILE_DATA, options.IsUsingMobileData ? "1" : "0"),
+                new BasicKeyValuePair(Parameters.USING_MOBILE_DATA, options.IsUsingMobileData ? "1" : "0")
             };
         }
 

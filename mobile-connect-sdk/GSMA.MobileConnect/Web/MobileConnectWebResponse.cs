@@ -1,5 +1,4 @@
 ﻿using GSMA.MobileConnect.Authentication;
-using GSMA.MobileConnect.Discovery;
 using Newtonsoft.Json.Linq;
 
 namespace GSMA.MobileConnect.Web
@@ -49,7 +48,7 @@ namespace GSMA.MobileConnect.Web
         /// <summary>
         /// Identity data returned from successful RequestUserInfo or RequestIdentityInfo call
         /// </summary>
-        public Newtonsoft.Json.Linq.JRaw Identity { get; set; }
+        public JRaw Identity { get; set; }
 
         /// <summary>
         /// Error code if available
