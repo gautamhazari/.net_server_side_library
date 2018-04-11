@@ -11,7 +11,8 @@ using System.Runtime.CompilerServices;
 namespace GSMA.MobileConnect
 {
     /// <summary>
-    /// Object to hold the details of a response returned from <see cref="MobileConnectInterface"/> and <see cref="MobileConnectWebInterface"/>
+    /// Object to hold the details of a response returned from <see cref="MobileConnectInterface"/> 
+    /// and <see cref="MobileConnectWebInterface"/>
     /// all information required to continue the process is included
     /// </summary>
     public class MobileConnectStatus

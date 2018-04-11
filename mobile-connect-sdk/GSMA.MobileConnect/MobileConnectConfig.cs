@@ -3,7 +3,9 @@
 namespace GSMA.MobileConnect
 {
     /// <summary>
-    /// Configuration properties for the MobileConnectInterface, reused across all requests for a single <see cref="MobileConnectInterface"/> or <see cref="MobileConnectWebInterface"/>
+    /// Configuration properties for the MobileConnectInterface, 
+    /// reused across all requests for a single <see cref="MobileConnectInterface"/> 
+    /// or <see cref="MobileConnectWebInterface"/>
     /// </summary>
     /// <seealso cref="IPreferences"/>
     public class MobileConnectConfig : IPreferences

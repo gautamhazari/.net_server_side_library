@@ -32,7 +32,8 @@ namespace GSMA.MobileConnect
                 discoveryOptions.RedirectUrl = config.RedirectUrl;
                 discoveryOptions.XRedirect = config.XRedirect;
 
-                response = await discovery.StartAutomatedOperatorDiscoveryAsync(config, config.RedirectUrl, discoveryOptions, cookies);
+                response = await discovery.StartAutomatedOperatorDiscoveryAsync(
+                    config, config.RedirectUrl, discoveryOptions, cookies);
             }
             catch (MobileConnectInvalidArgumentException e)
             {

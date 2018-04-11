@@ -6,7 +6,8 @@ namespace GSMA.MobileConnect
 {
     /// <summary>
     /// Options for a single request to <see cref="MobileConnectInterface"/>. 
-    /// Not all options are valid for all calls that accept an instance of this class, only options that are relevant to the method being called will be used.
+    /// Not all options are valid for all calls that accept an instance of this class, 
+    /// only options that are relevant to the method being called will be used.
     /// </summary>
     public class MobileConnectRequestOptions
     {

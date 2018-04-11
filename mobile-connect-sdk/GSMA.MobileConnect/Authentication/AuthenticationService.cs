@@ -128,8 +128,6 @@ namespace GSMA.MobileConnect.Authentication
             discoveryResponse.ProviderMetadata = providerMetadata;
 
             return discoveryResponse;
-
-
         }
 
         /// <inheritdoc/>
@@ -154,7 +152,7 @@ namespace GSMA.MobileConnect.Authentication
             catch (Exception e) when (e is System.Net.WebException || e is TaskCanceledException)
             {
                 Log.Error("Headless authentication was cancelled", e);
-                return new RequestTokenResponse(new ErrorResponse { Error = Constants.ErrorCodes.AuthCancelled, ErrorDescription = "Headless authentication was cancelled or a timeout occurred" });
+                return new RequestTokenResponse(new ErrorResponse { Error = ErrorCodes.AuthCancelled, ErrorDescription = "Headless authentication was cancelled or a timeout occurred" });
             }
             catch (HttpRequestException e)
             {
@@ -214,7 +212,7 @@ namespace GSMA.MobileConnect.Authentication
 
             splitScope.RemoveAll(x => x.Equals(disallowedScope, StringComparison.OrdinalIgnoreCase));
 
-            if (!shouldUseAuthorize && version == Constants.DefaultOptions.VERSION_MOBILECONNECTAUTHN)
+            if (!shouldUseAuthorize && version == DefaultOptions.VERSION_MOBILECONNECTAUTHN)
             {
                 splitScope.RemoveAll(x => x.Equals(Constants.Scope.AUTHN, StringComparison.OrdinalIgnoreCase));
             }
@@ -268,8 +266,8 @@ namespace GSMA.MobileConnect.Authentication
 
             var formData = new List<BasicKeyValuePair>()
             {
-                new BasicKeyValuePair(Constants.Parameters.REFRESH_TOKEN, refreshToken),
-                new BasicKeyValuePair(Constants.Parameters.GRANT_TYPE, Constants.GrantTypes.REFRESH_TOKEN),
+                new BasicKeyValuePair(Parameters.REFRESH_TOKEN, refreshToken),
+                new BasicKeyValuePair(Parameters.GRANT_TYPE, GrantTypes.REFRESH_TOKEN),
             };
             var authentication = RestAuthentication.Basic(clientId, clientSecret);
 
@@ -303,12 +301,12 @@ namespace GSMA.MobileConnect.Authentication
 
             var formData = new List<BasicKeyValuePair>()
             {
-                new BasicKeyValuePair(Constants.Parameters.TOKEN, token)
+                new BasicKeyValuePair(Parameters.TOKEN, token)
             };
 
             if (tokenTypeHint != null)
             {
-                formData.Add(new BasicKeyValuePair(Constants.Parameters.TOKEN_TYPE_HINT, tokenTypeHint));
+                formData.Add(new BasicKeyValuePair(Parameters.TOKEN_TYPE_HINT, tokenTypeHint));
             }
 
             var authentication = RestAuthentication.Basic(clientId, clientSecret);
@@ -352,31 +350,31 @@ namespace GSMA.MobileConnect.Authentication
         {
             var authParameters = new List<BasicKeyValuePair>
             {
-                new BasicKeyValuePair(Constants.Parameters.AUTHENTICATION_REDIRECT_URI, options.RedirectUrl),
-                new BasicKeyValuePair(Constants.Parameters.CLIENT_ID, options.ClientId),
-                new BasicKeyValuePair(Constants.Parameters.RESPONSE_TYPE, Constants.DefaultOptions.AUTHENTICATION_RESPONSE_TYPE),
-                new BasicKeyValuePair(Constants.Parameters.SCOPE, options.Scope),
-                new BasicKeyValuePair(Constants.Parameters.ACR_VALUES, options.AcrValues),
-                new BasicKeyValuePair(Constants.Parameters.STATE, options.State),
-                new BasicKeyValuePair(Constants.Parameters.NONCE, options.Nonce),
-                new BasicKeyValuePair(Constants.Parameters.DISPLAY, options.Display),
-                new BasicKeyValuePair(Constants.Parameters.PROMPT, options.Prompt),
-                new BasicKeyValuePair(Constants.Parameters.MAX_AGE, options.MaxAge.ToString()),
-                new BasicKeyValuePair(Constants.Parameters.UI_LOCALES, options.UiLocales),
-                new BasicKeyValuePair(Constants.Parameters.CLAIMS_LOCALES, options.ClaimsLocales),
-                new BasicKeyValuePair(Constants.Parameters.ID_TOKEN_HINT, options.IdTokenHint),
-                new BasicKeyValuePair(Constants.Parameters.LOGIN_HINT, options.LoginHint),
-                new BasicKeyValuePair(Constants.Parameters.LOGIN_HINT_TOKEN, options.LoginHintToken),
-                new BasicKeyValuePair(Constants.Parameters.DTBS, options.Dtbs),
-                new BasicKeyValuePair(Constants.Parameters.CLAIMS, GetClaimsString(options)),
-                new BasicKeyValuePair(Constants.Parameters.VERSION, version),
+                new BasicKeyValuePair(Parameters.AUTHENTICATION_REDIRECT_URI, options.RedirectUrl),
+                new BasicKeyValuePair(Parameters.CLIENT_ID, options.ClientId),
+                new BasicKeyValuePair(Parameters.RESPONSE_TYPE, DefaultOptions.AUTHENTICATION_RESPONSE_TYPE),
+                new BasicKeyValuePair(Parameters.SCOPE, options.Scope),
+                new BasicKeyValuePair(Parameters.ACR_VALUES, options.AcrValues),
+                new BasicKeyValuePair(Parameters.STATE, options.State),
+                new BasicKeyValuePair(Parameters.NONCE, options.Nonce),
+                new BasicKeyValuePair(Parameters.DISPLAY, options.Display),
+                new BasicKeyValuePair(Parameters.PROMPT, options.Prompt),
+                new BasicKeyValuePair(Parameters.MAX_AGE, options.MaxAge.ToString()),
+                new BasicKeyValuePair(Parameters.UI_LOCALES, options.UiLocales),
+                new BasicKeyValuePair(Parameters.CLAIMS_LOCALES, options.ClaimsLocales),
+                new BasicKeyValuePair(Parameters.ID_TOKEN_HINT, options.IdTokenHint),
+                new BasicKeyValuePair(Parameters.LOGIN_HINT, options.LoginHint),
+                new BasicKeyValuePair(Parameters.LOGIN_HINT_TOKEN, options.LoginHintToken),
+                new BasicKeyValuePair(Parameters.DTBS, options.Dtbs),
+                new BasicKeyValuePair(Parameters.CLAIMS, GetClaimsString(options)),
+                new BasicKeyValuePair(Parameters.VERSION, version),
             };
 
             if (useAuthorize)
             {
-                authParameters.Add(new BasicKeyValuePair(Constants.Parameters.CLIENT_NAME, options.ClientName));
-                authParameters.Add(new BasicKeyValuePair(Constants.Parameters.CONTEXT, options.Context));
-                authParameters.Add(new BasicKeyValuePair(Constants.Parameters.BINDING_MESSAGE, options.BindingMessage));
+                authParameters.Add(new BasicKeyValuePair(Parameters.CLIENT_NAME, options.ClientName));
+                authParameters.Add(new BasicKeyValuePair(Parameters.CONTEXT, options.Context));
+                authParameters.Add(new BasicKeyValuePair(Parameters.BINDING_MESSAGE, options.BindingMessage));
             }
 
             return authParameters;

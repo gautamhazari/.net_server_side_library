@@ -93,15 +93,31 @@ namespace GSMA.MobileConnect.Discovery
         }
 
         /// <inheritdoc/>
-        public async Task<DiscoveryResponse> StartAutomatedOperatorDiscoveryAsync(IPreferences preferences, string redirectUrl, DiscoveryOptions options, IEnumerable<BasicKeyValuePair> currentCookies)
+        public async Task<DiscoveryResponse> StartAutomatedOperatorDiscoveryAsync(
+            IPreferences preferences,
+            string redirectUrl,
+            DiscoveryOptions options,
+            IEnumerable<BasicKeyValuePair> currentCookies)
         {
             Validate.RejectNull(preferences, "preferences");
 
-            return await StartAutomatedOperatorDiscoveryAsync(preferences.ClientId, preferences.ClientSecret, preferences.DiscoveryUrl, redirectUrl, options, currentCookies);
+            return await StartAutomatedOperatorDiscoveryAsync(
+                preferences.ClientId,
+                preferences.ClientSecret,
+                preferences.DiscoveryUrl,
+                redirectUrl,
+                options,
+                currentCookies);
         }
 
         /// <inheritdoc/>
-        public async Task<DiscoveryResponse> StartAutomatedOperatorDiscoveryAsync(string clientId, string clientSecret, string discoveryUrl, string redirectUrl, DiscoveryOptions options, IEnumerable<BasicKeyValuePair> currentCookies)
+        public async Task<DiscoveryResponse> StartAutomatedOperatorDiscoveryAsync(
+            string clientId, 
+            string clientSecret, 
+            string discoveryUrl, 
+            string redirectUrl, 
+            DiscoveryOptions options, 
+            IEnumerable<BasicKeyValuePair> currentCookies)
         {
             options = options ?? new DiscoveryOptions();
             options.RedirectUrl = redirectUrl;

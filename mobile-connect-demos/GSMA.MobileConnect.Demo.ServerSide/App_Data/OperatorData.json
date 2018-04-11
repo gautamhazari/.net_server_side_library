@@ -9,5 +9,6 @@
   "scope": "openid mc_authn",
   "acrValues": "2",
   "UseInfo": "True",
-  "Identity": "True"
+  "Identity": "True",
+  "maxDiscoveryCacheSize": 104857600
 }

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using Newtonsoft.Json;
+using GSMA.MobileConnect.Discovery;
 
 namespace GSMA.MobileConnect.Cache
 {
@@ -9,11 +10,23 @@ namespace GSMA.MobileConnect.Cache
     /// </summary>
     public class ConcurrentCache : BaseCache
     {
-        private static readonly ConcurrentDictionary<string, string> _internalCache =
+        private readonly ConcurrentDictionary<string, string> _internalCache =
             new ConcurrentDictionary<string, string>();
 
         private static JsonSerializerSettings _serializerSettings =
             new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+
+        private long? _maxCacheSize;
+
+
+        private long CacheSize => new BinaryFormatter.BinaryConverter().Serialize(_internalCache).Length;
+
+        public ConcurrentCache() { }
+
+        public ConcurrentCache(long maxCacheSize)
+        {
+            _maxCacheSize = maxCacheSize;
+        }
 
         /// <inheritdoc/>
         public override bool IsEmpty
@@ -24,7 +37,19 @@ namespace GSMA.MobileConnect.Cache
         /// <inheritdoc/>
         protected override Task InternalAdd<T>(string key, T value)
         {
-            _internalCache[key] = JsonConvert.SerializeObject(value, _serializerSettings);
+            var jsonValue = JsonConvert.SerializeObject(value, _serializerSettings);
+            var valueSize = new BinaryFormatter.BinaryConverter().Serialize(jsonValue).Length;
+
+            if (_maxCacheSize != null && CacheSize + valueSize >= _maxCacheSize)
+            {
+                CleanCacheAsync();
+            }
+
+            if (_maxCacheSize == null || CacheSize + valueSize < _maxCacheSize)
+            {
+                _internalCache[key] = jsonValue;
+            }
+
             return _completedTask;
         }
 
@@ -79,6 +104,17 @@ namespace GSMA.MobileConnect.Cache
             string value;
             _internalCache.TryRemove(key, out value);
             return _completedTask;
+        }
+
+        private async Task CleanCacheAsync()
+        {
+            foreach (var record in _internalCache)
+            {
+                if ((await Get<DiscoveryResponse>(record.Key)).HasExpired)
+                {
+                    await Remove(record.Key).ConfigureAwait(false);
+                }
+            }
         }
     }
 }

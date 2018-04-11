@@ -27,6 +27,7 @@ namespace GSMA.MobileConnect
         private readonly IJWKeysetService _jwks;
         private readonly MobileConnectConfig _config;
         private readonly bool _cacheWithSessionId;
+        private readonly ConcurrentCache _sessionCahce;
 
         /// <summary>
         /// Initializes a new instance of the MobileConnectWebInterface class
@@ -43,16 +44,17 @@ namespace GSMA.MobileConnect
             IJWKeysetService jwks, 
             MobileConnectConfig config)
         {
-            this._discovery = discovery;
-            this._authentication = authentication;
-            this._identity = identity;
-            this._jwks = jwks;
-            this._config = config;
-            this._cacheWithSessionId = config.CacheResponsesWithSessionId && discovery.Cache != null;
+            _discovery = discovery;
+            _authentication = authentication;
+            _identity = identity;
+            _jwks = jwks;
+            _config = config;
+            _cacheWithSessionId = config.CacheResponsesWithSessionId;
+            _sessionCahce = new ConcurrentCache();
 
             Log.Debug(() => _cacheWithSessionId ?
                 $"MobileConnectWebInterface caching enabled with " +
-                $"type={discovery.Cache.GetType().AssemblyQualifiedName}" :
+                $"type={_sessionCahce.GetType().AssemblyQualifiedName}" :
                 "MobileConnectWebInterface caching disabled");
         }
 
@@ -61,8 +63,8 @@ namespace GSMA.MobileConnect
         /// </summary>
         /// <param name="config">Configuration options</param>
         /// <param name="cache">Concrete implementation of ICache</param>
-        public MobileConnectWebInterface(MobileConnectConfig config, ICache cache)
-            : this(config, cache, new RestClient()) { }
+        public MobileConnectWebInterface(MobileConnectConfig config, ICache cache, ICache discoveryCache)
+            : this(config, cache, new RestClient(), discoveryCache) { }
 
         /// <summary>
         /// Initializes a new instance of the MobileConnectWebInterface class using default concrete implementations
@@ -70,8 +72,9 @@ namespace GSMA.MobileConnect
         /// <param name="config">Configuration options</param>
         /// <param name="cache">Concrete implementation of ICache</param>
         /// <param name="client">Restclient for all http requests. Will default if null.</param>
-        public MobileConnectWebInterface(MobileConnectConfig config, ICache cache, RestClient client)
-            : this(new DiscoveryService(cache, client), 
+        public MobileConnectWebInterface(
+            MobileConnectConfig config, ICache cache, RestClient client, ICache discoveryCache)
+            : this(new DiscoveryService(discoveryCache, client), 
                   new AuthenticationService(client),
                   new IdentityService(client),
                   new JWKeysetService(client, cache), config) { }
@@ -88,18 +91,18 @@ namespace GSMA.MobileConnect
             IAuthenticationService authentication, 
             MobileConnectConfig config)
         {
-            var cache = discovery.Cache;
-            var client = new Utils.RestClient();
-            this._discovery = discovery;
-            this._authentication = authentication;
-            this._identity = new IdentityService(client);
-            this._jwks = new JWKeysetService(client, cache);
-            this._config = config;
-            this._cacheWithSessionId = config.CacheResponsesWithSessionId && _discovery.Cache != null;
+            var client = new RestClient();
+            _discovery = discovery;
+            _authentication = authentication;
+            _identity = new IdentityService(client);
+            _jwks = new JWKeysetService(client, new ConcurrentCache());
+            _config = config;
+            _cacheWithSessionId = config.CacheResponsesWithSessionId;
+            _sessionCahce = new ConcurrentCache();
 
             Log.Debug(() => _cacheWithSessionId ?
                 $"MobileConnectWebInterface caching enabled with " +
-                $"type={cache.GetType().AssemblyQualifiedName}" :
+                $"type={_sessionCahce.GetType().AssemblyQualifiedName}" :
                 "MobileConnectWebInterface caching disabled");
         }
 
@@ -589,7 +592,7 @@ namespace GSMA.MobileConnect
             }
 
             var sessionId = Security.GenerateSecureNonce();
-            await _discovery.Cache.Add(sessionId, status.DiscoveryResponse).ConfigureAwait(false);
+            await _sessionCahce.Add(sessionId, status.DiscoveryResponse).ConfigureAwait(false);
             status.SDKSession = sessionId;
 
             return status;
@@ -602,7 +605,7 @@ namespace GSMA.MobileConnect
                 return null;
             }
 
-            return await _discovery.Cache.Get<DiscoveryResponse>(sessionId);
+            return await _sessionCahce.Get<DiscoveryResponse>(sessionId);
         }
 
         private MobileConnectStatus GetCacheError()

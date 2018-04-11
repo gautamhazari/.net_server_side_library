@@ -1,7 +1,5 @@
 ﻿using System;
-using GSMA.MobileConnect.Demo.Config;
 using GSMA.MobileConnect.Cache;
-using GSMA.MobileConnect.Utils;
 using GSMA.MobileConnect.Web;
 using System.Dynamic;
 using System.Net;
@@ -37,16 +35,19 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 
         public MobileConnectController()
         {
+            GetParameters();
             var cache = new ConcurrentCache();
+            var discoveryCache = new ConcurrentCache(_operatorParams.maxDiscoveryCacheSize);
             if (_mobileConnect == null)
-                _mobileConnect = new MobileConnectWebInterface(DemoConfiguration.Config, cache);
+            {
+                _mobileConnect = new MobileConnectWebInterface(_mobileConnectConfig, cache, discoveryCache);
+            }
         }
 
         [HttpGet]
         [Route("start_discovery")]
         public async Task<IHttpActionResult> StartDiscovery(string msisdn = "", string mcc = "", string mnc = "")
         {
-            GetParameters();
             string sourceIp = Request.Headers.Any(h => h.Key.Equals("X-Source-IP")) ?
                 Request.Headers.GetValues("X-Source-IP").ToList().FirstOrDefault() :
                 string.Empty;
@@ -366,9 +367,6 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                 RedirectUrl = _operatorParams.redirectURL,
                 XRedirect = _operatorParams.xRedirect.Equals("True") ? "APP" : "False"
             };
-
-            _mobileConnect = new MobileConnectWebInterface(
-                _mobileConnectConfig, new ConcurrentCache(), new RestClient());
         }
     }
 }
