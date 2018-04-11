@@ -18,7 +18,6 @@ namespace GSMA.MobileConnect.Cache
 
         private long? _maxCacheSize;
 
-
         private long CacheSize => new BinaryFormatter.BinaryConverter().Serialize(_internalCache).Length;
 
         public ConcurrentCache() { }
