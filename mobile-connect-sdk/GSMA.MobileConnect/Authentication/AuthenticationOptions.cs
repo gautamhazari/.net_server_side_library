@@ -180,7 +180,7 @@ namespace GSMA.MobileConnect.Authentication
         public int MaxRedirects { get; set; } = 50;
 
         /// <summary>
-        /// The registered api version
+        /// Api version
         /// </summary>
         public string Version { get; set; }
     }

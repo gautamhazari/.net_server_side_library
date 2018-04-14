@@ -113,7 +113,6 @@ namespace GSMA.MobileConnect
                 string authorizationUrl = discoveryResponse.OperatorUrls.AuthorizationUrl;
                 SupportedVersions supportedVersions = discoveryResponse.ProviderMetadata?.MobileConnectVersionSupported;
                 AuthenticationOptions authOptions = options?.AuthenticationOptions ?? new AuthenticationOptions();
-                //authOptions.ClientName = discoveryResponse.ApplicationShortName;
 
                 response = authentication.StartAuthentication(clientId, authorizationUrl, config.RedirectUrl, state, nonce, encryptedMSISDN, supportedVersions, authOptions);
             }
