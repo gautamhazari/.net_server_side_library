@@ -178,5 +178,10 @@ namespace GSMA.MobileConnect.Authentication
         /// The number of redirects to allow during headless mode before aborting.
         /// </summary>
         public int MaxRedirects { get; set; } = 50;
+
+        /// <summary>
+        /// The registered api version
+        /// </summary>
+        public string Version { get; set; }
     }
 }

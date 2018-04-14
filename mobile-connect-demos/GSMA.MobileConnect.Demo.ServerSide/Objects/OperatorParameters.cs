@@ -6,6 +6,7 @@
         public string msisdn { get; set; }
         public string clientID { get; set; }
         public string clientSecret { get; set; }
+        public string clientName { get; set; }
         public string discoveryURL { get; set; }
         public string redirectURL { get; set; }
         public string xRedirect { get; set; }

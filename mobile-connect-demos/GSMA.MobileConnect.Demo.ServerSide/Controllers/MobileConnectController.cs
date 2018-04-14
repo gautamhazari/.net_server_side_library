@@ -263,6 +263,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             {
                 AcrValues = _operatorParams.acrValues,
                 Scope = scope,
+                ClientName = _operatorParams.clientName,
+                Version = _apiVersion,
                 Context = _apiVersion.Equals(Utils.Constants.Version2) ? Utils.Constants.ContextBindingMsg : null,
                 BindingMessage = _apiVersion.Equals(Utils.Constants.Version2) ? 
                     Utils.Constants.ContextBindingMsg : null

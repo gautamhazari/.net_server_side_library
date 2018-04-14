@@ -121,6 +121,13 @@ namespace GSMA.MobileConnect
             set { _authOptions.Context = value; }
         }
 
+        /// <inheritdoc cref="AuthenticationOptions.Version" />
+        public string Version
+        {
+            get { return _authOptions.Version; }
+            set { _authOptions.Version = value; }
+        }
+
         /// <inheritdoc cref="AuthenticationOptions.BindingMessage" />
         public string BindingMessage
         {
@@ -140,6 +147,13 @@ namespace GSMA.MobileConnect
         {
             get { return _authOptions.Claims; }
             set { _authOptions.Claims = value; }
+        }
+
+        /// <inheritdoc cref="AuthenticationOptions.ClientName" />
+        public string ClientName
+        {
+            get { return _authOptions.ClientName; }
+            set { _authOptions.ClientName = value; }
         }
 
         /// <summary>

@@ -44,29 +44,28 @@ namespace GSMA.MobileConnect.Authentication
 
             options = options ?? new AuthenticationOptions();
             options.Scope = options.Scope ?? "";
-            bool shouldUseAuthorize = ShouldUseAuthorize(options);
+
+            bool shouldUseAuthorize = options.Scope.ToLower().Equals(Constants.Scope.AUTHZ.ToLower());
 
             if (shouldUseAuthorize)
             {
                 Validate.RejectNullOrEmpty(options.Context, "options.Context");
                 Validate.RejectNullOrEmpty(options.ClientName, "options.ClientName");
+                Validate.RejectNullOrEmpty(options.BindingMessage, "options.BindingMessage");
             }
 
             options.State = state;
             options.Nonce = nonce;
-            options.LoginHintToken = options.LoginHintToken;
             if (options.LoginHintToken == null)
+            {
                 options.LoginHint = options.LoginHint ?? LoginHint.GenerateForEncryptedMsisdn(encryptedMsisdn);
+            }
+
             options.RedirectUrl = redirectUrl;
             options.ClientId = clientId;
 
-            string version;
-            string coercedScope = CoerceAuthenticationScope(options.Scope, versions, shouldUseAuthorize, out version);
-            Log.Info(() => $"scope={options.Scope} => coercedScope={coercedScope}");
-            options.Scope = coercedScope;
-
             UriBuilder build = new UriBuilder(authorizeUrl);
-            build.AddQueryParams(GetAuthenticationQueryParams(options, shouldUseAuthorize, version));
+            build.AddQueryParams(GetAuthenticationQueryParams(options, shouldUseAuthorize, options.Version));
 
             Log.Info(() => $"Authentication URI={build.Uri.AbsoluteUri}");
             return new StartAuthenticationResponse() { Url = build.Uri.AbsoluteUri };
@@ -368,6 +367,9 @@ namespace GSMA.MobileConnect.Authentication
                 new BasicKeyValuePair(Parameters.DTBS, options.Dtbs),
                 new BasicKeyValuePair(Parameters.CLAIMS, GetClaimsString(options)),
                 new BasicKeyValuePair(Parameters.VERSION, version),
+                new BasicKeyValuePair(Parameters.BINDING_MESSAGE, options.BindingMessage),
+                new BasicKeyValuePair(Parameters.CONTEXT, options.Context),
+                new BasicKeyValuePair(Parameters.CLIENT_NAME, options.ClientName)
             };
 
             if (useAuthorize)
