@@ -158,6 +158,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 
             if (HandleErrorMsg(authConnectStatus))
             {
+                responseChecker.RemoveData(state);
                 return CreateResponse(MobileConnectStatus.Error(
                     ErrorCodes.InvalidArgument, authConnectStatus.ErrorMessage, new Exception()));
             }

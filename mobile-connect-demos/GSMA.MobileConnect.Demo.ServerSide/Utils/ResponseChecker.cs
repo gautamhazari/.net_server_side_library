@@ -17,5 +17,10 @@ namespace GSMA.MobileConnect.ServerSide.Web.Utils
         {
            return await cache.Get<CachedParameters>(state);
         }
+
+        public async Task<CachedParameters> RemoveData(string state)
+        {
+            return await cache.Remove<CachedParameters>(state);
+        }
     }
 }
