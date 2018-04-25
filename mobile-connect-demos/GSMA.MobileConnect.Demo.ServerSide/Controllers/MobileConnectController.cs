@@ -12,6 +12,7 @@ using GSMA.MobileConnect.ServerSide.Web.Utils;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Linq;
+using GSMA.MobileConnect.Discovery;
 
 namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 {
@@ -27,6 +28,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         private static CachedParameters CachedParameters = new CachedParameters();
         private static ResponseChecker responseChecker = new ResponseChecker();
         private static HttpRequestMessage _requestMessage = new HttpRequestMessage();
+        IDiscoveryService discovery;
 
         public MobileConnectController(MobileConnectWebInterface mobileConnect)
         {
@@ -152,13 +154,13 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                 Request, 
                 Request.RequestUri, 
                 cachedInfo.Result.sdkSession, 
-                state, 
+                state,
                 cachedInfo.Result.nonce, 
                 requestOptions);
 
             if (HandleErrorMsg(authConnectStatus))
             {
-                responseChecker.RemoveData(state);
+                ////
                 return CreateResponse(MobileConnectStatus.Error(
                     ErrorCodes.InvalidArgument, authConnectStatus.ErrorMessage, new Exception()));
             }
