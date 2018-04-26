@@ -6,7 +6,15 @@ namespace GSMA.MobileConnect.ServerSide.Web.Utils
 {
     public class ResponseChecker
     {
-        ConcurrentCache cache = new ConcurrentCache();
+        private static OperatorParameters _operatorParams;
+        private static ReadAndParseFiles readAndParseFiles = new ReadAndParseFiles();
+        private ConcurrentCache cache;
+
+        public ResponseChecker()
+        {
+            _operatorParams = readAndParseFiles.ReadFile(Constants.ConfigFilePath);
+            cache = new ConcurrentCache(_operatorParams.maxDiscoveryCacheSize);
+        }
 
         public async Task SaveData(string state, CachedParameters cachedParameters)
         {
