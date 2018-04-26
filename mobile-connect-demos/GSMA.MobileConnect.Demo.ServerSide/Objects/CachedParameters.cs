@@ -1,5 +1,6 @@
 ﻿using System;
 using GSMA.MobileConnect.Cache;
+using GSMA.MobileConnect.Discovery;
 
 namespace GSMA.MobileConnect.ServerSide.Web.Objects
 {
@@ -10,6 +11,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Objects
         public string accessToken { get; set; }
         public bool Cached { get; set; }
         public bool HasExpired { get; private set; }
+        public DiscoveryOptions discoveryOptions { get; set; }
 
         public DateTime? TimeCachedUtc { get; set; }
 

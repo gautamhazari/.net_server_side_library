@@ -28,6 +28,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         private static CachedParameters CachedParameters = new CachedParameters();
         private static ResponseChecker responseChecker = new ResponseChecker();
         private static HttpRequestMessage _requestMessage = new HttpRequestMessage();
+        private ConcurrentCache cache;
+        private ConcurrentCache discoveryCache;
         IDiscoveryService discovery;
 
         public MobileConnectController(MobileConnectWebInterface mobileConnect)
@@ -38,10 +40,10 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         public MobileConnectController()
         {
             GetParameters();
-            var cache = new ConcurrentCache();
-            var discoveryCache = new ConcurrentCache(_operatorParams.maxDiscoveryCacheSize);
             if (_mobileConnect == null)
             {
+                cache = new ConcurrentCache();
+                discoveryCache = new ConcurrentCache(_operatorParams.maxDiscoveryCacheSize);
                 _mobileConnect = new MobileConnectWebInterface(_mobileConnectConfig, cache, discoveryCache);
             }
         }
@@ -55,6 +57,10 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                 string.Empty;
 
             var requestOptions = new MobileConnectRequestOptions { ClientIP = sourceIp };
+            var discoveryOptions = requestOptions?.DiscoveryOptions ?? new DiscoveryOptions();
+            discoveryOptions.MSISDN = msisdn;
+            discoveryOptions.IdentifiedMCC = mcc;
+            discoveryOptions.IdentifiedMNC = mnc;
 
             var status = await _mobileConnect.AttemptDiscoveryAsync(
                 Request, msisdn, mcc, mnc, false, _includeRequestIP, requestOptions);
@@ -71,6 +77,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                 status.DiscoveryResponse.ResponseCode == Utils.Constants.Response_OK)
             {
                 CachedParameters.sdkSession = status.SDKSession;
+                CachedParameters.discoveryOptions = discoveryOptions;
                 var authResponse = await StartAuthentication(
                     Request, status.SDKSession, status.DiscoveryResponse.ResponseData.subscriber_id);
 
@@ -160,7 +167,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 
             if (HandleErrorMsg(authConnectStatus))
             {
-                ////
+                RemoveSessionFromCache(discoveryCache, cachedInfo.Result.discoveryOptions);
                 return CreateResponse(MobileConnectStatus.Error(
                     ErrorCodes.InvalidArgument, authConnectStatus.ErrorMessage, new Exception()));
             }
@@ -213,6 +220,30 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                 return GetHttpMsgWithRedirect(status, status.ErrorMessage);
             }
         }
+
+        private async void RemoveSessionFromCache(ConcurrentCache cache, DiscoveryOptions options)
+        {
+            var mcc = options.IdentifiedMCC != null ? options.IdentifiedMCC : options.SelectedMCC;
+            var mnc = options.IdentifiedMNC != null ? options.IdentifiedMNC : options.SelectedMNC;
+            var msisdn = options.MSISDN;
+            var client_ip = options.LocalClientIP;
+
+            if (cache == null || options == null)
+            {
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(msisdn))
+                await cache.Remove<DiscoveryResponse>(msisdn);
+
+            else if (!(string.IsNullOrEmpty(mcc) && string.IsNullOrEmpty(mnc)))
+                await cache.Remove(mcc, mnc);
+
+            else if (!string.IsNullOrEmpty(client_ip))
+                await cache.Remove<DiscoveryResponse>(client_ip);
+
+        }
+
 
         private IHttpActionResult GetHttpMsgWithRedirect(MobileConnectStatus status, string errMsg)
         {
