@@ -243,6 +243,12 @@ namespace GSMA.MobileConnect.Discovery
                 await _cache.Remove(mcc, mnc).ConfigureAwait(false);
                 return;
             }
+            
+            if (!string.IsNullOrEmpty(mcc) && string.IsNullOrEmpty(mnc))
+            {
+                await _cache.Remove(mcc).ConfigureAwait(false);
+                return;
+            }
 
             await _cache.Clear().ConfigureAwait(false);
         }
@@ -265,13 +271,22 @@ namespace GSMA.MobileConnect.Discovery
             {
                 var mcc = options.IdentifiedMCC != null ? options.IdentifiedMCC : options.SelectedMCC;
                 var mnc = options.IdentifiedMNC != null ? options.IdentifiedMNC : options.SelectedMNC;
+                var msisdn = options.MSISDN;
+                var client_ip = options.LocalClientIP;
 
-                if (response.ErrorResponse != null || mcc == null || mnc == null)
+                if (response.ErrorResponse != null)
                 {
                     return;
                 }
 
-                await _cache.Add(mcc, mnc, response).ConfigureAwait(false);
+                if (!string.IsNullOrEmpty(msisdn))
+                    await _cache.Add(msisdn, response).ConfigureAwait(false);
+
+                else if (!(string.IsNullOrEmpty(mcc) && string.IsNullOrEmpty(mnc)))
+                    await _cache.Add(mcc, mnc, response).ConfigureAwait(false);
+
+                else if(!string.IsNullOrEmpty(client_ip))
+                    await _cache.Add(client_ip, response).ConfigureAwait(false);
             }
         }
 
@@ -287,7 +302,19 @@ namespace GSMA.MobileConnect.Discovery
         {
             var mcc = options.IdentifiedMCC != null ? options.IdentifiedMCC : options.SelectedMCC;
             var mnc = options.IdentifiedMNC != null ? options.IdentifiedMNC : options.SelectedMNC;
-            return _cache != null ? await _cache.Get(mcc, mnc) : null;
+            var msisdn = options.MSISDN;
+            var client_ip = options.LocalClientIP;
+
+            if (!string.IsNullOrEmpty(msisdn))
+                return _cache != null ? await _cache.Get<DiscoveryResponse>(msisdn) : null;
+
+            else if(!(string.IsNullOrEmpty(mcc) && string.IsNullOrEmpty(mnc)))
+                return _cache != null ? await _cache.Get(mcc, mnc) : null;
+
+            else if(!string.IsNullOrEmpty(client_ip))
+                return _cache != null ? await _cache.Get<DiscoveryResponse>(client_ip) : null;
+
+            return null;
         }
 
         private async Task<T> GetCachedValueAsync<T>(string key, bool removeIfExpired) where T : ICacheable
@@ -345,44 +372,13 @@ namespace GSMA.MobileConnect.Discovery
                 return ProviderMetadata.Default;
             }
 
-            // Get value from cache, if it is expired we don't want to remove it because we will use it as a fallback if the call to the provider metadata endpoint fails
-            // If it is expired and the call to the provider metadata endpoint succeeds then expired value will be overwritten in the cache anyway
-            ProviderMetadata cached = null;
-            if (!forceCacheBypass)
-            {
-                cached = await GetCachedValueAsync<ProviderMetadata>(url, false);
-
-                if (cached != null && !cached.HasExpired)
-                {
-                    return cached;
-                } 
-            }
-
             ProviderMetadata metadata = null;
-            try
-            {
+
                 var response = await _client.GetAsync(url, null);
                 if ((int)response.StatusCode < 400)
                 {
                     metadata = JsonConvert.DeserializeObject<ProviderMetadata>(response.Content);
-                    await AddCachedValueAsync(url, metadata).ConfigureAwait(false);
                 }
-                else if (cached != null)
-                {
-                    metadata = cached;
-                }
-            }
-            catch (Exception e)
-            {
-                // If an error occurred while fetching the metadata we don't want to cause the discovery to fail completely as the 
-                // info in the discovery response should be enough to make successful calls in the event that a provider supplies
-                // malformed metadata
-                if (cached != null)
-                {
-                    metadata = cached;
-                }
-                Log.Warning(() => cached != null ? $"Falling back to expired cached provider metadata, url={url}, reason={e.Message}" : $"Falling back to default provider metadata, url={url}, reason={e.Message}");
-            }
 
             return metadata ?? ProviderMetadata.Default;
         }

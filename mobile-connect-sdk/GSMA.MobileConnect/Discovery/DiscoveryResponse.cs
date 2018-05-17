@@ -30,10 +30,10 @@ namespace GSMA.MobileConnect.Discovery
                 _cached = value;
 
                 // if this was cached we don't want to return someone elses subscriber id, so we clear it
-                if(_cached && ResponseData?.subscriber_id != null)
-                {
-                    ResponseData.subscriber_id = null;
-                }
+                //if (_cached && ResponseData?.subscriber_id != null)
+                //{
+                //    ResponseData.subscriber_id = null;
+                //}
             }
         }
 

@@ -82,14 +82,18 @@ namespace GSMA.MobileConnect.Cache
             }
 
             var key = ConcatKey(mcc, mnc);
-            var response = await Get<DiscoveryResponse>(key);
-            if (response != null && response.HasExpired)
+
+            return await Get<DiscoveryResponse>(key);
+        }
+
+        public async Task<T> Remove<T>(string key)
+        {
+            if (! string.IsNullOrEmpty(key))
             {
-                response = null;
                 await Remove(key).ConfigureAwait(false);
             }
 
-            return response;
+            return default(T);
         }
 
         /// <inheritdoc/>

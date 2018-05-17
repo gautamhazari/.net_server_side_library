@@ -230,7 +230,9 @@ namespace GSMA.MobileConnect
                 return GetCacheError();
             }
 
-            return StartAuthentication(request, discoveryResponse, encryptedMSISDN, state, nonce, options);
+            var authResult = StartAuthentication(request, discoveryResponse, encryptedMSISDN, state, nonce, options);
+
+            return authResult;
         }
 
         /// <summary>
@@ -607,7 +609,7 @@ namespace GSMA.MobileConnect
 
             return await _sessionCahce.Get<DiscoveryResponse>(sessionId);
         }
-
+        
         private MobileConnectStatus GetCacheError()
         {
             if (!_cacheWithSessionId)

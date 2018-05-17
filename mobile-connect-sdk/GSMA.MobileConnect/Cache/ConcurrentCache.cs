@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using Newtonsoft.Json;
 using GSMA.MobileConnect.Discovery;
+using System;
 
 namespace GSMA.MobileConnect.Cache
 {
