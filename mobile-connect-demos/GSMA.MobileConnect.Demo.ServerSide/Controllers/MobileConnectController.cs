@@ -50,11 +50,14 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 
         [HttpGet]
         [Route("start_discovery")]
-        public async Task<IHttpActionResult> StartDiscovery(string msisdn = "", string mcc = "", string mnc = "")
+        public async Task<IHttpActionResult> StartDiscovery(string msisdn = "", string mcc = "", string mnc = "", string sourceIp = "")
         {
-            string sourceIp = Request.Headers.Any(h => h.Key.Equals("X-Source-IP")) ?
+            if (sourceIp.Equals(string.Empty))
+            {
+                sourceIp = Request.Headers.Any(h => h.Key.Equals("X-Source-IP")) ?
                 Request.Headers.GetValues("X-Source-IP").ToList().FirstOrDefault() :
                 string.Empty;
+            }
 
             var requestOptions = new MobileConnectRequestOptions { ClientIP = sourceIp };
             var discoveryOptions = requestOptions?.DiscoveryOptions ?? new DiscoveryOptions();
