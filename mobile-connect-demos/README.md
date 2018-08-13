@@ -1,4 +1,4 @@
-# GSMA MobileConnect .Net SDK Demos
+# GSMA MobileConnect .Net server side Demos
 
 - These demos should provide full example code for completing the authorization flow of MobileConnect
 - Demo code is only for example purposes
