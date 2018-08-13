@@ -1,8 +1,8 @@
-# GSMA MobileConnect .Net SDK
+# GSMA MobileConnect .Net Server Side Library
 
 ## Recommended Setup
 
-To utilise the SDK the following are required
+To utilise the server side the following are required
 
 - Visual Studio 2012 + Phone SDK 8.0 or Visual Studio 2013+
 
