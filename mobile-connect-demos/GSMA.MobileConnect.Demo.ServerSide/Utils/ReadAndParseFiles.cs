@@ -11,6 +11,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Utils
         {
             OperatorParameters operatorParameters;
             using (StreamReader streamReader = new StreamReader(HostingEnvironment.MapPath(filePath)))
+
             {
                 operatorParameters = JsonConvert.DeserializeObject<OperatorParameters>(streamReader.ReadToEnd());
             }

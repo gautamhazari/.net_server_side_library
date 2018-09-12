@@ -6,10 +6,10 @@
   "redirectURL": "http://localhost:8080/server_side_api/discovery_callback",
   "xRedirect": "True",
   "includeRequestIP": "True",
-  "apiVersion": "mc_v1.2",
-  "scope": "openid mc_authn",
+  "apiVersion": "mc_v1.1",
+  "scope": "openid",
   "acrValues": "2",
-  "UseInfo": "True",
-  "Identity": "True",
+  "userInfo": "True",
+  "identity": "True",
   "maxDiscoveryCacheSize": 104857600
 }

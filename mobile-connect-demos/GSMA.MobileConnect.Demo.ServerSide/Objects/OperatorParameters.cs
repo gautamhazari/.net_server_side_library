@@ -3,7 +3,6 @@
     
     public class OperatorParameters
     {
-        public string msisdn { get; set; }
         public string clientID { get; set; }
         public string clientSecret { get; set; }
         public string clientName { get; set; }
