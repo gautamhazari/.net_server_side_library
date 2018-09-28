@@ -19,6 +19,9 @@ namespace GSMA.MobileConnect
         public string ClientSecret { get; set; }
 
         /// <inheritdoc/>
+        public string ClientName { get; set; }
+
+        /// <inheritdoc/>
         public string XRedirect { get; set; }
 
         /// <inheritdoc/>

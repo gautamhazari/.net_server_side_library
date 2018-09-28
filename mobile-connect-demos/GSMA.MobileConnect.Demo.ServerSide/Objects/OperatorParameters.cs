@@ -13,8 +13,6 @@
         public string apiVersion { get; set; }
         public string scope { get; set; }
         public string acrValues { get; set; }
-        public string userInfo { get; set; }
-        public string identity { get; set; }
         public long maxDiscoveryCacheSize { get; set; }
     }
 }

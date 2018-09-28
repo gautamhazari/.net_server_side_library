@@ -2,6 +2,7 @@
 using GSMA.MobileConnect.Cache;
 using GSMA.MobileConnect.Web;
 using System.Dynamic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -11,6 +12,7 @@ using GSMA.MobileConnect.ServerSide.Web.Objects;
 using GSMA.MobileConnect.ServerSide.Web.Utils;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Utils;
 
@@ -23,10 +25,11 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         private static MobileConnectWebInterface _mobileConnect;
         private static string _apiVersion;
         private static bool _includeRequestIp;
+        private static string _clientName;
         private static MobileConnectConfig _mobileConnectConfig;
         private static OperatorParameters _operatorParams;
 
-        private static HttpRequestMessage _requestMessage = new HttpRequestMessage();
+    private static HttpRequestMessage _requestMessage = new HttpRequestMessage();
         private static SessionCache _sessionCache;
         private static DiscoveryCache _discoveryCache;
         IDiscoveryService discovery;
@@ -74,7 +77,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                     }
                 }
             }
-
+            
             SetDiscoveryCache(msisdn, mcc, mnc, sourceIp, discoveryResponse);
 
             string url = StartAuthentication(discoveryResponse, discoveryResponse.ResponseData.subscriber_id, Request,
@@ -237,13 +240,13 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             MobileConnectStatus response = null;
             if (idTokenResponseModel.nonce.Equals(sessionData.Nonce))
             {
-                if (_operatorParams.identity.Equals("True"))
+                if (!string.IsNullOrEmpty(sessionData.DiscoveryResponse.OperatorUrls.UserInfoUrl))
                 {
                     response = await RequestUserInfo(sessionData.DiscoveryResponse, status.TokenResponse.ResponseData.AccessToken);
                     return CreateIdentityResponse(status, response);
                 }
-
-                if (_operatorParams.userInfo.Equals("True"))
+                
+                if (!string.IsNullOrEmpty(sessionData.DiscoveryResponse.OperatorUrls.PremiumInfoUrl))
                 {
                     response = await RequestIdentity(sessionData.DiscoveryResponse, status.TokenResponse.ResponseData.AccessToken);
                     return CreateIdentityResponse(status, response);
@@ -255,8 +258,6 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                     ErrorCodes.InvalidArgument, "nonce is incorrect", new Exception());
                 return CreateResponse(response);
             }
-
-            // return CreateResponse(status);
             return CreateIdentityResponse(status);
         }
         
@@ -384,11 +385,12 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             _operatorParams = readAndParseFiles.ReadFile(Utils.Constants.ConfigFilePath);
             _apiVersion = _operatorParams.apiVersion;
             _includeRequestIp = _operatorParams.includeRequestIP.Equals("True");
-
+            _clientName = _operatorParams.clientName;
             _mobileConnectConfig = new MobileConnectConfig()
             {
                 ClientId = _operatorParams.clientID,
                 ClientSecret = _operatorParams.clientSecret,
+                ClientName = _operatorParams.clientName,
                 DiscoveryUrl = _operatorParams.discoveryURL,
                 RedirectUrl = _operatorParams.redirectURL,
                 XRedirect = _operatorParams.xRedirect.Equals("True") ? "APP" : "False"
