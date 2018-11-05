@@ -36,6 +36,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             Constants.Scope.IDENTITYNATIONALID, Constants.Scope.KYC_PLAIN, Constants.Scope.KYC_HASHED};
         private static readonly string[] USERINFO_SCOPES = {Constants.Scope.PROFILE, Constants.Scope.EMAIL, Constants.Scope.ADDRESS, Constants.Scope.PHONE,
             Constants.Scope.OFFLINEACCESS};
+        private static Logger _logger = new Logger();
 
         public MobileConnectController(MobileConnectWebInterface mobileConnect)
         {
@@ -423,19 +424,13 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             dynamic convertAuthnResponseToJson = JsonConvert.DeserializeObject(
                     authnResponse.Content.ReadAsStringAsync().Result);
 
-            dynamic responseMessage = new ExpandoObject();
-            responseMessage.access_token = convertAuthnResponseToJson.token.access_token;
-            responseMessage.token_type = convertAuthnResponseToJson.token.token_type;
-            responseMessage.id_token = convertAuthnResponseToJson.token.id_token;
-
             if (identityUserInfoStatustatus != null)
             {
                 dynamic convertResponseToJson =
                     JsonConvert.DeserializeObject(identityUserInfoStatustatus.Content.ReadAsStringAsync().Result);
-                responseMessage.identity = convertResponseToJson.identity;
             }
 
-            return JsonConvert.SerializeObject(responseMessage);
+            return JsonConvert.SerializeObject(convertAuthnResponseToJson);
         }
 
         private void GetParameters()
