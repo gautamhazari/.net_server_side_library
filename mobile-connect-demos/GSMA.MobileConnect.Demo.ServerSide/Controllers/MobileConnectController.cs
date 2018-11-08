@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Utils;
+using Scope = GSMA.MobileConnect.Constants.Scope;
 
 namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 {
@@ -77,7 +78,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 
             SetDiscoveryCache(msisdn, mcc, mnc, sourceIp, discoveryResponse);
 
-            string url = StartAuthentication(discoveryResponse, discoveryResponse.ResponseData.subscriber_id, Request,
+            string url = CallStartAuth(discoveryResponse, discoveryResponse.ResponseData.subscriber_id, Request,
                 msisdn, mcc, mnc, sourceIp);
 
             if (url == null)
@@ -187,7 +188,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             {
                 SetDiscoveryCache(null, mcc, mnc, null, status.DiscoveryResponse);
 
-                var url = StartAuthentication(status.DiscoveryResponse, subscriber_id, _requestMessage, null, mcc, mnc,
+                var url = CallStartAuth(status.DiscoveryResponse, subscriber_id, _requestMessage, null, mcc, mnc,
                     null);
                 return GetHttpMsgWithRedirect(url);
 
@@ -283,7 +284,47 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             return await _mobileConnect.RequestUserInfoAsync(Request, discoveryResponse, accessToken, new MobileConnectRequestOptions());
         }
 
+        private String CallStartAuth(
+            DiscoveryResponse discoveryResponse,
+            string subscriberId,
+            HttpRequestMessage request,
+            string msisdn,
+            string mcc,
+            string mnc,
+            string sourceIp)
+        {
+            if (_operatorParams.scope.Contains(Scope.AUTHZ))
+            {
+                return StartAuthorize(discoveryResponse, subscriberId, request, msisdn, mcc, mnc, sourceIp);
+            }
+            return StartAuthentication(discoveryResponse, subscriberId, request, msisdn, mcc, mnc, sourceIp);
+        }
+
         private String StartAuthentication(
+            DiscoveryResponse discoveryResponse,
+            string subscriberId,
+            HttpRequestMessage request,
+            string msisdn,
+            string mcc,
+            string mnc,
+            string sourceIp)
+        {
+            return StartAuth(discoveryResponse, subscriberId, request, msisdn, mcc, mnc, sourceIp);
+        }
+
+        private String StartAuthorize(
+            DiscoveryResponse discoveryResponse,
+            string subscriberId,
+            HttpRequestMessage request,
+            string msisdn,
+            string mcc,
+            string mnc,
+            string sourceIp)
+        {
+            return StartAuth(discoveryResponse, subscriberId, request, msisdn, mcc, mnc, sourceIp);
+        }
+
+        private String StartAuth(
             DiscoveryResponse discoveryResponse, 
             string subscriberId,
             HttpRequestMessage request,
@@ -364,19 +405,14 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             dynamic convertAuthnResponseToJson = JsonConvert.DeserializeObject(
                     authnResponse.Content.ReadAsStringAsync().Result);
 
-            dynamic responseMessage = new ExpandoObject();
-            responseMessage.access_token = convertAuthnResponseToJson.token.access_token;
-            responseMessage.token_type = convertAuthnResponseToJson.token.token_type;
-            responseMessage.id_token = convertAuthnResponseToJson.token.id_token;
-
             if (identityUserInfoStatustatus != null)
             {
                 dynamic convertResponseToJson =
                     JsonConvert.DeserializeObject(identityUserInfoStatustatus.Content.ReadAsStringAsync().Result);
-                responseMessage.identity = convertResponseToJson.identity;
+                convertAuthnResponseToJson.identity = convertResponseToJson.identity;
             }
 
-            return JsonConvert.SerializeObject(responseMessage);
+            return JsonConvert.SerializeObject(convertAuthnResponseToJson);
         }
 
         private void GetParameters()
