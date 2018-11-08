@@ -15,7 +15,6 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Utils;
-using GSMA.MobileConnect.Constants;
 
 namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 {
@@ -30,9 +29,10 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         private static MobileConnectConfig _mobileConnectConfig;
         private static OperatorParameters _operatorParams;
 
-        private static HttpRequestMessage _requestMessage = new HttpRequestMessage();
+    private static HttpRequestMessage _requestMessage = new HttpRequestMessage();
         private static SessionCache _sessionCache;
         private static DiscoveryCache _discoveryCache;
+        IDiscoveryService discovery;
 
         public MobileConnectController(MobileConnectWebInterface mobileConnect)
         {
@@ -80,7 +80,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             
             SetDiscoveryCache(msisdn, mcc, mnc, sourceIp, discoveryResponse);
 
-            string url  = CallAuth(discoveryResponse, discoveryResponse.ResponseData.subscriber_id, Request, msisdn, mcc, mnc, sourceIp);
+            string url = StartAuthentication(discoveryResponse, discoveryResponse.ResponseData.subscriber_id, Request,
+                msisdn, mcc, mnc, sourceIp);
 
             if (url == null)
             {
@@ -189,7 +190,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             {
                 SetDiscoveryCache(null, mcc, mnc, null, status.DiscoveryResponse);
 
-                var url = CallAuth(status.DiscoveryResponse, subscriber_id, _requestMessage, null, mcc, mnc,
+                var url = StartAuthentication(status.DiscoveryResponse, subscriber_id, _requestMessage, null, mcc, mnc,
                     null);
                 return GetHttpMsgWithRedirect(url);
 
@@ -259,27 +260,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             }
             return CreateIdentityResponse(status);
         }
-
-        private string CallAuth(DiscoveryResponse discoveryResponse,
-            string subscriberId,
-            HttpRequestMessage request,
-            string msisdn,
-            string mcc,
-            string mnc,
-            string sourceIp)
-        {
-            string url;
-            if (_operatorParams.scope.Contains(Constants.Scope.AUTHZ))
-            {
-                url = StartAuthorize(discoveryResponse, discoveryResponse.ResponseData.subscriber_id, Request, msisdn, mcc, mnc, sourceIp);
-            }
-            else
-            {
-                url = StartAuthentication(discoveryResponse, discoveryResponse.ResponseData.subscriber_id, Request, msisdn, mcc, mnc, sourceIp);
-            }
-            return url;
-        }
-
+        
         private IHttpActionResult GetHttpMsgWithRedirect(string url, string errMsg = null)
         {
             if (string.IsNullOrEmpty(url))
@@ -303,29 +284,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             return await _mobileConnect.RequestUserInfoAsync(Request, discoveryResponse, accessToken, new MobileConnectRequestOptions());
         }
 
-        private String StartAuthorize(DiscoveryResponse discoveryResponse,
-            string subscriberId,
-            HttpRequestMessage request,
-            string msisdn,
-            string mcc,
-            string mnc,
-            string sourceIp)
-        {
-            return StartAuth(discoveryResponse, discoveryResponse.ResponseData.subscriber_id, Request, msisdn, mcc, mnc, sourceIp);
-        }
-
-        private String StartAuthentication(DiscoveryResponse discoveryResponse,
-            string subscriberId,
-            HttpRequestMessage request,
-            string msisdn,
-            string mcc,
-            string mnc,
-            string sourceIp)
-        {
-            return StartAuth(discoveryResponse, discoveryResponse.ResponseData.subscriber_id, Request, msisdn, mcc, mnc, sourceIp);
-        }
-
-        private String StartAuth(
+        private String StartAuthentication(
             DiscoveryResponse discoveryResponse, 
             string subscriberId,
             HttpRequestMessage request,
