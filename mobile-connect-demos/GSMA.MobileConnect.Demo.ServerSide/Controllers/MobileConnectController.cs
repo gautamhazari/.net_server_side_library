@@ -30,6 +30,10 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         private static HttpRequestMessage _requestMessage = new HttpRequestMessage();
         private static SessionCache _sessionCache;
         private static DiscoveryCache _discoveryCache;
+        private static string[] _identityScopes = {Scope.IDENTITYPHONE, Scope.IDENTITYSIGNUP,
+            Scope.IDENTITYNATIONALID, Scope.IDENTITYSIGNUPPLUS, Scope.KYCHASHED, Scope.KYCPLAIN};
+        private static string[] _userInfoScopes = {Scope.PROFILE, Scope.EMAIL, Scope.ADDRESS,
+            Scope.PHONE, Scope.OFFLINEACCESS};
         IDiscoveryService discovery;
 
         public MobileConnectController(MobileConnectWebInterface mobileConnect)
@@ -123,27 +127,6 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         }
 
         [HttpGet]
-        [Route("headless_authentication")]
-        public async Task<IHttpActionResult> RequestHeadlessAuthentication(
-            string sdksession = null,
-            string subscriberId = null,
-            string scope = null)
-        {
-            var options = new MobileConnectRequestOptions
-            {
-                Scope = scope,
-                Context = "headless",
-                BindingMessage = "demo headless",
-                AutoRetrieveIdentityHeadless = true,
-            };
-
-            var response = await _mobileConnect.RequestHeadlessAuthenticationAsync(
-                Request, sdksession, subscriberId, null, null, options);
-
-            return CreateResponse(response);
-        }
-
-        [HttpGet]
         [Route("")]
         public async Task<IHttpActionResult> HandleRedirect(
             string sdksession = null, 
@@ -172,9 +155,10 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         {
             var requestOptions = new MobileConnectRequestOptions
             {
-                Context = _apiVersion.Equals(Utils.Constants.Version2) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = _apiVersion.Equals(Utils.Constants.Version2) ? Utils.Constants.ContextBindingMsg : null,
-                ClientName = _operatorParams.clientName
+                Context = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
+                ClientName = _operatorParams.clientName,
+                AcrValues = _operatorParams.acrValues
             };
 
             var mcc_mncArray = mcc_mnc.Split(new char[] { '_' });
@@ -218,9 +202,10 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             {
                 AcceptedValidationResults = Authentication.TokenValidationResult.Valid |
                     Authentication.TokenValidationResult.IdTokenValidationSkipped,
-                Context = _apiVersion.Equals(Utils.Constants.Version2) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = _apiVersion.Equals(Utils.Constants.Version2) ? Utils.Constants.ContextBindingMsg : null,
-                ClientName = _operatorParams.clientName
+                Context = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
+                ClientName = _operatorParams.clientName,
+                AcrValues = _operatorParams.acrValues
             };
           
             Uri requestUri = Request.RequestUri;
@@ -238,16 +223,32 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             MobileConnectStatus response = null;
             if (idTokenResponseModel.nonce.Equals(sessionData.Nonce))
             {
-                if (_operatorParams.identity.Equals("True"))
+                if (_apiVersion.Equals(Utils.Constants.VERSION1_1) &
+                    !string.IsNullOrEmpty(sessionData.DiscoveryResponse.OperatorUrls.UserInfoUrl))
                 {
-                    response = await RequestUserInfo(sessionData.DiscoveryResponse, status.TokenResponse.ResponseData.AccessToken);
-                    return CreateIdentityResponse(status, response);
+                    for (int scopeIndex = 0; scopeIndex < _userInfoScopes.Length; scopeIndex++)
+                    {
+                        if (_operatorParams.scope.Contains(_userInfoScopes[scopeIndex]))
+                        {
+                            response = await RequestUserInfo(sessionData.DiscoveryResponse,
+                                status.TokenResponse.ResponseData.AccessToken);
+                            return CreateIdentityResponse(status, response);
+                        }
+                    }
                 }
 
-                if (_operatorParams.userInfo.Equals("True"))
+                if ((_apiVersion.Equals(Utils.Constants.VERSION2_0) || _apiVersion.Equals(Utils.Constants.VERSION2_3)) &
+                    !string.IsNullOrEmpty(sessionData.DiscoveryResponse.OperatorUrls.PremiumInfoUrl))
                 {
-                    response = await RequestIdentity(sessionData.DiscoveryResponse, status.TokenResponse.ResponseData.AccessToken);
-                    return CreateIdentityResponse(status, response);
+                    for (int scopeIndex = 0; scopeIndex < _identityScopes.Length; scopeIndex++)
+                    {
+                        if (_operatorParams.scope.Contains(_identityScopes[scopeIndex]))
+                        {
+                            response = await RequestPremiumInfo(sessionData.DiscoveryResponse,
+                                status.TokenResponse.ResponseData.AccessToken);
+                            return CreateIdentityResponse(status, response);
+                        }
+                    }
                 }
             }
             else
@@ -338,9 +339,10 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             var options = new MobileConnectRequestOptions
             {
                 Scope = scope,
-                Context = _apiVersion.Equals(Utils.Constants.Version2) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = _apiVersion.Equals(Utils.Constants.Version2) ? Utils.Constants.ContextBindingMsg : null,
-                ClientName = _operatorParams.clientName
+                Context = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
+                ClientName = _operatorParams.clientName,
+                AcrValues = _operatorParams.acrValues
             };
 
             var status =
@@ -355,9 +357,9 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             return status.Url;
         }
 
-        private async Task<MobileConnectStatus> RequestIdentity(DiscoveryResponse discoveryResponse, string accessToken = null)
+        private async Task<MobileConnectStatus> RequestPremiumInfo(DiscoveryResponse discoveryResponse, string accessToken = null)
         {
-            return await _mobileConnect.RequestIdentityAsync(Request, discoveryResponse,accessToken, new MobileConnectRequestOptions());
+            return await _mobileConnect.RequestPremiumInfoAsync(Request, discoveryResponse,accessToken, new MobileConnectRequestOptions());
         }
 
         private IHttpActionResult CreateResponse(MobileConnectStatus status)

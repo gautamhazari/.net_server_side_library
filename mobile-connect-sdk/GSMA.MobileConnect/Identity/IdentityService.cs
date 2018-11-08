@@ -39,7 +39,7 @@ namespace GSMA.MobileConnect.Identity
         }
 
         /// <inheritdoc/>
-        public async Task<IdentityResponse> RequestIdentity(string premiumInfoUrl, string accessToken)
+        public async Task<IdentityResponse> RequestPremiumInfo(string premiumInfoUrl, string accessToken)
         {
             Validate.RejectNullOrEmpty(premiumInfoUrl, nameof(premiumInfoUrl));
             Validate.RejectNullOrEmpty(accessToken, nameof(accessToken));

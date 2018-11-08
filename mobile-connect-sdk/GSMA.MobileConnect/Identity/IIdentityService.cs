@@ -24,6 +24,6 @@ namespace GSMA.MobileConnect.Identity
         /// <param name="premiumInfoUrl">Url for accessing premium info identity services (Returned in discovery response)</param>
         /// <param name="accessToken">Access token for authorising identity request</param>
         /// <returns>UserInfo object if request succeeds</returns>
-        Task<IdentityResponse> RequestIdentity(string premiumInfoUrl, string accessToken);
+        Task<IdentityResponse> RequestPremiumInfo(string premiumInfoUrl, string accessToken);
     }
 }

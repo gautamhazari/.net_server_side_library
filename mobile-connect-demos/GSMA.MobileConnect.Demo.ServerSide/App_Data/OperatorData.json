@@ -7,9 +7,7 @@
   "xRedirect": "True",
   "includeRequestIP": "True",
   "apiVersion": "mc_v1.1",
-  "scope": "openid",
+  "scope": "openid profile",
   "acrValues": "2",
-  "userInfo": "True",
-  "identity": "True",
   "maxDiscoveryCacheSize": 104857600
 }

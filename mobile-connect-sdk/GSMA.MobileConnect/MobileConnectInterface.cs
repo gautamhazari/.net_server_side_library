@@ -375,24 +375,24 @@ namespace GSMA.MobileConnect
         /// <param name="accessToken">Access token from RequestToken stage</param>
         /// <param name="options">Additional optional parameters</param>
         /// <returns>MobileConnectStatus object with UserInfo information</returns>
-        public async Task<MobileConnectStatus> RequestIdentityAsync(
+        public async Task<MobileConnectStatus> RequestPremiumInfoAsync(
             DiscoveryResponse discoveryResponse, string accessToken, MobileConnectRequestOptions options)
         {
-            return await MobileConnectInterfaceHelper.RequestIdentity(
+            return await MobileConnectInterfaceHelper.RequestPremiumInfo(
                 _identity, discoveryResponse, accessToken, _config, options);
         }
 
         /// <summary>
-        /// Syncronous wrapper for <see cref="RequestIdentityAsync(DiscoveryResponse, string, MobileConnectRequestOptions)"/>
+        /// Syncronous wrapper for <see cref="RequestPremiumInfoAsync"/>
         /// </summary>
         /// <param name="discoveryResponse">The response returned by the discovery process</param>
         /// <param name="accessToken">Access token from RequestToken stage</param>
         /// <param name="options">Additional optional parameters</param>
         /// <returns>MobileConnectStatus object with UserInfo information</returns>
-        public MobileConnectStatus RequestIdentity(
+        public MobileConnectStatus RequestPremiumInfo(
             DiscoveryResponse discoveryResponse, string accessToken, MobileConnectRequestOptions options)
         {
-            return MobileConnectInterfaceHelper.RequestIdentity(
+            return MobileConnectInterfaceHelper.RequestPremiumInfo(
                 _identity, discoveryResponse, accessToken, _config, options).Result;
         }
     }

@@ -553,13 +553,13 @@ namespace GSMA.MobileConnect
         /// <param name="accessToken">Access token returned from RequestToken required to authenticate the request</param>
         /// <param name="options">Optional parameters</param>
         /// <returns>MobileConnectStatus object with requested Identity information</returns>
-        public async Task<MobileConnectStatus> RequestIdentityAsync(
+        public async Task<MobileConnectStatus> RequestPremiumInfoAsync(
             HttpRequestMessage request,
             DiscoveryResponse discoveryResponse,
             string accessToken,
             MobileConnectRequestOptions options)
         {
-            return await MobileConnectInterfaceHelper.RequestIdentity(
+            return await MobileConnectInterfaceHelper.RequestPremiumInfo(
                 _identity, discoveryResponse, accessToken, _config, options);
         }
 
@@ -571,7 +571,7 @@ namespace GSMA.MobileConnect
         /// <param name="accessToken">Access token returned from RequestToken required to authenticate the request</param>
         /// <param name="options">Additional optional parameters</param>
         /// <returns>MobileConnectStatus object with requested Identity information</returns>
-        public async Task<MobileConnectStatus> RequestIdentityAsync(
+        public async Task<MobileConnectStatus> RequestPremiumInfoAsync(
             HttpRequestMessage request, string sdkSession, string accessToken, MobileConnectRequestOptions options)
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
@@ -581,7 +581,7 @@ namespace GSMA.MobileConnect
                 return GetCacheError();
             }
 
-            return await RequestIdentityAsync(request, discoveryResponse, accessToken, options);
+            return await RequestPremiumInfoAsync(request, discoveryResponse, accessToken, options);
         }
 
         private async Task<MobileConnectStatus> CacheIfRequired(MobileConnectStatus status)

@@ -184,7 +184,7 @@ namespace GSMA.MobileConnect
                 return status;
             }
 
-            var identityStatus = await RequestIdentity(identity, discoveryResponse, status.TokenResponse.ResponseData.AccessToken, config, options);
+            var identityStatus = await RequestPremiumInfo(identity, discoveryResponse, status.TokenResponse.ResponseData.AccessToken, config, options);
             status.IdentityResponse = identityStatus.IdentityResponse;
 
             return status;
@@ -325,7 +325,7 @@ namespace GSMA.MobileConnect
             }
         }
 
-        internal static async Task<MobileConnectStatus> RequestIdentity(IIdentityService _identity, DiscoveryResponse discoveryResponse, string accessToken, MobileConnectConfig _config, MobileConnectRequestOptions options)
+        internal static async Task<MobileConnectStatus> RequestPremiumInfo(IIdentityService _identity, DiscoveryResponse discoveryResponse, string accessToken, MobileConnectConfig _config, MobileConnectRequestOptions options)
         {
             string identityUrl = discoveryResponse?.OperatorUrls?.PremiumInfoUrl;
 
@@ -337,12 +337,12 @@ namespace GSMA.MobileConnect
 
             try
             {
-                var response = await _identity.RequestIdentity(identityUrl, accessToken);
+                var response = await _identity.RequestPremiumInfo(identityUrl, accessToken);
                 return MobileConnectStatus.Identity(response);
             }
             catch (MobileConnectInvalidArgumentException e)
             {
-                Log.Error(() => $"An invalid argument was passed to RequestIdentity arg={e.Argument}");
+                Log.Error(() => $"An invalid argument was passed to RequestPremiumInfo arg={e.Argument}");
                 return MobileConnectStatus.Error(ErrorCodes.InvalidArgument, string.Format("An argument was found to be invalid during the process. The argument was {0}.", e.Argument), e);
             }
             catch (MobileConnectEndpointHttpException e)
