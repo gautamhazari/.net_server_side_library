@@ -12,7 +12,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Utils
 
         public ResponseChecker()
         {
-            _operatorParams = readAndParseFiles.ReadFile(Constants.ConfigFilePath);
+            _operatorParams = readAndParseFiles.ReadFile(Constants.OperatorDataFilePath);
             cache = new DiscoveryCache(_operatorParams.maxDiscoveryCacheSize);
         }
 

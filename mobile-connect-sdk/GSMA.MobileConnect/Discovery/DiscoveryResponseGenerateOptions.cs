@@ -18,10 +18,6 @@ namespace GSMA.MobileConnect.Discovery
         /// </summary>
         public string ClientId { get; }
         /// <summary>
-        /// Encripted MSISDN (subscrider id) option
-        /// </summary>
-        public string SubscriptionId { get; }
-        /// <summary>
         /// Client application name
         /// </summary>
         public string ClientApplicationName { get; }
@@ -47,12 +43,11 @@ namespace GSMA.MobileConnect.Discovery
         /// <param name="appName">Client application name</param>
         /// <param name="links">List of links</param>
         /// <param name="rel">List of rels</param>
-        public DiscoveryResponseGenerateOptions(string clientSecret, string clientId, string subId, string appName,
+        public DiscoveryResponseGenerateOptions(string clientSecret, string clientId, string appName,
             List<string> links, List<string> rel)
         {
             ClientSecret = clientSecret;
             ClientId = clientId;
-            SubscriptionId = subId;
             ClientApplicationName = appName;
             LinkList = links;
             Rel = rel;
@@ -67,8 +62,7 @@ namespace GSMA.MobileConnect.Discovery
                             link = new List<Link>()
                         }
                     }
-                },
-                subscriber_id = SubscriptionId
+                }
             };
 
             Response.response.client_id = ClientId;

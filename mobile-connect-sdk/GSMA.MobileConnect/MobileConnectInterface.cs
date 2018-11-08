@@ -104,10 +104,10 @@ namespace GSMA.MobileConnect
         /// <param name="operatorsUrls">Operators url</param>
         /// <returns>Manually generated discovery response</returns>
         public async Task<DiscoveryResponse> GenerateDiscoveryManuallyAsync(
-            string clientId, string clientSecret, string subscriberId, string appName, OperatorUrls operatorsUrls)
+            string clientId, string clientSecret, string appName, OperatorUrls operatorsUrls)
         {
             return await _authentication.MakeDiscoveryForAuthorization(
-                clientId, clientSecret, subscriberId, appName, operatorsUrls);
+                clientId, clientSecret, appName, operatorsUrls);
         }
 
         /// <summary>

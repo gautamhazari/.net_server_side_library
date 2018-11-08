@@ -18,23 +18,8 @@ using Scope = GSMA.MobileConnect.Constants.Scope;
 namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 {
     [RoutePrefix("server_side_api")]
-    public class MobileConnectController : ApiController
+    public class MobileConnectController : Controller
     {
-        private static ReadAndParseFiles readAndParseFiles = new ReadAndParseFiles();
-        private static MobileConnectWebInterface _mobileConnect;
-        private static string _apiVersion;
-        private static bool _includeRequestIp;
-        private static MobileConnectConfig _mobileConnectConfig;
-        private static OperatorParameters _operatorParams;
-
-        private static HttpRequestMessage _requestMessage = new HttpRequestMessage();
-        private static SessionCache _sessionCache;
-        private static DiscoveryCache _discoveryCache;
-        private static string[] _identityScopes = {Scope.IDENTITYPHONE, Scope.IDENTITYSIGNUP,
-            Scope.IDENTITYNATIONALID, Scope.IDENTITYSIGNUPPLUS, Scope.KYCHASHED, Scope.KYCPLAIN};
-        private static string[] _userInfoScopes = {Scope.PROFILE, Scope.EMAIL, Scope.ADDRESS,
-            Scope.PHONE, Scope.OFFLINEACCESS};
-        IDiscoveryService discovery;
 
         public MobileConnectController(MobileConnectWebInterface mobileConnect)
         {
@@ -54,10 +39,15 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 
         [HttpGet]
         [Route("start_discovery")]
-        public async Task<IHttpActionResult> StartDiscovery(string msisdn = "", string mcc = "", string mnc = "", string sourceIp = "")
+        public async Task<IHttpActionResult> StartDiscovery(string msisdn = "", string mcc = "", string mnc = "", string sourceIp = "", bool IgnoreIp = false)
         {
             _mobileConnect = new MobileConnectWebInterface(_mobileConnectConfig, _sessionCache, _discoveryCache);
             GetParameters();
+
+            if (string.IsNullOrEmpty(sourceIp) & !IgnoreIp)
+            {
+                sourceIp = _includeRequestIp ? Request.GetClientIp() : null;
+            }
 
             var discoveryResponse = GetDiscoveryCache(msisdn, mcc, mnc, sourceIp);
             MobileConnectStatus status;
@@ -75,7 +65,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                     }
                     else
                     {
-                        return await StartDiscovery(msisdn, mcc, mnc, null);
+                        return await StartDiscovery(null, null, null, null, true);
                     }
                 }
             }
@@ -87,7 +77,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 
             if (url == null)
             {
-                return await StartDiscovery(null, null, null, null);
+                return await StartDiscovery(null, null, null, null, true);
             }
 
             return GetHttpMsgWithRedirect(url);
@@ -419,7 +409,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 
         private void GetParameters()
         {
-            _operatorParams = readAndParseFiles.ReadFile(Utils.Constants.ConfigFilePath);
+            _operatorParams = readAndParseFiles.ReadFile(Utils.Constants.OperatorDataFilePath);
             _apiVersion = _operatorParams.apiVersion;
             _includeRequestIp = _operatorParams.includeRequestIP.Equals("True");
 

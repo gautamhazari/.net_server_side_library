@@ -80,7 +80,7 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="appName">Client application name</param>
         /// <param name="operatorsUrl">Operators urls</param>
         /// <returns>Generated fake discovery response</returns>
-        public async Task<DiscoveryResponse> MakeDiscoveryForAuthorization(string clientId, string clientSecret, string subscriberId,
+        public async Task<DiscoveryResponse> MakeDiscoveryForAuthorization(string clientId, string clientSecret,
             string appName, OperatorUrls operatorsUrl)
         {
             Validate.RejectNullOrEmpty(clientId, "clientId");
@@ -91,7 +91,7 @@ namespace GSMA.MobileConnect.Authentication
 
             var providerMetadata = new ProviderMetadata();
 
-            var discoveryGenerateResponseOptions = new DiscoveryResponseGenerateOptions(clientSecret, clientId, subscriberId, appName, operatorsUrl.GetListOfUrls(), operatorsUrl.GetListOfRels());
+            var discoveryGenerateResponseOptions = new DiscoveryResponseGenerateOptions(clientSecret, clientId, appName, operatorsUrl.GetListOfUrls(), operatorsUrl.GetListOfRels());
 
             var restResponse = new RestResponse()
             {

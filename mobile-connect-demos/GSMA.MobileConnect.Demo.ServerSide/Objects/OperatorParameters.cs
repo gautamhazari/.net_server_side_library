@@ -1,4 +1,6 @@
-﻿namespace GSMA.MobileConnect.ServerSide.Web.Objects
+﻿using GSMA.MobileConnect.Discovery;
+
+namespace GSMA.MobileConnect.ServerSide.Web.Objects
 {
     
     public class OperatorParameters
@@ -14,5 +16,6 @@
         public string scope { get; set; }
         public string acrValues { get; set; }
         public long maxDiscoveryCacheSize { get; set; }
+        public OperatorUrls operatorUrls { get; set; }
     }
 }

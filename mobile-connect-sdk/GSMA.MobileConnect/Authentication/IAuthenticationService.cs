@@ -32,7 +32,7 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="appName">application name (Required)</param>
         /// <param name="operatorsUrl">operator specific urls returned from a successful discovery process call</param>
         /// <returns></returns>
-        Task<DiscoveryResponse> MakeDiscoveryForAuthorization(string clientId, string clientSecret, string subscriberId,
+        Task<DiscoveryResponse> MakeDiscoveryForAuthorization(string clientId, string clientSecret,
             string appName, OperatorUrls operatorsUrl);
 
         /// <summary>

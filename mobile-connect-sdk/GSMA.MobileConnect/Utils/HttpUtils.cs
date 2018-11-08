@@ -164,7 +164,7 @@ namespace GSMA.MobileConnect.Utils
         /// </summary>
         /// <param name="request">Request to extract ip address from</param>
         /// <returns>Ip address if found</returns>
-        internal static string GetClientIp(this System.Net.Http.HttpRequestMessage request)
+        public static string GetClientIp(this System.Net.Http.HttpRequestMessage request)
         {
             IEnumerable<string> ipHeaderValues;
 
