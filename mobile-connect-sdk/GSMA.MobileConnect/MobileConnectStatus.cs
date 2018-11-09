@@ -100,7 +100,7 @@ namespace GSMA.MobileConnect
         }
 
         /// <summary>
-        /// Creates a status with ResponseType erorr and error related properties filled.
+        /// Creates a status with ResponseType error and error related properties filled.
         /// Indicates that the MobileConnect process has been aborted due to an issue encountered.
         /// </summary>
         /// <param name="error">ErrorResponse to retrieve error information from (Required)</param>

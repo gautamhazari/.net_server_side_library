@@ -104,77 +104,6 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             return status;
         }
 
-        private async void SetDiscoveryCache(string msisdn, string mcc, string mnc, string sourceIp,
-            DiscoveryResponse discoveryResponse)
-        {
-            await _discoveryCache.Add(StringUtils.FormatKey(msisdn, mcc, mnc, sourceIp), discoveryResponse);
-        }
-
-        private DiscoveryResponse GetDiscoveryCache(string msisdn, string mcc, string mnc, string sourceIp)
-        {
-            string key = StringUtils.FormatKey(msisdn, mcc, mnc, sourceIp);
-            return _discoveryCache.Get(key);
-        }
-
-        [HttpGet]
-        [Route("")]
-        public async Task<IHttpActionResult> HandleRedirect(
-            string sdksession = null, 
-            string mcc_mnc = null, 
-            string code = null,
-            string expectedState = null, 
-            string expectedNonce = null)
-        {
-            // Accept valid results and results indicating validation 
-            // was skipped due to missing support on the provider
-            var requestOptions = new MobileConnectRequestOptions
-            {
-                AcceptedValidationResults = Authentication.TokenValidationResult.Valid |
-                    Authentication.TokenValidationResult.IdTokenValidationSkipped
-            };
-
-            var response = await _mobileConnect.HandleUrlRedirectAsync(
-                Request, Request.RequestUri, sdksession, expectedState, expectedNonce, requestOptions);
-
-            return CreateResponse(response);
-        }
-
-        [HttpGet]
-        [Route("discovery_callback")]
-        public async Task<IHttpActionResult> MCC_MNC_DiscoveryCallback(string mcc_mnc, string subscriber_id = "")
-        {
-            var requestOptions = new MobileConnectRequestOptions
-            {
-                Context = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
-                ClientName = _operatorParams.clientName,
-                AcrValues = _operatorParams.acrValues
-            };
-
-            var mcc_mncArray = mcc_mnc.Split(new char[] { '_' });
-            var mcc = mcc_mncArray[0];
-            var mnc = mcc_mncArray[1];
-
-            var status = await _mobileConnect.AttemptDiscoveryAsync(
-                _requestMessage, null, mcc, mnc, true, _includeRequestIp, requestOptions);
-
-            if (status.DiscoveryResponse != null)
-            {
-                SetDiscoveryCache(null, mcc, mnc, null, status.DiscoveryResponse);
-
-                var url = CallStartAuth(status.DiscoveryResponse, subscriber_id, _requestMessage, null, mcc, mnc,
-                    null);
-                return GetHttpMsgWithRedirect(url);
-
-
-            }
-            else
-            {
-                return GetHttpMsgWithRedirect(status.Url, status.ErrorMessage);
-            }
-        }
-
-
         [HttpGet]
         [Route("discovery_callback")]
         public async Task<IHttpActionResult> DiscoveryCallback(
@@ -197,7 +126,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                 ClientName = _operatorParams.clientName,
                 AcrValues = _operatorParams.acrValues
             };
-          
+
             Uri requestUri = Request.RequestUri;
 
             SessionData sessionData = _sessionCache.Get(state);
@@ -251,28 +180,52 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             // return CreateResponse(status);
             return CreateIdentityResponse(status);
         }
-        
-        private IHttpActionResult GetHttpMsgWithRedirect(string url, string errMsg = null)
+
+        private async void SetDiscoveryCache(string msisdn, string mcc, string mnc, string sourceIp,
+            DiscoveryResponse discoveryResponse)
         {
-            if (string.IsNullOrEmpty(url))
+            await _discoveryCache.Add(StringUtils.FormatKey(msisdn, mcc, mnc, sourceIp), discoveryResponse);
+        }
+
+        private DiscoveryResponse GetDiscoveryCache(string msisdn, string mcc, string mnc, string sourceIp)
+        {
+            string key = StringUtils.FormatKey(msisdn, mcc, mnc, sourceIp);
+            return _discoveryCache.Get(key);
+        }
+
+        [HttpGet]
+        [Route("discovery_callback")]
+        public async Task<IHttpActionResult> MCC_MNC_DiscoveryCallback(string mcc_mnc, string subscriber_id = "")
+        {
+            var requestOptions = new MobileConnectRequestOptions
             {
-                return CreateResponse(MobileConnectStatus.Error(ErrorCodes.InvalidArgument, errMsg, new Exception()));
+                Context = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
+                ClientName = _operatorParams.clientName,
+                AcrValues = _operatorParams.acrValues
+            };
+
+            var mcc_mncArray = mcc_mnc.Split(new char[] { '_' });
+            var mcc = mcc_mncArray[0];
+            var mnc = mcc_mncArray[1];
+
+            var status = await _mobileConnect.AttemptDiscoveryAsync(
+                _requestMessage, null, mcc, mnc, true, _includeRequestIp, requestOptions);
+
+            if (status.DiscoveryResponse != null)
+            {
+                SetDiscoveryCache(null, mcc, mnc, null, status.DiscoveryResponse);
+
+                var url = CallStartAuth(status.DiscoveryResponse, subscriber_id, _requestMessage, null, mcc, mnc,
+                    null);
+                return GetHttpMsgWithRedirect(url);
+
+
             }
-
-            var authResponse = Request.CreateResponse(HttpStatusCode.Redirect);
-            authResponse.Headers.Location = new Uri(url);
-
-            return new ResponseMessageResult(authResponse);
-        }
-
-        private bool HandleErrorMsg(MobileConnectStatus status)
-        {
-            return !string.IsNullOrEmpty(status.ErrorMessage);
-        }
-
-        private async Task<MobileConnectStatus> RequestUserInfo(DiscoveryResponse discoveryResponse, string accessToken = null)
-        {
-            return await _mobileConnect.RequestUserInfoAsync(Request, discoveryResponse, accessToken, new MobileConnectRequestOptions());
+            else
+            {
+                return GetHttpMsgWithRedirect(status.Url, status.ErrorMessage);
+            }
         }
 
         private String CallStartAuth(
@@ -345,66 +298,6 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 
             SetSessionCache(status, msisdn, mcc, mnc, sourceIp);
             return status.Url;
-        }
-
-        private async Task<MobileConnectStatus> RequestPremiumInfo(DiscoveryResponse discoveryResponse, string accessToken = null)
-        {
-            return await _mobileConnect.RequestPremiumInfoAsync(Request, discoveryResponse,accessToken, new MobileConnectRequestOptions());
-        }
-
-        private IHttpActionResult CreateResponse(MobileConnectStatus status)
-        {
-            var response = Request.CreateResponse(HttpStatusCode.OK, ResponseConverter.Convert(status));
-            if (status.SetCookie != null)
-            {
-                foreach (var cookie in status.SetCookie)
-                {
-                    response.Headers.Add("Set-Cookie", cookie);
-                }
-            }
-
-            return new ResponseMessageResult(response);
-        }
-
-        private IHttpActionResult CreateIdentityResponse(MobileConnectStatus authnStatus, MobileConnectStatus identityUserInfoStatustatus = null)
-        {
-            var authnResponse = Request.CreateResponse(HttpStatusCode.OK, ResponseConverter.Convert(authnStatus));
-
-            if (identityUserInfoStatustatus != null)
-            {
-                var response = Request.CreateResponse(HttpStatusCode.OK, ResponseConverter.Convert(identityUserInfoStatustatus));
-                authnResponse.Content = new StringContent(СreateNewHttpResponseMessage(authnResponse, response));
-
-                if (identityUserInfoStatustatus.SetCookie != null)
-                {
-                    foreach (var cookie in identityUserInfoStatustatus.SetCookie)
-                    {
-                        authnResponse.Headers.Add("Set-Cookie", cookie);
-                    }
-                }
-            }
-
-            else
-            {
-                authnResponse.Content = new StringContent(СreateNewHttpResponseMessage(authnResponse));
-            }
-            return new ResponseMessageResult(authnResponse);
-        }
-
-        private string СreateNewHttpResponseMessage(HttpResponseMessage authnResponse, HttpResponseMessage identityUserInfoStatustatus = null)
-        {
-
-            dynamic convertAuthnResponseToJson = JsonConvert.DeserializeObject(
-                    authnResponse.Content.ReadAsStringAsync().Result);
-
-            if (identityUserInfoStatustatus != null)
-            {
-                dynamic convertResponseToJson =
-                    JsonConvert.DeserializeObject(identityUserInfoStatustatus.Content.ReadAsStringAsync().Result);
-                convertAuthnResponseToJson.identity = convertResponseToJson.identity;
-            }
-
-            return JsonConvert.SerializeObject(convertAuthnResponseToJson);
         }
 
         private void GetParameters()
