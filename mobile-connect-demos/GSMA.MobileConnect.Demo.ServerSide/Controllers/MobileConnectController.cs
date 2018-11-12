@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using GSMA.MobileConnect.Cache;
 using GSMA.MobileConnect.Web;
 using System.Dynamic;
+using System.Json;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -11,8 +13,10 @@ using GSMA.MobileConnect.ServerSide.Web.Objects;
 using GSMA.MobileConnect.ServerSide.Web.Utils;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Utils;
+using Newtonsoft.Json.Linq;
 using Scope = GSMA.MobileConnect.Constants.Scope;
 
 namespace GSMA.MobileConnect.ServerSide.Web.Controllers
@@ -121,8 +125,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             {
                 AcceptedValidationResults = Authentication.TokenValidationResult.Valid |
                     Authentication.TokenValidationResult.IdTokenValidationSkipped,
-                Context = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
+                Context = _apiVersion.Equals(Utils.Constants.VERSION2_0) || _apiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = _apiVersion.Equals(Utils.Constants.VERSION2_0) || _apiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
                 ClientName = _operatorParams.clientName,
                 AcrValues = _operatorParams.acrValues
             };
@@ -132,7 +136,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             SessionData sessionData = _sessionCache.Get(state);
 
             MobileConnectStatus status = await _mobileConnect.HandleUrlRedirectAsync(Request, requestUri, sessionData.DiscoveryResponse,
-                state, sessionData.Nonce, options);
+                state, sessionData.Nonce, options, _apiVersion);
 
 
             var idTokenResponseModel =
@@ -199,8 +203,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         {
             var requestOptions = new MobileConnectRequestOptions
             {
-                Context = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
+                Context = _apiVersion.Equals(Utils.Constants.VERSION2_0) || _apiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = _apiVersion.Equals(Utils.Constants.VERSION2_0) || _apiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
                 ClientName = _operatorParams.clientName,
                 AcrValues = _operatorParams.acrValues
             };
@@ -226,6 +230,29 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             {
                 return GetHttpMsgWithRedirect(status.Url, status.ErrorMessage);
             }
+        }
+
+        [HttpGet]
+        [Route("sector_identifier_uri")]
+        public async Task<IHttpActionResult> GetSectorIdentifierUri()
+        {
+            /*var response = Request.CreateResponse(HttpStatusCode.OK, ReadAndParseFiles.ReadFileAsString(Utils.Constants.SectorIdentifierFilePath));
+            return new ResponseMessageResult(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = new StringContent(JsonConvert.SerializeObject(ReadAndParseFiles.ReadFileAsString(Utils.Constants.SectorIdentifierFilePath)))
+            });*/
+
+            var json1 = JArray.Parse(Utils.Constants.SectorIdentifierFilePath);
+            var response = new HttpResponseMessage()
+            {
+                Content = new ObjectContent<JArray>(json1, new JsonMediaTypeFormatter()),
+                RequestMessage = Request
+            };
+
+            return new ResponseMessageResult(response);
+
+
         }
 
         private String CallStartAuth(
@@ -282,8 +309,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             var options = new MobileConnectRequestOptions
             {
                 Scope = scope,
-                Context = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
+                Context = _apiVersion.Equals(Utils.Constants.VERSION2_0) || _apiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = _apiVersion.Equals(Utils.Constants.VERSION2_0) || _apiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
                 ClientName = _operatorParams.clientName,
                 AcrValues = _operatorParams.acrValues
             };

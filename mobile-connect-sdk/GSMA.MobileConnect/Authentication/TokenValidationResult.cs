@@ -85,5 +85,10 @@ namespace GSMA.MobileConnect.Authentication
         /// support full validation of the token. Allow this result if you will be making requests to providers that only support mc_v1.1
         /// </summary>
         IdTokenValidationSkipped = 131072,
+        INVALID_AT_HASH = 262144,
+        INVALID_ACR = 524288,
+        INVALID_AMR = 1048576,
+        INVALID_HASHED_LOGIN_HINT = 2097152,
+
     }
 }

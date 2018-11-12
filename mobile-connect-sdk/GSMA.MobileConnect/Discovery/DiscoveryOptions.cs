@@ -60,6 +60,13 @@ namespace GSMA.MobileConnect.Discovery
         public bool IsUsingMobileData { get; set; }
 
         /// <summary>
+        /// Set to "true" if your application is able to determine that the user is accessing the service via mobile data.
+        /// This tells the Discovery Service to discover using the mobile-network.
+        /// </summary>
+        [JsonProperty("Using-Correlation-Id")]
+        public bool IsUsingCorrelationIf { get; set; }
+
+        /// <summary>
         /// The current local IP address of the client application i.e. the actual IP address
         /// currently allocated to the device running the application.
         /// </summary>

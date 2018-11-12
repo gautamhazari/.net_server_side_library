@@ -15,6 +15,7 @@ using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Utils;
 using Scope = GSMA.MobileConnect.Constants.Scope;
 using GSMA.MobileConnect.Constants;
+using System.Json;
 
 namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 {
@@ -64,7 +65,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             };
 
             var response = await _mobileConnect.HandleUrlRedirectAsync(
-                Request, Request.RequestUri, sdksession, expectedState, expectedNonce, requestOptions);
+                Request, Request.RequestUri, sdksession, expectedState, expectedNonce, requestOptions, _apiVersion);
 
             return CreateResponse(response);
         }

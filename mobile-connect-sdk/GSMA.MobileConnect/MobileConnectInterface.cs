@@ -190,7 +190,7 @@ namespace GSMA.MobileConnect
             Uri redirectedUrl,
             string expectedState,
             string expectedNonce,
-            MobileConnectRequestOptions options)
+            MobileConnectRequestOptions options, string version)
         {
             return await MobileConnectInterfaceHelper.RequestToken(
                 _authentication,
@@ -200,7 +200,7 @@ namespace GSMA.MobileConnect
                 expectedState,
                 expectedNonce,
                 _config,
-                options);
+                options, version);
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace GSMA.MobileConnect
             Uri redirectedUrl,
             string expectedState,
             string expectedNonce,
-            MobileConnectRequestOptions options)
+            MobileConnectRequestOptions options, string version)
         {
             return MobileConnectInterfaceHelper.RequestToken(
                 _authentication,
@@ -227,7 +227,7 @@ namespace GSMA.MobileConnect
                 expectedState,
                 expectedNonce,
                 _config,
-                options).Result;
+                options, version).Result;
         }
 
         /// <summary>
@@ -298,7 +298,7 @@ namespace GSMA.MobileConnect
             DiscoveryResponse discoveryResponse = null,
             string expectedState = null,
             string expectedNonce = null,
-            MobileConnectRequestOptions options = null)
+            MobileConnectRequestOptions options = null, string version = null)
         {
             return await MobileConnectInterfaceHelper.HandleUrlRedirect(
                 _discovery,
@@ -309,7 +309,7 @@ namespace GSMA.MobileConnect
                 expectedState,
                 expectedNonce,
                 _config,
-                options);
+                options, version);
         }
 
         /// <summary>
@@ -326,7 +326,7 @@ namespace GSMA.MobileConnect
             DiscoveryResponse discoveryResponse = null,
             string expectedState = null,
             string expectedNonce = null,
-            MobileConnectRequestOptions options = null)
+            MobileConnectRequestOptions options = null, string version = null)
         {
             return MobileConnectInterfaceHelper.HandleUrlRedirect(
                 _discovery,
@@ -337,7 +337,7 @@ namespace GSMA.MobileConnect
                 expectedState,
                 expectedNonce,
                 _config,
-                options).Result;
+                options, version).Result;
         }
 
         /// <summary>

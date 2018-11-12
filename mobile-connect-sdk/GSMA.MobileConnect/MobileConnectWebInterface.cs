@@ -253,6 +253,7 @@ namespace GSMA.MobileConnect
             string state,
             string nonce, 
             MobileConnectRequestOptions options,
+            string version,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             state = string.IsNullOrEmpty(state) ? Security.GenerateSecureNonce() : state;
@@ -267,7 +268,7 @@ namespace GSMA.MobileConnect
                 state, 
                 nonce, 
                 _config, 
-                options, 
+                options, version,
                 cancellationToken);
         }
 
@@ -289,7 +290,7 @@ namespace GSMA.MobileConnect
             string encryptedMSISDN,
             string state,
             string nonce, 
-            MobileConnectRequestOptions options,
+            MobileConnectRequestOptions options, string version,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
@@ -300,7 +301,7 @@ namespace GSMA.MobileConnect
             }
 
             return await RequestHeadlessAuthenticationAsync(
-                request, discoveryResponse, encryptedMSISDN, state, nonce, options, cancellationToken);
+                request, discoveryResponse, encryptedMSISDN, state, nonce, options, version, cancellationToken);
         }
 
         /// <summary>
@@ -319,7 +320,7 @@ namespace GSMA.MobileConnect
             Uri redirectedUrl,
             string expectedState,
             string expectedNonce,
-            MobileConnectRequestOptions options)
+            MobileConnectRequestOptions options, string version)
         {
             return await MobileConnectInterfaceHelper.RequestToken(
                 _authentication,
@@ -329,7 +330,7 @@ namespace GSMA.MobileConnect
                 expectedState,
                 expectedNonce,
                 _config,
-                options);
+                options, version);
         }
 
         /// <summary>
@@ -348,7 +349,7 @@ namespace GSMA.MobileConnect
             Uri redirectedUrl,
             string expectedState,
             string expectedNonce,
-            MobileConnectRequestOptions options)
+            MobileConnectRequestOptions options, string version)
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -358,7 +359,7 @@ namespace GSMA.MobileConnect
             }
 
             return await RequestTokenAsync(
-                request, discoveryResponse, redirectedUrl, expectedState, expectedNonce, options);
+                request, discoveryResponse, redirectedUrl, expectedState, expectedNonce, options, version);
         }
 
         /// <summary>
@@ -451,7 +452,7 @@ namespace GSMA.MobileConnect
             discoveryResponse = null,
             string expectedState = null,
             string expectedNonce = null,
-            MobileConnectRequestOptions options = null)
+            MobileConnectRequestOptions options = null, string version = null)
         {
             return await CacheIfRequired(
                 await MobileConnectInterfaceHelper.HandleUrlRedirect(
@@ -463,7 +464,7 @@ namespace GSMA.MobileConnect
                     expectedState,
                     expectedNonce,
                     _config,
-                    options));
+                    options, version));
         }
 
         /// <summary>
@@ -483,7 +484,7 @@ namespace GSMA.MobileConnect
             string sdkSession = null,
             string expectedState = null,
             string expectedNonce = null,
-            MobileConnectRequestOptions options = null)
+            MobileConnectRequestOptions options = null, string version = null)
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -502,7 +503,7 @@ namespace GSMA.MobileConnect
                     expectedState,
                     expectedNonce,
                     _config,
-                    options));
+                    options, version));
         }
 
         /// <summary>

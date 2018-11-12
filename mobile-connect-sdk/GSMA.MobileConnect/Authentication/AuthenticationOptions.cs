@@ -145,6 +145,11 @@ namespace GSMA.MobileConnect.Authentication
         public string ClientName { get; set; }
 
         /// <summary>
+        /// Client secret
+        /// </summary>
+        public string ClientSecret { get; set; }
+
+        /// <summary>
         /// Context of the action being authorized, when authorizing using mc_authz this will be displayed
         /// to the user along with the <see cref="ClientName"/> and <see cref="BindingMessage"/> to allow
         /// the user to identify the authorization request
@@ -183,5 +188,15 @@ namespace GSMA.MobileConnect.Authentication
         /// Api version
         /// </summary>
         public string Version { get; set; }
+
+        /// <summary>
+        /// Correlation Id
+        /// </summary>
+        public string CorrelationId { get; set; }
+
+        /// <summary>
+        /// Correlation Id
+        /// </summary>
+        public bool IsUsingCorrelationId { get; set; }
     }
 }

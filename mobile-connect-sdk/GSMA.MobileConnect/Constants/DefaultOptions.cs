@@ -19,6 +19,9 @@
         internal const int AUTHENTICATION_MAX_AGE = 3600;
         internal const string AUTHENTICATION_RESPONSE_TYPE = "code";
         internal const string AUTHENTICATION_DEFAULT_VERSION = "mc_v1.1";
+        internal const string V1_1 = "mc_v1.1";
+        internal const string V2_0 = "mc_v2.0";
+        internal const string V2_3 = "mc_di_r2_v2.3";
 
         internal const string GRANT_TYPE = GrantTypes.AUTH_CODE;
 

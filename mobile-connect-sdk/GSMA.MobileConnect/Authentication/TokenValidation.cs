@@ -3,6 +3,8 @@ using GSMA.MobileConnect.Utils;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
+using GSMA.MobileConnect.Claims;
+using GSMA.MobileConnect.Constants;
 
 namespace GSMA.MobileConnect.Authentication
 {
@@ -30,18 +32,14 @@ namespace GSMA.MobileConnect.Authentication
             }
 
             bool isR1Source = version == Discovery.SupportedVersions.R1Version;
-            TokenValidationResult result = ValidateIdTokenClaims(idToken, clientId, issuer, nonce, maxAge);
-            if (result != TokenValidationResult.Valid && !isR1Source)
+            TokenValidationResult result = ValidateIdTokenClaims(idToken, clientId, issuer, nonce, maxAge, version);
+            if (result != TokenValidationResult.Valid)
             {
                 return result;
             }
-            else if(isR1Source)
-            {
-                return TokenValidationResult.IdTokenValidationSkipped;
-            }
 
             result = ValidateIdTokenSignature(idToken, keyset);
-            return result != TokenValidationResult.Valid && isR1Source ? TokenValidationResult.IdTokenValidationSkipped : result;
+            return result != TokenValidationResult.Valid ? TokenValidationResult.IdTokenValidationSkipped : result;
         }
 
         /// <summary>
@@ -105,10 +103,10 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="nonce">Nonce that is validated against the nonce claim</param>
         /// <param name="maxAge">MaxAge that is used to validate the auth_time claim (if supplied)</param>
         /// <returns>TokenValidationResult that specifies if the token claims are valid, or if not why they are not valid</returns>
-        public static TokenValidationResult ValidateIdTokenClaims(string idToken, string clientId, string issuer, string nonce, int? maxAge)
+        public static TokenValidationResult ValidateIdTokenClaims(string idToken, string clientId, string issuer, string nonce, int? maxAge, string currentVersion)
         {
             JObject claims = JObject.Parse(JsonWebToken.DecodePart(idToken, JWTPart.Claims));
-            if (nonce != null && (string)claims["nonce"] != nonce)
+            if (nonce != null && (string)claims[ClaimsConstants.NONCE] != nonce)
             {
                 return TokenValidationResult.InvalidNonce;
             }
@@ -118,8 +116,33 @@ namespace GSMA.MobileConnect.Authentication
                 return TokenValidationResult.InvalidAudAndAzp;
             }
 
+            if (currentVersion.Equals(DefaultOptions.V2_3))
+            {
+                if (!IsAtHashPresent(claims))
+                {
+                    return TokenValidationResult.INVALID_AT_HASH;
+                }
+
+                if (!IsAcrPresent(claims))
+                {
+                    return TokenValidationResult.INVALID_ACR;
+                }
+
+                if (!IsAmrPresent(claims))
+                {
+                    return TokenValidationResult.INVALID_AMR;
+                }
+
+                if (!IsHashedLoginHintPresent(claims))
+                {
+                    return TokenValidationResult.INVALID_HASHED_LOGIN_HINT;
+                }
+            }
+
+            
+
             var now = DateTime.UtcNow;
-            var exp = (int?)claims["exp"];
+            var exp = (int?)claims[ClaimsConstants.EXPIRED];
             if (!exp.HasValue || UnixTimestamp.ToUTCDateTime(exp.Value) < now)
             {
                 return TokenValidationResult.IdTokenExpired;
@@ -132,12 +155,32 @@ namespace GSMA.MobileConnect.Authentication
                 return TokenValidationResult.MaxAgePassed;
             }
 
-            if ((string)claims["iss"] != issuer)
+            if ((string)claims[ClaimsConstants.ISSUER] != issuer)
             {
                 return TokenValidationResult.InvalidIssuer;
             }
 
             return TokenValidationResult.Valid;
+        }
+
+        private static bool IsAtHashPresent(JObject claims)
+        {
+            return claims[ClaimsConstants.AT_HASH] != null;
+        }
+
+        private static bool IsAcrPresent(JObject claims)
+        {
+            return claims[ClaimsConstants.ACR] != null;
+        }
+
+        private static bool IsAmrPresent(JObject claims)
+        {
+            return claims[ClaimsConstants.AMR] != null;
+        }
+
+        private static bool IsHashedLoginHintPresent(JObject claims)
+        {
+            return claims[ClaimsConstants.HASHED_LOGIN_HINT] != null;
         }
 
         /// <summary>

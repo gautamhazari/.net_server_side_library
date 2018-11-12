@@ -40,6 +40,12 @@ namespace GSMA.MobileConnect.Authentication
         public string RefreshToken { get; private set; }
 
         /// <summary>
+        /// The optional correlation id
+        /// </summary>
+        [JsonProperty("correlation_id")]
+        public string CorrelationId { get; private set; }
+
+        /// <summary>
         /// The time the response will expire, this is calculated using the time received and expires in values.
         /// </summary>
         [JsonIgnore]

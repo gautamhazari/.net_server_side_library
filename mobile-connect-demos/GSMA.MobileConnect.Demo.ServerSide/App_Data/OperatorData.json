@@ -6,7 +6,7 @@
   "redirectURL": "http://localhost:8080/server_side_api/discovery_callback",
   "xRedirect": "True",
   "includeRequestIP": "True",
-  "apiVersion": "mc_v1.1",
+  "apiVersion": "mc_di_r2_v2.3",
   "scope": "openid mc_identity_phonenumber",
   "acrValues": "2",
   "maxDiscoveryCacheSize": 104857600

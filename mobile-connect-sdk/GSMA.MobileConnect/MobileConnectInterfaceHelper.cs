@@ -131,7 +131,7 @@ namespace GSMA.MobileConnect
         }
 
         internal static async Task<MobileConnectStatus> RequestHeadlessAuthentication(IAuthenticationService authentication, IJWKeysetService jwks, IIdentityService identity, DiscoveryResponse discoveryResponse, string encryptedMSISDN,
-            string state, string nonce, MobileConnectConfig config, MobileConnectRequestOptions options, CancellationToken cancellationToken = default(CancellationToken))
+            string state, string nonce, MobileConnectConfig config, MobileConnectRequestOptions options, string version, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (!IsUsableDiscoveryResponse(discoveryResponse))
             {
@@ -191,7 +191,7 @@ namespace GSMA.MobileConnect
         }
 
         internal static async Task<MobileConnectStatus> RequestToken(IAuthenticationService authentication, IJWKeysetService jwks, DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState,
-            string expectedNonce, MobileConnectConfig config, MobileConnectRequestOptions options)
+            string expectedNonce, MobileConnectConfig config, MobileConnectRequestOptions options, string version)
         {
             RequestTokenResponse response;
 
@@ -235,7 +235,7 @@ namespace GSMA.MobileConnect
                 var maxSupportedVersion = discoveryResponse.ProviderMetadata?.MobileConnectVersionSupported == null ? "mc_v1.1" : discoveryResponse.ProviderMetadata.MobileConnectVersionSupported.MaxSupportedVersionString;
 
                 return HandleTokenResponse(authentication, response, clientId, issuer, expectedNonce,
-                    maxSupportedVersion, jwksTask.Result, options);
+                    version, jwksTask.Result, options);
             }
             catch (MobileConnectInvalidArgumentException e)
             {
@@ -278,11 +278,11 @@ namespace GSMA.MobileConnect
         }
 
         internal static async Task<MobileConnectStatus> HandleUrlRedirect(IDiscoveryService discovery, IAuthenticationService authentication, IJWKeysetService jwks, Uri redirectedUrl, DiscoveryResponse discoveryResponse, 
-            string expectedState, string expectedNonce, MobileConnectConfig config, MobileConnectRequestOptions options)
+            string expectedState, string expectedNonce, MobileConnectConfig config, MobileConnectRequestOptions options, string version)
         {
             if (HttpUtils.ExtractQueryValue(redirectedUrl.Query, "code") != null)
             {
-                return await RequestToken(authentication, jwks, discoveryResponse, redirectedUrl, expectedState, expectedNonce, config, options);
+                return await RequestToken(authentication, jwks, discoveryResponse, redirectedUrl, expectedState, expectedNonce, config, options, version);
             }
             else if (HttpUtils.ExtractQueryValue(redirectedUrl.Query, "mcc_mnc") != null)
             {
