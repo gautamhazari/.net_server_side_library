@@ -33,6 +33,10 @@ namespace GSMA.MobileConnect.Authentication
 
             bool isR1Source = version == Discovery.SupportedVersions.R1Version;
             TokenValidationResult result = ValidateIdTokenClaims(idToken, clientId, issuer, nonce, maxAge, version);
+            if (isR1Source)
+            {
+                return TokenValidationResult.IdTokenValidationSkipped;
+            }
             if (result != TokenValidationResult.Valid)
             {
                 return result;

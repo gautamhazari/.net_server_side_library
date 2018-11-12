@@ -1,7 +1,6 @@
 ﻿using System;
 using GSMA.MobileConnect.Cache;
 using GSMA.MobileConnect.Web;
-using System.Dynamic;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -12,35 +11,30 @@ using GSMA.MobileConnect.ServerSide.Web.Utils;
 using Newtonsoft.Json;
 using System.Net.Http;
 using GSMA.MobileConnect.Discovery;
-using GSMA.MobileConnect.Utils;
-using Scope = GSMA.MobileConnect.Constants.Scope;
-using GSMA.MobileConnect.Constants;
-using System.Json;
 
 namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 {
     [RoutePrefix("server_side_api")]
     public class Controller : ApiController
     {
-        protected static ReadAndParseFiles readAndParseFiles = new ReadAndParseFiles();
-        protected static MobileConnectWebInterface _mobileConnect;
-        protected static string _apiVersion;
-        protected static bool _includeRequestIp;
-        protected static MobileConnectConfig _mobileConnectConfig;
-        protected static OperatorParameters _operatorParams;
+        protected static ReadAndParseFiles ReadAndParseFiles = new ReadAndParseFiles();
+        protected static MobileConnectWebInterface MobileConnect;
+        protected static string ApiVersion;
+        protected static bool IncludeRequestIp;
+        protected static MobileConnectConfig MobileConnectConfig;
+        protected static OperatorParameters OperatorParams;
 
-        protected static HttpRequestMessage _requestMessage = new HttpRequestMessage();
-        protected static SessionCache _sessionCache;
-        protected static DiscoveryCache _discoveryCache;
-        protected static string[] _identityScopes = {Scope.IDENTITYPHONE, Scope.IDENTITYSIGNUP,
+        protected static HttpRequestMessage RequestMessage = new HttpRequestMessage();
+        protected static SessionCache SessionCache;
+        protected static DiscoveryCache DiscoveryCache;
+        protected static string[] IdentityScopes = {Scope.IDENTITYPHONE, Scope.IDENTITYSIGNUP,
             Scope.IDENTITYNATIONALID, Scope.IDENTITYSIGNUPPLUS, Scope.KYCHASHED, Scope.KYCPLAIN};
-        protected static string[] _userInfoScopes = {Scope.PROFILE, Scope.EMAIL, Scope.ADDRESS,
+        protected static string[] UserInfoScopes = {Scope.PROFILE, Scope.EMAIL, Scope.ADDRESS,
             Scope.PHONE, Scope.OFFLINEACCESS};
-        IDiscoveryService discovery;
 
         protected Controller(MobileConnectWebInterface mobileConnect)
         {
-            _mobileConnect = mobileConnect;
+            MobileConnect = mobileConnect;
         }
 
         protected Controller()
@@ -64,8 +58,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                                             Authentication.TokenValidationResult.IdTokenValidationSkipped
             };
 
-            var response = await _mobileConnect.HandleUrlRedirectAsync(
-                Request, Request.RequestUri, sdksession, expectedState, expectedNonce, requestOptions, _apiVersion);
+            var response = await MobileConnect.HandleUrlRedirectAsync(
+                Request, Request.RequestUri, sdksession, expectedState, expectedNonce, requestOptions, ApiVersion);
 
             return CreateResponse(response);
         }
@@ -90,12 +84,12 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 
         protected async Task<MobileConnectStatus> RequestUserInfo(DiscoveryResponse discoveryResponse, string accessToken = null)
         {
-            return await _mobileConnect.RequestUserInfoAsync(Request, discoveryResponse, accessToken, new MobileConnectRequestOptions());
+            return await MobileConnect.RequestUserInfoAsync(Request, discoveryResponse, accessToken, new MobileConnectRequestOptions());
         }
 
         protected async Task<MobileConnectStatus> RequestPremiumInfo(DiscoveryResponse discoveryResponse, string accessToken = null)
         {
-            return await _mobileConnect.RequestPremiumInfoAsync(Request, discoveryResponse, accessToken, new MobileConnectRequestOptions());
+            return await MobileConnect.RequestPremiumInfoAsync(Request, discoveryResponse, accessToken, new MobileConnectRequestOptions());
         }
 
         protected IHttpActionResult CreateResponse(MobileConnectStatus status)
@@ -137,7 +131,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                     }
                 }
             }
-
+    
             else
             {
                 authnResponse.Content = new StringContent(СreateNewHttpResponseMessage(authnResponse));
@@ -145,20 +139,20 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             return new ResponseMessageResult(authnResponse);
         }
 
-        protected string СreateNewHttpResponseMessage(HttpResponseMessage authnResponse, HttpResponseMessage identityUserInfoStatustatus = null)
+        protected string СreateNewHttpResponseMessage(HttpResponseMessage authResponse, HttpResponseMessage identityUserInfoStatus = null)
         {
 
-            dynamic convertAuthnResponseToJson = JsonConvert.DeserializeObject(
-                    authnResponse.Content.ReadAsStringAsync().Result);
+            dynamic convertAuthResponseToJson = JsonConvert.DeserializeObject(
+                    authResponse.Content.ReadAsStringAsync().Result);
 
-            if (identityUserInfoStatustatus != null)
+            if (identityUserInfoStatus != null)
             {
                 dynamic convertResponseToJson =
-                    JsonConvert.DeserializeObject(identityUserInfoStatustatus.Content.ReadAsStringAsync().Result);
-                convertAuthnResponseToJson.identity = convertResponseToJson.identity;
+                    JsonConvert.DeserializeObject(identityUserInfoStatus.Content.ReadAsStringAsync().Result);
+                convertAuthResponseToJson.identity = convertResponseToJson.identity;
             }
 
-            return JsonConvert.SerializeObject(convertAuthnResponseToJson);
+            return JsonConvert.SerializeObject(convertAuthResponseToJson);
         }
 
     }

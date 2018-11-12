@@ -12,6 +12,7 @@ using GSMA.MobileConnect.Cache;
 using GSMA.MobileConnect.Constants;
 using Scope = GSMA.MobileConnect.Utils.Scope;
 using System.Net.Http;
+using GSMA.MobileConnect.Claims;
 
 namespace GSMA.MobileConnect.Authentication
 {
@@ -34,7 +35,7 @@ namespace GSMA.MobileConnect.Authentication
 
         /// <inheritdoc/>
         public StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce,
-            string encryptedMsisdn, SupportedVersions versions, AuthenticationOptions options)
+            string encryptedMsisdn, SupportedVersions versions, AuthenticationOptions options, string currentVersion)
         {
             Validate.RejectNullOrEmpty(clientId, "clientId");
             Validate.RejectNullOrEmpty(authorizeUrl, "authorizeUrl");
@@ -52,6 +53,38 @@ namespace GSMA.MobileConnect.Authentication
                 Validate.RejectNullOrEmpty(options.Context, "options.Context");
                 Validate.RejectNullOrEmpty(options.ClientName, "options.ClientName");
                 Validate.RejectNullOrEmpty(options.BindingMessage, "options.BindingMessage");
+            }
+
+            if (options != null)
+            {
+                KYCClaimsParameter kycClaims = options.KycClaims;
+                if (kycClaims != null)
+                {
+                    bool isNamePresent = false;
+                    bool isAddressPresent = false;
+                    if (currentVersion.Equals(DefaultOptions.V2_3) && options.Scope.Contains(Constants.Scope.KYCPLAIN))
+                    {
+                        isNamePresent = StringUtils.requireNonEmpty("name || given_name and family_name",
+                            kycClaims.Name, kycClaims.GivenName, kycClaims.FamilyName);
+                        isAddressPresent = StringUtils.requireNonEmpty(
+                            "address || houseno_or_housename, postal_code, country, town", kycClaims.Address,
+                            kycClaims.HousenoOrHouseName, kycClaims.PostalCode, kycClaims.Country, kycClaims.Town);
+                    }
+             
+                    if (currentVersion.Equals(DefaultOptions.V2_3) && options.Scope.Contains(Constants.Scope.KYCHASHED))
+                    {
+                        isNamePresent = StringUtils.requireNonEmpty("name_hashed || given_name_hashed and family_name_hashed",
+                            kycClaims.NameHashed, kycClaims.GivenNameHashed, kycClaims.FamilyNameHashed);
+                        isAddressPresent = StringUtils.requireNonEmpty(
+                            "address_hashed || houseno_or_housename_hashed, postal_code_hashed, country_hashed, town_hashed", kycClaims.AddressHashed,
+                            kycClaims.HousenoOrHouseNameHashed, kycClaims.PostalCodeHashed, kycClaims.CountryHashed, kycClaims.TownHashed);
+                    }
+
+                    if ((isNamePresent & !isAddressPresent) | (!isNamePresent & isAddressPresent))
+                    {
+                        throw new MobileConnectInvalidArgumentException("(split|concatenated, plain|hashed) name or address is empty");
+                    }
+                }
             }
 
             options.State = state;
@@ -131,7 +164,7 @@ namespace GSMA.MobileConnect.Authentication
 
         /// <inheritdoc/>
         public async Task<RequestTokenResponse> RequestHeadlessAuthentication(string clientId, string clientSecret, string authorizeUrl, string tokenUrl, string redirectUrl,
-            string state, string nonce, string encryptedMsisdn, SupportedVersions versions, AuthenticationOptions options, CancellationToken cancellationToken = default(CancellationToken))
+            string state, string nonce, string encryptedMsisdn, SupportedVersions versions, AuthenticationOptions options, string version, CancellationToken cancellationToken = default(CancellationToken))
         {
             options = options ?? new AuthenticationOptions();
 
@@ -141,7 +174,7 @@ namespace GSMA.MobileConnect.Authentication
                 options.Prompt = "mobile";
             }
 
-            string authUrl = StartAuthentication(clientId, authorizeUrl, redirectUrl, state, nonce, encryptedMsisdn, versions, options).Url;
+            string authUrl = StartAuthentication(clientId, authorizeUrl, redirectUrl, state, nonce, encryptedMsisdn, versions, options, version).Url;
             Uri finalRedirect = null;
 
             try
@@ -347,6 +380,13 @@ namespace GSMA.MobileConnect.Authentication
         /// <inheritdoc/>
         private List<BasicKeyValuePair> GetAuthenticationQueryParams(AuthenticationOptions options, bool useAuthorize, string version)
         {
+            string kycClaimsJson = null;
+            if (options.KycClaims != null)
+            {
+                kycClaimsJson = options.KycClaims.ToJson();
+            }
+
+
             var authParameters = new List<BasicKeyValuePair>
             {
                 new BasicKeyValuePair(Parameters.AUTHENTICATION_REDIRECT_URI, options.RedirectUrl),
@@ -371,6 +411,11 @@ namespace GSMA.MobileConnect.Authentication
                 new BasicKeyValuePair(Parameters.CONTEXT, options.Context),
                 new BasicKeyValuePair(Parameters.CLIENT_NAME, options.ClientName)
             };
+
+            if (kycClaimsJson != null)
+            {
+                authParameters.Add(new BasicKeyValuePair(Parameters.CLAIMS, kycClaimsJson));
+            }
 
             if (useAuthorize)
             {

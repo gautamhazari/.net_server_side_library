@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GSMA.MobileConnect.Constants;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace GSMA.MobileConnect.Claims
 {
     /// <summary>
     /// Class to construct required kyc claims for the mobile connect process
     /// </summary>
-    class KYCClaimsParameter
+    public class KYCClaimsParameter
     {
         /// <summary>
         /// Concatenated given_name and family_name. 
@@ -119,5 +121,48 @@ namespace GSMA.MobileConnect.Claims
         /// </summary>
         [JsonProperty("birthdate_hashed", NullValueHandling = NullValueHandling.Ignore)]
         public string BirthdateHashed { get; set; }
+
+        /// <summary>
+        /// Convert claims to json in request format
+        /// </summary>
+        /// <returns></returns>
+        public string ToJson()
+        {
+            var node = new JObject();
+            PutValue(node, KYCClaimsConstants.NAME, Name);
+            PutValue(node, KYCClaimsConstants.GIVEN_NAME, GivenName);
+            PutValue(node, KYCClaimsConstants.FAMILY_NAME, FamilyName);
+            PutValue(node, KYCClaimsConstants.ADDRESS, Address);
+            PutValue(node, KYCClaimsConstants.HOUSENO_OR_HOUSENAME, HousenoOrHouseName);
+            PutValue(node, KYCClaimsConstants.POSTAL_CODE, PostalCode);
+            PutValue(node, KYCClaimsConstants.TOWN, Town);
+            PutValue(node, KYCClaimsConstants.COUNTRY, Country);
+            PutValue(node, KYCClaimsConstants.BIRTHDATE, Birthdate);
+
+            PutValue(node, KYCClaimsConstants.NAME_HASHED, NameHashed);
+            PutValue(node, KYCClaimsConstants.GIVEN_NAME_HASHED, GivenNameHashed);
+            PutValue(node, KYCClaimsConstants.FAMILY_NAME_HASHED, FamilyNameHashed);
+            PutValue(node, KYCClaimsConstants.ADDRESS_HASHED, AddressHashed);
+            PutValue(node, KYCClaimsConstants.HOUSENO_OR_HOUSENAME_HASHED, HousenoOrHouseNameHashed);
+            PutValue(node, KYCClaimsConstants.POSTAL_CODE_HASHED, PostalCodeHashed);
+            PutValue(node, KYCClaimsConstants.TOWN_HASHED, TownHashed);
+            PutValue(node, KYCClaimsConstants.COUNTRY_HASHED, CountryHashed);
+            PutValue(node, KYCClaimsConstants.BIRTHDATE_HASHED, BirthdateHashed);
+
+            var premiumInfo = new JObject {{LinkRels.PREMIUMINFO, node}};
+
+            return premiumInfo.ToString();
+        }
+
+        private JObject PutValue(JObject node, string name, string param)
+        {
+            if (!string.IsNullOrEmpty(param))
+            {
+                JObject jObject = new JObject {{LinkRels.VALUE, param}};
+                node.Add(name, jObject);
+            }
+
+            return node;
+        }
     }
 }

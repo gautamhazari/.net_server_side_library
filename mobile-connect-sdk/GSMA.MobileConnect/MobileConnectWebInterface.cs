@@ -195,13 +195,14 @@ namespace GSMA.MobileConnect
             string encryptedMSISDN,
             string state,
             string nonce,
-            MobileConnectRequestOptions options)
+            MobileConnectRequestOptions options,
+            string version)
         {
             state = string.IsNullOrEmpty(state) ? Security.GenerateSecureNonce() : state;
             nonce = string.IsNullOrEmpty(nonce) ? Security.GenerateSecureNonce() : nonce;
 
             return MobileConnectInterfaceHelper.StartAuthentication(
-                _authentication, discoveryResponse, encryptedMSISDN, state, nonce, _config, options);
+                _authentication, discoveryResponse, encryptedMSISDN, state, nonce, _config, options, version);
         }
 
         /// <summary>
@@ -220,7 +221,8 @@ namespace GSMA.MobileConnect
             string encryptedMSISDN,
             string state,
             string nonce,
-            MobileConnectRequestOptions options)
+            MobileConnectRequestOptions options,
+            string version)
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -229,7 +231,7 @@ namespace GSMA.MobileConnect
                 return GetCacheError();
             }
 
-            var authResult = StartAuthentication(request, discoveryResponse, encryptedMSISDN, state, nonce, options);
+            var authResult = StartAuthentication(request, discoveryResponse, encryptedMSISDN, state, nonce, options, version);
 
             return authResult;
         }

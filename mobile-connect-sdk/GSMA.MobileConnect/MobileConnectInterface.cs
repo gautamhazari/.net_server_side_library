@@ -170,10 +170,11 @@ namespace GSMA.MobileConnect
             string encryptedMSISDN,
             string state,
             string nonce,
-            MobileConnectRequestOptions options)
+            MobileConnectRequestOptions options,
+            string version)
         {
             return MobileConnectInterfaceHelper.StartAuthentication(
-                _authentication, discoveryResponse, encryptedMSISDN, state, nonce, _config, options);
+                _authentication, discoveryResponse, encryptedMSISDN, state, nonce, _config, options, version);
         }
 
         /// <summary>

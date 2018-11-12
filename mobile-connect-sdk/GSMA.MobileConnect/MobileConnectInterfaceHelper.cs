@@ -99,7 +99,7 @@ namespace GSMA.MobileConnect
         }
 
         internal static MobileConnectStatus StartAuthentication(IAuthenticationService authentication, DiscoveryResponse discoveryResponse, string encryptedMSISDN,
-            string state, string nonce, MobileConnectConfig config, MobileConnectRequestOptions options)
+            string state, string nonce, MobileConnectConfig config, MobileConnectRequestOptions options, string version)
         {
             if (!IsUsableDiscoveryResponse(discoveryResponse))
             {
@@ -114,7 +114,7 @@ namespace GSMA.MobileConnect
                 SupportedVersions supportedVersions = discoveryResponse.ProviderMetadata?.MobileConnectVersionSupported;
                 AuthenticationOptions authOptions = options?.AuthenticationOptions ?? new AuthenticationOptions();
 
-                response = authentication.StartAuthentication(clientId, authorizationUrl, config.RedirectUrl, state, nonce, encryptedMSISDN, supportedVersions, authOptions);
+                response = authentication.StartAuthentication(clientId, authorizationUrl, config.RedirectUrl, state, nonce, encryptedMSISDN, supportedVersions, authOptions, version);
             }
             catch (MobileConnectInvalidArgumentException e)
             {
@@ -152,7 +152,7 @@ namespace GSMA.MobileConnect
 
                 var jwksTask = jwks.RetrieveJWKSAsync(discoveryResponse.OperatorUrls.JWKSUrl);
                 var tokenTask = authentication.RequestHeadlessAuthentication(clientId, clientSecret, authorizationUrl, tokenUrl, config.RedirectUrl, state, nonce, 
-                    encryptedMSISDN, supportedVersions, authOptions, cancellationToken);
+                    encryptedMSISDN, supportedVersions, authOptions, version, cancellationToken);
 
                 // execute both tasks in parallel
                 await Task.WhenAll(tokenTask, jwksTask).ConfigureAwait(false);

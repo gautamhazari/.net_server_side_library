@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using GSMA.MobileConnect.Exceptions;
 
 namespace GSMA.MobileConnect.Utils
 {
@@ -92,6 +93,48 @@ namespace GSMA.MobileConnect.Utils
                 return null;
             }
             else return stringBuilder.ToString();
+        }
+
+        /// <summary>
+        /// Inspect a String for content, throws NullPointerException if is null or empty.
+        /// </summary>
+        /// <param name="keys">keys to convert</param>
+        /// <returns>string that contains all keys.</returns>
+        public static bool requireNonEmpty(string name, string value, params string[] values)
+        {
+            if (!string.IsNullOrEmpty(value) & !IsNullOrEmpty(values))
+            {
+                throw new MobileConnectInvalidArgumentException(name);
+            }
+            Validate.RejectNullOrEmpty(name, "name");
+            if (string.IsNullOrEmpty(value) & !IsNullOrEmpty(values))
+            {
+                foreach (var val in values)
+                {
+                    Validate.RejectNullOrEmpty(val, name);
+                }
+            }
+
+            return !string.IsNullOrEmpty(value) || !IsNullOrEmpty(values);
+        }
+
+        /// <summary>
+        /// Inspect a String for content, throws NullPointerException if is null or empty.
+        /// </summary>
+        /// <param name="keys">keys to convert</param>
+        /// <returns>string that contains all keys.</returns>
+        public static bool IsNullOrEmpty(params string[] values)
+        {
+            bool isEmpty = true;
+            foreach (var value in values)
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    isEmpty = false;
+                }
+            }
+
+            return isEmpty;
         }
 
         /// <summary>

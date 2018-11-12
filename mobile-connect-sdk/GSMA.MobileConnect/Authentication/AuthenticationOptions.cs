@@ -198,5 +198,10 @@ namespace GSMA.MobileConnect.Authentication
         /// Correlation Id
         /// </summary>
         public bool IsUsingCorrelationId { get; set; }
+
+        /// <summary>
+        /// KYC Claims
+        /// </summary>
+        public KYCClaimsParameter KycClaims { get; set; }
     }
 }
