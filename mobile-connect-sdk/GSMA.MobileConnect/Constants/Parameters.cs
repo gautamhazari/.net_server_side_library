@@ -21,6 +21,7 @@
 
         //Required params for authentication
         public const string CLIENT_ID = "client_id";
+        public const string CORRELATION_ID = "correlation_id";
         public const string RESPONSE_TYPE = "response_type";
         public const string AUTHENTICATION_REDIRECT_URI = "redirect_uri";
         public const string SCOPE = "scope";

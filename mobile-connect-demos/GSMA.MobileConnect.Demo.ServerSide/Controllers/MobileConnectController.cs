@@ -236,14 +236,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         [Route("sector_identifier_uri")]
         public async Task<IHttpActionResult> GetSectorIdentifierUri()
         {
-            /*var response = Request.CreateResponse(HttpStatusCode.OK, ReadAndParseFiles.ReadFileAsString(Utils.Constants.SectorIdentifierFilePath));
-            return new ResponseMessageResult(new HttpResponseMessage()
-            {
-                StatusCode = HttpStatusCode.OK,
-                Content = new StringContent(JsonConvert.SerializeObject(ReadAndParseFiles.ReadFileAsString(Utils.Constants.SectorIdentifierFilePath)))
-            });*/
-
-            var json1 = JArray.Parse(Utils.Constants.SectorIdentifierFilePath);
+            var json1 = JArray.Parse(ReadAndParseFiles.ReadFileAsString(Utils.Constants.SectorIdentifierFilePath));
             var response = new HttpResponseMessage()
             {
                 Content = new ObjectContent<JArray>(json1, new JsonMediaTypeFormatter()),
@@ -255,7 +248,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 
         }
 
-        private String CallStartAuth(
+        private string CallStartAuth(
             DiscoveryResponse discoveryResponse,
             string subscriberId,
             HttpRequestMessage request,
@@ -271,7 +264,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             return StartAuthentication(discoveryResponse, subscriberId, request, msisdn, mcc, mnc, sourceIp);
         }
 
-        private String StartAuthentication(
+        private string StartAuthentication(
             DiscoveryResponse discoveryResponse,
             string subscriberId,
             HttpRequestMessage request,
@@ -283,7 +276,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             return StartAuth(discoveryResponse, subscriberId, request, msisdn, mcc, mnc, sourceIp);
         }
 
-        private String StartAuthorize(
+        private string StartAuthorize(
             DiscoveryResponse discoveryResponse,
             string subscriberId,
             HttpRequestMessage request,
@@ -295,7 +288,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             return StartAuth(discoveryResponse, subscriberId, request, msisdn, mcc, mnc, sourceIp);
         }
 
-        private String StartAuth(
+        private string StartAuth(
             DiscoveryResponse discoveryResponse, 
             string subscriberId,
             HttpRequestMessage request,

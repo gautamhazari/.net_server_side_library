@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System.Net.Http.Headers;
+using System.Web.Http;
 
 namespace GSMA.MobileConnect.ServerSide.Web
 {
@@ -16,6 +17,8 @@ namespace GSMA.MobileConnect.ServerSide.Web
                 routeTemplate: "api/{controller}/{id}",                
                 defaults: new { id = RouteParameter.Optional, action = "Index" }
             );
+
+            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
         }
     }
 }
