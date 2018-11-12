@@ -21,8 +21,6 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
     [RoutePrefix("server_side_api")]
     public class WithoutDiscoveryController : Controller
     {
-     
-
         public WithoutDiscoveryController(MobileConnectWebInterface mobileConnect)
         {
             _mobileConnect = mobileConnect;
@@ -57,21 +55,6 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             return GetHttpMsgWithRedirect(url);
         }
         
-        private IHttpActionResult GetHttpMsgWithRedirect(string url, string errMsg = null)
-        {
-            if (string.IsNullOrEmpty(url))
-            {
-                return CreateResponse(MobileConnectStatus.Error(ErrorCodes.InvalidArgument, errMsg, new Exception()));
-            }
-
-            var authResponse = Request.CreateResponse(HttpStatusCode.Redirect);
-            authResponse.Headers.Location = new Uri(url);
-
-            return new ResponseMessageResult(authResponse);
-        }
-
-       
-
         private String CallStartAuth(
             DiscoveryResponse discoveryResponse,
             string msisdn,
@@ -110,14 +93,14 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             string loginHint = null;
             if (!string.IsNullOrEmpty(msisdn))
             {
-                loginHint = "MSISDN:"+msisdn;
+                loginHint = $"{Parameters.MSISDN}:{msisdn}";
             }
 
             var options = new MobileConnectRequestOptions
             {
                 Scope = scope,
-                Context = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = _apiVersion.Equals(Utils.Constants.VERSION2_0) ? Utils.Constants.ContextBindingMsg : null,
+                Context = _apiVersion.Equals(Utils.Constants.VERSION2_0) || _apiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = _apiVersion.Equals(Utils.Constants.VERSION2_0) || _apiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
                 ClientName = _operatorParams.clientName,
                 AcrValues = _operatorParams.acrValues,
                 LoginHint = loginHint
@@ -134,73 +117,6 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             SetSessionCache(status, discoveryResponse, status.Nonce);
             
             return status.Url;
-        }
-
-
-
-        private bool HandleErrorMsg(MobileConnectStatus status)
-        {
-            return !string.IsNullOrEmpty(status.ErrorMessage);
-        }
-
-        private async Task<MobileConnectStatus> RequestPremiumInfo(DiscoveryResponse discoveryResponse, string accessToken = null)
-        {
-            return await _mobileConnect.RequestPremiumInfoAsync(Request, discoveryResponse,accessToken, new MobileConnectRequestOptions());
-        }
-
-        private IHttpActionResult CreateResponse(MobileConnectStatus status)
-        {
-            var response = Request.CreateResponse(HttpStatusCode.OK, ResponseConverter.Convert(status));
-            if (status.SetCookie != null)
-            {
-                foreach (var cookie in status.SetCookie)
-                {
-                    response.Headers.Add("Set-Cookie", cookie);
-                }
-            }
-
-            return new ResponseMessageResult(response);
-        }
-
-        private IHttpActionResult CreateIdentityResponse(MobileConnectStatus authnStatus, MobileConnectStatus identityUserInfoStatustatus = null)
-        {
-            var authnResponse = Request.CreateResponse(HttpStatusCode.OK, ResponseConverter.Convert(authnStatus));
-
-            if (identityUserInfoStatustatus != null)
-            {
-                var response = Request.CreateResponse(HttpStatusCode.OK, ResponseConverter.Convert(identityUserInfoStatustatus));
-                authnResponse.Content = new StringContent(СreateNewHttpResponseMessage(authnResponse, response));
-
-                if (identityUserInfoStatustatus.SetCookie != null)
-                {
-                    foreach (var cookie in identityUserInfoStatustatus.SetCookie)
-                    {
-                        authnResponse.Headers.Add("Set-Cookie", cookie);
-                    }
-                }
-            }
-
-            else
-            {
-                authnResponse.Content = new StringContent(СreateNewHttpResponseMessage(authnResponse));
-            }
-            return new ResponseMessageResult(authnResponse);
-        }
-
-        private string СreateNewHttpResponseMessage(HttpResponseMessage authnResponse, HttpResponseMessage identityUserInfoStatustatus = null)
-        {
-
-            dynamic convertAuthnResponseToJson = JsonConvert.DeserializeObject(
-                    authnResponse.Content.ReadAsStringAsync().Result);
-
-            if (identityUserInfoStatustatus != null)
-            {
-                dynamic convertResponseToJson =
-                    JsonConvert.DeserializeObject(identityUserInfoStatustatus.Content.ReadAsStringAsync().Result);
-                convertAuthnResponseToJson.identity = convertResponseToJson.identity;
-            }
-
-            return JsonConvert.SerializeObject(convertAuthnResponseToJson);
         }
 
         private void GetParameters()
@@ -223,6 +139,5 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         {
             await _sessionCache.Add(status.State, new SessionData(discoveryResponse, nonce));
         }
-
     }
 }
