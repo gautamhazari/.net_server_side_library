@@ -30,19 +30,17 @@ namespace GSMA.MobileConnect.Authentication
             {
                 return TokenValidationResult.IdTokenMissing;
             }
-
-            bool isR1Source = version == Discovery.SupportedVersions.R1Version;
+            
             TokenValidationResult result = ValidateIdTokenClaims(idToken, clientId, issuer, nonce, maxAge, version);
-            if (isR1Source)
-            {
-                return TokenValidationResult.IdTokenValidationSkipped;
-            }
             if (result != TokenValidationResult.Valid)
             {
                 return result;
             }
 
-            result = ValidateIdTokenSignature(idToken, keyset);
+            if (version == DefaultOptions.V1_1)
+            {
+                result = ValidateIdTokenSignature(idToken, keyset);
+            }
             return result != TokenValidationResult.Valid ? TokenValidationResult.IdTokenValidationSkipped : result;
         }
 
@@ -159,7 +157,7 @@ namespace GSMA.MobileConnect.Authentication
                 return TokenValidationResult.MaxAgePassed;
             }
 
-            if ((string)claims[ClaimsConstants.ISSUER] != issuer)
+            if (!currentVersion.Equals(DefaultOptions.V1_1) && (string)claims[ClaimsConstants.ISSUER] != issuer)
             {
                 return TokenValidationResult.InvalidIssuer;
             }
