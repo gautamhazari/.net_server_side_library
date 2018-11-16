@@ -22,7 +22,8 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="encryptedMSISDN">Encrypted MSISDN for user if returned from discovery service</param>
         /// <param name="versions">SupportedVersions from <see cref="ProviderMetadata"/> if null default supported versions will be used to generate the auth url</param>
         /// <param name="options">Optional parameters</param>
-        StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl,
+        StartAuthenticationResponse StartAuthentication(string clientId, string correlationId, string authorizeUrl,
+            string redirectUrl,
             string state, string nonce, string encryptedMSISDN, SupportedVersions versions,
             AuthenticationOptions options, string version);
 
@@ -52,10 +53,14 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="encryptedMSISDN">Encrypted MSISDN for user if returned from discovery service</param>
         /// <param name="versions">SupportedVersions from <see cref="ProviderMetadata"/> if null default supported versions will be used to generate the auth url</param>
         /// <param name="options">Optional parameters</param>
+        /// <param name="version">Current version</param>
         /// <param name="cancellationToken">Cancellation token that can be used to cancel long running requests</param>
         /// <returns>Token if headless authentication is successful</returns>
-        Task<RequestTokenResponse> RequestHeadlessAuthentication(string clientId, string clientSecret, string authorizeUrl, string tokenUrl, string redirectUrl,
-            string state, string nonce, string encryptedMSISDN, SupportedVersions versions, AuthenticationOptions options, string version, CancellationToken cancellationToken = default(CancellationToken));
+        Task<RequestTokenResponse> RequestHeadlessAuthentication(string clientId, string correlationId, string clientSecret,
+            string authorizeUrl, string tokenUrl, string redirectUrl,
+            string state, string nonce, string encryptedMSISDN, SupportedVersions versions,
+            AuthenticationOptions options, string version,
+            CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Synchronous wrapper for <see cref="IAuthenticationService.RequestTokenAsync(string, string, string, string, string)"/>
@@ -65,7 +70,8 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="requestTokenUrl">The url for token requests recieved from the discovery process (Required)</param>
         /// <param name="redirectUrl">Confirms the redirectURI that the application used when the authorization request (Required)</param>
         /// <param name="code">The authorization code provided to the application via the call to the authentication/authorization API (Required)</param>
-        RequestTokenResponse RequestToken(string clientId, string clientSecret, string requestTokenUrl, string redirectUrl, string code);
+        RequestTokenResponse RequestToken(string clientId, string correlationId, string clientSecret,
+            string requestTokenUrl, string redirectUrl, string code);
 
         /// <summary>
         /// Allows an application to use the authorization code obtained from authentication/authorization to obtain an access token
@@ -79,7 +85,8 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="requestTokenUrl">The url for token requests recieved from the discovery process (Required)</param>
         /// <param name="redirectUrl">Confirms the redirectURI that the application used when the authorization request (Required)</param>
         /// <param name="code">The authorization code provided to the application via the call to the authentication/authorization API (Required)</param>
-        Task<RequestTokenResponse> RequestTokenAsync(string clientId, string clientSecret, string requestTokenUrl, string redirectUrl, string code);
+        Task<RequestTokenResponse> RequestTokenAsync(string clientId, string correlationId, string clientSecret,
+            string requestTokenUrl, string redirectUrl, string code);
 
         /// <summary>
         /// Allows an application to use the refresh token obtained from request token response and request for a token refresh. 

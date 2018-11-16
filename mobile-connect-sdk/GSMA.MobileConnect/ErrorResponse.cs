@@ -27,6 +27,12 @@ namespace GSMA.MobileConnect
         public string ErrorUri { get; set; }
 
         /// <summary>
+        /// Correlation Id
+        /// </summary>
+        [JsonProperty("correlation_id")]
+        public string CorrelationId { get; set; }
+
+        /// <summary>
         /// Creates an instance of the class ErrorResponse using a redirect url as the source for the error arguments
         /// </summary>
         /// <param name="url">Url with potential error arguments</param>

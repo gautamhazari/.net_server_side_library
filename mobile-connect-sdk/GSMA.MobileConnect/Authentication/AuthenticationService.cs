@@ -34,7 +34,7 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        public StartAuthenticationResponse StartAuthentication(string clientId, string authorizeUrl, string redirectUrl, string state, string nonce,
+        public StartAuthenticationResponse StartAuthentication(string clientId, string correlationId, string authorizeUrl, string redirectUrl, string state, string nonce,
             string encryptedMsisdn, SupportedVersions versions, AuthenticationOptions options, string currentVersion)
         {
             Validate.RejectNullOrEmpty(clientId, "clientId");
@@ -45,6 +45,11 @@ namespace GSMA.MobileConnect.Authentication
 
             options = options ?? new AuthenticationOptions();
             options.Scope = options.Scope ?? "";
+
+            if (options != null && !options.IsUsingCorrelationId)
+            {
+                correlationId = "";
+            }
 
             bool shouldUseAuthorize = options.Scope.ToLower().Equals(Constants.Scope.AUTHZ.ToLower());
 
@@ -89,6 +94,7 @@ namespace GSMA.MobileConnect.Authentication
 
             options.State = state;
             options.Nonce = nonce;
+            options.CorrelationId = correlationId;
             if (options.LoginHintToken == null)
             {
                 options.LoginHint = options.LoginHint ?? LoginHint.GenerateForEncryptedMsisdn(encryptedMsisdn);
@@ -163,7 +169,7 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        public async Task<RequestTokenResponse> RequestHeadlessAuthentication(string clientId, string clientSecret, string authorizeUrl, string tokenUrl, string redirectUrl,
+        public async Task<RequestTokenResponse> RequestHeadlessAuthentication(string clientId, string correlationId, string clientSecret, string authorizeUrl, string tokenUrl, string redirectUrl,
             string state, string nonce, string encryptedMsisdn, SupportedVersions versions, AuthenticationOptions options, string version, CancellationToken cancellationToken = default(CancellationToken))
         {
             options = options ?? new AuthenticationOptions();
@@ -174,7 +180,7 @@ namespace GSMA.MobileConnect.Authentication
                 options.Prompt = "mobile";
             }
 
-            string authUrl = StartAuthentication(clientId, authorizeUrl, redirectUrl, state, nonce, encryptedMsisdn, versions, options, version).Url;
+            string authUrl = StartAuthentication(clientId, correlationId, authorizeUrl, redirectUrl, state, nonce, encryptedMsisdn, versions, options, version).Url;
             Uri finalRedirect = null;
 
             try
@@ -200,7 +206,7 @@ namespace GSMA.MobileConnect.Authentication
             }
 
             var code = HttpUtils.ExtractQueryValue(finalRedirect.AbsoluteUri, "code");
-            return await RequestTokenAsync(clientId, clientSecret, tokenUrl, redirectUrl, code);
+            return await RequestTokenAsync(clientId, correlationId, clientSecret, tokenUrl, redirectUrl, code);
         }
 
         private bool ShouldUseAuthorize(AuthenticationOptions options)
@@ -253,7 +259,7 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        public async Task<RequestTokenResponse> RequestTokenAsync(string clientId, string clientSecret, string requestTokenUrl, string redirectUrl, string code)
+        public async Task<RequestTokenResponse> RequestTokenAsync(string clientId, string correlationId, string clientSecret, string requestTokenUrl, string redirectUrl, string code)
         {
             Validate.RejectNullOrEmpty(clientId, "clientId");
             Validate.RejectNullOrEmpty(clientSecret, "clientSecret");
@@ -267,7 +273,8 @@ namespace GSMA.MobileConnect.Authentication
                 {
                     new BasicKeyValuePair(Parameters.AUTHENTICATION_REDIRECT_URI, redirectUrl),
                     new BasicKeyValuePair(Parameters.CODE, code),
-                    new BasicKeyValuePair(Parameters.GRANT_TYPE, DefaultOptions.GRANT_TYPE)
+                    new BasicKeyValuePair(Parameters.GRANT_TYPE, DefaultOptions.GRANT_TYPE),
+                    new BasicKeyValuePair(Parameters.CORRELATION_ID, correlationId)
                 };
 
                 RestResponse response = await _client.PostAsync(requestTokenUrl, RestAuthentication.Basic(clientId, clientSecret), formData, null, null);
@@ -283,9 +290,9 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        public RequestTokenResponse RequestToken(string clientId, string clientSecret, string requestTokenUrl, string redirectUrl, string code)
+        public RequestTokenResponse RequestToken(string clientId, string correlationId, string clientSecret, string requestTokenUrl, string redirectUrl, string code)
         {
-            return RequestTokenAsync(clientId, clientSecret, requestTokenUrl, redirectUrl, code).Result;
+            return RequestTokenAsync(clientId, correlationId, clientSecret, requestTokenUrl, redirectUrl, code).Result;
         }
 
         /// <inheritdoc/>
@@ -409,7 +416,8 @@ namespace GSMA.MobileConnect.Authentication
                 new BasicKeyValuePair(Parameters.VERSION, version),
                 new BasicKeyValuePair(Parameters.BINDING_MESSAGE, options.BindingMessage),
                 new BasicKeyValuePair(Parameters.CONTEXT, options.Context),
-                new BasicKeyValuePair(Parameters.CLIENT_NAME, options.ClientName)
+                new BasicKeyValuePair(Parameters.CLIENT_NAME, options.ClientName),
+                new BasicKeyValuePair(Parameters.CORRELATION_ID, options.CorrelationId)
             };
 
             if (kycClaimsJson != null)

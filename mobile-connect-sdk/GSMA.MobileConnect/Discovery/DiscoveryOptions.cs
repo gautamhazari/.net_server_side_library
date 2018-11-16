@@ -64,7 +64,7 @@ namespace GSMA.MobileConnect.Discovery
         /// This tells the Discovery Service to discover using the mobile-network.
         /// </summary>
         [JsonProperty("Using-Correlation-Id")]
-        public bool IsUsingCorrelationIf { get; set; }
+        public bool IsUsingCorrelationId { get; set; }
 
         /// <summary>
         /// The current local IP address of the client application i.e. the actual IP address

@@ -1,4 +1,5 @@
-﻿using GSMA.MobileConnect.Authentication;
+﻿using System;
+using GSMA.MobileConnect.Authentication;
 using GSMA.MobileConnect.Claims;
 using GSMA.MobileConnect.Discovery;
 

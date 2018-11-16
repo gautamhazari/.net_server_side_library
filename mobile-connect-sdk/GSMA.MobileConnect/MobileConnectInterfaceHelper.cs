@@ -111,10 +111,11 @@ namespace GSMA.MobileConnect
             {
                 string clientId = discoveryResponse.ResponseData.response.client_id ?? config.ClientId;
                 string authorizationUrl = discoveryResponse.OperatorUrls.AuthorizationUrl;
+                string correlationId = discoveryResponse.ResponseData.correlationId;
                 SupportedVersions supportedVersions = discoveryResponse.ProviderMetadata?.MobileConnectVersionSupported;
                 AuthenticationOptions authOptions = options?.AuthenticationOptions ?? new AuthenticationOptions();
 
-                response = authentication.StartAuthentication(clientId, authorizationUrl, config.RedirectUrl, state, nonce, encryptedMSISDN, supportedVersions, authOptions, version);
+                response = authentication.StartAuthentication(clientId, correlationId, authorizationUrl, config.RedirectUrl, state, nonce, encryptedMSISDN, supportedVersions, authOptions, version);
             }
             catch (MobileConnectInvalidArgumentException e)
             {
@@ -146,12 +147,13 @@ namespace GSMA.MobileConnect
                 string authorizationUrl = discoveryResponse.OperatorUrls.AuthorizationUrl;
                 string tokenUrl = discoveryResponse.OperatorUrls.RequestTokenUrl;
                 string issuer = discoveryResponse.ProviderMetadata.Issuer;
+                string correlationId = discoveryResponse.ResponseData.correlationId;
                 SupportedVersions supportedVersions = discoveryResponse.ProviderMetadata.MobileConnectVersionSupported;
                 AuthenticationOptions authOptions = options?.AuthenticationOptions ?? new AuthenticationOptions();
                 authOptions.ClientName = discoveryResponse.ApplicationShortName;
 
                 var jwksTask = jwks.RetrieveJWKSAsync(discoveryResponse.OperatorUrls.JWKSUrl);
-                var tokenTask = authentication.RequestHeadlessAuthentication(clientId, clientSecret, authorizationUrl, tokenUrl, config.RedirectUrl, state, nonce, 
+                var tokenTask = authentication.RequestHeadlessAuthentication(clientId, correlationId, clientSecret, authorizationUrl, tokenUrl, config.RedirectUrl, state, nonce, 
                     encryptedMSISDN, supportedVersions, authOptions, version, cancellationToken);
 
                 // execute both tasks in parallel
@@ -223,8 +225,9 @@ namespace GSMA.MobileConnect
                 var clientSecret = discoveryResponse.ResponseData.response.client_secret ?? config.ClientSecret;
                 var requestTokenUrl = discoveryResponse.OperatorUrls.RequestTokenUrl;
                 var issuer = discoveryResponse.ProviderMetadata.Issuer;
+                var correlationId = discoveryResponse.ResponseData.correlationId;
 
-                var tokenTask = authentication.RequestTokenAsync(clientId, clientSecret, requestTokenUrl, config.RedirectUrl, code);
+                var tokenTask = authentication.RequestTokenAsync(clientId, correlationId, clientSecret, requestTokenUrl, config.RedirectUrl, code);
                 var jwksTask = jwks.RetrieveJWKSAsync(discoveryResponse.OperatorUrls.JWKSUrl);
 
                 // execute both tasks in parallel
