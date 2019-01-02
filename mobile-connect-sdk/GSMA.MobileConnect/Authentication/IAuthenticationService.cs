@@ -24,8 +24,7 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="options">Optional parameters</param>
         StartAuthenticationResponse StartAuthentication(string clientId, string correlationId, string authorizeUrl,
             string redirectUrl,
-            string state, string nonce, string encryptedMSISDN, SupportedVersions versions,
-            AuthenticationOptions options, string version);
+            string state, string nonce, string encryptedMSISDN, AuthenticationOptions options, string version);
 
         /// <summary>
         /// Allows an application to create discovery object manually without call to discovery service
@@ -58,8 +57,7 @@ namespace GSMA.MobileConnect.Authentication
         /// <returns>Token if headless authentication is successful</returns>
         Task<RequestTokenResponse> RequestHeadlessAuthentication(string clientId, string correlationId, string clientSecret,
             string authorizeUrl, string tokenUrl, string redirectUrl,
-            string state, string nonce, string encryptedMSISDN, SupportedVersions versions,
-            AuthenticationOptions options, string version,
+            string state, string nonce, string encryptedMSISDN, AuthenticationOptions options, string version,
             CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>

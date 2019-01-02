@@ -35,7 +35,7 @@ namespace GSMA.MobileConnect.Authentication
 
         /// <inheritdoc/>
         public StartAuthenticationResponse StartAuthentication(string clientId, string correlationId, string authorizeUrl, string redirectUrl, string state, string nonce,
-            string encryptedMsisdn, SupportedVersions versions, AuthenticationOptions options, string currentVersion)
+            string encryptedMsisdn, AuthenticationOptions options, string currentVersion)
         {
             Validate.RejectNullOrEmpty(clientId, "clientId");
             Validate.RejectNullOrEmpty(authorizeUrl, "authorizeUrl");
@@ -170,7 +170,7 @@ namespace GSMA.MobileConnect.Authentication
 
         /// <inheritdoc/>
         public async Task<RequestTokenResponse> RequestHeadlessAuthentication(string clientId, string correlationId, string clientSecret, string authorizeUrl, string tokenUrl, string redirectUrl,
-            string state, string nonce, string encryptedMsisdn, SupportedVersions versions, AuthenticationOptions options, string version, CancellationToken cancellationToken = default(CancellationToken))
+            string state, string nonce, string encryptedMsisdn, AuthenticationOptions options, string version, CancellationToken cancellationToken = default(CancellationToken))
         {
             options = options ?? new AuthenticationOptions();
 
@@ -180,7 +180,7 @@ namespace GSMA.MobileConnect.Authentication
                 options.Prompt = "mobile";
             }
 
-            string authUrl = StartAuthentication(clientId, correlationId, authorizeUrl, redirectUrl, state, nonce, encryptedMsisdn, versions, options, version).Url;
+            string authUrl = StartAuthentication(clientId, correlationId, authorizeUrl, redirectUrl, state, nonce, encryptedMsisdn, options, version).Url;
             Uri finalRedirect = null;
 
             try
@@ -228,36 +228,7 @@ namespace GSMA.MobileConnect.Authentication
 
             return false;
         }
-
-        /// <summary>
-        /// Returns a modified scope value based on the version required. Depending on the version the value mc_authn may be added or removed
-        /// </summary>
-        /// <param name="scopeRequested">Request scope value</param>
-        /// <param name="versions">SupportedVersions from ProviderMetadata, used for finding the supported version for the requested auth type</param>
-        /// <param name="shouldUseAuthorize">If mc_authz should be used over mc_authn</param>
-        /// <param name="version">Supported version of the scope selected to use</param>
-        /// <returns>Returns a modified scope value with mc_authn removed or added</returns>
-        private string CoerceAuthenticationScope(string scopeRequested, SupportedVersions versions, bool shouldUseAuthorize, out string version)
-        {
-            var requiredScope = shouldUseAuthorize ? MobileConnectConstants.MOBILECONNECTAUTHORIZATION : MobileConnectConstants.MOBILECONNECTAUTHENTICATION;
-            var disallowedScope = shouldUseAuthorize ? Constants.Scope.AUTHN : Constants.Scope.AUTHZ;
-
-            versions = versions ?? new SupportedVersions(null);
-            version = versions.GetSupportedVersion(requiredScope);
-
-            var splitScope = scopeRequested.Split().ToList();
-            splitScope = Scope.CoerceOpenIdScope(splitScope, requiredScope);
-
-            splitScope.RemoveAll(x => x.Equals(disallowedScope, StringComparison.OrdinalIgnoreCase));
-
-            if (!shouldUseAuthorize && version == DefaultOptions.VERSION_MOBILECONNECTAUTHN)
-            {
-                splitScope.RemoveAll(x => x.Equals(Constants.Scope.AUTHN, StringComparison.OrdinalIgnoreCase));
-            }
-
-            return Scope.CreateScope(splitScope);
-        }
-
+    
         /// <inheritdoc/>
         public async Task<RequestTokenResponse> RequestTokenAsync(string clientId, string correlationId, string clientSecret, string requestTokenUrl, string redirectUrl, string code)
         {

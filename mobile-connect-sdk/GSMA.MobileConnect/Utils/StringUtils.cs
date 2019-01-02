@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using GSMA.MobileConnect.Exceptions;
 
@@ -165,6 +167,21 @@ namespace GSMA.MobileConnect.Utils
             }
 
             return value;
+        }
+
+        /// <summary>
+        /// Convert init string to list by spaces
+        /// </summary>
+        /// <param name="initString"></param>
+        /// <returns></returns>
+        public static List<string> ConvertToListBySpace(string initString)
+        {
+            if (String.IsNullOrEmpty(initString))
+            {
+                return new List<string>();
+            }
+
+            return initString.Split(' ').ToList();
         }
     }
 }

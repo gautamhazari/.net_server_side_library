@@ -276,13 +276,6 @@ namespace GSMA.MobileConnect.Discovery
         public bool RequestUriParameterSupported { get; set; } = true;
 
         /// <summary>
-        /// Dictionary of values that represent the supported versions for different mobile connect services from this provider. These versions are used when constructing calls to the services.
-        /// </summary>
-        [JsonProperty("mobile_connect_version_supported")]
-        [JsonConverter(typeof(Json.Converters.SupportedVersionsConverter))]
-        public SupportedVersions MobileConnectVersionSupported { get; set; }
-
-        /// <summary>
         /// Array containing a list of the login hint methods supported by the issuer ID Gateway
         /// </summary>
         [JsonProperty("login_hint_methods_supported")]
@@ -293,23 +286,13 @@ namespace GSMA.MobileConnect.Discovery
         /// </summary>
         public static ProviderMetadata Default
         {
-            get { return new ProviderMetadata(null); }
+            get { return new ProviderMetadata(); }
         }
 
         /// <summary>
         /// Creates a new instance of the Provider Metadata class
         /// </summary>
         public ProviderMetadata() { }
-
-        /// <summary>
-        /// Creates a new intance of ProviderMetadata using the input dictionary for MobileConnectVersionSupported. This is used to construct the object when deserializing from JSON
-        /// </summary>
-        /// <param name="mobileConnectVersionSupported">Dictionary of version supported, if null will default to a populated dictionary</param>
-        [JsonConstructor]
-        public ProviderMetadata(SupportedVersions mobileConnectVersionSupported)
-        {
-            MobileConnectVersionSupported = mobileConnectVersionSupported ?? new SupportedVersions(null);
-        }
 
         /// <inheritdoc/>
         public void MarkExpired(bool isExpired)
