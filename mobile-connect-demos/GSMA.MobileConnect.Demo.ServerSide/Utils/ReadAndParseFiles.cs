@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Json;
 using System.Web.Hosting;
 using GSMA.MobileConnect.ServerSide.Web.Objects;
 using Newtonsoft.Json;

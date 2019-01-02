@@ -104,7 +104,7 @@ namespace GSMA.MobileConnect.Authentication
             options.ClientId = clientId;
 
             UriBuilder build = new UriBuilder(authorizeUrl);
-            build.AddQueryParams(GetAuthenticationQueryParams(options, shouldUseAuthorize, options.Version));
+            build.AddQueryParams(GetAuthenticationQueryParams(options, shouldUseAuthorize, currentVersion));
 
             Log.Info(() => $"Authentication URI={build.Uri.AbsoluteUri}");
             return new StartAuthenticationResponse() { Url = build.Uri.AbsoluteUri };

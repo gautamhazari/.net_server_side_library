@@ -27,6 +27,12 @@ namespace GSMA.MobileConnect.Discovery
         public string Version { get; set; }
 
         /// <summary>
+        /// The supported versions of provider metadata
+        /// </summary>
+        [JsonProperty("mc_version")]
+        public List<string> MCVersion { get; set; }
+
+        /// <summary>
         /// The name of the issuer the provider metadata is related to. This value is used when validating the returned ID Token
         /// </summary>
         [JsonProperty("issuer")]
