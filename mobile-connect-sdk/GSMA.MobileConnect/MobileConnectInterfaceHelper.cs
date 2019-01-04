@@ -114,7 +114,14 @@ namespace GSMA.MobileConnect
                 string correlationId = discoveryResponse.ResponseData.correlationId;
                 AuthenticationOptions authOptions = options?.AuthenticationOptions ?? new AuthenticationOptions();
 
-                response = authentication.StartAuthentication(clientId, correlationId, authorizationUrl, config.RedirectUrl, state, nonce, encryptedMSISDN, authOptions, version);
+                try {
+                    response = authentication.StartAuthentication(clientId, correlationId, authorizationUrl, config.RedirectUrl, state, nonce, encryptedMSISDN, authOptions, 
+                    VersionDetection.GetCurrentVersion(version, options?.AuthenticationOptions?.Scope, discoveryResponse.ProviderMetadata));
+                }
+                catch (MobileConnectInvalidScopeException e)
+                {
+                    return e.ToMobileConnectStatus();
+                }
             }
             catch (MobileConnectInvalidArgumentException e)
             {
@@ -149,6 +156,15 @@ namespace GSMA.MobileConnect
                 string correlationId = discoveryResponse.ResponseData.correlationId;
                 AuthenticationOptions authOptions = options?.AuthenticationOptions ?? new AuthenticationOptions();
                 authOptions.ClientName = discoveryResponse.ApplicationShortName;
+
+                try
+                {
+                    version = VersionDetection.GetCurrentVersion(version, options?.AuthenticationOptions?.Scope, discoveryResponse.ProviderMetadata);
+                }
+                catch (MobileConnectInvalidScopeException e)
+                {
+                    return e.ToMobileConnectStatus();
+                }
 
                 var jwksTask = jwks.RetrieveJWKSAsync(discoveryResponse.OperatorUrls.JWKSUrl);
                 var tokenTask = authentication.RequestHeadlessAuthentication(clientId, correlationId, clientSecret, authorizationUrl, tokenUrl, config.RedirectUrl, state, nonce, 
@@ -233,8 +249,15 @@ namespace GSMA.MobileConnect
 
                 response = tokenTask.Result;
   
-                return HandleTokenResponse(authentication, response, clientId, issuer, expectedNonce,
-                    version, jwksTask.Result, options);
+                try {
+                    return HandleTokenResponse(authentication, response, clientId, issuer, expectedNonce,
+                    VersionDetection.GetCurrentVersion(version,
+                        options?.AuthenticationOptions?.Scope, discoveryResponse.ProviderMetadata), jwksTask.Result, options);
+                }
+                catch (MobileConnectInvalidScopeException e)
+                {
+                    return e.ToMobileConnectStatus();
+                }
             }
             catch (MobileConnectInvalidArgumentException e)
             {
@@ -281,7 +304,15 @@ namespace GSMA.MobileConnect
         {
             if (HttpUtils.ExtractQueryValue(redirectedUrl.Query, "code") != null)
             {
-                return await RequestToken(authentication, jwks, discoveryResponse, redirectedUrl, expectedState, expectedNonce, config, options, version);
+                try {
+                    return await RequestToken(authentication, jwks, discoveryResponse, redirectedUrl, expectedState, expectedNonce, config, options, VersionDetection.GetCurrentVersion(version,
+                    options?.AuthenticationOptions?.Scope, discoveryResponse.ProviderMetadata));
+
+                }
+                catch (MobileConnectInvalidScopeException e)
+                {
+                    return e.ToMobileConnectStatus();
+                }
             }
             else if (HttpUtils.ExtractQueryValue(redirectedUrl.Query, "mcc_mnc") != null)
             {

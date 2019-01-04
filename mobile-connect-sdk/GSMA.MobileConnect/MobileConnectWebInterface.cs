@@ -8,6 +8,7 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using GSMA.MobileConnect.Exceptions;
 
 namespace GSMA.MobileConnect
 {
@@ -201,8 +202,15 @@ namespace GSMA.MobileConnect
             state = string.IsNullOrEmpty(state) ? Security.GenerateSecureNonce() : state;
             nonce = string.IsNullOrEmpty(nonce) ? Security.GenerateSecureNonce() : nonce;
 
-            return MobileConnectInterfaceHelper.StartAuthentication(
-                _authentication, discoveryResponse, encryptedMSISDN, state, nonce, _config, options, version);
+            try {
+                return MobileConnectInterfaceHelper.StartAuthentication(
+                _authentication, discoveryResponse, encryptedMSISDN, state, nonce, _config, options, VersionDetection.GetCurrentVersion(version, 
+                    options?.AuthenticationOptions?.Scope, discoveryResponse.ProviderMetadata));
+            }
+            catch (MobileConnectInvalidScopeException e)
+            {
+                return e.ToMobileConnectStatus();
+            }
         }
 
         /// <summary>
@@ -231,9 +239,16 @@ namespace GSMA.MobileConnect
                 return GetCacheError();
             }
 
-            var authResult = StartAuthentication(request, discoveryResponse, encryptedMSISDN, state, nonce, options, version);
-
-            return authResult;
+            try
+            {
+                return StartAuthentication(request, discoveryResponse, encryptedMSISDN, state, nonce, options,
+                    VersionDetection.GetCurrentVersion(version,
+                        options?.AuthenticationOptions?.Scope, discoveryResponse.ProviderMetadata));
+            }
+            catch (MobileConnectInvalidScopeException e)
+            {
+                return e.ToMobileConnectStatus();
+            }
         }
 
         /// <summary>
@@ -302,8 +317,17 @@ namespace GSMA.MobileConnect
                 return GetCacheError();
             }
 
-            return await RequestHeadlessAuthenticationAsync(
-                request, discoveryResponse, encryptedMSISDN, state, nonce, options, version, cancellationToken);
+            try
+            {
+                return await RequestHeadlessAuthenticationAsync(
+                    request, discoveryResponse, encryptedMSISDN, state, nonce, options,
+                    VersionDetection.GetCurrentVersion(version,
+                        options?.AuthenticationOptions?.Scope, discoveryResponse.ProviderMetadata), cancellationToken);
+            }
+            catch (MobileConnectInvalidScopeException e)
+            {
+                return e.ToMobileConnectStatus();
+            }
         }
 
         /// <summary>
