@@ -19,7 +19,7 @@ namespace GSMA.MobileConnect.Discovery
         /// <returns>detected version</returns>
         public static string GetCurrentVersion(string version, string scope, ProviderMetadata providerMetadata)
         {
-            bList<string> supportedVersion = GetSupportedVersions(providerMetadata);
+            List<string> supportedVersion = GetSupportedVersions(providerMetadata);
             if (version != null && IsVersionSupported(version))
             {
                 if (!supportedVersion.Contains(version))
@@ -39,11 +39,11 @@ namespace GSMA.MobileConnect.Discovery
             {
                 return Version.MC_V2_0;
             } 
-            if (supportedVersion.Contains(Version.MC_V1_1) & ContainsOpenidScope(currentScopes) & currentScopes.Count == 1)
+            if (supportedVersion.Contains(Version.MC_V1_1) & ContainsScopesV1_1(currentScopes))
             {
                 return Version.MC_V1_1;
             }
-            if (supportedVersion.Contains(Version.MC_V1_2) & ContainsOpenidScope(currentScopes) & supportedVersion.Count == 1)
+            if (supportedVersion.Contains(Version.MC_V1_2) & ContainsScopesV2_0(currentScopes) & supportedVersion.Count == 1)
             { 
                 Log.Warning("Version is deprecated");
                 return Version.MC_V1_2;
@@ -56,6 +56,18 @@ namespace GSMA.MobileConnect.Discovery
         private static bool ContainsOpenidScope(List<string> currentScopes)
         {
             return currentScopes.Contains(Scope.OPENID);
+        }
+
+        private static bool ContainsUniversalIndianScopes(List<string> currentScopes)
+        {
+            return currentScopes.Contains(Scope.MC_INDIA_TC) || currentScopes.Contains(Scope.MC_MNV_VALIDATE)
+                                                             || currentScopes.Contains(Scope.MC_MNV_VALIDATE_PLUS) || currentScopes.Contains(Scope.MC_ATTR_VM_SHARE)
+                                                             || currentScopes.Contains(Scope.MC_ATTR_VM_SHARE_HASH);
+        }
+
+        private static bool ContainsScopesV1_1(List<string> currentScopes)
+        {
+            return (ContainsOpenidScope(currentScopes) & currentScopes.Count == 1) || (ContainsOpenidScope(currentScopes) &  ContainsUniversalIndianScopes(currentScopes));
         }
 
         private static bool ContainsScopesV2_0(List<string> currentScopes)
