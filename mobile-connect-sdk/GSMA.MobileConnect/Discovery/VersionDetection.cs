@@ -19,7 +19,7 @@ namespace GSMA.MobileConnect.Discovery
         /// <returns>detected version</returns>
         public static string GetCurrentVersion(string version, string scope, ProviderMetadata providerMetadata)
         {
-            List<string> supportedVersion = GetSupportedVersions(providerMetadata);
+            bList<string> supportedVersion = GetSupportedVersions(providerMetadata);
             if (version != null && IsVersionSupported(version))
             {
                 if (!supportedVersion.Contains(version))

@@ -20,9 +20,14 @@
 
         public const string KYCPLAIN = "mc_kyc_plain";
         public const string KYCHASHED = "mc_kyc_hashed";
-        public const string ATTRVMSHARE = "mc_attr_vm_share";
         public const string ATTRVMMATCH = "mc_attr_vm_match";
         public const string ATTRVMMATCHHASH = "mc_attr_vm_match_hash";
+
+        public const string MC_INDIA_TC = "mc_india_tc";
+        public const string MC_MNV_VALIDATE = "mc_mnv_validate";
+        public const string MC_MNV_VALIDATE_PLUS = "mc_mnv_validate_plus";
+        public const string MC_ATTR_VM_SHARE = "mc_attr_vm_share";
+        public const string MC_ATTR_VM_SHARE_HASH = "mc_attr_vm_share_hash";
 
         public const string MCPREFIX = "mc_";
     }
