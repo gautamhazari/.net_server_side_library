@@ -27,8 +27,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         protected static HttpRequestMessage RequestMessage = new HttpRequestMessage();
         protected static SessionCache SessionCache;
         protected static DiscoveryCache DiscoveryCache;
-        protected static string[] IdentityScopes = {Scope.IDENTITYPHONE, Scope.IDENTITYSIGNUP,
-            Scope.IDENTITYNATIONALID, Scope.IDENTITYSIGNUPPLUS, Scope.KYCHASHED, Scope.KYCPLAIN};
+        protected static string[] IdentityScopes = {Scope.IDENTITYPHONENUMBER, Scope.PHONENUMBER, Scope.IDENTITYSIGNUP,
+            Scope.SIGNUP, Scope.NATIONALID, Scope.IDENTITYNATIONALID, Scope.IDENTITYSIGNUPPLUS, Scope.KYCHASHED, Scope.KYCPLAIN};
         protected static string[] UserInfoScopes = {Scope.PROFILE, Scope.EMAIL, Scope.ADDRESS,
             Scope.PHONE, Scope.OFFLINEACCESS};
 

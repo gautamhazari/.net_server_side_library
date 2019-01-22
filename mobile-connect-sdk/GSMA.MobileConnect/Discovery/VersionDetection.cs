@@ -62,7 +62,7 @@ namespace GSMA.MobileConnect.Discovery
         {
             return currentScopes.Contains(Scope.MC_INDIA_TC) || currentScopes.Contains(Scope.MC_MNV_VALIDATE)
                                                              || currentScopes.Contains(Scope.MC_MNV_VALIDATE_PLUS) || currentScopes.Contains(Scope.MC_ATTR_VM_SHARE)
-                                                             || currentScopes.Contains(Scope.MC_ATTR_VM_SHARE_HASH);
+                                                             || currentScopes.Contains(Scope.MC_VM_SHARE) || currentScopes.Contains(Scope.MC_ATTR_VM_SHARE_HASH);
         }
 
         private static bool ContainsScopesV1_1(List<string> currentScopes)
@@ -73,8 +73,12 @@ namespace GSMA.MobileConnect.Discovery
         private static bool ContainsScopesV2_0(List<string> currentScopes)
         {
             return ContainsOpenidScope(currentScopes) & (currentScopes.Contains(Scope.AUTHN) || currentScopes.Contains(Scope.AUTHZ) ||
-                                                         currentScopes.Contains(Scope.IDENTITYPHONE) || currentScopes.Contains(Scope.IDENTITYNATIONALID) ||
-                                                         currentScopes.Contains(Scope.IDENTITYSIGNUP) || currentScopes.Contains(Scope.IDENTITYSIGNUPPLUS));
+                                                         currentScopes.Contains(Scope.IDENTITYPHONENUMBER) || currentScopes.Contains(Scope.PHONENUMBER) || 
+                                                         currentScopes.Contains(Scope.IDENTITYNATIONALID) || currentScopes.Contains(Scope.NATIONALID) ||
+                                                         currentScopes.Contains(Scope.IDENTITYSIGNUP) || currentScopes.Contains(Scope.SIGNUP) || 
+                                                         currentScopes.Contains(Scope.IDENTITYSIGNUPPLUS) ||
+                                                         currentScopes.Contains(Scope.ATTRVMMATCH) || currentScopes.Contains(Scope.VMMATCH) ||
+                                                         currentScopes.Contains(Scope.ATTRVMMATCHHASH) || currentScopes.Contains(Scope.VMMATCHHASH));
         }
 
         private static bool ContainsScopesV2_3(List<string> currentScopes)
