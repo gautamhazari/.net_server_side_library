@@ -6,7 +6,7 @@ Note: if you operate in the EU then you should use EU Discovery Service domain i
 
 ## Quick Start
 
-- Build and run the [demo code](mobile-connect-demos/)
+- Build and run the [demo code](mobile-connect-demos/) or
 - Install and use the [sdk](mobile-connect-sdk/)
 
 ## Install
