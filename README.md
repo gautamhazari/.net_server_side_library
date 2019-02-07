@@ -4,9 +4,7 @@ GSMA MobileConnect SDK including example integration in .Net applications
 
 ## Quick Start
 
-- Build and run the [demo code](mobile-connect-demos/)
-
-or
+- Build and run the [demo code](mobile-connect-demos/) or
 - Install and use the [sdk](mobile-connect-sdk/)
 
 ## Install
