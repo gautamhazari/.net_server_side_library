@@ -6,7 +6,7 @@ Note: if you operate in the EU then you should use EU Discovery Service domain i
 
 ## Quick Start
 
-Configure, build and run [demo server side controller](mobile-connect-demos/) or install anf use the [SDK library](mobile-connect-sdk/) to setup your solution.
+Configure, build and run [demo server side appication](mobile-connect-demos/) or install anf use the [SDK library](mobile-connect-sdk/) to setup your solution.
 
 ## Support
 
