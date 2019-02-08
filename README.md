@@ -2,18 +2,11 @@
 
 GSMA MobileConnect SDK including example integration in .Net applications
 
+Note: if you operate in the EU then you should use EU Discovery Service domain in discovery URL: eu.discover.mobileconnect.io
+
 ## Quick Start
 
-- Build and run the [demo code](mobile-connect-demos/) or
-- Install and use the [sdk](mobile-connect-sdk/)
-
-## Install
-
-Install the SDK to your .Net application using [Nuget](https://www.nuget.org/packages/GSMAMobileConnect)
-
-```posh
-Install-Package GSMAMobileConnect
-```
+Configure, build and run [demo server side appication](mobile-connect-demos/) or install and use the [SDK library](mobile-connect-sdk/) to setup your solution.
 
 ## Support
 
