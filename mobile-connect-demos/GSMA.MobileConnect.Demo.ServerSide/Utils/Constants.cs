@@ -11,5 +11,7 @@
         public static string ContextBindingMsg = "demo context";
         public static string BindingMsg = "demo binding";
         public static int Response_OK = 200;
+        public const string FailPage = "Views/Home/fail.cshtml";
+        public const string SuccessPage = "Views/Home/success.cshtml";
     }
 }

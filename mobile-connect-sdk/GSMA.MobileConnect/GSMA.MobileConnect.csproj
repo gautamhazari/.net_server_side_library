@@ -52,9 +52,12 @@
     <Compile Include="Cache\DiscoveryCache.cs" />
     <Compile Include="Cache\ICacheable.cs" />
     <Compile Include="Cache\SessionCache.cs" />
+    <Compile Include="Claims\ClaimsConstants.cs" />
     <Compile Include="Claims\ClaimsDictionary.cs" />
     <Compile Include="Claims\ClaimsParameter.cs" />
     <Compile Include="Claims\ClaimsValue.cs" />
+    <Compile Include="Claims\KYCClaimsConstants.cs" />
+    <Compile Include="Claims\KYCClaimsParameter.cs" />
     <Compile Include="Constants\ErrorCodes.cs" />
     <Compile Include="Constants\GrantTypes.cs" />
     <Compile Include="Constants\LinkRels.cs" />
@@ -64,10 +67,12 @@
     <Compile Include="Discovery\OperatorUrls.cs" />
     <Compile Include="Discovery\ProviderMetadata.cs" />
     <Compile Include="Discovery\SessionData.cs" />
-    <Compile Include="Discovery\SupportedVersions.cs" />
+    <Compile Include="Discovery\Version.cs" />
+    <Compile Include="Discovery\VersionDetection.cs" />
     <Compile Include="Exceptions\MobileConnectCacheExpiryLimitException.cs" />
     <Compile Include="Exceptions\MobileConnectInvalidArgumentException.cs" />
     <Compile Include="Exceptions\MobileConnectInvalidJWKException.cs" />
+    <Compile Include="Exceptions\MobileConnectInvalidScopeException.cs" />
     <Compile Include="Exceptions\MobileConnectProviderMetadataUnavailableException.cs" />
     <Compile Include="Exceptions\MobileConnectUnsupportedJWKException.cs" />
     <Compile Include="Identity\AddressData.cs" />
@@ -77,7 +82,6 @@
     <Compile Include="Identity\UserInfoData.cs" />
     <Compile Include="Identity\IdentityResponse.cs" />
     <Compile Include="ILogger.cs" />
-    <Compile Include="Json\Converters\SupportedVersionsConverter.cs" />
     <Compile Include="Json\Converters\UnixTimestampConverter.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="MobileConnectConstants.cs" />

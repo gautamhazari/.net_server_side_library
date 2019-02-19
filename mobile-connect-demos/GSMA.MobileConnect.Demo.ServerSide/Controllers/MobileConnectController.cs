@@ -5,7 +5,6 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using GSMA.MobileConnect.Constants;
 using GSMA.MobileConnect.ServerSide.Web.Objects;
-using GSMA.MobileConnect.ServerSide.Web.Utils;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -13,6 +12,7 @@ using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Utils;
 using Newtonsoft.Json.Linq;
 using Scope = GSMA.MobileConnect.Constants.Scope;
+
 
 namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 {
@@ -103,17 +103,37 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             return status;
         }
 
+        private HttpResponseMessage redirectToView(MobileConnectStatus status, string operationStatus)
+        {
+            if (status.ErrorCode != null)
+            {
+                return Utils.ControllerResponseConverter.GetResponseMessage(new { Status = status, Operation = operationStatus }, Utils.Constants.FailPage);
+            }
+
+            return Utils.ControllerResponseConverter.GetResponseMessage(new { Operation = operationStatus }, Utils.Constants.SuccessPage);
+        }
+
         [HttpGet]
         [Route("discovery_callback")]
-        public async Task<IHttpActionResult> DiscoveryCallback(
+        public async Task<HttpResponseMessage> DiscoveryCallback(
           string state = null,
           string error = null,
           string error_description = null,
           string description = null)
         {
+            string operationStatus;
+
             if (!string.IsNullOrEmpty(error))
             {
-                return CreateResponse(MobileConnectStatus.Error(error, error_description != null ? error_description : description, new Exception()));
+                if (OperatorParams.scope.Contains(Scope.AUTHN) || OperatorParams.scope.Equals(Scope.OPENID))
+                {
+                    operationStatus = Utils.Status.AUTHENTICATION;
+                }
+                else
+                {
+                    operationStatus = Utils.Status.AUTHORISATION;
+                }
+                return redirectToView(MobileConnectStatus.Error(error, error_description ?? description, new Exception()), operationStatus);
             }
 
             var options = new MobileConnectRequestOptions
@@ -150,7 +170,6 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                         {
                             response = await RequestUserInfo(sessionData.DiscoveryResponse,
                                 status.TokenResponse.ResponseData.AccessToken);
-                            return CreateIdentityResponse(status, response);
                         }
                     }
                 }
@@ -164,20 +183,23 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                         {
                             response = await RequestPremiumInfo(sessionData.DiscoveryResponse,
                                 status.TokenResponse.ResponseData.AccessToken);
-                            return CreateIdentityResponse(status, response);
                         }
                     }
+                }
+                else
+                {
+                    return redirectToView(response, Utils.Status.TOKEN);
                 }
             }
             else
             {
                 response = MobileConnectStatus.Error(
                     ErrorCodes.InvalidArgument, "nonce is incorrect", new Exception());
-                return CreateResponse(response);
+                return redirectToView(response, Utils.Status.TOKEN);
             }
 
             // return CreateResponse(status);
-            return CreateIdentityResponse(status);
+            return redirectToView(response, Utils.Status.PREMIUMINFO);
         }
 
         private async void SetDiscoveryCache(string msisdn, string mcc, string mnc, string sourceIp,
@@ -231,7 +253,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         [Route("sector_identifier_uri")]
         public IHttpActionResult GetSectorIdentifierUri()
         {
-            var array = JArray.Parse(ReadAndParseFiles.ReadFileAsString(Utils.Constants.SectorIdentifierFilePath));
+            var array = JArray.Parse(Utils.ReadAndParseFiles.ReadFileAsString(Utils.Constants.SectorIdentifierFilePath));
             var response = new HttpResponseMessage()
             {
                 Content = new ObjectContent<JArray>(array, new JsonMediaTypeFormatter()),
