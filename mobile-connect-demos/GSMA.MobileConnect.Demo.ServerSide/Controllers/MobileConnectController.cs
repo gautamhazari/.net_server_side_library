@@ -115,7 +115,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         {
             if (status.ErrorCode != null)
             {
-               return ControllerResponseConverter.GetResponseMessage(new { Status = status, Operation = operationStatus }, Utils.Constants.FailPage);
+               return ControllerResponseConverter.GetResponseMessage(new { Status = status, Operation = operationStatus }, Utils.Constants.FailPage, HttpStatusCode.Found);
             }
             
             return ControllerResponseConverter.GetResponseMessage(new { Operation = operationStatus }, Utils.Constants.SuccessPage);
