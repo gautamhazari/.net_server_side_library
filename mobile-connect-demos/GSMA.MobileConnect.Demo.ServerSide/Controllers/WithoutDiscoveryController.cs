@@ -89,8 +89,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             var options = new MobileConnectRequestOptions
             {
                 Scope = scope,
-                Context = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
+                Context = ApiVersion.Equals(Utils.Constants.Version20) || ApiVersion.Equals(Utils.Constants.Version23) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = ApiVersion.Equals(Utils.Constants.Version20) || ApiVersion.Equals(Utils.Constants.Version23) ? Utils.Constants.ContextBindingMsg : null,
                 ClientName = OperatorParams.clientName,
                 AcrValues = OperatorParams.acrValues,
                 LoginHint = loginHint

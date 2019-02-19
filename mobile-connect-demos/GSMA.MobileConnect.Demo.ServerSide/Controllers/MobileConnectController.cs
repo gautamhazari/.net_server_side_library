@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Net;
 using GSMA.MobileConnect.Cache;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -9,9 +11,15 @@ using GSMA.MobileConnect.ServerSide.Web.Utils;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
+using System.Web.Razor.Parser;
 using GSMA.MobileConnect.Discovery;
 using GSMA.MobileConnect.Utils;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Newtonsoft.Json.Linq;
+using RazorEngine;
+using HttpContext = System.Web.HttpContext;
 using Scope = GSMA.MobileConnect.Constants.Scope;
 
 namespace GSMA.MobileConnect.ServerSide.Web.Controllers
@@ -56,7 +64,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                 status = await AttemptDiscovery(msisdn, mcc, mnc, sourceIp, Request);
                 discoveryResponse = status.DiscoveryResponse;
 
-                if (discoveryResponse == null || discoveryResponse.ResponseCode != Utils.Constants.Response_OK)
+                if (discoveryResponse == null || discoveryResponse.ResponseCode != Utils.Constants.ResponseOk)
                 {
                     if (status.Url != null)
                     {
@@ -103,25 +111,45 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             return status;
         }
 
+        private HttpResponseMessage redirectToView(MobileConnectStatus status, string operationStatus)
+        {
+            if (status.ErrorCode != null)
+            {
+               return ControllerResponseConverter.GetResponseMessage(new { Status = status, Operation = operationStatus }, Utils.Constants.FailPage);
+            }
+            
+            return ControllerResponseConverter.GetResponseMessage(new { Operation = operationStatus }, Utils.Constants.SuccessPage);
+        }
+
         [HttpGet]
         [Route("discovery_callback")]
-        public async Task<IHttpActionResult> DiscoveryCallback(
+        public async Task<HttpResponseMessage> DiscoveryCallback(
           string state = null,
           string error = null,
           string error_description = null,
           string description = null)
         {
+            string operationStatus;
+
             if (!string.IsNullOrEmpty(error))
             {
-                return CreateResponse(MobileConnectStatus.Error(error, error_description != null ? error_description : description, new Exception()));
+                if (OperatorParams.scope.Contains(Scope.AUTHN) || OperatorParams.scope.Equals(Scope.OPENID))
+                {
+                    operationStatus = Status.AUTHENTICATION;
+                }
+                else
+                {
+                    operationStatus = Status.AUTHORISATION;
+                }
+                return redirectToView(MobileConnectStatus.Error(error, error_description ?? description, new Exception()), operationStatus);
             }
 
             var options = new MobileConnectRequestOptions
             {
                 AcceptedValidationResults = Authentication.TokenValidationResult.Valid |
                     Authentication.TokenValidationResult.IdTokenValidationSkipped,
-                Context = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
+                Context = ApiVersion.Equals(Utils.Constants.Version20) || ApiVersion.Equals(Utils.Constants.Version23) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = ApiVersion.Equals(Utils.Constants.Version20) || ApiVersion.Equals(Utils.Constants.Version23) ? Utils.Constants.ContextBindingMsg : null,
                 ClientName = OperatorParams.clientName,
                 AcrValues = OperatorParams.acrValues
             };
@@ -141,7 +169,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             MobileConnectStatus response = null;
             if (idTokenResponseModel.nonce.Equals(sessionData.Nonce))
             {
-                if (ApiVersion.Equals(Utils.Constants.VERSION1_1) &
+                if (ApiVersion.Equals(Utils.Constants.Version11) &
                     !string.IsNullOrEmpty(sessionData.DiscoveryResponse.OperatorUrls.UserInfoUrl))
                 {
                     for (int scopeIndex = 0; scopeIndex < UserInfoScopes.Length; scopeIndex++)
@@ -150,12 +178,11 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                         {
                             response = await RequestUserInfo(sessionData.DiscoveryResponse,
                                 status.TokenResponse.ResponseData.AccessToken);
-                            return CreateIdentityResponse(status, response);
                         }
                     }
                 }
 
-                if ((ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3)) &
+                if ((ApiVersion.Equals(Utils.Constants.Version20) || ApiVersion.Equals(Utils.Constants.Version23)) &
                     !string.IsNullOrEmpty(sessionData.DiscoveryResponse.OperatorUrls.PremiumInfoUrl))
                 {
                     for (int scopeIndex = 0; scopeIndex < IdentityScopes.Length; scopeIndex++)
@@ -164,20 +191,22 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                         {
                             response = await RequestPremiumInfo(sessionData.DiscoveryResponse,
                                 status.TokenResponse.ResponseData.AccessToken);
-                            return CreateIdentityResponse(status, response);
                         }
                     }
+                }
+                else
+                {
+                    return redirectToView(response, Status.TOKEN);
                 }
             }
             else
             {
                 response = MobileConnectStatus.Error(
                     ErrorCodes.InvalidArgument, "nonce is incorrect", new Exception());
-                return CreateResponse(response);
+                return redirectToView(response, Status.TOKEN);
             }
 
-            // return CreateResponse(status);
-            return CreateIdentityResponse(status);
+            return redirectToView(response, Status.PREMIUMINFO);
         }
 
         private async void SetDiscoveryCache(string msisdn, string mcc, string mnc, string sourceIp,
@@ -198,8 +227,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         {
             var requestOptions = new MobileConnectRequestOptions
             {
-                Context = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
+                Context = ApiVersion.Equals(Utils.Constants.Version20) || ApiVersion.Equals(Utils.Constants.Version23) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = ApiVersion.Equals(Utils.Constants.Version20) || ApiVersion.Equals(Utils.Constants.Version23) ? Utils.Constants.ContextBindingMsg : null,
                 ClientName = OperatorParams.clientName,
                 AcrValues = OperatorParams.acrValues
             };
@@ -295,8 +324,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             var options = new MobileConnectRequestOptions
             {
                 Scope = scope,
-                Context = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
+                Context = ApiVersion.Equals(Utils.Constants.Version20) || ApiVersion.Equals(Utils.Constants.Version23) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = ApiVersion.Equals(Utils.Constants.Version20) || ApiVersion.Equals(Utils.Constants.Version23) ? Utils.Constants.ContextBindingMsg : null,
                 ClientName = OperatorParams.clientName,
                 AcrValues = OperatorParams.acrValues
             };
