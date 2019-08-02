@@ -1,7 +1,7 @@
-﻿{
-  "clientID": "YWI0MTZlMmMtZWRiZS00NTcwLWIyMTgtMjZkZDMyMzlmY2VlOm9wZXJhdG9yLWI=",
-  "clientSecret": "YmM4NDI1YzYtYzlhZC00NWE0LTk4NjYtMGFkZDQ2OGVjZTUwOm9wZXJhdG9yLWI=",
-  "clientName": "demoApp",
+{
+  "clientID": "NmI1ZDg3MGMtNjI0ZS00NjRiLWI4MjYtYmQyMWExMzU3NzAzOm9wZXJhdG9yLWM=",
+  "clientSecret": "MDk0MTA4OWItMzc3NC00MDdiLTk4MGItZjgwZmE3ZjhjNGY2Om9wZXJhdG9yLWM=",
+  "clientName": "demoAppSDK",
   "discoveryURL": "https://discovery.sandbox.mobileconnect.io/v2/discovery",
   "redirectURL": "http://172.19.2.20:8080/server_side_api/discovery_callback",
   "xRedirect": "True",
