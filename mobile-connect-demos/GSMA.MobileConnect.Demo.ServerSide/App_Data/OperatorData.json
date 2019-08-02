@@ -1,7 +1,7 @@
-﻿{
-  "clientID": "ab416e2c-edbe-4570-b218-26dd3239fcee",
-  "clientSecret": "bc8425c6-c9ad-45a4-9866-0add468ece50",
-  "clientName": "demoApp",
+{
+  "clientID": "6b5d870c-624e-464b-b826-bd21a1357703",
+  "clientSecret": "0941089b-3774-407b-980b-f80fa7f8c4f6",
+  "clientName": "demoAppSDK",
   "discoveryURL": "https://discovery.sandbox.mobileconnect.io/v2/discovery",
   "redirectURL": "http://172.19.2.20:8080/server_side_api/discovery_callback",
   "xRedirect": "True",
