@@ -10,16 +10,20 @@
         public const string EMAIL = "email";
         public const string ADDRESS = "address";
         public const string PHONE = "phone";
-        public const string OFFLINEACCESS = "offline_access";
+        public const string OFFLINE_ACCESS = "offline_access";
 
-        public const string IDENTITY = "mc_identity";
-        public const string IDENTITYPHONE = "mc_identity_phonenumber";
-        public const string IDENTITYSIGNUP = "mc_identity_signup";
-        public const string IDENTITYSIGNUPPLUS = "mc_identity_signupplus";
-        public const string IDENTITYNATIONALID = "mc_identity_nationalid";
+        public const string MC_IDENTITY = "mc_identity";
+        public const string MC_IDENTITY_PHONE = "mc_identity_phonenumber";
+        public const string MC_IDENTITY_SIGNUP = "mc_identity_signup";
+        public const string MC_IDENTITY_SIGNUP_PLUS = "mc_identity_signupplus";
+        public const string MC_IDENTITY_NATIONALID = "mc_identity_nationalid";
+        
+        public const string MC_PHONE = "mc_phonenumber";
+        public const string MC_SIGNUP = "mc_signup";
+        public const string MC_NATIONALID = "mc_nationalid";
 
-        public const string KYCPLAIN = "mc_kyc_plain";
-        public const string KYCHASHED = "mc_kyc_hashed";
+        public const string KYC_PLAIN = "mc_kyc_plain";
+        public const string KYC_HASHED = "mc_kyc_hashed";
         public const string ATTRVMMATCH = "mc_attr_vm_match";
         public const string ATTRVMMATCHHASH = "mc_attr_vm_match_hash";
 

@@ -67,7 +67,7 @@ namespace GSMA.MobileConnect.Authentication
                 {
                     bool isNamePresent = false;
                     bool isAddressPresent = false;
-                    if (currentVersion.Equals(DefaultOptions.V2_3) && options.Scope.Contains(Constants.Scope.KYCPLAIN))
+                    if (currentVersion.Equals(DefaultOptions.V2_3) && options.Scope.Contains(Constants.Scope.KYC_PLAIN))
                     {
                         isNamePresent = StringUtils.requireNonEmpty("name || given_name and family_name",
                             kycClaims.Name, kycClaims.GivenName, kycClaims.FamilyName);
@@ -76,7 +76,7 @@ namespace GSMA.MobileConnect.Authentication
                             kycClaims.HousenoOrHouseName, kycClaims.PostalCode, kycClaims.Country, kycClaims.Town);
                     }
              
-                    if (currentVersion.Equals(DefaultOptions.V2_3) && options.Scope.Contains(Constants.Scope.KYCHASHED))
+                    if (currentVersion.Equals(DefaultOptions.V2_3) && options.Scope.Contains(Constants.Scope.KYC_HASHED))
                     {
                         isNamePresent = StringUtils.requireNonEmpty("name_hashed || given_name_hashed and family_name_hashed",
                             kycClaims.NameHashed, kycClaims.GivenNameHashed, kycClaims.FamilyNameHashed);
@@ -177,7 +177,7 @@ namespace GSMA.MobileConnect.Authentication
             bool shouldUseAuthorize = ShouldUseAuthorize(options);
             if (shouldUseAuthorize)
             {
-                options.Prompt = "mobile";
+                options.Prompt = "login";
             }
 
             string authUrl = StartAuthentication(clientId, correlationId, authorizeUrl, redirectUrl, state, nonce, encryptedMsisdn, options, version).Url;

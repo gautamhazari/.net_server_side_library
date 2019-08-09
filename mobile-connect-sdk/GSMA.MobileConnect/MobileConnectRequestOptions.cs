@@ -87,6 +87,13 @@ namespace GSMA.MobileConnect
             set { _authOptions.LoginHint = value; }
         }
 
+        /// <inheritdoc cref="AuthenticationOptions.LoginHintToken"/>
+        public string LoginHintToken
+        {
+            get { return _authOptions.LoginHintToken; }
+            set { _authOptions.LoginHintToken = value; }
+        }
+
         /// <inheritdoc cref="AuthenticationOptions.Dtbs"/>
         public string Dtbs
         {

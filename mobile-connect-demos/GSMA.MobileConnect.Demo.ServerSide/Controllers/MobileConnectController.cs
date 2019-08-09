@@ -320,7 +320,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                 Context = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
                 BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
                 ClientName = OperatorParams.clientName,
-                AcrValues = OperatorParams.acrValues
+                AcrValues = OperatorParams.acrValues,
+                LoginHintToken = discoveryResponse.ResponseData.subscriber_id_token
             };
 
             var status =

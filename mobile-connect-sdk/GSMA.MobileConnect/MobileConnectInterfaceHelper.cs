@@ -78,6 +78,11 @@ namespace GSMA.MobileConnect
                 {
                     response.ResponseData.subscriber_id = parsedRedirect.EncryptedMSISDN;
                 }
+
+                if (response.ResponseData.subscriber_id_token == null)
+                {
+                    response.ResponseData.subscriber_id_token = parsedRedirect.LoginHintToken;
+                }
             }
             catch (MobileConnectInvalidArgumentException e)
             {

@@ -18,6 +18,7 @@
         public const string X_REDIRECT_DEFAULT_VALUE = "App";
         public const string MCC_MNC = "mcc_mnc";
         public const string SUBSCRIBER_ID = "subscriber_id";
+        public const string SUBSCRIBER_ID_TOKEN = "subscriber_id_token";
 
         //Required params for authentication
         public const string CLIENT_ID = "client_id";

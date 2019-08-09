@@ -177,11 +177,12 @@ namespace GSMA.MobileConnect.Discovery
 
             if (string.IsNullOrEmpty(query))
             {
-                return new ParsedDiscoveryRedirect(null, null, null);
+                return new ParsedDiscoveryRedirect(null, null, null, null);
             }
 
             var mcc_mnc = HttpUtils.ExtractQueryValue(query, Parameters.MCC_MNC);
             var encryptedMSISDN = HttpUtils.ExtractQueryValue(query, Parameters.SUBSCRIBER_ID);
+            var loginHintToken = HttpUtils.ExtractQueryValue(query, Parameters.SUBSCRIBER_ID_TOKEN);
 
             string mcc = null;
             string mnc = null;
@@ -195,7 +196,7 @@ namespace GSMA.MobileConnect.Discovery
                 }
             }
 
-            return new ParsedDiscoveryRedirect(mcc, mnc, encryptedMSISDN);
+            return new ParsedDiscoveryRedirect(mcc, mnc, encryptedMSISDN, loginHintToken);
         }
 
         /// <inheritdoc/>

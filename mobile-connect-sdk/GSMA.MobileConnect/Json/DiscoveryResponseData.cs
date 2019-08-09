@@ -18,6 +18,10 @@ namespace GSMA.MobileConnect.Json
         /// <summary>
         /// Parsed from JSON response
         /// </summary>
+        public string subscriber_id_token { get; set; }
+        /// <summary>
+        /// Parsed from JSON response
+        /// </summary>
         public string error { get; set; }
         /// <summary>
         /// Parsed from JSON response

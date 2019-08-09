@@ -31,6 +31,10 @@ namespace GSMA.MobileConnect.Discovery
             }
 
             List<string> currentScopes = StringUtils.ConvertToListBySpace(scope);
+            if (supportedVersion.Contains(Version.MC_DI_V3_0) & ContainsScopesV3_0(currentScopes))
+            {
+                return Version.MC_DI_V3_0;
+            }
             if (supportedVersion.Contains(Version.MC_DI_R2_V2_3) & ContainsScopesV2_3(currentScopes))
             {
                 return Version.MC_DI_R2_V2_3;
@@ -73,14 +77,22 @@ namespace GSMA.MobileConnect.Discovery
         private static bool ContainsScopesV2_0(List<string> currentScopes)
         {
             return ContainsOpenidScope(currentScopes) & (currentScopes.Contains(Scope.AUTHN) || currentScopes.Contains(Scope.AUTHZ) ||
-                                                         currentScopes.Contains(Scope.IDENTITYPHONE) || currentScopes.Contains(Scope.IDENTITYNATIONALID) ||
-                                                         currentScopes.Contains(Scope.IDENTITYSIGNUP) || currentScopes.Contains(Scope.IDENTITYSIGNUPPLUS));
+                                                         currentScopes.Contains(Scope.MC_IDENTITY_PHONE) || currentScopes.Contains(Scope.MC_IDENTITY_NATIONALID) ||
+                                                         currentScopes.Contains(Scope.MC_IDENTITY_SIGNUP) || currentScopes.Contains(Scope.MC_IDENTITY_SIGNUP_PLUS));
         }
 
         private static bool ContainsScopesV2_3(List<string> currentScopes)
         {
-            return ContainsOpenidScope(currentScopes) & (ContainsScopesV2_0(currentScopes) || currentScopes.Contains(Scope.KYCHASHED)
-                                                                                           || currentScopes.Contains(Scope.KYCPLAIN));
+            return ContainsOpenidScope(currentScopes) & (ContainsScopesV2_0(currentScopes) || currentScopes.Contains(Scope.KYC_HASHED)
+                                                                                           || currentScopes.Contains(Scope.KYC_PLAIN));
+        }
+
+        private static bool ContainsScopesV3_0(List<string> currentScopes)
+        {
+            return ContainsOpenidScope(currentScopes) & (currentScopes.Contains(Scope.AUTHN) || currentScopes.Contains(Scope.AUTHZ) ||
+                                                         currentScopes.Contains(Scope.MC_PHONE) || currentScopes.Contains(Scope.MC_NATIONALID) ||
+                                                         currentScopes.Contains(Scope.MC_SIGNUP) || currentScopes.Contains(Scope.KYC_HASHED) ||
+                                                         currentScopes.Contains(Scope.KYC_PLAIN));
         }
 
 
