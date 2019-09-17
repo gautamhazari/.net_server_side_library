@@ -21,6 +21,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         protected static MobileConnectWebInterface MobileConnect;
         protected static string ApiVersion;
         protected static bool IncludeRequestIp;
+        protected static bool LoginHintTokenPreference;
         protected static MobileConnectConfig MobileConnectConfig;
         protected static OperatorParameters OperatorParams;
 
@@ -28,7 +29,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         protected static SessionCache SessionCache;
         protected static DiscoveryCache DiscoveryCache;
         protected static string[] IdentityScopes = {Scope.MC_IDENTITY_PHONE, Scope.MC_IDENTITY_SIGNUP,
-            Scope.MC_IDENTITY_NATIONALID, Scope.MC_IDENTITY_SIGNUP_PLUS, Scope.KYC_HASHED, Scope.KYC_PLAIN};
+            Scope.MC_IDENTITY_NATIONALID, Scope.MC_PHONE, Scope.MC_SIGNUP,
+            Scope.MC_NATIONALID, Scope.MC_IDENTITY_SIGNUP_PLUS, Scope.KYC_HASHED, Scope.KYC_PLAIN};
         protected static string[] UserInfoScopes = {Scope.PROFILE, Scope.EMAIL, Scope.ADDRESS,
             Scope.PHONE, Scope.OFFLINE_ACCESS};
 

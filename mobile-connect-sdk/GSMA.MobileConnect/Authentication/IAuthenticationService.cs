@@ -61,7 +61,7 @@ namespace GSMA.MobileConnect.Authentication
             CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Synchronous wrapper for <see cref="IAuthenticationService.RequestTokenAsync(string, string, string, string, string)"/>
+        /// Synchronous wrapper for <see cref="IAuthenticationService.RequestTokenAsync(string, string, string, string, string, bool)"/>
         /// </summary>
         /// <param name="clientId">The registered application ClientId (Required)</param>
         /// <param name="clientSecret">The registered application ClientSecret (Required)</param>
@@ -84,7 +84,7 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="redirectUrl">Confirms the redirectURI that the application used when the authorization request (Required)</param>
         /// <param name="code">The authorization code provided to the application via the call to the authentication/authorization API (Required)</param>
         Task<RequestTokenResponse> RequestTokenAsync(string clientId, string correlationId, string clientSecret,
-            string requestTokenUrl, string redirectUrl, string code);
+            string requestTokenUrl, string redirectUrl, string code, bool isBasicAuth);
 
         /// <summary>
         /// Allows an application to use the refresh token obtained from request token response and request for a token refresh. 
@@ -95,10 +95,10 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="refreshTokenUrl">The url for token refresh received from the discovery process</param>
         /// <param name="refreshToken">Refresh token returned from RequestToken request</param>
         /// <returns></returns>
-        Task<RequestTokenResponse> RefreshTokenAsync(string clientId, string clientSecret, string refreshTokenUrl, string refreshToken);
+        Task<RequestTokenResponse> RefreshTokenAsync(string clientId, string clientSecret, string refreshTokenUrl, string refreshToken, bool isBasicAuth);
 
         /// <summary>
-        /// Synchronous wrapper for <see cref="RefreshTokenAsync(string, string, string, string)"/>
+        /// Synchronous wrapper for <see cref="RefreshTokenAsync(string, string, string, string, bool)"/>
         /// </summary>
         /// <param name="clientId">The application ClientId returned by the discovery process</param>
         /// <param name="clientSecret">The ClientSecret returned by the discovery response</param>
@@ -118,7 +118,7 @@ namespace GSMA.MobileConnect.Authentication
         /// <param name="token">Access/Refresh token returned from RequestToken request</param>
         /// <param name="tokenTypeHint">Hint to indicate the type of token being passed in</param>
         /// <returns></returns>
-        Task<RevokeTokenResponse> RevokeTokenAsync(string clientId, string clientSecret, string revokeTokenUrl, string token, string tokenTypeHint);
+        Task<RevokeTokenResponse> RevokeTokenAsync(string clientId, string clientSecret, string revokeTokenUrl, string token, string tokenTypeHint, bool isBasicAuth);
 
         /// <summary>
         /// Synchronous wrapper for <see cref="RevokeToken(string, string, string, string, string)"/>

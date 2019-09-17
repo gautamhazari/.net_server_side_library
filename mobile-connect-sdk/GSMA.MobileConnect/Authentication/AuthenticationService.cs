@@ -13,6 +13,7 @@ using GSMA.MobileConnect.Constants;
 using Scope = GSMA.MobileConnect.Utils.Scope;
 using System.Net.Http;
 using GSMA.MobileConnect.Claims;
+using Version = GSMA.MobileConnect.Discovery.Version;
 
 namespace GSMA.MobileConnect.Authentication
 {
@@ -140,16 +141,21 @@ namespace GSMA.MobileConnect.Authentication
 
             try
             {
-                var index = 0;
                 var length = discoveryGenerateResponseOptions.Response.response.apis.operatorid.link.Count;
+                string providerMetadataLink = null;
                 for (var i = 0; i < length; i++)
                 {
-                    if (discoveryGenerateResponseOptions.Response.response.apis.operatorid.link[i].rel != LinkRels.OPENID_CONFIGURATION) continue;
-                    index = i;
-                    break;
+                    var link = discoveryGenerateResponseOptions.Response.response.apis.operatorid.link[i];
+                    if (link.rel == LinkRels.OPENID_CONFIGURATION)
+                    {
+                        providerMetadataLink = link.href;
+                    } else if (string.IsNullOrEmpty(providerMetadataLink) && link.rel == LinkRels.ISSUER)
+                    {
+                        providerMetadataLink = StringUtils.concatenateURL(link.href, LinkRels.PROVIDER_METADATA_POSTFIX);
+                    }
                 }
 
-                var providerMetadataLink = discoveryGenerateResponseOptions.Response.response.apis.operatorid.link[index].href;
+                
 
                 if (providerMetadataLink != null)
                 {
@@ -177,7 +183,7 @@ namespace GSMA.MobileConnect.Authentication
             bool shouldUseAuthorize = ShouldUseAuthorize(options);
             if (shouldUseAuthorize)
             {
-                options.Prompt = "login";
+                options.Prompt = Parameters.LOGIN;
             }
 
             string authUrl = StartAuthentication(clientId, correlationId, authorizeUrl, redirectUrl, state, nonce, encryptedMsisdn, options, version).Url;
@@ -230,7 +236,7 @@ namespace GSMA.MobileConnect.Authentication
         }
     
         /// <inheritdoc/>
-        public async Task<RequestTokenResponse> RequestTokenAsync(string clientId, string correlationId, string clientSecret, string requestTokenUrl, string redirectUrl, string code)
+        public async Task<RequestTokenResponse> RequestTokenAsync(string clientId, string correlationId, string clientSecret, string requestTokenUrl, string redirectUrl, string code, bool isBasicAuth = true)
         {
             Validate.RejectNullOrEmpty(clientId, "clientId");
             Validate.RejectNullOrEmpty(clientSecret, "clientSecret");
@@ -242,13 +248,14 @@ namespace GSMA.MobileConnect.Authentication
             {
                 var formData = new List<BasicKeyValuePair>()
                 {
+                    new BasicKeyValuePair(Parameters.CLIENT_ID, !isBasicAuth ? clientId : null),
+                    new BasicKeyValuePair(Parameters.CLIENT_SECRET, !isBasicAuth ? clientSecret : null),
                     new BasicKeyValuePair(Parameters.AUTHENTICATION_REDIRECT_URI, redirectUrl),
                     new BasicKeyValuePair(Parameters.CODE, code),
                     new BasicKeyValuePair(Parameters.GRANT_TYPE, DefaultOptions.GRANT_TYPE),
                     new BasicKeyValuePair(Parameters.CORRELATION_ID, correlationId)
                 };
-
-                RestResponse response = await _client.PostAsync(requestTokenUrl, RestAuthentication.Basic(clientId, clientSecret), formData, null, null);
+                RestResponse response = await _client.PostAsync(requestTokenUrl, isBasicAuth ? RestAuthentication.Basic(clientId, clientSecret) : null, formData, null, null);
                 var tokenResponse = new RequestTokenResponse(response);
 
                 return tokenResponse;
@@ -267,7 +274,7 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        public async Task<RequestTokenResponse> RefreshTokenAsync(string clientId, string clientSecret, string refreshTokenUrl, string refreshToken)
+        public async Task<RequestTokenResponse> RefreshTokenAsync(string clientId, string clientSecret, string refreshTokenUrl, string refreshToken, bool isBasicAuth = true)
         {
             Validate.RejectNullOrEmpty(clientId, "clientId");
             Validate.RejectNullOrEmpty(clientSecret, "clientSecret");
@@ -284,7 +291,7 @@ namespace GSMA.MobileConnect.Authentication
             RestResponse restResponse;
             try
             {
-                restResponse = await _client.PostAsync(refreshTokenUrl, authentication, formData, null, null);
+                restResponse = await _client.PostAsync(refreshTokenUrl, isBasicAuth ? authentication : null, formData, null, null);
             }
             catch (Exception e) when (e is HttpRequestException || e is System.Net.WebException || e is TaskCanceledException)
             {
@@ -302,7 +309,7 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        public async Task<RevokeTokenResponse> RevokeTokenAsync(string clientId, string clientSecret, string revokeTokenUrl, string token, string tokenTypeHint)
+        public async Task<RevokeTokenResponse> RevokeTokenAsync(string clientId, string clientSecret, string revokeTokenUrl, string token, string tokenTypeHint, bool isBasicAuth = true)
         {
             Validate.RejectNullOrEmpty(clientId, "clientId");
             Validate.RejectNullOrEmpty(clientSecret, "clientSecret");
@@ -320,7 +327,7 @@ namespace GSMA.MobileConnect.Authentication
             }
 
             var authentication = RestAuthentication.Basic(clientId, clientSecret);
-            var restResponse = await _client.PostAsync(revokeTokenUrl, authentication, formData, null, null);
+            var restResponse = await _client.PostAsync(revokeTokenUrl, isBasicAuth ? authentication : null, formData, null, null);
             return new RevokeTokenResponse(restResponse);
         }
 
@@ -375,7 +382,7 @@ namespace GSMA.MobileConnect.Authentication
                 new BasicKeyValuePair(Parameters.STATE, options.State),
                 new BasicKeyValuePair(Parameters.NONCE, options.Nonce),
                 new BasicKeyValuePair(Parameters.DISPLAY, options.Display),
-                new BasicKeyValuePair(Parameters.PROMPT, options.Prompt),
+                new BasicKeyValuePair(Parameters.PROMPT, getPrompt(options.Prompt, version)),
                 new BasicKeyValuePair(Parameters.MAX_AGE, options.MaxAge.ToString()),
                 new BasicKeyValuePair(Parameters.UI_LOCALES, options.UiLocales),
                 new BasicKeyValuePair(Parameters.CLAIMS_LOCALES, options.ClaimsLocales),
@@ -404,6 +411,30 @@ namespace GSMA.MobileConnect.Authentication
             }
 
             return authParameters;
+        }
+
+        private String getPrompt(string currentPrompt, string currentVersion)
+        {
+            if (string.IsNullOrEmpty(currentPrompt))
+            {
+                return null;
+            }
+
+            if (!currentVersion.Equals(Version.MC_DI_V3_0))
+            {
+                if (currentPrompt.Equals(Parameters.CONSENT) || currentPrompt.Equals(Parameters.SELECT_ACCOUNT))
+                {
+                    return currentPrompt;
+                }
+            }
+
+            if (currentPrompt.Equals(Parameters.NONE) || currentPrompt.Equals(Parameters.LOGIN)
+                                                      || currentPrompt.Equals(Parameters.NO_SEAM))
+            {
+                return currentPrompt;
+            }
+
+            return null;
         }
 
         private string GetClaimsString(AuthenticationOptions options)

@@ -77,7 +77,8 @@ namespace GSMA.MobileConnect.Utils
         private HttpRequestMessage CreateDiscoveryRequest(HttpMethod method, Uri uri, string xRedirect, RestAuthentication authentication, string sourceIp, IEnumerable<BasicKeyValuePair> cookies)
         {
             var message = CreateRequest(method, uri, xRedirect, authentication, sourceIp, cookies);
-            message.Headers.Add(Headers.SDK_VERSION, VersionUtils.GetSDKVersion());
+            //message.Headers.Add(Headers.SDK_VERSION, VersionUtils.GetSDKVersion());
+            message.Headers.Add(Headers.SDK_VERSION, Discovery.Version.NET_VERSION);
             return message;
         }
 

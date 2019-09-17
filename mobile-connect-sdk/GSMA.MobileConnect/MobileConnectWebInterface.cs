@@ -346,7 +346,7 @@ namespace GSMA.MobileConnect
             Uri redirectedUrl,
             string expectedState,
             string expectedNonce,
-            MobileConnectRequestOptions options, string version)
+            MobileConnectRequestOptions options, string version, bool isBasicAuth)
         {
             return await MobileConnectInterfaceHelper.RequestToken(
                 _authentication,
@@ -356,7 +356,7 @@ namespace GSMA.MobileConnect
                 expectedState,
                 expectedNonce,
                 _config,
-                options, version);
+                options, version, isBasicAuth);
         }
 
         /// <summary>
@@ -375,7 +375,7 @@ namespace GSMA.MobileConnect
             Uri redirectedUrl,
             string expectedState,
             string expectedNonce,
-            MobileConnectRequestOptions options, string version)
+            MobileConnectRequestOptions options, string version, bool isBasicAuth)
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -385,7 +385,7 @@ namespace GSMA.MobileConnect
             }
 
             return await RequestTokenAsync(
-                request, discoveryResponse, redirectedUrl, expectedState, expectedNonce, options, version);
+                request, discoveryResponse, redirectedUrl, expectedState, expectedNonce, options, version, isBasicAuth);
         }
 
         /// <summary>
@@ -398,10 +398,10 @@ namespace GSMA.MobileConnect
         public async Task<MobileConnectStatus> RefreshTokenAsync(
             HttpRequestMessage request,
             string refreshToken,
-            DiscoveryResponse discoveryResponse)
+            DiscoveryResponse discoveryResponse, bool isBasicAuth)
         {
             return await MobileConnectInterfaceHelper.RefreshToken(
-                _authentication, refreshToken, discoveryResponse, _config);
+                _authentication, refreshToken, discoveryResponse, _config, isBasicAuth);
         }
 
         /// <summary>
@@ -412,7 +412,7 @@ namespace GSMA.MobileConnect
         /// <param name="sdkSession">SDKSession id used to fetch the discovery response with additional parameters that are required to refresh a token</param>
         /// <returns>Object with required information for continuing the mobile connect process</returns>
         public async Task<MobileConnectStatus> RefreshTokenAsync(
-            HttpRequestMessage request, string refreshToken, string sdkSession)
+            HttpRequestMessage request, string refreshToken, string sdkSession, bool isBasicAuth)
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -421,7 +421,7 @@ namespace GSMA.MobileConnect
                 return GetCacheError();
             }
 
-            return await RefreshTokenAsync(request, refreshToken, discoveryResponse);
+            return await RefreshTokenAsync(request, refreshToken, discoveryResponse, isBasicAuth);
         }
 
         /// <summary>
@@ -433,10 +433,10 @@ namespace GSMA.MobileConnect
         /// <param name="discoveryResponse">The response returned by the discovery process</param>
         /// <returns>Object with required information for continuing the mobile connect process</returns>
         public async Task<MobileConnectStatus> RevokeTokenAsync(
-            HttpRequestMessage request, string token, string tokenTypeHint, DiscoveryResponse discoveryResponse)
+            HttpRequestMessage request, string token, string tokenTypeHint, DiscoveryResponse discoveryResponse, bool isBasicAuth)
         {
             return await MobileConnectInterfaceHelper.RevokeToken(
-                _authentication, token, tokenTypeHint, discoveryResponse, _config);
+                _authentication, token, tokenTypeHint, discoveryResponse, _config, isBasicAuth);
         }
 
         /// <summary>
@@ -448,7 +448,7 @@ namespace GSMA.MobileConnect
         /// <param name="sdkSession">SDKSession id used to fetch the discovery response with additional parameters that are required to revoke a token</param>
         /// <returns>Object with required information for continuing the mobile connect process</returns>
         public async Task<MobileConnectStatus> RevokeTokenAsync(
-            HttpRequestMessage request, string token, string tokenTypeHint, string sdkSession)
+            HttpRequestMessage request, string token, string tokenTypeHint, string sdkSession, bool isBasicAuth)
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -457,7 +457,7 @@ namespace GSMA.MobileConnect
                 return GetCacheError();
             }
 
-            return await RevokeTokenAsync(request, token, tokenTypeHint, discoveryResponse);
+            return await RevokeTokenAsync(request, token, tokenTypeHint, discoveryResponse, isBasicAuth);
         }
 
         /// <summary>
@@ -478,7 +478,7 @@ namespace GSMA.MobileConnect
             discoveryResponse = null,
             string expectedState = null,
             string expectedNonce = null,
-            MobileConnectRequestOptions options = null, string version = null)
+            MobileConnectRequestOptions options = null, string version = null, bool isBasicAuth = true)
         {
             return await CacheIfRequired(
                 await MobileConnectInterfaceHelper.HandleUrlRedirect(
@@ -490,7 +490,7 @@ namespace GSMA.MobileConnect
                     expectedState,
                     expectedNonce,
                     _config,
-                    options, version));
+                    options, version, isBasicAuth));
         }
 
         /// <summary>
@@ -510,7 +510,7 @@ namespace GSMA.MobileConnect
             string sdkSession = null,
             string expectedState = null,
             string expectedNonce = null,
-            MobileConnectRequestOptions options = null, string version = null)
+            MobileConnectRequestOptions options = null, string version = null, bool isBasicAuth = true)
         {
             var discoveryResponse = await GetSessionFromCache(sdkSession);
 
@@ -529,7 +529,7 @@ namespace GSMA.MobileConnect
                     expectedState,
                     expectedNonce,
                     _config,
-                    options, version));
+                    options, version, isBasicAuth));
         }
 
         /// <summary>

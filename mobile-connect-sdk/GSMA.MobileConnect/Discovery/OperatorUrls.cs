@@ -2,6 +2,7 @@
 using GSMA.MobileConnect.Json;
 using System.Collections.Generic;
 using System.Linq;
+using GSMA.MobileConnect.Utils;
 
 namespace GSMA.MobileConnect.Discovery
 {
@@ -77,7 +78,7 @@ namespace GSMA.MobileConnect.Discovery
                 JWKSUrl = GetUrl(links, LinkRels.JWKS),
                 RefreshTokenUrl = GetUrl(links, LinkRels.TOKENREFRESH),
                 RevokeTokenUrl = GetUrl(links, LinkRels.TOKENREVOKE),
-                ProviderMetadataUrl = GetUrl(links, LinkRels.OPENID_CONFIGURATION),
+                ProviderMetadataUrl = GetUrl(links, LinkRels.OPENID_CONFIGURATION) ?? StringUtils.concatenateURL(GetUrl(links, LinkRels.ISSUER), LinkRels.PROVIDER_METADATA_POSTFIX),
                 ScopeUrl = GetUrl(links, LinkRels.SCOPE)
             };
         }
@@ -142,6 +143,7 @@ namespace GSMA.MobileConnect.Discovery
             list.Add(LinkRels.TOKENREFRESH);
             list.Add(LinkRels.TOKENREVOKE);
             list.Add(LinkRels.OPENID_CONFIGURATION);
+            list.Add(LinkRels.ISSUER);
             list.Add(LinkRels.SCOPE);
             return list;
         }

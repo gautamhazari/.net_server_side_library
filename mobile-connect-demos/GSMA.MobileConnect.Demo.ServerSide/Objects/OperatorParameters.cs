@@ -12,6 +12,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Objects
         public string redirectURL { get; set; }
         public string xRedirect { get; set; }
         public string includeRequestIP { get; set; }
+        public string loginHintTokenPreference { get; set; }
         public string apiVersion { get; set; }
         public string scope { get; set; }
         public string acrValues { get; set; }

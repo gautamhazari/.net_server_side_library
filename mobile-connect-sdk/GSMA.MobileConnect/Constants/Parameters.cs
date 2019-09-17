@@ -22,6 +22,7 @@
 
         //Required params for authentication
         public const string CLIENT_ID = "client_id";
+        public const string CLIENT_SECRET = "client_secret";
         public const string CORRELATION_ID = "correlation_id";
         public const string RESPONSE_TYPE = "response_type";
         public const string AUTHENTICATION_REDIRECT_URI = "redirect_uri";
@@ -34,6 +35,11 @@
         //Optional params for authentication
         public const string DISPLAY = "display";
         public const string PROMPT = "prompt";
+        public const string LOGIN = "login";
+        public const string NONE = "none";
+        public const string CONSENT = "consent";
+        public const string SELECT_ACCOUNT = "select_account";
+        public const string NO_SEAM = "no_seam";
         public const string MAX_AGE = "max_age";
         public const string UI_LOCALES = "ui_locales";
         public const string CLAIMS_LOCALES = "claims_locales";

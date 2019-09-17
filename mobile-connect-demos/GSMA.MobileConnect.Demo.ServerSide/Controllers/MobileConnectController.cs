@@ -140,8 +140,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             {
                 AcceptedValidationResults = Authentication.TokenValidationResult.Valid |
                     Authentication.TokenValidationResult.IdTokenValidationSkipped,
-                Context = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
+                Context = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) || ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) || ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
                 ClientName = OperatorParams.clientName,
                 AcrValues = OperatorParams.acrValues
             };
@@ -174,7 +174,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                     }
                 }
 
-                if ((ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3)) &
+                if ((ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) || ApiVersion.Equals(Utils.Constants.VERSION3_0)) &
                     !string.IsNullOrEmpty(sessionData.DiscoveryResponse.OperatorUrls.PremiumInfoUrl))
                 {
                     for (int scopeIndex = 0; scopeIndex < IdentityScopes.Length; scopeIndex++)
@@ -188,7 +188,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                 }
                 else
                 {
-                    return redirectToView(response, Utils.Status.TOKEN);
+                    return redirectToView(response ?? status, Utils.Status.TOKEN);
                 }
             }
             else
@@ -199,7 +199,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             }
 
             // return CreateResponse(status);
-            return redirectToView(response, Utils.Status.PREMIUMINFO);
+            return redirectToView(response ?? status, response != null ? Utils.Status.PREMIUMINFO : Utils.Status.TOKEN);
         }
 
         private async void SetDiscoveryCache(string msisdn, string mcc, string mnc, string sourceIp,
@@ -220,8 +220,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         {
             var requestOptions = new MobileConnectRequestOptions
             {
-                Context = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
+                Context = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) || ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) || ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
                 ClientName = OperatorParams.clientName,
                 AcrValues = OperatorParams.acrValues
             };
@@ -314,14 +314,31 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         {
             string scope = OperatorParams.scope;
 
+            string SubscriberIdToken = discoveryResponse.ResponseData.subscriber_id_token;
+            if (!VersionDetection.GetCurrentVersion(ApiVersion, scope, discoveryResponse.ProviderMetadata)
+                .Equals(Utils.Constants.VERSION3_0))
+            {
+                LoginHintTokenPreference = false;
+            }
+
+            if (!LoginHintTokenPreference && !string.IsNullOrEmpty(subscriberId))
+            {
+                SubscriberIdToken = null;
+            }
+            else if (!string.IsNullOrEmpty(SubscriberIdToken))
+            {
+                subscriberId = null;
+            }
+
+
             var options = new MobileConnectRequestOptions
             {
                 Scope = scope,
-                Context = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) ? Utils.Constants.ContextBindingMsg : null,
+                Context = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3)  || ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) || ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
                 ClientName = OperatorParams.clientName,
                 AcrValues = OperatorParams.acrValues,
-                LoginHintToken = discoveryResponse.ResponseData.subscriber_id_token
+                LoginHintToken = SubscriberIdToken
             };
 
             var status =
@@ -341,6 +358,11 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             OperatorParams = ReadAndParseFiles.ReadFile(Utils.Constants.OperatorDataFilePath);
             ApiVersion = OperatorParams.apiVersion;
             IncludeRequestIp = OperatorParams.includeRequestIP.Equals("True");
+            LoginHintTokenPreference = OperatorParams.loginHintTokenPreference.Equals("True");
+            if (!ApiVersion.Equals(Utils.Constants.VERSION3_0))
+            {
+                LoginHintTokenPreference = false;
+            }
 
             MobileConnectConfig = new MobileConnectConfig()
             {

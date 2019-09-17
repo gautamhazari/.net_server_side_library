@@ -183,5 +183,22 @@ namespace GSMA.MobileConnect.Utils
 
             return initString.Split(' ').ToList();
         }
+
+        public static String concatenateURL(String url, String postfix)
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                return url;
+            }
+            String separator = "/";
+            if (url.EndsWith(separator))
+            {
+                return url + postfix;
+            }
+            else
+            {
+                return url + separator + postfix;
+            }
+        }
     }
 }

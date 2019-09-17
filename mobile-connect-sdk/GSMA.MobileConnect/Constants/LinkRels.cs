@@ -44,6 +44,8 @@
         /// Key for openid-configuration
         /// </summary>
         public const string OPENID_CONFIGURATION = "openid-configuration";
+        public const string ISSUER = "issuer";
+        public const string PROVIDER_METADATA_POSTFIX = ".well-known/openid-configuration";
 
         public const string SCOPE = "scope";
 

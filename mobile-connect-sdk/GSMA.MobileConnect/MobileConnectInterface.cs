@@ -191,7 +191,7 @@ namespace GSMA.MobileConnect
             Uri redirectedUrl,
             string expectedState,
             string expectedNonce,
-            MobileConnectRequestOptions options, string version)
+            MobileConnectRequestOptions options, string version, bool isBasicAuth)
         {
             return await MobileConnectInterfaceHelper.RequestToken(
                 _authentication,
@@ -201,7 +201,7 @@ namespace GSMA.MobileConnect
                 expectedState,
                 expectedNonce,
                 _config,
-                options, version);
+                options, version, isBasicAuth);
         }
 
         /// <summary>
@@ -218,7 +218,7 @@ namespace GSMA.MobileConnect
             Uri redirectedUrl,
             string expectedState,
             string expectedNonce,
-            MobileConnectRequestOptions options, string version)
+            MobileConnectRequestOptions options, string version, bool isBasicAuth)
         {
             return MobileConnectInterfaceHelper.RequestToken(
                 _authentication,
@@ -228,7 +228,7 @@ namespace GSMA.MobileConnect
                 expectedState,
                 expectedNonce,
                 _config,
-                options, version).Result;
+                options, version, isBasicAuth).Result;
         }
 
         /// <summary>
@@ -238,10 +238,10 @@ namespace GSMA.MobileConnect
         /// <param name="discoveryResponse">The response returned by the discovery process</param>
         /// <returns>Object with required information for continuing the mobile connect process</returns>
         public async Task<MobileConnectStatus> RefreshTokenAsync(
-            string refreshToken, DiscoveryResponse discoveryResponse)
+            string refreshToken, DiscoveryResponse discoveryResponse, bool isBasicAuth)
         {
             return await MobileConnectInterfaceHelper.RefreshToken(
-                _authentication, refreshToken, discoveryResponse, _config);
+                _authentication, refreshToken, discoveryResponse, _config, isBasicAuth);
         }
 
         /// <summary>
@@ -250,10 +250,10 @@ namespace GSMA.MobileConnect
         /// <param name="refreshToken">Refresh token returned from RefreshToken request</param>
         /// <param name="discoveryResponse">The response returned by the discovery process</param>
         /// <returns>Object with required information for continuing the mobile connect process</returns>
-        public MobileConnectStatus RefreshToken(string refreshToken, DiscoveryResponse discoveryResponse)
+        public MobileConnectStatus RefreshToken(string refreshToken, DiscoveryResponse discoveryResponse, bool isBasicAuth)
         {
             return MobileConnectInterfaceHelper.RefreshToken(
-                _authentication, refreshToken, discoveryResponse, _config).Result;
+                _authentication, refreshToken, discoveryResponse, _config, isBasicAuth).Result;
         }
 
         /// <summary>
@@ -264,10 +264,10 @@ namespace GSMA.MobileConnect
         /// <param name="discoveryResponse">The response returned by the discovery process</param>
         /// <returns>Object with required information for continuing the mobile connect process</returns>
         public async Task<MobileConnectStatus> RevokeTokenAsync(
-            string token, string tokenTypeHint, DiscoveryResponse discoveryResponse)
+            string token, string tokenTypeHint, DiscoveryResponse discoveryResponse, bool isBasicAuth)
         {
             return await MobileConnectInterfaceHelper.RevokeToken(
-                _authentication, token, tokenTypeHint, discoveryResponse, _config);
+                _authentication, token, tokenTypeHint, discoveryResponse, _config, isBasicAuth);
         }
 
         /// <summary>
@@ -278,10 +278,10 @@ namespace GSMA.MobileConnect
         /// <param name="discoveryResponse">The response returned by the discovery process</param>
         /// <returns>Object with required information for continuing the mobile connect process</returns>
         public MobileConnectStatus RevokeToken(
-            string token, string tokenTypeHint, DiscoveryResponse discoveryResponse)
+            string token, string tokenTypeHint, DiscoveryResponse discoveryResponse, bool isBasicAuth)
         {
             return MobileConnectInterfaceHelper.RevokeToken(
-                _authentication, token, tokenTypeHint, discoveryResponse, _config).Result;
+                _authentication, token, tokenTypeHint, discoveryResponse, _config, isBasicAuth).Result;
         }
 
         /// <summary>
@@ -299,7 +299,7 @@ namespace GSMA.MobileConnect
             DiscoveryResponse discoveryResponse = null,
             string expectedState = null,
             string expectedNonce = null,
-            MobileConnectRequestOptions options = null, string version = null)
+            MobileConnectRequestOptions options = null, string version = null, bool isBasicAuth = true)
         {
             return await MobileConnectInterfaceHelper.HandleUrlRedirect(
                 _discovery,
@@ -310,7 +310,7 @@ namespace GSMA.MobileConnect
                 expectedState,
                 expectedNonce,
                 _config,
-                options, version);
+                options, version, isBasicAuth);
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace GSMA.MobileConnect
             DiscoveryResponse discoveryResponse = null,
             string expectedState = null,
             string expectedNonce = null,
-            MobileConnectRequestOptions options = null, string version = null)
+            MobileConnectRequestOptions options = null, string version = null, bool isBasicAuth = true)
         {
             return MobileConnectInterfaceHelper.HandleUrlRedirect(
                 _discovery,
@@ -338,7 +338,7 @@ namespace GSMA.MobileConnect
                 expectedState,
                 expectedNonce,
                 _config,
-                options, version).Result;
+                options, version, isBasicAuth).Result;
         }
 
         /// <summary>

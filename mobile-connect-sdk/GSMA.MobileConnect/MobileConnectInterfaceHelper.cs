@@ -212,7 +212,7 @@ namespace GSMA.MobileConnect
         }
 
         internal static async Task<MobileConnectStatus> RequestToken(IAuthenticationService authentication, IJWKeysetService jwks, DiscoveryResponse discoveryResponse, Uri redirectedUrl, string expectedState,
-            string expectedNonce, MobileConnectConfig config, MobileConnectRequestOptions options, string version)
+            string expectedNonce, MobileConnectConfig config, MobileConnectRequestOptions options, string version, bool isBasicAuth)
         {
             RequestTokenResponse response;
 
@@ -246,7 +246,7 @@ namespace GSMA.MobileConnect
                 var issuer = discoveryResponse.ProviderMetadata.Issuer;
                 var correlationId = discoveryResponse.ResponseData.correlationId;
 
-                var tokenTask = authentication.RequestTokenAsync(clientId, correlationId, clientSecret, requestTokenUrl, config.RedirectUrl, code);
+                var tokenTask = authentication.RequestTokenAsync(clientId, correlationId, clientSecret, requestTokenUrl, config.RedirectUrl, code, isBasicAuth);
                 var jwksTask = jwks.RetrieveJWKSAsync(discoveryResponse.OperatorUrls.JWKSUrl);
 
                 // execute both tasks in parallel
@@ -305,13 +305,13 @@ namespace GSMA.MobileConnect
         }
 
         internal static async Task<MobileConnectStatus> HandleUrlRedirect(IDiscoveryService discovery, IAuthenticationService authentication, IJWKeysetService jwks, Uri redirectedUrl, DiscoveryResponse discoveryResponse, 
-            string expectedState, string expectedNonce, MobileConnectConfig config, MobileConnectRequestOptions options, string version)
+            string expectedState, string expectedNonce, MobileConnectConfig config, MobileConnectRequestOptions options, string version, bool isBasicAuth)
         {
             if (HttpUtils.ExtractQueryValue(redirectedUrl.Query, "code") != null)
             {
                 try {
                     return await RequestToken(authentication, jwks, discoveryResponse, redirectedUrl, expectedState, expectedNonce, config, options, VersionDetection.GetCurrentVersion(version,
-                    options?.AuthenticationOptions?.Scope, discoveryResponse.ProviderMetadata));
+                    options?.AuthenticationOptions?.Scope, discoveryResponse.ProviderMetadata), isBasicAuth);
 
                 }
                 catch (MobileConnectInvalidScopeException e)
@@ -392,7 +392,7 @@ namespace GSMA.MobileConnect
             }
         }
 
-        internal static async Task<MobileConnectStatus> RefreshToken(IAuthenticationService authentication, string refreshToken, DiscoveryResponse discoveryResponse, MobileConnectConfig config)
+        internal static async Task<MobileConnectStatus> RefreshToken(IAuthenticationService authentication, string refreshToken, DiscoveryResponse discoveryResponse, MobileConnectConfig config, bool isBasicAuth)
         {
             Validate.RejectNull(discoveryResponse, "discoveryResponse");
             Validate.RejectNullOrEmpty(refreshToken, "refreshToken");
@@ -415,7 +415,7 @@ namespace GSMA.MobileConnect
 
             try
             {
-                RequestTokenResponse requestTokenResponse = await authentication.RefreshTokenAsync(clientId, clientSecret, refreshTokenUrl, refreshToken);
+                RequestTokenResponse requestTokenResponse = await authentication.RefreshTokenAsync(clientId, clientSecret, refreshTokenUrl, refreshToken, isBasicAuth);
                 ErrorResponse errorResponse = requestTokenResponse.ErrorResponse;
                 if (errorResponse != null)
                 {
@@ -435,7 +435,7 @@ namespace GSMA.MobileConnect
             }
         }
 
-        internal static async Task<MobileConnectStatus> RevokeToken(IAuthenticationService authentication, string token, string tokenTypeHint, DiscoveryResponse discoveryResponse, MobileConnectConfig config)
+        internal static async Task<MobileConnectStatus> RevokeToken(IAuthenticationService authentication, string token, string tokenTypeHint, DiscoveryResponse discoveryResponse, MobileConnectConfig config, bool isBasicAuth)
         {
             Validate.RejectNull(discoveryResponse, "discoveryResponse");
             Validate.RejectNullOrEmpty(token, "token");
@@ -453,7 +453,7 @@ namespace GSMA.MobileConnect
 
             try
             {
-                var response = await authentication.RevokeTokenAsync(clientId, clientSecret, revokeTokenUrl, token, tokenTypeHint);
+                var response = await authentication.RevokeTokenAsync(clientId, clientSecret, revokeTokenUrl, token, tokenTypeHint, isBasicAuth);
                 return MobileConnectStatus.TokenRevoked(response);
             }
             catch (Exception e)
