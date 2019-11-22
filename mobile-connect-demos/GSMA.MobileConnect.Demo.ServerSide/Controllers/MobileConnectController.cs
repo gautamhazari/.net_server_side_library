@@ -71,7 +71,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
 
             SetDiscoveryCache(msisdn, mcc, mnc, sourceIp, discoveryResponse);
 
-            string url = CallStartAuth(discoveryResponse, discoveryResponse.ResponseData.subscriber_id, Request,
+            string url = StartAuth(discoveryResponse, discoveryResponse.ResponseData.subscriber_id, Request,
                 msisdn, mcc, mnc, sourceIp);
 
             if (url == null)
@@ -140,8 +140,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             {
                 AcceptedValidationResults = Authentication.TokenValidationResult.Valid |
                     Authentication.TokenValidationResult.IdTokenValidationSkipped,
-                Context = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) || ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) || ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
+                Context = ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
                 ClientName = OperatorParams.clientName,
                 AcrValues = OperatorParams.acrValues
             };
@@ -174,7 +174,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
                     }
                 }
 
-                if ((ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) || ApiVersion.Equals(Utils.Constants.VERSION3_0)) &
+                if (ApiVersion.Equals(Utils.Constants.VERSION3_0) &
                     !string.IsNullOrEmpty(sessionData.DiscoveryResponse.OperatorUrls.PremiumInfoUrl))
                 {
                     for (int scopeIndex = 0; scopeIndex < IdentityScopes.Length; scopeIndex++)
@@ -220,8 +220,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
         {
             var requestOptions = new MobileConnectRequestOptions
             {
-                Context = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) || ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) || ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
+                Context = ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
                 ClientName = OperatorParams.clientName,
                 AcrValues = OperatorParams.acrValues
             };
@@ -237,7 +237,7 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             {
                 SetDiscoveryCache(null, mcc, mnc, null, status.DiscoveryResponse);
 
-                var url = CallStartAuth(status.DiscoveryResponse, subscriber_id, RequestMessage, null, mcc, mnc,
+                var url = StartAuth(status.DiscoveryResponse, subscriber_id, RequestMessage, null, mcc, mnc,
                     null);
                 return GetHttpMsgWithRedirect(url);
 
@@ -261,46 +261,6 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             };
 
             return new ResponseMessageResult(response);
-        }
-
-        private string CallStartAuth(
-            DiscoveryResponse discoveryResponse,
-            string subscriberId,
-            HttpRequestMessage request,
-            string msisdn,
-            string mcc,
-            string mnc,
-            string sourceIp)
-        {
-            if (OperatorParams.scope.Contains(Scope.AUTHZ))
-            {
-                return StartAuthorize(discoveryResponse, subscriberId, request, msisdn, mcc, mnc, sourceIp);
-            }
-            return StartAuthentication(discoveryResponse, subscriberId, request, msisdn, mcc, mnc, sourceIp);
-        }
-
-        private string StartAuthentication(
-            DiscoveryResponse discoveryResponse,
-            string subscriberId,
-            HttpRequestMessage request,
-            string msisdn,
-            string mcc,
-            string mnc,
-            string sourceIp)
-        {
-            return StartAuth(discoveryResponse, subscriberId, request, msisdn, mcc, mnc, sourceIp);
-        }
-
-        private string StartAuthorize(
-            DiscoveryResponse discoveryResponse,
-            string subscriberId,
-            HttpRequestMessage request,
-            string msisdn,
-            string mcc,
-            string mnc,
-            string sourceIp)
-        {
-            return StartAuth(discoveryResponse, subscriberId, request, msisdn, mcc, mnc, sourceIp);
         }
 
         private string StartAuth(
@@ -334,8 +294,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             var options = new MobileConnectRequestOptions
             {
                 Scope = scope,
-                Context = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3)  || ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) || ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
+                Context = ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
                 ClientName = OperatorParams.clientName,
                 AcrValues = OperatorParams.acrValues,
                 LoginHintToken = SubscriberIdToken

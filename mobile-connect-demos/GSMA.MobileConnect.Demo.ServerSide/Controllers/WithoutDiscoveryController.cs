@@ -40,37 +40,9 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
            
             discoveryResponse = await MobileConnect.GenerateDiscoveryManually(OperatorParams.clientID, OperatorParams.clientSecret, OperatorParams.clientName, OperatorParams.operatorUrls);
 
-            string url = CallStartAuth(discoveryResponse, msisdn, Request);
+            string url = StartAuth(discoveryResponse, msisdn, Request);
 
             return GetHttpMsgWithRedirect(url);
-        }
-        
-        private string CallStartAuth(
-            DiscoveryResponse discoveryResponse,
-            string msisdn,
-            HttpRequestMessage request)
-        {
-            if (OperatorParams.scope.Contains(Scope.AUTHZ))
-            {
-                return StartAuthorize(discoveryResponse, msisdn, request);
-            }
-            return StartAuthentication(discoveryResponse, msisdn, request);
-        }
-
-        private string StartAuthentication(
-            DiscoveryResponse discoveryResponse,
-            string msisdn,
-            HttpRequestMessage request)
-        {
-            return StartAuth(discoveryResponse, msisdn, request);
-        }
-
-        private string StartAuthorize(
-            DiscoveryResponse discoveryResponse,
-            string msisdn,
-            HttpRequestMessage request)
-        {
-            return StartAuth(discoveryResponse, msisdn, request);
         }
 
         private string StartAuth(
@@ -89,8 +61,8 @@ namespace GSMA.MobileConnect.ServerSide.Web.Controllers
             var options = new MobileConnectRequestOptions
             {
                 Scope = scope,
-                Context = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) || ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
-                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION2_0) || ApiVersion.Equals(Utils.Constants.VERSION2_3) || ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
+                Context = ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
+                BindingMessage = ApiVersion.Equals(Utils.Constants.VERSION3_0) ? Utils.Constants.ContextBindingMsg : null,
                 ClientName = OperatorParams.clientName,
                 AcrValues = OperatorParams.acrValues,
                 LoginHint = loginHint

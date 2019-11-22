@@ -4,7 +4,6 @@
     {
         public const string OPENID = "openid";
         public const string AUTHN = "mc_authn";
-        public const string AUTHZ = "mc_authz";
 
         public const string PROFILE = "profile";
         public const string EMAIL = "email";
@@ -13,14 +12,10 @@
         public const string OFFLINE_ACCESS = "offline_access";
 
         public const string MC_IDENTITY = "mc_identity";
-        public const string MC_IDENTITY_PHONE = "mc_identity_phonenumber";
         public const string MC_IDENTITY_SIGNUP = "mc_identity_signup";
         public const string MC_IDENTITY_SIGNUP_PLUS = "mc_identity_signupplus";
-        public const string MC_IDENTITY_NATIONALID = "mc_identity_nationalid";
         
-        public const string MC_PHONE = "mc_phonenumber";
         public const string MC_SIGNUP = "mc_signup";
-        public const string MC_NATIONALID = "mc_nationalid";
 
         public const string KYC_PLAIN = "mc_kyc_plain";
         public const string KYC_HASHED = "mc_kyc_hashed";

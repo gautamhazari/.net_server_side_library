@@ -52,15 +52,6 @@ namespace GSMA.MobileConnect.Authentication
                 correlationId = "";
             }
 
-            bool shouldUseAuthorize = options.Scope.ToLower().Equals(Constants.Scope.AUTHZ.ToLower());
-
-            if (shouldUseAuthorize)
-            {
-                Validate.RejectNullOrEmpty(options.Context, "options.Context");
-                Validate.RejectNullOrEmpty(options.ClientName, "options.ClientName");
-                Validate.RejectNullOrEmpty(options.BindingMessage, "options.BindingMessage");
-            }
-
             if (options != null)
             {
                 KYCClaimsParameter kycClaims = options.KycClaims;
@@ -68,7 +59,7 @@ namespace GSMA.MobileConnect.Authentication
                 {
                     bool isNamePresent = false;
                     bool isAddressPresent = false;
-                    if (currentVersion.Equals(DefaultOptions.V2_3) && options.Scope.Contains(Constants.Scope.KYC_PLAIN))
+                    if (currentVersion.Equals(Version.MC_DI_V3_0) && options.Scope.Contains(Constants.Scope.KYC_PLAIN))
                     {
                         isNamePresent = StringUtils.requireNonEmpty("name || given_name and family_name",
                             kycClaims.Name, kycClaims.GivenName, kycClaims.FamilyName);
@@ -77,7 +68,7 @@ namespace GSMA.MobileConnect.Authentication
                             kycClaims.HousenoOrHouseName, kycClaims.PostalCode, kycClaims.Country, kycClaims.Town);
                     }
              
-                    if (currentVersion.Equals(DefaultOptions.V2_3) && options.Scope.Contains(Constants.Scope.KYC_HASHED))
+                    if (currentVersion.Equals(Version.MC_DI_V3_0) && options.Scope.Contains(Constants.Scope.KYC_HASHED))
                     {
                         isNamePresent = StringUtils.requireNonEmpty("name_hashed || given_name_hashed and family_name_hashed",
                             kycClaims.NameHashed, kycClaims.GivenNameHashed, kycClaims.FamilyNameHashed);
@@ -105,7 +96,7 @@ namespace GSMA.MobileConnect.Authentication
             options.ClientId = clientId;
 
             UriBuilder build = new UriBuilder(authorizeUrl);
-            build.AddQueryParams(GetAuthenticationQueryParams(options, shouldUseAuthorize, currentVersion));
+            build.AddQueryParams(GetAuthenticationQueryParams(options, currentVersion));
 
             Log.Info(() => $"Authentication URI={build.Uri.AbsoluteUri}");
             return new StartAuthenticationResponse() { Url = build.Uri.AbsoluteUri };
@@ -180,12 +171,6 @@ namespace GSMA.MobileConnect.Authentication
         {
             options = options ?? new AuthenticationOptions();
 
-            bool shouldUseAuthorize = ShouldUseAuthorize(options);
-            if (shouldUseAuthorize)
-            {
-                options.Prompt = Parameters.LOGIN;
-            }
-
             string authUrl = StartAuthentication(clientId, correlationId, authorizeUrl, redirectUrl, state, nonce, encryptedMsisdn, options, version).Url;
             Uri finalRedirect = null;
 
@@ -213,26 +198,6 @@ namespace GSMA.MobileConnect.Authentication
 
             var code = HttpUtils.ExtractQueryValue(finalRedirect.AbsoluteUri, "code");
             return await RequestTokenAsync(clientId, correlationId, clientSecret, tokenUrl, redirectUrl, code);
-        }
-
-        private bool ShouldUseAuthorize(AuthenticationOptions options)
-        {
-            int authnIndex = options.Scope.IndexOf(Constants.Scope.AUTHN, StringComparison.OrdinalIgnoreCase);
-            bool authnRequested = authnIndex > -1;
-            bool mcProductRequested = options.Scope.ToLower().Equals(Constants.Scope.AUTHZ.ToLower());
-
-            if (mcProductRequested)
-            {
-                return true;
-            }
-
-            // If context is passed and authn not specifically requested then use authorize
-            if (!authnRequested && !string.IsNullOrEmpty(options.Context))
-            {
-                return true;
-            }
-
-            return false;
         }
     
         /// <inheritdoc/>
@@ -363,7 +328,7 @@ namespace GSMA.MobileConnect.Authentication
         }
 
         /// <inheritdoc/>
-        private List<BasicKeyValuePair> GetAuthenticationQueryParams(AuthenticationOptions options, bool useAuthorize, string version)
+        private List<BasicKeyValuePair> GetAuthenticationQueryParams(AuthenticationOptions options, string version)
         {
             string kycClaimsJson = null;
             if (options.KycClaims != null)
@@ -395,20 +360,16 @@ namespace GSMA.MobileConnect.Authentication
                 new BasicKeyValuePair(Parameters.BINDING_MESSAGE, options.BindingMessage),
                 new BasicKeyValuePair(Parameters.CONTEXT, options.Context),
                 new BasicKeyValuePair(Parameters.CLIENT_NAME, options.ClientName),
-                new BasicKeyValuePair(Parameters.CORRELATION_ID, options.CorrelationId)
+                new BasicKeyValuePair(Parameters.CORRELATION_ID, options.CorrelationId),
+                new BasicKeyValuePair(Parameters.CLIENT_NAME, options.ClientName),
+                new BasicKeyValuePair(Parameters.CONTEXT, options.Context),
+                new BasicKeyValuePair(Parameters.BINDING_MESSAGE, options.BindingMessage)
             };
 
             if (kycClaimsJson != null)
             {
                 authParameters.Add(new BasicKeyValuePair(Parameters.CLAIMS, kycClaimsJson));
-            }
-
-            if (useAuthorize)
-            {
-                authParameters.Add(new BasicKeyValuePair(Parameters.CLIENT_NAME, options.ClientName));
-                authParameters.Add(new BasicKeyValuePair(Parameters.CONTEXT, options.Context));
-                authParameters.Add(new BasicKeyValuePair(Parameters.BINDING_MESSAGE, options.BindingMessage));
-            }
+            }        
 
             return authParameters;
         }

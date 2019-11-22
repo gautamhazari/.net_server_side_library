@@ -35,22 +35,9 @@ namespace GSMA.MobileConnect.Discovery
             {
                 return Version.MC_DI_V3_0;
             }
-            if (supportedVersion.Contains(Version.MC_DI_R2_V2_3) & ContainsScopesV2_3(currentScopes))
-            {
-                return Version.MC_DI_R2_V2_3;
-            } 
-            if (supportedVersion.Contains(Version.MC_V2_0) & ContainsScopesV2_0(currentScopes))
-            {
-                return Version.MC_V2_0;
-            } 
             if (supportedVersion.Contains(Version.MC_V1_1) & ContainsScopesV1_1(currentScopes))
             {
                 return Version.MC_V1_1;
-            }
-            if (supportedVersion.Contains(Version.MC_V1_2) & ContainsScopesV2_0(currentScopes) & supportedVersion.Count == 1)
-            { 
-                Log.Warning("Version is deprecated");
-                return Version.MC_V1_2;
             }
 
             MobileConnectInvalidScopeException invalidScopeException = new MobileConnectInvalidScopeException(scope);
@@ -76,9 +63,7 @@ namespace GSMA.MobileConnect.Discovery
 
         private static bool ContainsScopesV2_0(List<string> currentScopes)
         {
-            return ContainsOpenidScope(currentScopes) & (currentScopes.Contains(Scope.AUTHN) || currentScopes.Contains(Scope.AUTHZ) ||
-                                                         currentScopes.Contains(Scope.MC_IDENTITY_PHONE) || currentScopes.Contains(Scope.MC_IDENTITY_NATIONALID) ||
-                                                         currentScopes.Contains(Scope.MC_IDENTITY_SIGNUP) || currentScopes.Contains(Scope.MC_IDENTITY_SIGNUP_PLUS));
+            return ContainsOpenidScope(currentScopes) & (currentScopes.Contains(Scope.AUTHN) || currentScopes.Contains(Scope.MC_IDENTITY_SIGNUP) || currentScopes.Contains(Scope.MC_IDENTITY_SIGNUP_PLUS));
         }
 
         private static bool ContainsScopesV2_3(List<string> currentScopes)
@@ -89,17 +74,14 @@ namespace GSMA.MobileConnect.Discovery
 
         private static bool ContainsScopesV3_0(List<string> currentScopes)
         {
-            return ContainsOpenidScope(currentScopes) & (currentScopes.Contains(Scope.AUTHN) || currentScopes.Contains(Scope.AUTHZ) ||
-                                                         currentScopes.Contains(Scope.MC_PHONE) || currentScopes.Contains(Scope.MC_NATIONALID) ||
-                                                         currentScopes.Contains(Scope.MC_SIGNUP) || currentScopes.Contains(Scope.KYC_HASHED) ||
+            return ContainsOpenidScope(currentScopes) & (currentScopes.Contains(Scope.AUTHN) || currentScopes.Contains(Scope.MC_SIGNUP) || currentScopes.Contains(Scope.KYC_HASHED) ||
                                                          currentScopes.Contains(Scope.KYC_PLAIN));
         }
 
 
         private static bool IsVersionSupported(string version)
         {
-            return version.Equals(Version.MC_V1_1) || version.Equals(Version.MC_V1_2) ||
-                   version.Equals(Version.MC_V2_0) || version.Equals(Version.MC_DI_R2_V2_3);
+            return version.Equals(Version.MC_V1_1) || version.Equals(Version.MC_DI_V3_0);
         }
 
         private static List<string> GetSupportedVersions(ProviderMetadata providerMetadata)

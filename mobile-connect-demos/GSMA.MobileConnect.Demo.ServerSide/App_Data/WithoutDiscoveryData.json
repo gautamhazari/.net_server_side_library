@@ -7,7 +7,7 @@
   "xRedirect": "True",
   "includeRequestIP": "True",
   "apiVersion": "mc_di_v3.0",
-  "scope": "openid mc_phonenumber",
+  "scope": "openid mc_authn",
   "acrValues": "2",
   "maxDiscoveryCacheSize": 104857600,
   "operatorUrls": {

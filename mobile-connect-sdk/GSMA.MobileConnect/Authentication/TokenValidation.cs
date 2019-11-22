@@ -118,7 +118,7 @@ namespace GSMA.MobileConnect.Authentication
                 return TokenValidationResult.InvalidAudAndAzp;
             }
 
-            if (currentVersion.Equals(DefaultOptions.V2_3))
+            if (currentVersion.Equals(Discovery.Version.MC_DI_V3_0))
             {
                 if (!IsAtHashPresent(claims))
                 {

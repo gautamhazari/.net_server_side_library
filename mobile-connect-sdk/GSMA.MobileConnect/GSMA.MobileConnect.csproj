@@ -122,7 +122,6 @@
     <Compile Include="Utils\JsonWebToken.cs" />
     <Compile Include="Utils\BasicKeyValuePair.cs" />
     <Compile Include="Utils\MessageLogHandler.cs" />
-    <Compile Include="Utils\MobileConnectVersions.cs" />
     <Compile Include="Utils\RequiredCookies.cs" />
     <Compile Include="Utils\RestAuthentication.cs" />
     <Compile Include="Utils\RestClient.cs" />
